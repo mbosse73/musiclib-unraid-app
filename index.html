@@ -19,10 +19,12 @@
   --hair: rgba(237, 230, 218, 0.07);
   --hair-strong: rgba(237, 230, 218, 0.16);
   --gold: #C9A574;
+  --warn: #D9856A;
   --player-h: 84px;
-  --display: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
-  --body: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  /* eine Schriftquelle, drei Rollen — Schrift hier zentral austauschen */
   --mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --display: var(--mono);
+  --body: var(--mono);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -71,12 +73,22 @@ header {
   display: flex;
   align-items: center;
   gap: 14px;
+  min-width: 0;
   font-family: var(--mono);
   font-size: 10.5px;
   color: var(--text-3);
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
+/* Scan-Meldungen koennen lang werden — kuerzen statt das Layout sprengen,
+   der volle Text haengt im title-Attribut. */
+#status-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.status.error #status-text { color: var(--warn); }
+.status.error .dot { background: var(--warn); }
 .dot {
   width: 6px; height: 6px;
   border-radius: 50%;
@@ -758,12 +770,18 @@ function fmtTotal(s) {
   return h ? `${h} h ${m} min` : `${m} min`;
 }
 function esc(s) {
-  return (s == null ? '' : String(s)).replace(/[&<>"]/g, c => (
-    {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]
+  return (s == null ? '' : String(s)).replace(/[&<>"']/g, c => (
+    {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]
   ));
 }
 function initial(album) {
   return ((album.title || '?').trim().charAt(0) || '?').toUpperCase();
+}
+function setStatus(text, isError = false) {
+  const el = $('status-text');
+  el.textContent = text;
+  el.title = text;                       // gekuerzter Text bleibt vollstaendig lesbar
+  el.closest('.status').classList.toggle('error', isError);
 }
 function coverURL(album) {
   return album.cover ? `/api/cover/${encodeURIComponent(album.cover)}` : null;
@@ -871,16 +889,19 @@ function renderArtists(list) {
   root.appendChild(frag);
 }
 
+function albumMatches(a, q) {
+  if (a.title.toLowerCase().includes(q)) return true;
+  if (a.artist.toLowerCase().includes(q)) return true;
+  // auch Titel durchsuchen — wer ein Lied sucht, kennt oft nur dessen Namen
+  return a.tracks.some(t =>
+    t.title.toLowerCase().includes(q) ||
+    (t.artist || '').toLowerCase().includes(q)
+  );
+}
+
 function applyFilter() {
   const q = $('search').value.trim().toLowerCase();
-  if (!q) {
-    filtered = library.albums;
-  } else {
-    filtered = library.albums.filter(a =>
-      a.title.toLowerCase().includes(q) ||
-      a.artist.toLowerCase().includes(q)
-    );
-  }
+  filtered = q ? library.albums.filter(a => albumMatches(a, q)) : library.albums;
   render();
 }
 
@@ -971,17 +992,23 @@ function playFromAlbum(album, startIndex) {
   playCurrent();
 }
 
+// Der Button spiegelt immer den echten Zustand des <audio>-Elements, nie eine
+// Annahme — sonst laeuft er auseinander, sobald von aussen gesteuert wird
+// (Sperrbildschirm, Medientasten, blockiertes Autoplay).
+function setPlayButton(playing) {
+  $('play-btn').textContent = playing ? '❚❚' : '▶';
+  $('play-btn').setAttribute('aria-label', playing ? 'Pause' : 'Abspielen');
+}
+
 function playCurrent() {
   if (qIndex < 0 || qIndex >= queue.length) return;
   const { track, album } = queue[qIndex];
   audio.src = `/api/stream/${encodeURIComponent(track.id)}`;
-  audio.play().catch(() => {});
+  audio.play().catch(() => {});  // z. B. blockiertes Autoplay: Button bleibt korrekt
 
   $('now-title').textContent = track.title;
   $('now-artist').textContent = `${album.artist} — ${album.title}`;
   setCover(album, $('now-cover'));
-  $('play-btn').textContent = '❚❚';
-  $('play-btn').setAttribute('aria-label', 'Pause');
 
   document.querySelectorAll('.track.playing').forEach(el => el.classList.remove('playing'));
   const cur = document.querySelector(`.track[data-track-id="${track.id}"]`);
@@ -997,34 +1024,56 @@ function playCurrent() {
   }
 }
 
-$('play-btn').addEventListener('click', () => {
-  if (!audio.src) return;
-  if (audio.paused) {
-    audio.play();
-    $('play-btn').textContent = '❚❚';
-    $('play-btn').setAttribute('aria-label', 'Pause');
-  } else {
-    audio.pause();
-    $('play-btn').textContent = '▶';
-    $('play-btn').setAttribute('aria-label', 'Abspielen');
-  }
-});
+function hasNext() { return qIndex >= 0 && qIndex < queue.length - 1; }
 
-$('next-btn').addEventListener('click', () => {
-  if (qIndex < queue.length - 1) { qIndex++; playCurrent(); }
-});
-$('prev-btn').addEventListener('click', () => {
+function playNext() {
+  if (hasNext()) { qIndex++; playCurrent(); }
+}
+
+function playPrev() {
   if (audio.currentTime > 3) { audio.currentTime = 0; return; }
   if (qIndex > 0) { qIndex--; playCurrent(); }
-});
+}
+
+function togglePlay() {
+  if (!audio.src) return;
+  if (audio.paused) audio.play().catch(() => {});
+  else audio.pause();
+}
+
+$('play-btn').addEventListener('click', togglePlay);
+$('next-btn').addEventListener('click', playNext);
+$('prev-btn').addEventListener('click', playPrev);
+
+audio.addEventListener('play', () => setPlayButton(true));
+audio.addEventListener('pause', () => setPlayButton(false));
 
 audio.addEventListener('ended', () => {
-  if (qIndex < queue.length - 1) { qIndex++; playCurrent(); }
-  else {
-    $('play-btn').textContent = '▶';
-    $('play-btn').setAttribute('aria-label', 'Abspielen');
-  }
+  if (hasNext()) playNext();
+  else setPlayButton(false);
 });
+
+// Ein Titel, dessen Datei seit dem letzten Scan verschoben wurde, liefert 404.
+// Ohne diesen Handler bliebe der Player wortlos stehen.
+audio.addEventListener('error', () => {
+  if (!audio.src) return;
+  setPlayButton(false);
+  $('now-artist').textContent = 'Titel nicht abspielbar — bitte neu scannen';
+});
+
+// Sperrbildschirm und Medientasten sollen dieselbe Warteschlange bedienen
+// wie die Knoepfe im Player.
+if ('mediaSession' in navigator) {
+  const handlers = {
+    play: () => audio.play().catch(() => {}),
+    pause: () => audio.pause(),
+    previoustrack: playPrev,
+    nexttrack: playNext,
+  };
+  for (const [action, fn] of Object.entries(handlers)) {
+    try { navigator.mediaSession.setActionHandler(action, fn); } catch {}
+  }
+}
 
 audio.addEventListener('timeupdate', () => {
   const c = audio.currentTime;
@@ -1068,16 +1117,20 @@ async function pollScan() {
     const s = await r.json();
     $('status-dot').classList.toggle('idle', !s.running);
     if (s.running) {
-      $('status-text').textContent = s.total > 0
-        ? `Scanne ${s.progress}/${s.total}`
-        : 'Scanne…';
+      setStatus(s.total > 0 ? `Scanne ${s.progress}/${s.total}` : 'Scanne…');
       setTimeout(pollScan, 600);
     } else {
-      $('status-text').textContent = s.error ? `Fehler: ${s.error}` : 'Bereit';
+      if (s.error) {
+        setStatus(s.error, true);
+      } else if (s.skipped) {
+        setStatus(`Bereit — ${s.skipped} Datei(en) übersprungen`, true);
+      } else {
+        setStatus('Bereit');
+      }
       await loadLibrary();
     }
   } catch {
-    $('status-text').textContent = 'Verbindung verloren';
+    setStatus('Verbindung verloren', true);
   }
 }
 
@@ -1099,7 +1152,7 @@ async function loadLibrary() {
     }
     applyFilter();
   } catch (e) {
-    $('status-text').textContent = 'Bibliothek konnte nicht geladen werden';
+    setStatus('Bibliothek konnte nicht geladen werden', true);
   }
 }
 

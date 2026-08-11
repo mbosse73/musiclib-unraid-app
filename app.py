@@ -14,7 +14,9 @@ Environment:
 import asyncio
 import hashlib
 import json
+import logging
 import os
+import threading
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from pathlib import Path
@@ -30,10 +32,28 @@ LIBRARY_FILE = DATA_DIR / "library.json"
 TRACKS_FILE = DATA_DIR / "tracks.json"  # internal: track_id -> filesystem path
 APP_DIR = Path(__file__).parent
 
-DATA_DIR.mkdir(parents=True, exist_ok=True)
-COVERS_DIR.mkdir(parents=True, exist_ok=True)
+log = logging.getLogger("musiklib")
 
-scan_state = {"running": False, "progress": 0, "total": 0, "error": None}
+# Guards the check-then-set on scan_state["running"]. scan() runs in a worker
+# thread while request handlers read the state, so the flag alone is not enough.
+_scan_lock = threading.Lock()
+
+# Strong references to startup tasks; asyncio only holds weak ones.
+_startup_tasks: set = set()
+
+scan_state = {
+    "running": False,
+    "progress": 0,
+    "total": 0,
+    "skipped": 0,  # files that could not be read and were left out
+    "error": None,  # short, user-facing message — details go to the log
+}
+
+
+def ensure_dirs() -> None:
+    """Create DATA_DIR/covers. Called at startup and before every scan."""
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    COVERS_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def stable_id(*parts) -> str:
@@ -48,7 +68,10 @@ def read_tags(filepath: Path):
     """Read ID3 tags from an MP3 and return a flat dict, or None on failure."""
     try:
         audio = MP3(filepath)
-    except Exception:
+    except Exception as exc:
+        # One compact line per file — a full traceback per broken file would
+        # drown the container log on a collection with many stray files.
+        log.warning("Datei uebersprungen (%s): %s", exc.__class__.__name__, filepath)
         return None
 
     tags = audio.tags or {}
@@ -109,55 +132,104 @@ def read_tags(filepath: Path):
     }
 
 
-def scan():
-    """Walk MUSIC_DIR, build albums dict, write library.json + tracks.json."""
-    if scan_state["running"]:
-        return
-    scan_state["running"] = True
-    scan_state["progress"] = 0
-    scan_state["total"] = 0
-    scan_state["error"] = None
-
+def store_cover(album_id: str, tags) -> str | None:
+    """Write embedded cover art to COVERS_DIR and return its filename."""
+    if not tags["cover_data"]:
+        return None
+    mime = (tags["cover_mime"] or "").lower()
+    ext = "jpg" if "jpeg" in mime or "jpg" in mime else "png"
+    filename = f"{album_id}.{ext}"
+    cover_path = COVERS_DIR / filename
+    if cover_path.exists():
+        return filename
     try:
+        cover_path.write_bytes(tags["cover_data"])
+    except Exception:
+        log.warning("Cover konnte nicht geschrieben werden: %s", cover_path, exc_info=True)
+        return None
+    return filename
+
+
+def _claim_scan() -> bool:
+    """Reserve the scan slot. False if a scan is already running."""
+    with _scan_lock:
+        if scan_state["running"]:
+            return False
+        scan_state.update(running=True, progress=0, total=0, skipped=0, error=None)
+        return True
+
+
+def _release_scan() -> None:
+    with _scan_lock:
+        scan_state["running"] = False
+
+
+def scan():
+    """Run a full scan. No-op if one is already running."""
+    if not _claim_scan():
+        return
+    run_claimed_scan()
+
+
+def run_claimed_scan():
+    """Scan body. The caller must have reserved the slot via _claim_scan()."""
+    try:
+        ensure_dirs()
+
+        # Without this guard a missing music share (unmounted, renamed) would
+        # look like an empty collection and overwrite a good library.json.
+        if not MUSIC_DIR.is_dir():
+            scan_state["error"] = f"Musikverzeichnis nicht gefunden: {MUSIC_DIR}"
+            log.error("MUSIC_DIR ist kein Verzeichnis: %s", MUSIC_DIR)
+            return
+
         mp3s = {p.resolve() for p in MUSIC_DIR.rglob("*.[mM][pP]3")}
         mp3s = sorted(mp3s)
         scan_state["total"] = len(mp3s)
 
+        # Same protection for a share that is mounted but empty.
+        if not mp3s and _library_has_albums():
+            scan_state["error"] = (
+                f"Keine MP3s unter {MUSIC_DIR} gefunden — bestehender Katalog "
+                f"wurde nicht ueberschrieben. Zum Leeren DATA_DIR loeschen."
+            )
+            log.error("Leerer Scan bei vorhandenem Katalog — Abbruch, nichts geschrieben.")
+            return
+
         albums = {}
         tracks_by_id = {}
+        skipped = 0
 
         for i, path in enumerate(mp3s):
-            scan_state["progress"] = i
             tags = read_tags(path)
             if not tags:
+                skipped += 1
+                scan_state["skipped"] = skipped
+                scan_state["progress"] = i + 1
                 continue
 
             album_id = stable_id(tags["album_artist"], tags["album"])
             track_id = stable_id(str(path))
 
             if album_id not in albums:
-                cover_filename = None
-                if tags["cover_data"]:
-                    mime = (tags["cover_mime"] or "").lower()
-                    ext = "jpg" if "jpeg" in mime or "jpg" in mime else "png"
-                    cover_filename = f"{album_id}.{ext}"
-                    cover_path = COVERS_DIR / cover_filename
-                    if not cover_path.exists():
-                        try:
-                            cover_path.write_bytes(tags["cover_data"])
-                        except Exception:
-                            cover_filename = None
-
                 albums[album_id] = {
                     "id": album_id,
                     "title": tags["album"],
                     "artist": tags["album_artist"],
-                    "year": tags["year"],
-                    "cover": cover_filename,
+                    "year": None,
+                    "cover": None,
                     "tracks": [],
                 }
 
-            albums[album_id]["tracks"].append({
+            album = albums[album_id]
+            # Album-level metadata comes from whichever track carries it first,
+            # not necessarily the first track of the album.
+            if album["cover"] is None:
+                album["cover"] = store_cover(album_id, tags)
+            if album["year"] is None:
+                album["year"] = tags["year"]
+
+            album["tracks"].append({
                 "id": track_id,
                 "title": tags["title"],
                 "artist": tags["artist"],
@@ -165,6 +237,7 @@ def scan():
                 "duration": tags["duration"],
             })
             tracks_by_id[track_id] = str(path)
+            scan_state["progress"] = i + 1
 
         for a in albums.values():
             a["tracks"].sort(key=lambda t: (
@@ -177,32 +250,49 @@ def scan():
             "scanned_at": datetime.now(timezone.utc).isoformat(),
             "album_count": len(albums),
             "track_count": sum(len(a["tracks"]) for a in albums.values()),
+            "skipped_count": skipped,
             "albums": sorted(
                 albums.values(),
                 key=lambda a: (a["artist"].lower(), (a["year"] or 0), a["title"].lower()),
             ),
         }
 
-        # atomic write
-        tmp = LIBRARY_FILE.with_suffix(".json.tmp")
-        tmp.write_text(json.dumps(library, ensure_ascii=False), encoding="utf-8")
-        tmp.replace(LIBRARY_FILE)
-
-        tmp = TRACKS_FILE.with_suffix(".json.tmp")
-        tmp.write_text(json.dumps(tracks_by_id, ensure_ascii=False), encoding="utf-8")
-        tmp.replace(TRACKS_FILE)
+        _write_json_atomic(LIBRARY_FILE, library)
+        _write_json_atomic(TRACKS_FILE, tracks_by_id)
 
         scan_state["progress"] = scan_state["total"]
-    except Exception as e:
-        scan_state["error"] = str(e)
+        if skipped:
+            log.warning("Scan beendet, %d Datei(en) uebersprungen.", skipped)
+    except Exception:
+        # Keep filesystem details out of the API response; log them instead.
+        log.exception("Scan fehlgeschlagen")
+        scan_state["error"] = "Scan fehlgeschlagen — Details siehe Container-Log."
     finally:
-        scan_state["running"] = False
+        _release_scan()
+
+
+def _library_has_albums() -> bool:
+    """True if a non-empty catalog already exists on disk."""
+    try:
+        data = json.loads(LIBRARY_FILE.read_text(encoding="utf-8"))
+        return bool(data.get("albums"))
+    except Exception:
+        return False
+
+
+def _write_json_atomic(target: Path, payload) -> None:
+    tmp = target.with_suffix(".json.tmp")
+    tmp.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+    tmp.replace(target)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    ensure_dirs()
     if not LIBRARY_FILE.exists() and MUSIC_DIR.exists():
-        asyncio.create_task(asyncio.to_thread(scan))
+        task = asyncio.create_task(asyncio.to_thread(scan))
+        _startup_tasks.add(task)
+        task.add_done_callback(_startup_tasks.discard)
     yield
 
 
@@ -222,6 +312,7 @@ def get_library():
             "albums": [],
             "album_count": 0,
             "track_count": 0,
+            "skipped_count": 0,
         })
     return FileResponse(LIBRARY_FILE, media_type="application/json")
 
@@ -254,10 +345,13 @@ def stream(track_id: str):
 
 @app.post("/api/scan")
 def trigger_scan(background_tasks: BackgroundTasks):
-    if scan_state["running"]:
+    # Claim the slot here, not in the background task: BackgroundTasks only run
+    # after the response is sent, so a status poll issued right after this POST
+    # would otherwise still see running=False and stop polling.
+    if not _claim_scan():
         return {"status": "already_running", **scan_state}
-    background_tasks.add_task(scan)
-    return {"status": "started"}
+    background_tasks.add_task(run_claimed_scan)
+    return {"status": "started", **scan_state}
 
 
 @app.get("/api/scan/status")
@@ -267,4 +361,5 @@ def scan_status():
 
 if __name__ == "__main__":
     import uvicorn
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", "8080")))

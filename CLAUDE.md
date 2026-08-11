@@ -9,7 +9,7 @@ Musiklib: a minimal, fast music library for a personal MP3 collection. Runs as a
 The application is three files:
 - `app.py` — FastAPI backend (~270 lines): scanning, JSON API, streaming.
 - `index.html` — the entire frontend (~1100 lines): HTML + CSS + vanilla JS in one file, no build step, no framework.
-- `requirements.txt` — pinned deps: `fastapi`, `uvicorn[standard]`, `mutagen`.
+- `requirements.txt` — pinned deps: `fastapi`, `starlette`, `mutagen`, `uvicorn`, `uvloop`, `httptools`. `starlette` is pinned explicitly even though it only arrives via FastAPI: it provides the `FileResponse` that implements Range streaming, and versions before 1.3.1 parse Range headers in quadratic time (a single request stalls the event loop for minutes). `uvicorn` is installed without the `[standard]` extra — `uvloop` and `httptools` are listed directly instead, so the unused `websockets`/`watchfiles`/`PyYAML`/`python-dotenv` don't get pulled in.
 
 `docker-compose.yml` and `README.md` (in German) cover unraid deployment; not relevant to app logic.
 
@@ -58,16 +58,20 @@ These follow from the code above and are easy to trip over:
 
 - **`track_id` is a hash of the absolute file path.** Moving or renaming an MP3 gives it a new id on the next scan, invalidating anything that stored the old one. Nothing currently persists track ids across scans — keep it that way, or the assumption breaks.
 - **Nothing is ever deleted from `DATA_DIR`.** `scan()` only writes. Covers for albums that no longer exist stay on disk, and a cover file is written only when one doesn't already exist at that path — so a changed cover for an unchanged album is *not* picked up by a re-scan. A full rebuild means deleting `DATA_DIR`.
-- **Unreadable files vanish silently.** `read_tags()` returns `None` on any exception and `scan()` skips those files without recording anything; the scan reports success. A file missing from the library is the only symptom.
-- **`scan()`'s `running` guard is a plain global flag with no lock**, and `scan_state` is mutated from a worker thread while request handlers read it. Fine for one user on a NAS; don't build on it as if it were synchronized.
-- **`POST /api/scan` returns before the scan starts.** FastAPI runs `BackgroundTasks` after the response is sent, so a status poll issued immediately after the POST can still report `running: false`.
+- **A scan refuses to replace a non-empty catalog with an empty one.** If `MUSIC_DIR` is not a directory, or if it yields zero MP3s while `library.json` still lists albums, `run_claimed_scan()` reports an error in `scan_state["error"]` and writes nothing. Without that guard an unmounted or renamed music share would silently wipe the catalog, because `Path.rglob()` on a missing directory returns an empty iterator instead of raising. Deliberately emptying the library therefore means deleting `DATA_DIR`, not scanning an empty folder.
+- **Skipped files are counted, not silent.** `read_tags()` still returns `None` on any exception, but `scan()` now counts those files into `scan_state["skipped"]` and `library.json`'s `skipped_count`, and logs one line per file. The frontend surfaces the count in the header.
+- **Album-level fields come from whichever track carries them first**, not from the album's first track. Cover art and `year` are filled in the first time any track of that album supplies them — an intro track without embedded art no longer leaves the whole album coverless.
+- **`scan_state` is guarded by `_scan_lock`.** `_claim_scan()` does the check-and-set atomically and `POST /api/scan` claims the slot *before* returning, so a status poll issued immediately after the POST always observes `running: true`. Don't reintroduce a bare flag check.
 - **`/api/stream` re-reads and JSON-parses all of `tracks.json` on every request**, including every Range request while seeking. It's the hot path if streaming ever feels slow.
+- **`scan_state["error"]` is a short, user-facing German message**, rendered as-is in the UI. Exception detail goes to the log via `log.exception`, not into the API response.
 
 **Frontend (`index.html`)** is one file with three parts in this order: `<style>` (CSS custom properties at the top of `:root` centralize theme — colors, fonts, `--player-h` — change those instead of scattering literal values), the DOM skeleton, then a single `<script>` with no modules/bundler. Key frontend concepts:
 - `library` (fetched from `/api/library`) is the full in-memory dataset; `filtered` is the current search-filtered subset; both are plain arrays of album objects re-rendered on every filter/tab change (no virtual DOM/diffing).
 - `queue` + `qIndex` model the play queue: clicking a track loads the whole album into `queue` starting at that index, so next/prev just moves `qIndex`.
-- Playback state is driven off the single `<audio>` element's native events (`timeupdate`, `ended`); there is no separate player state object. `playCurrent()` is the one place that changes what's playing — it also updates the Media Session metadata that drives phone lockscreen controls, so keep that in sync when touching playback.
+- Playback state is driven off the single `<audio>` element's native events; there is no separate player state object. The play/pause button is updated **only** from the `play`/`pause` events via `setPlayButton()` — never set it optimistically next to an `audio.play()` call, or it desyncs the moment playback is controlled from outside the page (lockscreen, media keys, blocked autoplay). `playCurrent()` is the one place that changes what's playing; it also refreshes the Media Session metadata. `playNext()`/`playPrev()`/`togglePlay()` are shared by the player buttons and the Media Session action handlers, so lockscreen controls move the same queue.
+- The `error` event on `<audio>` reports a track whose file moved since the last scan (the stream 404s). Without a handler the player just stops silently, so keep one.
 - `groupByArtist()` derives the artist view from `library.albums` on the fly — there is no separate artists endpoint or artist data structure server-side.
+- `albumMatches()` decides what the search finds: album title, album artist, and every track title/artist. It runs over the whole collection on each keystroke (debounced 80 ms) — cheap string matching, but it is the first thing to feel slow on a very large library.
 - `pollScan()` re-polls `/api/scan/status` every 600ms while a scan runs and calls `loadLibrary()` once it finishes; this is the only path that refreshes the library after startup.
 - The page loads IBM Plex Mono from Google Fonts (`<link>` in `<head>`). A NAS without internet access falls back to the system monospace — the layout survives, but don't assume the webfont is present.
 

@@ -163,6 +163,11 @@ ls /mnt/user/Music
 ```
 Wenn das leer ist, ist `Music` nicht der richtige Sharename.
 
+Ein bereits aufgebauter Katalog geht dabei **nicht** verloren: Findet ein Scan das Musikverzeichnis nicht oder keine einzige MP3 darin, bricht er ab, ohne `library.json` zu überschreiben, und zeigt oben rechts eine Meldung statt „Bereit". Die Bibliothek bleibt also sichtbar, bis der Pfad wieder stimmt. Wer die Bibliothek wirklich leeren will, löscht den Ordner `data/`.
+
+**Oben rechts steht „Bereit — n Datei(en) übersprungen"**
+So viele Dateien konnten nicht gelesen werden und fehlen in der Bibliothek — meist defekte Downloads oder Dateien, die nur `.mp3` heißen. Welche es sind, steht im Container-Log (unraid → `musiklib` → **Logs**), eine Zeile pro Datei.
+
 **Beim `Compose Up`: `top-level object must be a mapping`**
 Die `docker-compose.yml` wurde wahrscheinlich über den Stack-Editor verändert (Sonderzeichen, Quotes weg). Lösung: Inhalt nochmal sauber aus der Originaldatei einkopieren.
 
@@ -180,4 +185,4 @@ Bewusst weggelassen, damit es schlicht bleibt:
 
 ## Erweitern
 
-Da die UI eine einzige `index.html` ist, lässt sie sich problemlos selbst anpassen — Schriftarten, Farben, Layout sind über CSS-Variablen ganz oben in `<style>` zentralisiert. Die Backend-Logik ist ca. 200 Zeilen Python und behandelt nur das Nötigste.
+Da die UI eine einzige `index.html` ist, lässt sie sich problemlos selbst anpassen — Schriftarten, Farben, Layout sind über CSS-Variablen ganz oben in `<style>` zentralisiert. Die Backend-Logik ist gut 300 Zeilen Python und behandelt nur das Nötigste.
