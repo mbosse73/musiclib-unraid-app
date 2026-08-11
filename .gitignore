@@ -1,0 +1,8 @@
+# local virtualenv for running the app outside Docker
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# DATA_DIR when running locally (library.json, tracks.json, covers/)
+data/
