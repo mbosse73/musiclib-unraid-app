@@ -98,12 +98,14 @@ Beim allerersten Start scannt die App automatisch. Bei einer Sammlung mit ein pa
 
 ## Bedienung
 
-- Die **Suche** filtert Alben und Interpreten gleichzeitig in Echtzeit.
-- **Alben** zeigt die Sammlung als Cover-Raster.
-- **Interpreten** zeigt eine Liste, die sich aufklappen lässt.
-- Klick auf ein Album öffnet die Trackliste. Klick auf einen Titel startet die Wiedergabe. Der Rest des Albums hängt automatisch in der Warteschlange.
-- Der Player unten bleibt sichtbar, auch beim Stöbern.
-- Wenn sich die Sammlung ändert: Knopf **„Neu scannen"** oben rechts. Der Scan läuft im Hintergrund, das UI bleibt benutzbar.
+- Die **Suche** filtert Alben, Interpreten und Titel gleichzeitig in Echtzeit. Wird ein Album wegen eines Titels gefunden, ist dieser Titel beim Öffnen des Albums golden markiert.
+- **Alben** zeigt die Sammlung als Cover-Raster, **Interpreten** eine aufklappbare Liste. Über **Sortierung** rechts lässt sich zwischen Interpret, Albumtitel, Jahr und „Zuletzt hinzugefügt" wechseln; die Wahl bleibt gespeichert.
+- Klick auf ein Album öffnet die Trackliste. Klick auf einen Titel startet die Wiedergabe. Der Rest des Albums hängt automatisch in der Warteschlange. In der Interpreten-Ansicht spielt **„Alles abspielen"** sämtliche Alben eines Interpreten am Stück.
+- Der Player unten bleibt sichtbar, auch beim Stöbern. Er hat Zufallswiedergabe und einen Lautstärkeregler (am Handy ausgeblendet, dort regeln die Hardwaretasten).
+- Am PC per Tastatur: **Leertaste** Wiedergabe/Pause, **←/→** 10 Sekunden springen, **n**/**p** nächster/vorheriger Titel, **s** Zufallswiedergabe, **/** springt ins Suchfeld, **Esc** schließt das Album.
+- Beim erneuten Öffnen setzt die App dort fort, wo sie zuletzt war — gleicher Titel, gleiche Position, angehalten. Praktisch am Handy, wo der Tab ständig geschlossen wird.
+- Auf dem Sperrbildschirm bzw. über die Medientasten funktionieren Wiedergabe, Pause und Titelwechsel.
+- Wenn sich die Sammlung ändert: Knopf **„Neu scannen"** oben rechts. Der Scan läuft im Hintergrund, das UI bleibt benutzbar. Nur geänderte Dateien werden neu eingelesen, weitere Scans dauern daher meist nur Sekunden.
 
 ## Updates und Wartung
 
@@ -126,10 +128,13 @@ Der komplette Katalog liegt unterhalb von `DATA_DIR` (im Compose-File auf `/app/
 ├── requirements.txt
 └── data/                      ← DATA_DIR, wird beim ersten Start automatisch angelegt
     ├── library.json           ← der Katalog: Alben, Interpreten, Titel
-    ├── tracks.json             ← interne Zuordnung Track-ID → Dateipfad (fürs Streaming)
+    ├── tracks.json            ← interne Zuordnung Track-ID → Dateipfad (fürs Streaming)
+    ├── tagcache.json          ← intern: gelesene Tags je Datei, macht weitere Scans schnell
     └── covers/
-        └── <hash>.jpg / .png  ← extrahierte Coverbilder, eine Datei pro Album
+        └── <hash>.jpg / .png  ← Coverbilder, eine Datei pro Album
 ```
+
+Coverbilder kommen bevorzugt aus dem MP3 selbst. Enthält kein einziger Titel eines Albums ein eingebettetes Bild, sucht die App im selben Ordner nach `cover.jpg`, `folder.jpg`, `front.jpg` oder `albumart.jpg` (auch als `.png`).
 
 Die MP3-Dateien selbst werden nie kopiert oder verändert (`/music` ist `read_only`) — `library.json` verweist nur auf ihre Pfade. Der gesamte `data/`-Ordner ist deshalb typischerweise nur wenige MB groß, auch bei tausenden Titeln.
 
@@ -144,6 +149,8 @@ Die MP3-Dateien selbst werden nie kopiert oder verändert (`/music` ist `read_on
 Da `data/library.json` nach dem Restore bereits existiert, löst die App **keinen** automatischen Re-Scan aus (der läuft nur, wenn diese Datei fehlt) — der wiederhergestellte Katalog erscheint sofort. Hat sich die Musiksammlung seit dem Backup geändert, oben rechts auf **„Neu scannen"** klicken.
 
 **Katalog verwerfen und neu aufbauen**: `library.json` enthält keine manuellen Eingaben, nur aus ID3-Tags abgeleitete Daten. Es reicht daher, den `data/`-Ordner zu löschen und den Container neu zu starten — der Katalog wird beim nächsten Start automatisch neu aus der Musiksammlung aufgebaut.
+
+Für den Alltag ist das aber selten nötig: Ein normaler Scan räumt Coverbilder verschwundener Alben von selbst weg und übernimmt ausgetauschte Cover. Nur wenn wirklich alles von Grund auf neu soll, den Ordner löschen.
 
 ## Troubleshooting
 
