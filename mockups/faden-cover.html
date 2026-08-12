@@ -162,7 +162,9 @@ button,input{font:inherit;color:inherit;background:none;border:none}
 .pE .list .it.past .t{color:rgba(36,30,24,.24)}
 
 .pE .foot{flex-shrink:0;padding:0 30px 30px;position:relative;z-index:7}
-.pE .transport{display:flex;align-items:center;gap:26px;padding-top:20px;border-top:1px solid var(--line)}
+/* Die Transportzeile trägt nur die drei Knöpfe — mittig, ohne Gegengewicht */
+.pE .transport{display:flex;align-items:center;justify-content:center;gap:34px;padding-top:20px;
+  border-top:1px solid var(--line)}
 .pE .tb{width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--ink-2);
   cursor:pointer}
 .pE .tb:active{color:var(--ink)}
@@ -171,16 +173,17 @@ button,input{font:inherit;color:inherit;background:none;border:none}
   transition:background .2s,color .2s,transform .12s}
 .pE .play:active{transform:scale(.95)}
 .pE .play.on{background:var(--brass);color:var(--paper)}
-.pE .rest{margin-left:auto;text-align:right;display:flex;flex-direction:column;align-items:flex-end}
-.pE .rest .k{font-family:var(--sans);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--ink-3)}
-.pE .rest .v{font-family:var(--serif);font-size:16px;color:var(--ink-2);font-variant-numeric:tabular-nums;
-  margin-top:2px}
-.pE .next{margin-top:18px;display:flex;align-items:baseline;gap:12px;cursor:pointer}
+/* Folgender Titel und Restzeit stehen auf einer Grundlinie: links, was kommt,
+   rechts, wie lange es noch dauert. Beide Seiten führt dieselbe kleine
+   Versalie an, damit die Zeile symmetrisch liest. */
+.pE .next{margin-top:20px;display:flex;align-items:baseline;gap:12px;cursor:pointer}
 .pE .next .k{font-family:var(--sans);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
   color:var(--ink-3);flex-shrink:0}
-.pE .next .v{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-2);
+.pE .next .v{flex:1;min-width:0;font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-2);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pE .next .rest{flex-shrink:0;display:flex;align-items:baseline;gap:8px}
+.pE .next .rest .num{font-family:var(--serif);font-size:15px;color:var(--ink-2);
+  font-variant-numeric:tabular-nums;letter-spacing:.01em}
 
 /* ══════════════════ F · DESERT ROSE ══════════════════
    Farben unverändert aus dem Thema: Sand, Dusty Rose, Clay, Deep Burgundy.
@@ -468,9 +471,12 @@ class Player {
             <span class="tb" data-prev>${PREV}</span>
             <span class="play on" data-pp>${PAUSE(20)}</span>
             <span class="tb" data-next>${NEXT}</span>
-            <span class="rest"><span class="k">Noch</span><span class="v" data-rest></span></span>
           </div>
-          <div class="next" data-nextrow><span class="k">Danach</span><span class="v" data-un></span></div>
+          <div class="next" data-nextrow>
+            <span class="k">Danach</span>
+            <span class="v" data-un></span>
+            <span class="rest"><span class="k">Noch</span><span class="num" data-rest></span></span>
+          </div>
         </div>
       </div><div class="homeind"></div>`;
 
