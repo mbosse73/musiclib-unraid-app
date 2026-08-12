@@ -92,6 +92,22 @@ button,input{font:inherit;color:inherit;background:none;border:none}
 .pE .lid{display:flex;align-items:baseline;justify-content:space-between;padding:2px 30px 0;flex-shrink:0}
 .pE .lid .b{font-family:var(--serif);font-size:14px;letter-spacing:.01em}
 .pE .lid .b em{font-style:italic;color:var(--brass)}
+/* Der Griff zur Warteschlange: Zähler plus drei Striche. Im aufgeklappten
+   Zustand tauschen Zeichen und Farbe, damit der Weg zurück derselbe ist. */
+.pE .qbtn{display:flex;align-items:center;gap:9px;cursor:pointer;padding:6px 0 6px 10px;
+  color:var(--ink-3);transition:color .25s;-webkit-tap-highlight-color:transparent}
+.pE .qbtn:active,.pE .qbtn[aria-expanded="true"]{color:var(--brass)}
+.pE .qbtn .n{font-family:var(--sans);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  font-variant-numeric:tabular-nums}
+.pE .qbtn .gl{display:flex;flex-direction:column;gap:3px;width:13px}
+.pE .qbtn .gl i{display:block;height:1px;background:currentColor;transition:width .3s,transform .3s}
+.pE .qbtn .gl i:nth-child(1){width:13px}
+.pE .qbtn .gl i:nth-child(2){width:9px}
+.pE .qbtn .gl i:nth-child(3){width:13px}
+/* aufgeklappt: aus den drei Strichen wird ein Schließkreuz-Andeutung */
+.pE .qbtn[aria-expanded="true"] .gl i:nth-child(1){transform:translateY(4px) rotate(9deg)}
+.pE .qbtn[aria-expanded="true"] .gl i:nth-child(2){width:13px;opacity:0}
+.pE .qbtn[aria-expanded="true"] .gl i:nth-child(3){transform:translateY(-4px) rotate(-9deg)}
 .pE .main{flex:1;min-height:0;position:relative;padding:22px 78px 0 30px}
 
 .pE .cov{width:100%;aspect-ratio:1;border-radius:1px;position:relative;
@@ -287,8 +303,12 @@ footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--line-2);font-
         <h2><span class="no">Entwurf E</span>Der Rand</h2>
         <p>Die Achse steht dort, wo sonst nur Papier ist: im rechten Rand, als Haarlinie mit einer Marke je
         Titel. Sie schreibt nichts an — sie zeigt nur, wo man ist. Erst beim Ziehen tritt das Bild hinter einen
-        Schleier zurück und der Titel unter dem Griff nach vorn. Wer die ganze Liste will, tippt den Rand an:
-        das Cover schrumpft auf eine Vignette, die Titel kommen rechtsbündig herein wie ein Inhaltsverzeichnis.</p>
+        Schleier zurück und der Titel unter dem Griff nach vorn. Wer die ganze Liste will, tippt den Zähler oben
+        rechts an — oder den Rand: das Cover schrumpft auf eine Vignette, die Titel kommen rechtsbündig herein
+        wie ein Inhaltsverzeichnis.</p>
+        <div class="note" style="border-left-color:var(--ink-3)"><b>Am Telefon ausprobieren:</b> oben rechts auf
+        <span style="letter-spacing:.2em">2 / 4</span> tippen — das ist der Weg zur Liste und wieder zurück.
+        Am Rand ziehen spult; kurzes Antippen des Randes tut dasselbe wie der Zähler.</div>
         <div class="swatches" aria-hidden="true">
           <i style="background:#FBF9F5"></i><i style="background:#F1EDE4"></i><i style="background:#8A6534"></i>
           <i style="background:#6B6155"></i><i style="background:#241E18"></i>
@@ -437,7 +457,10 @@ class Player {
     this.root.innerHTML = `<div class="notch"></div>${SBAR()}
       <div class="screen">
         <div class="lid"><span class="b">Musiklib<em>.</em></span>
-          <span class="caps" data-pos></span></div>
+          <button class="qbtn" data-pos aria-expanded="false">
+            <span class="n"></span>
+            <span class="gl"><i></i><i></i><i></i></span>
+          </button></div>
         <div class="main">
           <div style="position:relative">
             <div class="art cov" style="background:${grad}">${ART(64)}</div>
@@ -463,7 +486,7 @@ class Player {
             <div class="rdone" data-done></div>
             <div class="rknob" data-knob></div>
             <div class="rnum" data-num></div>
-            <div class="rhint" data-hint>Ziehen</div>
+            <div class="rhint" data-hint>Ziehen zum Spulen</div>
           </div>
         </div>
         <div class="foot">
@@ -487,33 +510,44 @@ class Player {
     this.$$('[data-it]').forEach(n => n.onclick = () => {
       this.qi = +n.dataset.it; this.pos = 0; this.playing = true; this.sync(); });
 
+    // Der Zähler oben rechts ist der sichtbare Griff zur Liste. Ohne ihn
+    // hing das Aufklappen an einem Antippen des Randes, auf das nichts hinwies.
+    this.$('[data-pos]').onclick = () => this.setOpen(!this.open);
+
     const rail = this.$('[data-rail]');
     const at = e => { const r = rail.getBoundingClientRect();
       return clamp((e.clientY-r.top)/r.height, 0, 1) * this.total; };
-    let moved = false, startY = 0;
-    rail.addEventListener('pointerdown', e => {
-      startY = e.clientY; moved = false;
-      this.dragging = true; rail.classList.add('grabbing');
+    // Tippen und Ziehen sind zwei verschiedene Dinge: erst ab acht Punkten
+    // Bewegung wird gespult, vorher bleibt es ein Tippen (= Liste).
+    let pending = false, moved = false, startY = 0;
+    const beginDrag = () => {
+      moved = true; this.dragging = true;
+      rail.classList.add('grabbing');
       this.root.classList.add('dragging');
       this.$('[data-peek]').classList.add('on');
       this.$('[data-hint]').classList.add('gone');
+    };
+    rail.addEventListener('pointerdown', e => {
+      startY = e.clientY; moved = false; pending = true;
       rail.setPointerCapture(e.pointerId);
-      this.setGlobal(at(e));
     });
     rail.addEventListener('pointermove', e => {
-      if (!this.dragging) return;
-      if (Math.abs(e.clientY - startY) > 4) moved = true;
-      this.setGlobal(at(e));
+      if (!pending) return;
+      if (!moved && Math.abs(e.clientY - startY) > 8) beginDrag();
+      if (moved) this.setGlobal(at(e));
     });
     const end = () => {
-      if (!this.dragging) return;
-      this.snap();
-      this.dragging = false;
-      rail.classList.remove('grabbing');
-      this.root.classList.remove('dragging');
-      this.$('[data-peek]').classList.remove('on');
-      // kurzes Antippen ohne Ziehen klappt die Liste auf und wieder zu
-      if (!moved) this.setOpen(!this.open);
+      if (!pending) return;
+      pending = false;
+      if (moved){
+        this.snap();
+        this.dragging = false;
+        rail.classList.remove('grabbing');
+        this.root.classList.remove('dragging');
+        this.$('[data-peek]').classList.remove('on');
+      } else {
+        this.setOpen(!this.open);
+      }
       this.sync();
     };
     rail.addEventListener('pointerup', end);
@@ -521,7 +555,13 @@ class Player {
 
     this.sync();
   }
-  setOpen(v){ this.open = v; this.root.classList.toggle('open', v); this.layoutList(); }
+  setOpen(v){
+    this.open = v;
+    this.root.classList.toggle('open', v);
+    const p = this.$('[data-pos]');
+    if (p) p.setAttribute('aria-expanded', String(v));
+    this.layoutList();
+  }
 
   /* Im aufgeklappten Zustand dürfen die Namen nicht übereinander liegen. */
   layoutList(){
@@ -544,7 +584,7 @@ class Player {
     const T = this.total, p = this.gpos/T*100, [ct,cd] = this.cur;
     this.$('[data-pp]').innerHTML = this.playing ? PAUSE(20) : PLAY(22);
     this.$('[data-pp]').classList.toggle('on', this.playing);
-    this.$('[data-pos]').textContent = `${this.qi+1} / ${ALBUM.tr.length}`;
+    this.$('[data-pos] .n').textContent = `${this.qi+1} / ${ALBUM.tr.length}`;
     this.$('.meta h3').textContent = ct;
     this.$('[data-rest]').textContent = fmt(T - this.gpos);
     this.$('[data-un]').textContent = this.qi < ALBUM.tr.length-1
