@@ -583,7 +583,101 @@ def test_mobile_settings_are_one_object_in_storage(phone):
     phone.wait_for_timeout(200)
 
     gespeichert = json.loads(phone.evaluate("localStorage.getItem('musiklib:einstellungen')"))
-    assert gespeichert == {"akzent": "petrol", "leiste": "bedarf"}
+    assert gespeichert == {"thema": "papier", "akzent": "petrol", "leiste": "bedarf"}
+
+
+# --------------------------------------------------------------------------
+# Themen: „Papier" und „Desert Rose"
+# --------------------------------------------------------------------------
+
+def waehle_thema(phone, wert):
+    phone.click("#settings-btn")
+    phone.wait_for_timeout(200)
+    phone.click(f"#themen button[data-wert='{wert}']")
+    phone.wait_for_timeout(250)
+    phone.click("#settings-back")
+    phone.wait_for_timeout(400)
+
+
+def sichtbar(phone, sel):
+    return phone.eval_on_selector(sel, "el => getComputedStyle(el).display") != "none"
+
+
+def test_mobile_theme_swaps_palette_and_axis(phone):
+    """Ein Thema ist mehr als Farbe: mit ihm wechselt die Achse."""
+    assert sichtbar(phone, "#rail") and not sichtbar(phone, "#skala")
+
+    waehle_thema(phone, "wueste")
+    assert phone.evaluate("document.documentElement.dataset.thema") == "wueste"
+    assert phone.eval_on_selector("body", "el => getComputedStyle(el).backgroundColor") \
+        == "rgb(232, 213, 196)"
+    # Die Warteschlange liegt jetzt waagerecht unter dem Bild.
+    assert sichtbar(phone, "#skala") and not sichtbar(phone, "#rail")
+    # Auch die Statusleiste des Geraets gehoert zum Thema.
+    assert phone.get_attribute('meta[name="theme-color"]', "content") == "#E8D5C4"
+
+    waehle_thema(phone, "papier")
+    assert sichtbar(phone, "#rail") and not sichtbar(phone, "#skala")
+    assert phone.get_attribute('meta[name="theme-color"]', "content") == "#FBF9F5"
+
+
+def test_mobile_theme_brings_its_own_accents(phone):
+    akzente = lambda: phone.eval_on_selector_all(
+        "#accents button", "els => els.map(e => e.dataset.akzent)")
+    phone.click("#settings-btn")
+    phone.wait_for_timeout(200)
+    assert akzente() == ["messing", "petrol", "gruen"]
+
+    phone.click("#themen button[data-wert='wueste']")
+    phone.wait_for_timeout(250)
+    # Messing auf Sand waere keine Wahl, sondern ein Fehler.
+    assert akzente() == ["ton", "rose"]
+    assert phone.evaluate("document.documentElement.dataset.akzent") == "ton"
+
+    phone.click("#accents button[data-akzent='rose']")
+    phone.wait_for_timeout(200)
+    assert phone.eval_on_selector("#sdone", "el => getComputedStyle(el).backgroundColor") \
+        == "rgb(212, 165, 165)"
+
+    # Zurueck: der Akzent des anderen Themas gilt hier nicht.
+    phone.click("#themen button[data-wert='papier']")
+    phone.wait_for_timeout(250)
+    assert akzente() == ["messing", "petrol", "gruen"]
+    assert phone.evaluate("document.documentElement.dataset.akzent") == "messing"
+
+
+def test_mobile_theme_survives_reload(phone):
+    waehle_thema(phone, "wueste")
+    phone.reload(wait_until="domcontentloaded")
+    phone.wait_for_selector(".card")
+    assert phone.evaluate("document.documentElement.dataset.thema") == "wueste"
+    assert sichtbar(phone, "#skala")
+
+
+def test_mobile_scale_seeks_across_a_track_boundary(phone):
+    """Dieselbe Bewegung wie am Rand, nur waagerecht — und erst beim Loslassen."""
+    waehle_thema(phone, "wueste")
+    phone.locator(".card", has_text="Autobahn").first.click()
+    phone.wait_for_selector(".trk")
+    phone.locator(".trk").first.click()
+    phone.wait_for_function("!document.getElementById('audio').paused")
+    assert phone.evaluate("qIndex") == 0
+
+    r = phone.eval_on_selector("#ruler", """el => {
+      const b = el.getBoundingClientRect();
+      return {x: b.x, y: b.y + b.height / 2, w: b.width};
+    }""")
+    phone.mouse.move(r["x"] + r["w"] * 0.05, r["y"])
+    phone.mouse.down()
+    phone.mouse.move(r["x"] + r["w"] * 0.70, r["y"], steps=6)
+    phone.wait_for_timeout(150)
+    # Waehrend des Ziehens bewegt sich nur die Anzeige, nicht die Wiedergabe.
+    assert phone.evaluate("qIndex") == 0
+    assert "Kometenmelodie" in phone.inner_text("#sbubble")
+
+    phone.mouse.up()
+    phone.wait_for_function("qIndex === 1")
+    assert phone.inner_text("#np-title") == "Kometenmelodie"
 
 
 def test_mobile_shares_the_session_with_the_desktop_page(phone, server):
