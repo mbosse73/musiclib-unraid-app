@@ -96,6 +96,9 @@ button,input{font:inherit;color:inherit}
 .caption .try{margin-top:18px;border-left:2px solid var(--bronze);padding:4px 0 4px 14px;
   font-size:12.5px;color:var(--ink-2)}
 .caption .try b{color:var(--ink);font-weight:500}
+.qswitch{margin-top:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.qswitch .lbl{font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+.qswitch .pill{font-size:10.5px;padding:8px 13px}
 .facts{margin-top:26px;border-top:1px solid var(--hair-strong);display:flex;flex-direction:column}
 .fact{display:grid;grid-template-columns:150px 1fr;gap:18px;padding:13px 0;
   border-bottom:1px solid var(--hair);font-size:12.5px}
@@ -208,10 +211,11 @@ button,input{font:inherit;color:inherit}
   border-top:1px solid var(--hair-strong);display:flex;align-items:center;padding:0 10px 14px 14px;
   cursor:pointer;-webkit-tap-highlight-color:transparent}
 /* bei Entwurf B trägt die Reiterleiste die Luft, die Mini-Leiste sitzt darüber */
-.phone[data-m="B"] .mini{bottom:78px;height:66px;padding-bottom:0}
+.phone[data-m="B"] .mini,.phone[data-m="D"] .mini{bottom:78px;height:66px;padding-bottom:0}
 /* „Jetzt läuft" ist bei B ein Reiter, kein Überzug: es muss UNTER der
    Reiterleiste liegen, sonst lässt sich der Reiter nicht mehr verlassen. */
-.phone[data-m="B"] .now{z-index:40}
+.phone[data-m="B"] .now,.phone[data-m="D"] .tnow{z-index:40}
+.phone[data-m="D"] .tnow{padding-bottom:78px}
 .phone[data-m="B"] .now .inner{padding-bottom:92px}
 .mini .msw{width:44px;height:44px;border-radius:2px;flex-shrink:0;position:relative;overflow:hidden}
 .mini .msw .ini{position:absolute;inset:0;display:grid;place-items:center;font-size:16px;
@@ -286,13 +290,73 @@ button,input{font:inherit;color:inherit}
 .upnext .v{flex:1;min-width:0;font-size:12.5px;color:var(--ink-2);white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis}
 
+/* ══════════ Der senkrechte Faden (Entwurf D) ══════════
+   Die Form aus der Vorlage: die Warteschlange IST die Achse. Am Handy passt
+   sie besser als am Schreibtisch — hoher Bildschirm, der Daumen zieht ohnehin
+   senkrecht. Preis: das Cover muss den Platz räumen. */
+.tnow{background:var(--card)}
+.tnow .thd{padding:8px 22px 6px;flex-shrink:0;display:flex;align-items:center;gap:12px}
+.tnow .thd .tsw{width:42px;height:42px;border-radius:2px;flex-shrink:0;position:relative;overflow:hidden}
+.tnow .thd .tsw .ini{position:absolute;inset:0;display:grid;place-items:center;font-size:16px;
+  font-style:italic;font-weight:300;color:rgba(255,255,255,.85)}
+.tnow .thd .m{flex:1;min-width:0}
+.tnow .thd .qn{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tnow .thd .qc{font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-top:2px}
+
+.tfield{position:relative;flex:1;min-height:0;margin:10px 0 0;user-select:none;overflow:hidden}
+.thit{position:absolute;left:0;top:0;bottom:0;width:100px;z-index:6;cursor:grab;touch-action:none}
+.thit.grabbing{cursor:grabbing}
+/* sichtbarer Griffbereich: ohne ihn rät man, wo man ziehen darf */
+.thit::before{content:'';position:absolute;left:26px;top:14px;bottom:14px;width:1px;
+  background:repeating-linear-gradient(180deg,var(--hair-strong) 0 2px,transparent 2px 7px)}
+.trail{position:absolute;left:62px;top:0;bottom:0;width:1px;background:var(--hair-strong)}
+.tdone{position:absolute;left:61px;top:0;width:3px;height:0;border-radius:2px;background:var(--bronze);z-index:2}
+.tband{position:absolute;left:44px;right:10px;background:rgba(138,101,52,.06);border-radius:2px;z-index:0;
+  transition:top .35s cubic-bezier(.3,.8,.3,1),height .35s cubic-bezier(.3,.8,.3,1)}
+.ttick{position:absolute;left:54px;width:16px;height:1px;background:var(--hair-strong);z-index:1}
+.ttick.past{background:var(--bronze-mid)}
+.tclock{position:absolute;left:0;width:46px;text-align:right;transform:translateY(-50%);font-size:10px;
+  color:var(--ink-2);font-variant-numeric:tabular-nums;z-index:7;letter-spacing:.03em;
+  background:var(--card);padding:3px 0}
+.tknob{position:absolute;left:62px;width:12px;height:12px;border-radius:50%;background:var(--card);
+  border:2px solid var(--bronze);transform:translate(-50%,-50%);z-index:8;pointer-events:none;
+  transition:width .15s,height .15s,box-shadow .15s}
+.tknob.big{width:18px;height:18px;box-shadow:0 0 0 7px var(--bronze-soft)}
+.tnode{position:absolute;left:88px;right:12px;z-index:4;cursor:pointer;
+  transition:top .28s cubic-bezier(.3,.8,.3,1)}
+.tnode .t{font-size:14px;color:var(--ink-2);line-height:1.25;
+  transition:color .28s,font-size .28s,font-weight .28s;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tnode .m{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-top:4px;
+  opacity:0;height:0;overflow:hidden;transition:opacity .28s}
+.tnode.past .t{color:var(--ink-3)}
+.tnode.now .t{font-size:21px;font-weight:500;color:var(--ink)}
+.tnode.now .m{opacity:1;height:auto}
+.tnode.target .t{color:var(--bronze)}
+.treadout{position:absolute;right:12px;transform:translateY(-50%);background:var(--bronze);color:#FFF8EC;
+  padding:4px 11px;border-radius:2px;font-size:10.5px;white-space:nowrap;z-index:9;opacity:0;
+  pointer-events:none;transition:opacity .14s;font-variant-numeric:tabular-nums;font-weight:500;
+  box-shadow:0 4px 14px var(--bronze-mid)}
+.treadout.on{opacity:1}
+.thint{position:absolute;left:88px;bottom:0;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);transition:opacity .5s;z-index:5}
+.thint.gone{opacity:0}
+.tfoot{flex-shrink:0;padding:10px 22px 14px;display:flex;align-items:center;justify-content:center;
+  gap:16px;border-top:1px solid var(--hair);position:relative}
+.tfoot .rest{position:absolute;right:22px;top:50%;transform:translateY(-50%);
+  font-size:10.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+/* Warnung, wenn die Warteschlange für den Faden zu lang wird */
+.toolong{margin:0 22px 10px;padding:9px 12px;border:1px solid var(--hair-strong);border-left:2px solid var(--warn);
+  border-radius:2px;font-size:11px;color:var(--ink-2);line-height:1.5;display:none}
+.toolong.on{display:block}
+
 /* ══════════ Album-Seite (geschoben) ══════════ */
 .sheet{z-index:100;transform:translateX(100%);transition:transform 360ms cubic-bezier(.3,.75,.2,1)}
 .sheet.on{transform:translateX(0)}
 /* Bei A und B bleibt die Mini-Leiste (und bei B die Reiterleiste) über der
    Album-Seite stehen — man kommt von dort direkt zurück zum Ton.
    Bei C wird das Album aus der Blende heraus geöffnet und muss sie überdecken. */
-.phone[data-m="A"] .sheet,.phone[data-m="B"] .sheet{z-index:50}
+.phone[data-m="A"] .sheet,.phone[data-m="B"] .sheet,.phone[data-m="D"] .sheet{z-index:50}
 .back{background:none;border:none;color:var(--bronze);cursor:pointer;display:flex;align-items:center;
   gap:6px;font-size:13px;padding:10px 22px 6px;align-self:flex-start}
 .albhead{padding:6px 22px 4px;display:flex;gap:16px;align-items:flex-end}
@@ -363,7 +427,7 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--hair-strong);
     <h1>Die Sammlung <em>in der Hand</em></h1>
     <p class="lede">Eine zweite Oberfläche neben <code>index.html</code>: gedacht fürs Handy und fürs iPad,
     ausgeliefert vom selben Server, gegen dieselben drei Endpunkte. Das Gerät in der Hand spielt selbst —
-    es fernbedient nichts, es <em>ist</em> der Spieler. Drei Entwürfe, alle bedienbar.</p>
+    es fernbedient nichts, es <em>ist</em> der Spieler. Vier Entwürfe, alle bedienbar.</p>
   </div>
 </div>
 
@@ -411,6 +475,7 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--hair-strong);
       <button class="pill on" data-m="A">A · Griffbereit</button>
       <button class="pill" data-m="B">B · Reiter</button>
       <button class="pill" data-m="C">C · Fernbedienung</button>
+      <button class="pill" data-m="D">D · Der Faden</button>
     </div>
     <span class="lbl" style="margin-left:auto">Die Telefone sind bedienbar</span>
   </div>
@@ -422,11 +487,19 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--hair-strong);
       <div class="phone on" data-m="A"></div>
       <div class="phone" data-m="B"></div>
       <div class="phone" data-m="C"></div>
+      <div class="phone" data-m="D"></div>
     </div>
     <div class="caption">
       <h3><span class="k" id="cap-k">Entwurf A</span><span id="cap-t">Griffbereit</span></h3>
       <p id="cap-p"></p>
       <div class="try" id="cap-try"></div>
+      <div class="qswitch" id="qswitch" hidden>
+        <span class="lbl">Warteschlange</span>
+        <div class="pills">
+          <button class="pill on" data-queue="album">Album · 4 Titel</button>
+          <button class="pill" data-queue="lang">Ganze Sammlung · 24 Titel</button>
+        </div>
+      </div>
       <div class="facts" id="cap-facts"></div>
     </div>
   </div>
@@ -442,9 +515,21 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--hair-strong);
     sie unschlagbar, aber sie stellt die Sammlung hinter eine Geste. Wenn später doch die echte Fernbedienung
     kommt — Handy steuert einen anderen Spieler —, ist C genau die richtige Form dafür. Für die erste Fassung
     zu speziell.</p>
-    <p>Alle drei benutzen dieselbe <strong>Faden-Leiste</strong> als Spulanzeige: ein Abschnitt je Titel über
+    <p><strong>D ist kein vierter Weg, sondern ein anderer dritter Reiter.</strong> Navigation und Sammlung
+    sind identisch mit B — nur „Jetzt läuft" sieht anders aus. Deshalb muss man sich zwischen B und D auch
+    nicht entscheiden: <strong>Cover-Bildschirm als Grundstellung, der Faden eine Berührung weiter.</strong>
+    Die Zeile „Als Nächstes" am unteren Rand von B ist genau der richtige Griff dafür — sie stellt die Frage,
+    die der Faden beantwortet.</p>
+    <p>Zwei Dinge, die der Faden am Handy nicht kann und die man einplanen muss. <strong>Erstens: das Cover
+    muss weichen.</strong> Achse, Titel und Bild passen nicht gleichzeitig auf 390 Punkte Breite — die Vorlage
+    hat das Cover deshalb ganz weggelassen, hier bleibt es als kleines Feld in der Kopfzeile.
+    <strong>Zweitens gibt es eine Obergrenze.</strong> Ab etwa zwölf Titeln stehen die Namen dichter, als der
+    Daumen sie trennen kann; der Ausweichabstand rückt sie dann von ihren Marken weg, und die Achse lügt.
+    Also: Faden für Album- und kurze Warteschlangen, schlichte Liste für „Alles abspielen". Im Entwurf lässt
+    sich das umschalten — der Bruch ist absichtlich sichtbar.</p>
+    <p>Alle vier benutzen dieselbe <strong>Faden-Leiste</strong> als Spulanzeige: ein Abschnitt je Titel über
     die ganze Warteschlange. Das ist die Empfehlung aus dem letzten Entwurf — am Handy kostet sie nichts, weil
-    der Balken dort ohnehin neu gebaut wird.</p>
+    der Balken dort ohnehin neu gebaut wird. Bei D wird aus derselben Idee die ganze Seite.</p>
 
     <ol class="steps">
       <li><span><b>Route.</b> <code>@app.get("/mobil")</code> liefert <code>mobile.html</code> — vier Zeilen in
@@ -463,6 +548,11 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--hair-strong);
       <li><span><b>Zweites Audio-Element.</b> <code>preload="none"</code> plus <code>src</code>-Wechsel heißt
       hörbare Lücke zwischen den Titeln. Den nächsten Titel vorladen, sobald der laufende die halbe Länge
       erreicht.</span></li>
+      <li><span><b>Faden nur bis zwölf Titel.</b> Darüber greift die Liste — eine Zeile
+      <code>queue.length &lt;= 12</code> entscheidet, welche Ansicht der Griff öffnet.</span></li>
+      <li><span><b>Ziehen gegen Scrollen.</b> Der Griffbereich am linken Rand braucht
+      <code>touch-action:none</code> und <code>setPointerCapture</code>, sonst gewinnt die Scrollgeste des
+      Browsers und der Faden ruckelt.</span></li>
       <li><span><b>Tests.</b> <code>test_frontend.py</code> bekommt eine Gruppe mit iPhone-Viewport
       (<code>has_touch=True</code>) gegen <code>/mobil</code> — Suche, Antippen eines Titels, Wechsel zum
       nächsten.</span></li>
@@ -505,6 +595,11 @@ const albOf = t => ALBUMS.find(a => a.id === t.al);
 const grad = a => `linear-gradient(150deg,${a.c[0]},${a.c[1]})`;
 const ini  = a => a.t.trim().charAt(0).toUpperCase();
 const fmt  = s => { s = Math.max(0, Math.round(s)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
+// ab einer Stunde ist mm:ss nicht mehr lesbar
+const fmtH = s => { s = Math.max(0, Math.round(s));
+  const h = Math.floor(s/3600);
+  return h ? `${h}:${String(Math.floor(s%3600/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`
+           : fmt(s); };
 const fmtLong = s => { s = Math.round(s); const h = Math.floor(s/3600), m = Math.round(s%3600/60);
   return h ? `${h} Std ${m} Min` : `${m} Min`; };
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
@@ -572,6 +667,17 @@ const CAPS = {
         ['Schwäche','Die Sammlung liegt hinter einer Geste'],
         ['Ebenen','1 (Spieler) + Blende'],
         ['Nähe zu index.html','am geringsten — eigenständigste der drei Formen']]},
+  D:{k:'Entwurf D', t:'Der Faden',
+     p:'Die Form aus der Vorlage, unverändert übernommen: die Warteschlange ist die Zeitachse. Am linken '+
+       'Rand der Griffbereich, daneben die Titel — der laufende groß, Gespieltes zurückgenommen. Ziehen spult '+
+       'über Titelgrenzen hinweg, nah am Anfang rastet der Griff ein. Am Handy passt das besser als am '+
+       'Schreibtisch: der Bildschirm ist hoch, und der Daumen zieht ohnehin senkrecht. Navigation wie in B — '+
+       'der Faden ersetzt nur den dritten Reiter, nichts sonst.',
+     try:'<b>Ausprobieren:</b> links am Faden ziehen. Dann auf „Ganze Sammlung" umschalten — dort bricht die Form.',
+     f:[['Stärke','Warteschlange, Position und Restzeit in einem Bild'],
+        ['Preis','<b>Das Cover muss weichen</b> — beides passt nicht auf einen Handybildschirm'],
+        ['Grenze','Ab etwa zwölf Titeln stehen die Namen dichter, als man sie treffen kann'],
+        ['Kombinierbar','ja — passt genauso in A oder C als Vollbild']]},
 };
 
 /* ═════════ eine Instanz je Entwurf ═════════ */
@@ -583,7 +689,7 @@ class Phone {
     this.queue = a.tr.map((_,i) => `${a.id}-${i}`);
     this.qname = a.t;
     this.qi = 1; this.pos = 74; this.playing = true;
-    this.tab = 'lib'; this.query = ''; this.libOpen = false; this.nowOpen = false;
+    this.tab = mode === 'D' ? 'now' : 'lib'; this.query = ''; this.libOpen = false; this.nowOpen = false;
     this.shuffle = false; this.dragging = false;
     this.build();
   }
@@ -667,6 +773,36 @@ class Phone {
       </div>
     </div>`;
   }
+  /* Entwurf D: die Warteschlange als senkrechte Achse, Form aus der Vorlage */
+  threadHTML(){
+    return `<div class="layer tnow" data-tnow>
+      <div class="thd">
+        <div class="tsw" data-msw><span class="ini"></span></div>
+        <div class="m"><div class="qn" data-qn></div><div class="qc" data-qc></div></div>
+      </div>
+      <div class="toolong" data-toolong>Warteschlange zu lang für den Faden — die Titel stehen dichter,
+        als man sie treffen kann. Ab etwa zwölf Titeln greift die Liste.</div>
+      <div class="tfield" data-tfield>
+        <div class="tband" data-tband></div>
+        <div class="trail"></div>
+        <div data-tticks></div>
+        <div class="tdone" data-tdone></div>
+        <div data-tnodes></div>
+        <div class="tclock" data-tclock></div>
+        <div class="tknob" data-tknob></div>
+        <div class="treadout" data-treadout></div>
+        <div class="thint" data-thint>Am Faden ziehen</div>
+        <div class="thit" data-thit></div>
+      </div>
+      <div class="tfoot">
+        <button class="tb small" data-prev>${I.prevS}</button>
+        <button class="pp" style="width:52px;height:52px" data-pp>${PLAY(22)}</button>
+        <button class="tb small" data-next>${I.nextS}</button>
+        <span class="rest" data-trest></span>
+      </div>
+    </div>`;
+  }
+
   albumHTML(){
     return `<div class="layer sheet" data-albsheet>
       <button class="back" data-back>${I.left} Zurück</button>
@@ -693,7 +829,9 @@ class Phone {
         ${this.albumHTML()}
         ${this.nowHTML({slide:true, closable:true})}`;
     }
-    else if (this.m === 'B'){
+    // B und D teilen sich die Reiterleiste — sie unterscheiden sich NUR im
+    // dritten Reiter. Genau das ist die Aussage von D.
+    else if (this.m === 'B' || this.m === 'D'){
       inner = `<div class="layer" data-tabview="lib">
           <div class="hd"><div class="big">Sammlung</div>
             <div class="sub">${ALBUMS.length} Alben · ${TRACK_TOTAL} Titel</div></div>
@@ -709,7 +847,8 @@ class Phone {
             <button class="clr" data-clr>${I.x}</button></div></div>
           <div class="body" data-results style="padding-bottom:150px"></div>
         </div>
-        <div data-tabview="now" style="display:none">${this.nowHTML({})}</div>
+        <div data-tabview="now" style="display:none">${
+          this.m === 'D' ? this.threadHTML() : this.nowHTML({})}</div>
         ${this.miniHTML()}
         <div class="tabbar" data-tabbar>
           <button data-tab="lib" class="on">${I.grid}Sammlung</button>
@@ -765,7 +904,7 @@ class Phone {
     if (mini) mini.onclick = e => {
       if (e.target.closest('button')) return;
       if (this.m === 'A') this.setNow(true);
-      if (this.m === 'B') this.setTab('now');
+      if (this.m === 'B' || this.m === 'D') this.setTab('now');
       if (this.m === 'C') this.setBlende(false);
     };
     const nclose = this.$('[data-nclose]');
@@ -782,10 +921,25 @@ class Phone {
     if (un) un.onclick = () => this.next();
     this.$('[data-back]').onclick = () => this.$('[data-albsheet]').classList.remove('on');
 
-    this.buildScrub();
+    this.buildScrub(); this.buildThread();
     this.renderLib();
     this.renderResults();
     this.sync();
+    if (this.m === 'D') this.setTab('now');
+  }
+
+  /* Nur für die Entwurfsseite: zeigt, wo der Faden trägt und wo nicht. */
+  setDemoQueue(kind){
+    if (kind === 'lang'){
+      this.queue = ALBUMS.flatMap(a => a.tr.map((_,i) => `${a.id}-${i}`));
+      this.qname = 'Ganze Sammlung';
+    } else {
+      const a = ALBUMS[3];
+      this.queue = a.tr.map((_,i) => `${a.id}-${i}`);
+      this.qname = a.t;
+    }
+    this.qi = 1; this.pos = 74; this.playing = true;
+    this.buildScrub(); this.buildThread(); this.sync();
   }
 
   setTab(name){
@@ -795,6 +949,8 @@ class Phone {
     const mini = this.$('[data-mini]');
     if (mini) mini.style.display = name === 'now' ? 'none' : '';
     if (name === 'search'){ const i = this.$('[data-q]'); if (i) i.focus(); }
+    // Der Faden kann erst vermessen werden, wenn seine Ebene sichtbar ist
+    if (name === 'now'){ this._lastQi = -1; this.layoutNodes(); }
   }
   setNow(v){ this.nowOpen = v; this.$('[data-now]').classList.toggle('up', v); }
   setBlende(v){ this.libOpen = v; this.$('[data-blende]').classList.toggle('on', v);
@@ -886,7 +1042,7 @@ class Phone {
           <span class="n num">${String(i+1).padStart(2,'0')}</span>
           <span class="t">${esc(t)}</span><span class="d num">${fmt(d)}</span></div>`;
       }).join('')}
-      <div style="height:${this.m==='B'?'150px':'104px'}"></div>`;
+      <div style="height:${(this.m==='B'||this.m==='D')?'150px':'104px'}"></div>`;
     P.querySelector('[data-all]').onclick = () => this.play(a, 0);
     P.querySelector('[data-shuf]').onclick = () => this.play(a, Math.floor(a.tr.length/2));
     P.querySelectorAll('[data-i]').forEach(n => n.onclick = () => this.play(a, +n.dataset.i));
@@ -901,9 +1057,9 @@ class Phone {
     this.pos = 0; this.playing = true;
     this.$('[data-albsheet]').classList.remove('on');
     if (this.m === 'C') this.setBlende(false);
-    if (this.m === 'B') this.setTab('now');
+    if (this.m === 'B' || this.m === 'D') this.setTab('now');
     if (this.m === 'A') this.setNow(true);
-    this.buildScrub();
+    this.buildScrub(); this.buildThread();
     this.renderLib(); this.renderResults();
     this.sync();
   }
@@ -913,16 +1069,19 @@ class Phone {
 
   /* ---------- Faden-Leiste ---------- */
   buildScrub(){
+    const O = this.offs, T = this.total;
+
+    // Haarlinie an der Oberkante der Mini-Leiste — gibt es in jedem Entwurf
+    const th = this.$('[data-thread]');
+    if (th) th.innerHTML = this.queue.map(id =>
+      `<i style="flex:${TRACKS[id].d}"><b></b></i>`).join('');
+
     const bar = this.$('[data-fadenbar]');
     if (!bar) return;
-    const O = this.offs, T = this.total;
     bar.querySelector('[data-segs]').innerHTML = this.queue.map((id,i) => {
       const l = O[i]/T*100, w = TRACKS[id].d/T*100;
       return `<div class="seg" data-seg2="${i}" style="left:calc(${l}% + 1px);width:calc(${w}% - 2px)"><i></i></div>`;
     }).join('');
-    const th = this.$('[data-thread]');
-    if (th) th.innerHTML = this.queue.map(id =>
-      `<i style="flex:${TRACKS[id].d}"><b></b></i>`).join('');
 
     if (bar.dataset.bound) return;
     bar.dataset.bound = '1';
@@ -941,6 +1100,74 @@ class Phone {
     };
     bar.addEventListener('pointerup', end);
     bar.addEventListener('pointercancel', end);
+  }
+
+  /* ---------- senkrechter Faden (D) ---------- */
+  buildThread(){
+    const f = this.$('[data-tfield]');
+    if (!f) return;
+    const O = this.offs, T = this.total, pc = v => v/T*100;
+    f.querySelector('[data-tticks]').innerHTML = this.queue.map((id,i) =>
+      `<div class="ttick" data-ttick="${i}" style="top:${pc(O[i])}%"></div>`).join('');
+    f.querySelector('[data-tnodes]').innerHTML = this.queue.map((id,i) => {
+      const t = TRACKS[id];
+      return `<div class="tnode" data-tnode="${i}" style="top:calc(${pc(O[i])}% + 2px)">
+        <div class="t">${esc(t.t)}</div>
+        <div class="m">${esc(albOf(t).ar)} · ${fmt(t.d)}</div></div>`;
+    }).join('');
+    f.querySelectorAll('[data-tnode]').forEach(n => n.onclick = () => {
+      this.qi = +n.dataset.tnode; this.pos = 0; this.playing = true; this.sync();
+    });
+    this._lastQi = -1;
+    this.layoutNodes();
+
+    const tl = this.$('[data-toolong]');
+    if (tl) tl.classList.toggle('on', this.queue.length > 12);
+
+    const hit = f.querySelector('[data-thit]');
+    if (hit.dataset.bound) return;
+    hit.dataset.bound = '1';
+    const knob = f.querySelector('[data-tknob]'), rd = f.querySelector('[data-treadout]');
+    const at = e => { const r = f.getBoundingClientRect();
+      return clamp((e.clientY-r.top)/r.height, 0, 1) * this.total; };
+    hit.addEventListener('pointerdown', e => {
+      this.dragging = true;
+      hit.classList.add('grabbing'); knob.classList.add('big'); rd.classList.add('on');
+      hit.setPointerCapture(e.pointerId);
+      const h = f.querySelector('[data-thint]'); if (h) h.classList.add('gone');
+      this.setGlobal(at(e));
+    });
+    hit.addEventListener('pointermove', e => { if (this.dragging) this.setGlobal(at(e)); });
+    const end2 = () => {
+      if (!this.dragging) return;
+      const g = this.gpos, tol = this.total*0.012;
+      const near = this.offs.find(o => Math.abs(o-g) < tol);
+      if (near !== undefined) this.setGlobal(near);
+      this.dragging = false;
+      hit.classList.remove('grabbing'); knob.classList.remove('big'); rd.classList.remove('on');
+      this.sync();
+    };
+    hit.addEventListener('pointerup', end2);
+    hit.addEventListener('pointercancel', end2);
+  }
+
+  /* Kurze Titel lägen sonst übereinander. Der laufende steht größer und trägt
+     eine zweite Zeile — direkt darunter braucht es mehr Luft. Achtung: sobald
+     geschoben wird, sitzt die Beschriftung nicht mehr exakt auf ihrer Marke. */
+  layoutNodes(){
+    const f = this.$('[data-tfield]');
+    if (!f) return;
+    const h = f.clientHeight;
+    if (!h) return;
+    const O = this.offs, T = this.total;
+    let last = -Infinity;
+    f.querySelectorAll('[data-tnode]').forEach((n,i) => {
+      const min = (i-1 === this.qi) ? 58 : 26;
+      let top = O[i]/T*h + 2;
+      if (top - last < min) top = last + min;
+      last = top;
+      n.style.top = top + 'px';
+    });
   }
 
   /* ---------- Anzeige ---------- */
@@ -982,6 +1209,33 @@ class Phone {
         i < this.qi ? '100%' : i > this.qi ? '0%' : (this.pos/t.d*100)+'%';
     });
 
+    // senkrechter Faden (D)
+    const f = this.$('[data-tfield]');
+    if (f){
+      set('[data-qc]', e => e.textContent = `${this.queue.length} Titel · noch ${fmtLong(T - this.gpos)}`);
+      set('[data-trest]', e => e.textContent = `−${fmtH(T - this.gpos)}`);
+      f.querySelector('[data-tdone]').style.height = p + '%';
+      f.querySelector('[data-tknob]').style.top = p + '%';
+      const band = f.querySelector('[data-tband]');
+      band.style.top = (this.offs[this.qi]/T*100) + '%';
+      band.style.height = (t.d/T*100) + '%';
+      const clock = f.querySelector('[data-tclock]');
+      clock.style.top = p + '%'; clock.textContent = fmt(this.gpos);
+      const rd = f.querySelector('[data-treadout]');
+      rd.style.top = p + '%';
+      rd.textContent = `${this.qi+1} von ${this.queue.length} · ${fmt(this.pos)}`;
+      f.querySelectorAll('[data-tnode]').forEach(n => {
+        const i = +n.dataset.tnode;
+        n.classList.toggle('now', i === this.qi);
+        n.classList.toggle('past', i < this.qi);
+        n.classList.toggle('target', this.dragging && i === this.qi);
+      });
+      f.querySelectorAll('[data-ttick]').forEach(n =>
+        n.classList.toggle('past', +n.dataset.ttick <= this.qi));
+      // nur beim Titelwechsel neu setzen, nicht in jedem Bild
+      if (this._lastQi !== this.qi){ this._lastQi = this.qi; this.layoutNodes(); }
+    }
+
     // laufender Titel in Listen und im offenen Album
     this.$$('.row[data-trk]').forEach(n => n.classList.toggle('playing', n.dataset.trk === t.id));
     this.$$('.trk[data-i]').forEach(n =>
@@ -1009,6 +1263,7 @@ function setCaption(m){
   document.getElementById('cap-t').textContent = c.t;
   document.getElementById('cap-p').textContent = c.p;
   document.getElementById('cap-try').innerHTML = c.try;
+  document.getElementById('qswitch').hidden = m !== 'D';
   document.getElementById('cap-facts').innerHTML = c.f.map(([k,v]) =>
     `<div class="fact"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('');
 }
@@ -1018,8 +1273,17 @@ document.getElementById('mode-pills').addEventListener('click', e => {
   document.querySelectorAll('#mode-pills .pill').forEach(p => p.classList.toggle('on', p === b));
   document.querySelectorAll('.phone').forEach(f => f.classList.toggle('on', f.dataset.m === m));
   setCaption(m);
+  // erst jetzt hat die Ebene eine Höhe, die sich vermessen lässt
+  const ph = phones[m];
+  if (ph){ ph._lastQi = -1; ph.layoutNodes(); }
 });
 setCaption('A');
+
+document.getElementById('qswitch').addEventListener('click', e => {
+  const b = e.target.closest('[data-queue]'); if (!b) return;
+  document.querySelectorAll('#qswitch .pill').forEach(p => p.classList.toggle('on', p === b));
+  phones.D.setDemoQueue(b.dataset.queue);
+});
 
 let last = 0;
 (function loop(ts){
