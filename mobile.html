@@ -32,9 +32,12 @@
   --warn:#9C4A2E;
   --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
   --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
-  --tabs:60px;
+  --tabs:60px;       /* Hoehe der Reiterleiste */
+  --unten:60px;      /* Platz, den die Blaetter unten freilassen */
   --safe:env(safe-area-inset-bottom,0px);
 }
+/* „Bei Bedarf": die Leiste liegt unter dem Rand, stehen bleibt nur der Griff. */
+[data-leiste="bedarf"]{--unten:18px}
 /* ── Farbakzente ──────────────────────────────────────────────────────
    Zwei Toene je Akzent: --accent traegt Flaechen und Linien, --accent-ink
    traegt Schrift. Beim Gruen liegt der Flaechenton bewusst heller, als es
@@ -67,7 +70,7 @@ button{cursor:pointer}
 
 /* ── Ebenen ── */
 .view{
-  position:fixed;inset:0 0 calc(var(--tabs) + var(--safe)) 0;
+  position:fixed;inset:0 0 calc(var(--unten) + var(--safe)) 0;
   display:none;flex-direction:column;background:var(--paper);
 }
 .view.on{display:flex}
@@ -85,15 +88,28 @@ button{cursor:pointer}
   justify-content:center;color:var(--ink-3);border-radius:50%}
 .icon-btn:active{background:var(--tint)}
 
-/* ── Sammlung ── */
+/* ── Sammlung ──
+   min-width:0 an der Kachel ist nicht schmueckend: Rasterelemente sind sonst
+   mindestens so breit wie ihr laengster unumbrechbarer Inhalt, und die
+   Interpretenzeile laeuft mit white-space:nowrap. Ein langer Name schiebt die
+   Spalte dann ueber den Bildschirmrand hinaus und die Sammlung scrollt
+   waagerecht. Mit 0 greift stattdessen das Auslassungszeichen. */
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:26px 16px;padding:12px 22px 30px}
+/* align-self:start, weil Browser den Inhalt eines <button> senkrecht mittig
+   setzen: in einer Reihe mit zweizeiligem Titel saenke die Nachbarkachel sonst
+   um eine halbe Zeile ab. */
+.card{min-width:0;align-self:start}
+@media (min-width:600px){                    /* iPad: nicht zwei Riesenkacheln */
+  .grid{grid-template-columns:repeat(auto-fill,minmax(158px,1fr))}
+}
 .card .cov{width:100%;aspect-ratio:1;border-radius:1px;background:var(--tint);position:relative;
   overflow:hidden;box-shadow:0 6px 18px rgba(36,30,24,.14)}
 .card .cov img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .card .cov .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);
   font-style:italic;font-size:38px;color:var(--ink-4)}
 .card .t{margin-top:10px;font-family:var(--serif);font-size:14.5px;line-height:1.25;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  overflow-wrap:anywhere}
 .card .a{margin-top:3px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card.now .t{color:var(--accent-ink)}
@@ -234,16 +250,40 @@ button{cursor:pointer}
 .nextrow .rest .num{font-family:var(--serif);font-size:15px;color:var(--ink-2)}
 
 /* ── Reiterleiste ── */
+/* z-index ueber dem Albumblatt (70): dauerhaft liegt die Leiste darunter und
+   beruehrt es nie, hervorgeholt aber ueberdeckt sie dessen unteren Rand — und
+   muss dann davor stehen, nicht dahinter. Unter den Einstellungen (80) bleibt
+   sie, die decken bewusst alles zu. */
 .tabs{position:fixed;left:0;right:0;bottom:0;height:calc(var(--tabs) + var(--safe));
-  padding-bottom:var(--safe);z-index:60;display:flex;
+  padding-bottom:var(--safe);z-index:75;display:flex;
   background:rgba(251,249,245,.94);border-top:1px solid var(--line-2);
-  backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%)}
+  backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);
+  transition:transform .3s cubic-bezier(.3,.75,.2,1)}
 .tabs button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
   color:var(--ink-4);font-size:9px;letter-spacing:.14em;text-transform:uppercase}
 .tabs button.on{color:var(--accent-ink)}
 
+/* Weggeschoben statt nur unsichtbar: visibility nimmt sie zugleich aus der
+   Tabulatorreihenfolge, sonst blieben drei unerreichbare Knoepfe im Fokusweg. */
+[data-leiste="bedarf"] .tabs{transform:translateY(100%);visibility:hidden;
+  transition:transform .3s cubic-bezier(.3,.75,.2,1),visibility 0s .3s}
+[data-leiste="bedarf"] .tabs.zeigen{transform:none;visibility:visible;
+  transition:transform .3s cubic-bezier(.3,.75,.2,1)}
+
+/* Der Griff: eine Haarlinie im Sockel — sichtbar, damit die Leiste nicht
+   verschollen ist. Die Trefferflaeche reicht ueber die Marke hinaus nach oben. */
+.grip{position:fixed;left:50%;bottom:0;z-index:76;width:104px;
+  height:calc(30px + var(--safe));padding-bottom:calc(var(--safe) + 7px);
+  transform:translateX(-50%);display:none;align-items:flex-end;justify-content:center;
+  transition:opacity .25s}
+[data-leiste="bedarf"] .grip{display:flex}
+.grip i{display:block;width:34px;height:2px;border-radius:2px;
+  background:var(--ink-4);transition:width .25s,background .25s}
+.grip:active i{width:52px;background:var(--accent)}
+.leiste-offen .grip{opacity:0;pointer-events:none}
+
 /* ── Geschobene Seiten (Album, Einstellungen) ── */
-.sheet{position:fixed;inset:0 0 calc(var(--tabs) + var(--safe)) 0;background:var(--paper);z-index:70;
+.sheet{position:fixed;inset:0 0 calc(var(--unten) + var(--safe)) 0;background:var(--paper);z-index:70;
   transform:translateX(100%);transition:transform .34s cubic-bezier(.3,.75,.2,1);
   display:flex;flex-direction:column;visibility:hidden}
 .sheet.on{transform:translateX(0);visibility:visible}
@@ -267,7 +307,8 @@ button{cursor:pointer}
   border-bottom:1px solid var(--line);width:100%;text-align:left}
 .trk:active{background:var(--tint)}
 .trk .n{font-size:11px;color:var(--ink-4);font-variant-numeric:tabular-nums}
-.trk .t{font-family:var(--serif);font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trk .t{min-width:0;font-family:var(--serif);font-size:15px;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
 .trk .d{font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
 .trk.now .t,.trk.now .n,.trk.now .d{color:var(--accent-ink)}
 
@@ -286,6 +327,14 @@ button{cursor:pointer}
 .accents button[aria-pressed="true"] .dot::after{content:'';position:absolute;inset:-5px;
   border:1px solid var(--ink-3);border-radius:50%}
 .accents .lbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+/* Zweispaltige Wahl — die Form fuer alles, was nur zwei oder drei Zustaende hat */
+.choice{display:flex;gap:12px;margin-top:16px}
+.choice button{flex:1;min-width:0;padding:13px 13px 12px;text-align:left;
+  border:1px solid var(--line);border-radius:3px;transition:border-color .2s,background .2s}
+.choice button[aria-pressed="true"]{border-color:var(--ink-3);background:var(--tint)}
+.choice .lbl{display:block;font-family:var(--serif);font-size:15px}
+.choice button[aria-pressed="true"] .lbl{color:var(--accent-ink)}
+.choice .cap{display:block;margin-top:5px;font-size:11px;line-height:1.5;color:var(--ink-4)}
 .soon{padding:16px 22px 40px;font-size:12px;color:var(--ink-4);line-height:1.6}
 
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important}}
@@ -413,6 +462,7 @@ button{cursor:pointer}
       <circle cx="7" cy="18" r="3"/><circle cx="18" cy="15.5" r="2.6"/><path d="M10 18V6l10.6-2.4v12"/></svg>
     Jetzt läuft</button>
 </nav>
+<button class="grip" id="grip" aria-label="Leiste einblenden"><i></i></button>
 
 <!-- ══════════ Album ══════════ -->
 <section class="sheet" id="album-sheet" aria-hidden="true">
@@ -437,6 +487,12 @@ button{cursor:pointer}
       <h2>Farbakzent</h2>
       <div class="hint">Färbt Abspielknopf, Achse und Hervorhebungen.</div>
       <div class="accents" id="accents"></div>
+    </div>
+
+    <div class="group">
+      <h2>Untere Leiste</h2>
+      <div class="hint">Sammlung, Suche und „Jetzt läuft“.</div>
+      <div class="choice" id="leiste"></div>
     </div>
 
     <p class="soon">Weitere Einstellungen kommen hierher — die Gruppen darüber sind so gebaut,
@@ -482,15 +538,33 @@ const AKZENTE = [
   { id: 'petrol',  name: 'Petrol',  farbe: '#1F6470' },
   { id: 'gruen',   name: 'Grün',    farbe: '#4F8A46' },
 ];
-const EINSTELLUNGEN_STANDARD = { akzent: 'messing' };
+const LEISTEN = [
+  { id: 'dauerhaft', name: 'Dauerhaft', cap: 'Steht immer unten.' },
+  { id: 'bedarf',    name: 'Bei Bedarf', cap: 'Liegt unter dem Rand. Der Griff holt sie hervor.' },
+];
+const EINSTELLUNGEN_STANDARD = { akzent: 'messing', leiste: 'dauerhaft' };
 let settings = { ...EINSTELLUNGEN_STANDARD, ...(restore('einstellungen', null) || {}) };
 
+function gewaehlt(liste, wert, ersatz) {
+  return liste.some(x => x.id === wert) ? wert : ersatz;
+}
+
 function applySettings() {
-  const akzent = AKZENTE.some(a => a.id === settings.akzent) ? settings.akzent : 'messing';
+  const akzent = gewaehlt(AKZENTE, settings.akzent, 'messing');
+  const leiste = gewaehlt(LEISTEN, settings.leiste, 'dauerhaft');
   document.documentElement.dataset.akzent = akzent;
+  document.documentElement.dataset.leiste = leiste;
   document.querySelectorAll('#accents button').forEach(b => {
     b.setAttribute('aria-pressed', String(b.dataset.akzent === akzent));
   });
+  document.querySelectorAll('#leiste button').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.wert === leiste));
+  });
+  // „Dauerhaft" laesst keinen eingeblendeten Zustand uebrig, den man
+  // spaeter nicht mehr los wird.
+  zeigeLeiste(leiste === 'dauerhaft');
+  // Die Hoehe der Buehne aendert sich mit dem Sockel — die Achse muss neu legen.
+  if (view === 'now') requestAnimationFrame(layoutQueueList);
 }
 function setSetting(key, value) {
   settings = { ...settings, [key]: value };
@@ -507,6 +581,35 @@ function buildSettings() {
     const b = e.target.closest('[data-akzent]');
     if (b) setSetting('akzent', b.dataset.akzent);
   });
+
+  // data-wert, nicht data-leiste: [data-leiste="bedarf"] traegt oben im
+  // Stilblatt die Sockelhoehe — der Knopf soll sie nicht mitnehmen.
+  $('leiste').innerHTML = LEISTEN.map(l => `
+    <button data-wert="${l.id}" aria-pressed="false">
+      <span class="lbl">${l.name}</span>
+      <span class="cap">${l.cap}</span>
+    </button>`).join('');
+  $('leiste').addEventListener('click', e => {
+    const b = e.target.closest('[data-wert]');
+    if (b) setSetting('leiste', b.dataset.wert);
+  });
+}
+
+// ---------- Die Leiste bei Bedarf ----------
+// Eingeblendet bleibt sie nur, solange sie gebraucht wird: nach der Wahl eines
+// Reiters, nach einer Beruehrung daneben und nach ein paar Sekunden Ruhe geht
+// sie zurueck. Der Griff bleibt sichtbar — eine Geste, die man nicht sieht,
+// ist keine.
+let leisteTimer;
+function leisteAufBedarf() {
+  return gewaehlt(LEISTEN, settings.leiste, 'dauerhaft') === 'bedarf';
+}
+function zeigeLeiste(v) {
+  clearTimeout(leisteTimer);
+  const an = v || !leisteAufBedarf();
+  $('tabs').classList.toggle('zeigen', an);
+  document.documentElement.classList.toggle('leiste-offen', an && leisteAufBedarf());
+  if (an && leisteAufBedarf()) leisteTimer = setTimeout(() => zeigeLeiste(false), 4000);
 }
 
 // ---------- Helfer ----------
@@ -991,8 +1094,17 @@ function setView(name) {
 }
 $('tabs').addEventListener('click', e => {
   const b = e.target.closest('[data-view]');
-  if (b) setView(b.dataset.view);
+  if (!b) return;
+  setView(b.dataset.view);
+  // Kurz stehen lassen, damit die getroffene Wahl noch zu sehen ist.
+  if (leisteAufBedarf()) setTimeout(() => zeigeLeiste(false), 300);
 });
+$('grip').addEventListener('pointerdown', () => zeigeLeiste(true));
+document.addEventListener('pointerdown', e => {
+  if (!leisteAufBedarf()) return;
+  if (e.target.closest('#tabs, #grip')) return;
+  zeigeLeiste(false);
+}, true);
 
 $('play-btn').addEventListener('click', togglePlay);
 $('next-btn').addEventListener('click', playNext);
