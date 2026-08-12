@@ -292,6 +292,15 @@ def test_index_and_library_are_served(client):
     assert lib["album_count"] == 1
 
 
+def test_mobile_page_is_served(client):
+    c, app, data = client
+    r = c.get("/mobil")
+    assert r.status_code == 200
+    assert "text/html" in r.headers["content-type"]
+    # Ohne diese Zeile startet "Zum Home-Bildschirm" mit Safari-Leiste.
+    assert 'name="apple-mobile-web-app-capable"' in r.text
+
+
 def test_stream_supports_range_requests(client):
     c, app, data = client
     track_id = next(iter(json.loads((data / "tracks.json").read_text())))

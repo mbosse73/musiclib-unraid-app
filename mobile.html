@@ -1,0 +1,1087 @@
+<!doctype html>
+<html lang="de" data-akzent="messing">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#FBF9F5">
+<!-- Ohne diese drei Zeilen startet „Zum Home-Bildschirm" mit Safari-Leiste. -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Musiklib">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAACsUlEQVR42u3dwW3DMBBEURalltJM+s0h8MUN5GAgcTSz+4BfAEG+OLYoUefx/SX92DEFgkNwCA7BITgEh+AQHIJDcEhwCA7BITgEh+AQHIJDcAgOCQ7BITgEh+AQHIJDcAgOwSHBITgEx+t9flwvBgcKFy6LcPwtiIVQDhaIrMDx/yZmKzlYIDIWRxqLSUQOFoiMwtHCop3IIYOPCTh6WZQSOWTw0Y1jkowiH4cMPipxTGXRQuSQwUcZjtuXh49QHAl/uz4/EnGEfLD7/wIHHD04cr4S+nKahSPq94IfL0E40n5M+nGbgiPwSoOLH3DAkY0j8xqlK6f344i9gO3KOhxwpOJI3vqyLQcHHJE4wjfN7enDAUcejvzbbdwQBAccYTgqbtRzNyEccMABRwWOlvu/3acOBxwxOIqeHPGQCxxwwAEHHHC04uh6WtWztXDAAQcccMABBxxwwLEER93ZOg4DggMOOOCAAw444IADDjjggAMOOOCAAw444IADDjjggAMOOGzZ27KHAw444IADDjjggAMOODwO6XFIOOCAAw444HDsk2Of4IBjOg5HTTpqEg444IDDwfgLZcABh5fxlOPwpiY44PACwBIZcMCRiuPhpcPBMuCAIxhHyDK0jGodjoSVqBgSHHDAEbYY+eNZjePe9QgfDBx3LknySOC4eVVihwEHHHAE+8gcAxwRPgIHAEfxYUDjZUTjWOIjef6jccwmkj/zBThG+qiY9g4cw3y0zHkNjjE+iia8CUc7kbqp7sNR6qNxnitxdBHpneFiHE52g2PI85VwIHJNms9ROOypwpFFZPAETsbxPihLJm0Ljt9wWTtFe3EIDsEhOASH4BAcgkNwCA4JDsEhOASH4BAcgkNwCA7BITgkOASH4BAcgkNwCA7BITgEhwSH4BAcekdPDA1vEv9Njf8AAAAASUVORK5CYII=">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23FBF9F5'/%3E%3Ccircle cx='16' cy='16' r='10' fill='%238A6534'/%3E%3Crect x='15' y='9' width='2' height='14' fill='%23FBF9F5'/%3E%3C/svg%3E">
+<title>Musiklib</title>
+<style>
+/* ══════════════════════════════════════════════════════════════════════
+   Musiklib — Handy-Oberflaeche.
+
+   Bewusst kleiner geschnitten als index.html: suchen und hoeren. Scannen,
+   uebersprungene Dateien und die Sortierwahl bleiben am Schreibtisch.
+   Papier statt Nacht, weil man das Geraet im Hellen haelt; aus dem Gold
+   wird ein Messing, weil helles Gold auf Weiss nicht traegt.
+   ══════════════════════════════════════════════════════════════════════ */
+:root{
+  --paper:#FBF9F5;
+  --tint:#F1EDE4;
+  --ink:#241E18;
+  --ink-2:#5F574B;
+  --ink-3:#766D5F;   /* lesbare Beischrift */
+  --ink-4:#A0968A;   /* schmueckend: Haarlinien, Marken, Ruhezustaende */
+  --line:rgba(36,30,24,.10);
+  --line-2:rgba(36,30,24,.22);
+  --warn:#9C4A2E;
+  --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  --tabs:60px;
+  --safe:env(safe-area-inset-bottom,0px);
+}
+/* ── Farbakzente ──────────────────────────────────────────────────────
+   Zwei Toene je Akzent: --accent traegt Flaechen und Linien, --accent-ink
+   traegt Schrift. Beim Gruen liegt der Flaechenton bewusst heller, als es
+   fuer Text zulaessig waere — deshalb die zweite, dunklere Stufe. */
+:root,[data-akzent="messing"]{
+  --accent:#8A6534; --accent-ink:#7A5A2E;
+  --accent-soft:rgba(138,101,52,.09); --accent-mid:rgba(138,101,52,.42);
+}
+[data-akzent="petrol"]{
+  --accent:#1F6470; --accent-ink:#1B5A66;
+  --accent-soft:rgba(31,100,112,.10); --accent-mid:rgba(31,100,112,.42);
+}
+[data-akzent="gruen"]{
+  --accent:#4F8A46; --accent-ink:#3D6B36;
+  --accent-soft:rgba(79,138,70,.10); --accent-mid:rgba(79,138,70,.42);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--paper);color:var(--ink)}
+body{
+  font-family:var(--sans);font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+  overscroll-behavior:none;
+}
+button,input{font:inherit;color:inherit;background:none;border:none}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.caps{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+.num{font-variant-numeric:tabular-nums}
+
+/* ── Ebenen ── */
+.view{
+  position:fixed;inset:0 0 calc(var(--tabs) + var(--safe)) 0;
+  display:none;flex-direction:column;background:var(--paper);
+}
+.view.on{display:flex}
+.body{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.body::-webkit-scrollbar{display:none}
+.body{scrollbar-width:none}
+
+.hd{padding:calc(env(safe-area-inset-top,0px) + 14px) 22px 10px;flex-shrink:0}
+.hd .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-family:var(--serif);font-size:17px}
+.brand em{font-style:italic;color:var(--accent-ink)}
+.hd .big{font-family:var(--serif);font-weight:400;font-size:28px;letter-spacing:-.01em}
+.hd .sub{margin-top:4px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+.icon-btn{width:44px;height:44px;margin-right:-10px;display:flex;align-items:center;
+  justify-content:center;color:var(--ink-3);border-radius:50%}
+.icon-btn:active{background:var(--tint)}
+
+/* ── Sammlung ── */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:26px 16px;padding:12px 22px 30px}
+.card .cov{width:100%;aspect-ratio:1;border-radius:1px;background:var(--tint);position:relative;
+  overflow:hidden;box-shadow:0 6px 18px rgba(36,30,24,.14)}
+.card .cov img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.card .cov .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);
+  font-style:italic;font-size:38px;color:var(--ink-4)}
+.card .t{margin-top:10px;font-family:var(--serif);font-size:14.5px;line-height:1.25;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .a{margin-top:3px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card.now .t{color:var(--accent-ink)}
+
+/* ── Suche ── */
+.searchwrap{padding:2px 22px 12px;flex-shrink:0}
+.search{display:flex;align-items:center;gap:10px;background:var(--tint);border:1px solid transparent;
+  border-radius:3px;padding:12px 13px;transition:border-color .2s,background .2s}
+.search:focus-within{border-color:var(--accent);background:var(--paper)}
+.search input{flex:1;min-width:0;outline:none;font-size:16px}   /* 16px: sonst zoomt iOS beim Fokus */
+.search input::placeholder{color:var(--ink-4)}
+.search .clr{color:var(--ink-3);display:none;padding:2px}
+.search.has .clr{display:block}
+.search svg{color:var(--ink-3);flex-shrink:0}
+
+.sec{padding:18px 22px 6px;display:flex;align-items:baseline;justify-content:space-between}
+.row{display:flex;align-items:center;gap:13px;padding:9px 22px;transition:background .14s;width:100%;
+  text-align:left}
+.row:active{background:var(--tint)}
+.row .sw{width:46px;height:46px;border-radius:1px;flex-shrink:0;position:relative;overflow:hidden;
+  background:var(--tint)}
+.row .sw img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.row .sw .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);
+  font-style:italic;font-size:17px;color:var(--ink-4)}
+.row .m{flex:1;min-width:0}
+.row .t,.row .s{display:block}
+.row .t{font-family:var(--serif);font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .s{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .d{font-size:11px;color:var(--ink-3);flex-shrink:0}
+.row .chev{color:var(--ink-4);flex-shrink:0;display:flex}
+.row.now .t{color:var(--accent-ink)}
+.empty{padding:64px 34px;text-align:center;font-family:var(--serif);font-size:18px;color:var(--ink-3)}
+.empty small{display:block;margin-top:8px;font-family:var(--sans);font-size:12.5px;color:var(--ink-4)}
+
+/* ══════════════════ Jetzt läuft — „Der Rand" ══════════════════ */
+#view-now{padding:0}
+.lid{display:flex;align-items:center;justify-content:space-between;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 30px 0;flex-shrink:0}
+.qbtn{display:flex;align-items:center;gap:9px;padding:8px 0 8px 12px;color:var(--ink-3);
+  transition:color .25s}
+.qbtn:active,.qbtn[aria-expanded="true"]{color:var(--accent-ink)}
+.qbtn .n{font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-variant-numeric:tabular-nums}
+.qbtn .gl{display:flex;flex-direction:column;gap:3px;width:13px}
+.qbtn .gl i{display:block;height:1px;background:currentColor;transition:width .3s,transform .3s,opacity .3s}
+.qbtn .gl i:nth-child(1){width:13px}
+.qbtn .gl i:nth-child(2){width:9px}
+.qbtn .gl i:nth-child(3){width:13px}
+.qbtn[aria-expanded="true"] .gl i:nth-child(1){transform:translateY(4px) rotate(9deg)}
+.qbtn[aria-expanded="true"] .gl i:nth-child(2){opacity:0}
+.qbtn[aria-expanded="true"] .gl i:nth-child(3){transform:translateY(-4px) rotate(-9deg)}
+
+.stage{flex:1;min-height:0;position:relative;padding:22px 78px 0 30px}
+.artwrap{position:relative}
+.art{width:100%;aspect-ratio:1;border-radius:1px;background:var(--tint);position:relative;overflow:hidden;
+  box-shadow:0 20px 44px rgba(36,30,24,.24);
+  transition:width .55s cubic-bezier(.3,.8,.25,1),box-shadow .5s}
+.art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.art .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);
+  font-style:italic;font-size:72px;color:var(--ink-4)}
+/* Haarrahmen mit Abstand — wie in einer Vitrine */
+.frame{position:absolute;inset:-11px;border:1px solid var(--line-2);border-radius:1px;
+  transition:opacity .4s ease;pointer-events:none}
+.meta{margin-top:34px;transition:opacity .4s ease,transform .5s cubic-bezier(.3,.8,.25,1)}
+.meta h2{font-family:var(--serif);font-weight:400;font-size:26px;line-height:1.2;letter-spacing:-.01em;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.meta .by{margin-top:11px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta .alb{margin-top:5px;font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-3);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta .err{margin-top:11px;font-size:12px;color:var(--warn)}
+
+/* Der Rand: die Achse steht dort, wo sonst nur Papier ist */
+.rail{position:absolute;top:22px;bottom:14px;right:0;width:78px;z-index:5;touch-action:none}
+.rline{position:absolute;top:0;bottom:0;right:30px;width:1px;background:var(--line-2)}
+.rdone{position:absolute;top:0;right:29px;width:3px;height:0;background:var(--accent);border-radius:2px}
+.rtick{position:absolute;right:24px;width:13px;height:1px;background:var(--line-2)}
+.rtick.past{background:var(--accent-mid)}
+.rband{position:absolute;right:28px;width:5px;background:var(--accent-soft);border-radius:3px;
+  transition:top .4s cubic-bezier(.3,.8,.25,1),height .4s cubic-bezier(.3,.8,.25,1)}
+.rknob{position:absolute;right:30px;width:11px;height:11px;border-radius:50%;background:var(--paper);
+  border:1.5px solid var(--accent);transform:translate(50%,-50%);pointer-events:none;
+  transition:width .18s,height .18s,box-shadow .18s}
+.rail.grabbing .rknob{width:17px;height:17px;box-shadow:0 0 0 7px var(--accent-soft)}
+.rnum{position:absolute;right:44px;width:32px;text-align:right;transform:translateY(-50%);
+  font-size:9px;letter-spacing:.06em;color:var(--ink-3);font-variant-numeric:tabular-nums;white-space:nowrap}
+.rhint{position:absolute;right:52px;bottom:0;font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-4);writing-mode:vertical-rl;transition:opacity .5s;pointer-events:none}
+.rhint.gone{opacity:0}
+
+/* Beim Ziehen tritt das Bild zurueck und der Titel unter dem Griff nach vorn */
+.veil{position:absolute;inset:0;background:var(--paper);opacity:0;pointer-events:none;
+  transition:opacity .3s ease;z-index:4}
+.peek{position:absolute;left:30px;right:92px;top:46%;transform:translateY(-50%);z-index:6;opacity:0;
+  pointer-events:none;transition:opacity .28s ease}
+.peek .n{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-ink)}
+.peek h3{font-family:var(--serif);font-weight:400;font-size:29px;line-height:1.15;margin-top:9px;
+  letter-spacing:-.01em}
+.peek .t{margin-top:9px;font-size:11px;letter-spacing:.14em;color:var(--ink-2);font-variant-numeric:tabular-nums}
+#view-now.dragging .veil{opacity:.9}
+#view-now.dragging .peek{opacity:1}
+#view-now.dragging .meta,#view-now.dragging .frame{opacity:0}
+#view-now.dragging .art{box-shadow:0 8px 20px rgba(36,30,24,.10)}
+
+/* Aufgeklappt: das Bild tritt zurueck, die Titel treten hervor */
+.qlist{position:absolute;left:30px;right:92px;top:22px;bottom:8px;opacity:0;pointer-events:none;
+  transition:opacity .4s ease;z-index:3;text-align:right;overflow:hidden}
+#view-now.open .qlist{opacity:1;pointer-events:auto}
+#view-now.open .art{width:96px}
+#view-now.open .frame{opacity:0}
+#view-now.open .meta{opacity:0;transform:translateY(8px)}
+.qitem{position:absolute;left:0;right:0;transition:top .4s cubic-bezier(.3,.8,.25,1);text-align:right}
+.qitem .t,.qitem .d{display:block}
+.qitem .t{font-family:var(--serif);font-size:16px;color:var(--ink-3);line-height:1.25;
+  transition:color .3s,font-size .3s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qitem .d{font-size:9.5px;letter-spacing:.14em;color:var(--ink-4);margin-top:3px;
+  font-variant-numeric:tabular-nums;opacity:0;transition:opacity .3s}
+.qitem.now .t{color:var(--ink);font-size:22px}
+.qitem.now .d{opacity:1;color:var(--ink-3)}
+.qitem.past .t{color:rgba(36,30,24,.26)}
+
+.foot{flex-shrink:0;padding:0 30px 22px;position:relative;z-index:7}
+.transport{display:flex;align-items:center;justify-content:center;gap:34px;padding-top:20px;
+  border-top:1px solid var(--line)}
+.tb{width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--ink-2);
+  border-radius:50%}
+.tb:active{color:var(--ink);background:var(--tint)}
+.play{width:56px;height:56px;border-radius:50%;border:1px solid var(--accent);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,color .2s,transform .12s,border-color .2s}
+.play:active{transform:scale(.95)}
+.play.on{background:var(--accent);color:var(--paper)}
+.nextrow{margin-top:20px;display:flex;align-items:baseline;gap:12px;width:100%;text-align:left}
+.nextrow .k{font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);flex-shrink:0}
+.nextrow .v{flex:1;min-width:0;font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nextrow .rest{flex-shrink:0;display:flex;align-items:baseline;gap:8px}
+.nextrow .rest .num{font-family:var(--serif);font-size:15px;color:var(--ink-2)}
+
+/* ── Reiterleiste ── */
+.tabs{position:fixed;left:0;right:0;bottom:0;height:calc(var(--tabs) + var(--safe));
+  padding-bottom:var(--safe);z-index:60;display:flex;
+  background:rgba(251,249,245,.94);border-top:1px solid var(--line-2);
+  backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%)}
+.tabs button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  color:var(--ink-4);font-size:9px;letter-spacing:.14em;text-transform:uppercase}
+.tabs button.on{color:var(--accent-ink)}
+
+/* ── Geschobene Seiten (Album, Einstellungen) ── */
+.sheet{position:fixed;inset:0 0 calc(var(--tabs) + var(--safe)) 0;background:var(--paper);z-index:70;
+  transform:translateX(100%);transition:transform .34s cubic-bezier(.3,.75,.2,1);
+  display:flex;flex-direction:column;visibility:hidden}
+.sheet.on{transform:translateX(0);visibility:visible}
+.sheet.full{bottom:0;z-index:80}
+.back{display:flex;align-items:center;gap:7px;color:var(--accent-ink);font-size:13.5px;
+  padding:calc(env(safe-area-inset-top,0px) + 12px) 22px 6px;align-self:flex-start}
+.albhead{padding:6px 22px 2px;display:flex;gap:16px;align-items:flex-end}
+.albhead .cov{width:112px;height:112px;border-radius:1px;flex-shrink:0;position:relative;overflow:hidden;
+  background:var(--tint);box-shadow:0 10px 26px rgba(36,30,24,.2)}
+.albhead .cov img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.albhead .cov .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);
+  font-style:italic;font-size:36px;color:var(--ink-4)}
+.albhead .t{font-family:var(--serif);font-size:21px;line-height:1.2}
+.albhead .a{margin-top:5px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-2)}
+.albhead .mt{margin-top:6px;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.albact{padding:18px 22px 6px}
+.act{background:var(--accent);color:var(--paper);border-radius:24px;padding:11px 20px;font-size:13px;
+  display:inline-flex;align-items:center;gap:9px}
+.act:active{opacity:.85}
+.trk{display:grid;grid-template-columns:24px 1fr auto;align-items:center;gap:14px;padding:12px 22px;
+  border-bottom:1px solid var(--line);width:100%;text-align:left}
+.trk:active{background:var(--tint)}
+.trk .n{font-size:11px;color:var(--ink-4);font-variant-numeric:tabular-nums}
+.trk .t{font-family:var(--serif);font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trk .d{font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.trk.now .t,.trk.now .n,.trk.now .d{color:var(--accent-ink)}
+
+/* ── Einstellungen ── */
+.set-h1{font-family:var(--serif);font-size:28px;padding:2px 22px 4px}
+.set-sub{padding:0 22px 18px;font-size:12.5px;color:var(--ink-3)}
+.group{border-top:1px solid var(--line-2);margin-top:6px;padding:16px 22px 20px}
+.group h2{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+.group .hint{margin-top:6px;font-size:12px;color:var(--ink-4);line-height:1.5}
+.accents{display:flex;gap:12px;margin-top:16px}
+.accents button{flex:1;display:flex;flex-direction:column;align-items:center;gap:9px;
+  padding:14px 6px 12px;border:1px solid var(--line);border-radius:3px;
+  transition:border-color .2s,background .2s}
+.accents button[aria-pressed="true"]{border-color:var(--ink-3);background:var(--tint)}
+.accents .dot{width:30px;height:30px;border-radius:50%;position:relative}
+.accents button[aria-pressed="true"] .dot::after{content:'';position:absolute;inset:-5px;
+  border:1px solid var(--ink-3);border-radius:50%}
+.accents .lbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.soon{padding:16px 22px 40px;font-size:12px;color:var(--ink-4);line-height:1.6}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<!-- ══════════ Sammlung ══════════ -->
+<main class="view on" id="view-lib">
+  <header class="hd">
+    <div class="row">
+      <span class="brand">Musiklib<em>.</em></span>
+      <button class="icon-btn" id="settings-btn" aria-label="Einstellungen">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="3.2"/>
+          <path d="M19.4 15a1.6 1.6 0 0 0 .32 1.77l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.6 1.6 0 0 0-1.77-.32 1.6 1.6 0 0 0-1 1.47V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.77.32l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.6 1.6 0 0 0 4.72 15a1.6 1.6 0 0 0-1.47-1H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.32-1.77l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.6 1.6 0 0 0 9 4.72 1.6 1.6 0 0 0 10 3.25V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.47 1.6 1.6 0 0 0 1.77-.32l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.6 1.6 0 0 0 19.28 9v0a1.6 1.6 0 0 0 1.47 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/>
+        </svg>
+      </button>
+    </div>
+    <div class="sub" id="lib-sub">Wird geladen …</div>
+  </header>
+  <div class="body">
+    <div class="grid" id="grid"></div>
+    <p class="empty" id="lib-empty" hidden>Bibliothek ist leer.
+      <small>Am Schreibtisch einen Scan starten.</small></p>
+  </div>
+</main>
+
+<!-- ══════════ Suche ══════════ -->
+<main class="view" id="view-search">
+  <header class="hd"><h1 class="big">Suche</h1></header>
+  <div class="searchwrap">
+    <div class="search" id="searchbox">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.7" y2="16.7"/></svg>
+      <input type="text" id="q" placeholder="Album, Titel, Interpret" autocomplete="off"
+             autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+      <button class="clr" id="q-clear" aria-label="Suche leeren">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="body" id="results"></div>
+</main>
+
+<!-- ══════════ Jetzt läuft ══════════ -->
+<main class="view" id="view-now">
+  <div class="lid">
+    <span class="brand">Musiklib<em>.</em></span>
+    <button class="qbtn" id="qbtn" aria-expanded="false" aria-label="Warteschlange">
+      <span class="n" id="qcount">0 / 0</span>
+      <span class="gl"><i></i><i></i><i></i></span>
+    </button>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="artwrap">
+      <div class="art" id="art"><span class="ini">♪</span></div>
+      <div class="frame"></div>
+    </div>
+    <div class="meta" id="meta">
+      <h2 id="np-title">Nichts ausgewählt</h2>
+      <div class="by" id="np-artist"></div>
+      <div class="alb" id="np-album"></div>
+      <div class="err" id="np-error" hidden>Titel nicht abspielbar — bitte neu scannen</div>
+    </div>
+
+    <div class="veil"></div>
+    <div class="qlist" id="qlist"></div>
+
+    <div class="peek" id="peek">
+      <div class="n" id="peek-no"></div>
+      <h3 id="peek-title"></h3>
+      <div class="t" id="peek-time"></div>
+    </div>
+
+    <div class="rail" id="rail">
+      <div class="rline"></div>
+      <div class="rband" id="rband"></div>
+      <div id="rticks"></div>
+      <div class="rdone" id="rdone"></div>
+      <div class="rknob" id="rknob"></div>
+      <div class="rnum num" id="rnum"></div>
+      <div class="rhint" id="rhint">Ziehen zum Spulen</div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="transport">
+      <button class="tb" id="prev-btn" aria-label="Vorheriger Titel">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 20L9 12l10-8v16zM5 4h2v16H5z"/></svg>
+      </button>
+      <button class="play" id="play-btn" aria-label="Abspielen">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" id="play-glyph">
+          <path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button class="tb" id="next-btn" aria-label="Nächster Titel">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M5 4l10 8-10 8V4zm14 0h2v16h-2z"/></svg>
+      </button>
+    </div>
+    <button class="nextrow" id="nextrow">
+      <span class="k">Danach</span>
+      <span class="v" id="np-next">—</span>
+      <span class="rest"><span class="k">Noch</span><span class="num" id="np-rest">0:00</span></span>
+    </button>
+  </div>
+</main>
+
+<!-- ══════════ Reiterleiste ══════════ -->
+<nav class="tabs" id="tabs">
+  <button data-view="lib" class="on">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+      <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Sammlung</button>
+  <button data-view="search">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.7" y2="16.7"/></svg>
+    Suche</button>
+  <button data-view="now">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="7" cy="18" r="3"/><circle cx="18" cy="15.5" r="2.6"/><path d="M10 18V6l10.6-2.4v12"/></svg>
+    Jetzt läuft</button>
+</nav>
+
+<!-- ══════════ Album ══════════ -->
+<section class="sheet" id="album-sheet" aria-hidden="true">
+  <button class="back" id="album-back">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+         stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Zurück</button>
+  <div class="body" id="album-body"></div>
+</section>
+
+<!-- ══════════ Einstellungen ══════════ -->
+<section class="sheet full" id="settings-sheet" aria-hidden="true">
+  <button class="back" id="settings-back">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+         stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Fertig</button>
+  <div class="body">
+    <h1 class="set-h1">Einstellungen</h1>
+    <p class="set-sub">Gilt nur für dieses Gerät.</p>
+
+    <div class="group">
+      <h2>Farbakzent</h2>
+      <div class="hint">Färbt Abspielknopf, Achse und Hervorhebungen.</div>
+      <div class="accents" id="accents"></div>
+    </div>
+
+    <p class="soon">Weitere Einstellungen kommen hierher — die Gruppen darüber sind so gebaut,
+      dass eine neue nur ein weiterer Block ist.</p>
+  </div>
+</section>
+
+<audio id="audio" preload="none"></audio>
+
+<script>
+'use strict';
+
+const $ = id => document.getElementById(id);
+const audio = $('audio');
+
+let library = { albums: [], album_count: 0, track_count: 0 };
+let queue = [];          // [{track, album}]
+let qIndex = -1;
+let pendingSeek = 0;     // Position, die nach loadedmetadata gesetzt wird
+let shuffle = false;
+let view = 'lib';
+let openQueue = false;   // Warteschlange im „Jetzt läuft" aufgeklappt
+let currentAlbum = null; // im Album-Blatt gezeigtes Album
+
+// ---------- gespeicherte Einstellungen ----------
+// Wie in index.html: faellt localStorage aus, laeuft die App unveraendert weiter.
+const STORE = 'musiklib:';
+function store(key, value) {
+  try { localStorage.setItem(STORE + key, JSON.stringify(value)); } catch {}
+}
+function restore(key, fallback) {
+  try {
+    const raw = localStorage.getItem(STORE + key);
+    return raw === null ? fallback : JSON.parse(raw);
+  } catch { return fallback; }
+}
+
+// ---------- Einstellungen ----------
+// Ein Objekt statt vieler Schluessel: spaetere Optionen brauchen dann keinen
+// neuen Eintrag in localStorage, nur ein weiteres Feld.
+const AKZENTE = [
+  { id: 'messing', name: 'Messing', farbe: '#8A6534' },
+  { id: 'petrol',  name: 'Petrol',  farbe: '#1F6470' },
+  { id: 'gruen',   name: 'Grün',    farbe: '#4F8A46' },
+];
+const EINSTELLUNGEN_STANDARD = { akzent: 'messing' };
+let settings = { ...EINSTELLUNGEN_STANDARD, ...(restore('einstellungen', null) || {}) };
+
+function applySettings() {
+  const akzent = AKZENTE.some(a => a.id === settings.akzent) ? settings.akzent : 'messing';
+  document.documentElement.dataset.akzent = akzent;
+  document.querySelectorAll('#accents button').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.akzent === akzent));
+  });
+}
+function setSetting(key, value) {
+  settings = { ...settings, [key]: value };
+  store('einstellungen', settings);
+  applySettings();
+}
+function buildSettings() {
+  $('accents').innerHTML = AKZENTE.map(a => `
+    <button data-akzent="${a.id}" aria-pressed="false">
+      <span class="dot" style="background:${a.farbe}"></span>
+      <span class="lbl">${a.name}</span>
+    </button>`).join('');
+  $('accents').addEventListener('click', e => {
+    const b = e.target.closest('[data-akzent]');
+    if (b) setSetting('akzent', b.dataset.akzent);
+  });
+}
+
+// ---------- Helfer ----------
+function fmt(s) {
+  if (!s || !isFinite(s)) return '0:00';
+  s = Math.floor(s);
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+}
+function fmtLang(s) {                 // ab einer Stunde ist mm:ss nicht mehr lesbar
+  s = Math.max(0, Math.floor(s || 0));
+  const h = Math.floor(s / 3600);
+  return h ? `${h}:${String(Math.floor(s % 3600 / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
+           : fmt(s);
+}
+function fmtGesamt(s) {
+  s = Math.floor(s || 0);
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
+  return h ? `${h} Std ${m} Min` : `${m} Min`;
+}
+function esc(s) {
+  return (s == null ? '' : String(s)).replace(/[&<>"']/g,
+    c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function initial(album) {
+  return ((album.title || '?').trim().charAt(0) || '?').toUpperCase();
+}
+function coverURL(album) {
+  return album.cover ? `/api/cover/${encodeURIComponent(album.cover)}` : null;
+}
+function coverHTML(album, klasse) {
+  const url = coverURL(album);
+  return `<div class="${klasse}">${url
+    ? `<img loading="lazy" src="${url}" alt="">`
+    : `<span class="ini">${esc(initial(album))}</span>`}</div>`;
+}
+function albumDauer(a) {
+  return a.tracks.reduce((n, t) => n + (t.duration || 0), 0);
+}
+
+// ---------- Bibliothek ----------
+function indexLibrary() {
+  for (const a of library.albums) {
+    const parts = [a.title, a.artist];
+    for (const t of a.tracks) {
+      parts.push(t.title);
+      if (t.artist) parts.push(t.artist);
+    }
+    a._q = parts.join('\n').toLowerCase();
+  }
+}
+
+async function loadLibrary() {
+  try {
+    const r = await fetch('/api/library');
+    library = await r.json();
+    indexLibrary();
+    $('lib-sub').textContent =
+      `${library.album_count} Alben · ${library.track_count} Titel`;
+    renderGrid();
+    renderResults();
+  } catch {
+    $('lib-sub').textContent = 'Bibliothek nicht erreichbar';
+  }
+}
+
+function renderGrid() {
+  const grid = $('grid');
+  const leer = !library.albums.length;
+  $('lib-empty').hidden = !leer;
+  grid.innerHTML = library.albums.map((a, i) => `
+    <button class="card" data-album="${i}">
+      ${coverHTML(a, 'cov')}
+      <div class="t">${esc(a.title)}</div>
+      <div class="a">${esc(a.artist)}</div>
+    </button>`).join('');
+  markPlayingInLists();
+}
+
+// ---------- Suche ----------
+function renderResults() {
+  const q = $('q').value.trim().toLowerCase();
+  const box = $('results');
+  if (!q) {
+    box.innerHTML = library.albums.length
+      ? `<div class="sec"><span class="caps">Alle Alben</span>
+           <span class="caps">${library.albums.length}</span></div>` +
+        library.albums.map((a, i) => albumRow(a, i)).join('') + '<div style="height:24px"></div>'
+      : '';
+    markPlayingInLists();
+    return;
+  }
+
+  const alben = [];
+  const titel = [];
+  library.albums.forEach((a, i) => {
+    if ((a.title + ' ' + a.artist).toLowerCase().includes(q)) alben.push([a, i]);
+    a.tracks.forEach((t, k) => {
+      if (titel.length < 40 &&
+          ((t.title || '').toLowerCase().includes(q) ||
+           (t.artist || '').toLowerCase().includes(q))) titel.push([a, i, t, k]);
+    });
+  });
+
+  if (!alben.length && !titel.length) {
+    box.innerHTML = `<p class="empty">Nichts gefunden.
+      <small>Für „${esc($('q').value)}“ gibt es keinen Treffer.</small></p>`;
+    return;
+  }
+  const sec = (k, n) => `<div class="sec"><span class="caps">${k}</span><span class="caps">${n}</span></div>`;
+  box.innerHTML =
+    (alben.length ? sec('Alben', alben.length) + alben.map(([a, i]) => albumRow(a, i)).join('') : '') +
+    (titel.length ? sec('Titel', titel.length) +
+      titel.map(([a, i, t, k]) => trackRow(a, i, t, k)).join('') : '') +
+    '<div style="height:24px"></div>';
+  markPlayingInLists();
+}
+
+function albumRow(a, i) {
+  return `<button class="row" data-album="${i}">
+    ${coverHTML(a, 'sw')}
+    <span class="m"><span class="t">${esc(a.title)}</span>
+      <span class="s">${esc(a.artist)} · ${a.tracks.length} Titel</span></span>
+    <span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 18 15 12 9 6"/></svg></span>
+  </button>`;
+}
+function trackRow(a, i, t, k) {
+  return `<button class="row" data-album="${i}" data-track="${k}" data-id="${esc(t.id)}">
+    ${coverHTML(a, 'sw')}
+    <span class="m"><span class="t">${esc(t.title)}</span>
+      <span class="s">${esc(a.artist)} · ${esc(a.title)}</span></span>
+    <span class="d num">${fmt(t.duration)}</span>
+  </button>`;
+}
+
+// ---------- Album ----------
+function openAlbum(a) {
+  currentAlbum = a;
+  $('album-body').innerHTML = `
+    <div class="albhead">
+      ${coverHTML(a, 'cov')}
+      <div style="flex:1;min-width:0">
+        <div class="t">${esc(a.title)}</div>
+        <div class="a">${esc(a.artist)}</div>
+        <div class="mt">${[a.year, `${a.tracks.length} Titel`, fmtGesamt(albumDauer(a))]
+          .filter(Boolean).join(' · ')}</div>
+      </div>
+    </div>
+    <div class="albact"><button class="act" id="album-play">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      Album abspielen</button></div>
+    ${a.tracks.map((t, i) => `
+      <button class="trk" data-track="${i}" data-id="${esc(t.id)}">
+        <span class="n num">${String(t.track_no || i + 1).padStart(2, '0')}</span>
+        <span class="t">${esc(t.title)}</span>
+        <span class="d num">${fmt(t.duration)}</span>
+      </button>`).join('')}
+    <div style="height:40px"></div>`;
+  $('album-play').addEventListener('click', () => playFromAlbum(a, 0));
+  $('album-body').querySelectorAll('.trk').forEach(el => {
+    el.addEventListener('click', () => playFromAlbum(a, +el.dataset.track));
+  });
+  markPlayingInLists();
+  $('album-sheet').classList.add('on');
+  $('album-sheet').setAttribute('aria-hidden', 'false');
+}
+function closeAlbum() {
+  $('album-sheet').classList.remove('on');
+  $('album-sheet').setAttribute('aria-hidden', 'true');
+}
+
+// ---------- Wiedergabe ----------
+function shuffleInPlace(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Einziger Weg, eine neue Warteschlange zu setzen — wie in index.html.
+function loadQueue(items, startIndex, autoplay = true) {
+  if (!items.length) return;
+  queue = items;
+  qIndex = Math.max(0, Math.min(startIndex, items.length - 1));
+  if (shuffle) {
+    const chosen = queue[qIndex];
+    const rest = queue.filter((_, i) => i !== qIndex);
+    queue = [chosen, ...shuffleInPlace(rest)];
+    qIndex = 0;
+  }
+  buildRail();
+  playCurrent(autoplay);
+}
+function playFromAlbum(album, startIndex) {
+  loadQueue(album.tracks.map(t => ({ track: t, album })), startIndex);
+  closeAlbum();
+  setView('now');
+}
+
+// Der Knopf spiegelt immer den echten Zustand des <audio>-Elements, nie eine
+// Annahme — sonst laeuft er auseinander, sobald von aussen gesteuert wird
+// (Sperrbildschirm, Kopfhoerertaste, blockiertes Autoplay).
+function setPlayButton(playing) {
+  $('play-glyph').innerHTML = playing
+    ? '<path d="M6 4.5h3.4v15H6zM14.6 4.5H18v15h-3.4z"/>'
+    : '<path d="M8 5v14l11-7z"/>';
+  $('play-btn').classList.toggle('on', playing);
+  $('play-btn').setAttribute('aria-label', playing ? 'Pause' : 'Abspielen');
+}
+
+function playCurrent(autoplay = true) {
+  if (qIndex < 0 || qIndex >= queue.length) return;
+  const { track, album } = queue[qIndex];
+  $('np-error').hidden = true;
+  audio.src = `/api/stream/${encodeURIComponent(track.id)}`;
+  if (autoplay) audio.play().catch(() => {});   // blockiertes Autoplay: Knopf bleibt korrekt
+
+  $('np-title').textContent = track.title;
+  $('np-artist').textContent = album.artist;
+  $('np-album').textContent = [album.title, album.year].filter(Boolean).join(' · ');
+  const art = $('art');
+  const url = coverURL(album);
+  art.innerHTML = url ? `<img src="${url}" alt="">` : `<span class="ini">${esc(initial(album))}</span>`;
+
+  renderQueueList();
+  markPlayingInLists();
+  renderProgress();
+
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: track.title,
+      artist: album.artist,
+      album: album.title,
+      artwork: url ? [{ src: url, sizes: '512x512' }] : [],
+    });
+  }
+}
+
+function hasNext() { return qIndex >= 0 && qIndex < queue.length - 1; }
+function playNext() { if (hasNext()) { qIndex++; playCurrent(); } }
+function playPrev() {
+  if (audio.currentTime > 3) { audio.currentTime = 0; return; }
+  if (qIndex > 0) { qIndex--; playCurrent(); }
+}
+function togglePlay() {
+  if (!audio.src) return;
+  if (audio.paused) audio.play().catch(() => {});
+  else audio.pause();
+}
+
+function markPlayingInLists() {
+  const id = qIndex >= 0 && queue[qIndex] ? queue[qIndex].track.id : null;
+  document.querySelectorAll('.row[data-id]').forEach(el =>
+    el.classList.toggle('now', el.dataset.id === id));
+  document.querySelectorAll('.trk[data-id]').forEach(el =>
+    el.classList.toggle('now', el.dataset.id === id));
+  const albumId = qIndex >= 0 && queue[qIndex] ? queue[qIndex].album.id : null;
+  document.querySelectorAll('.card[data-album]').forEach(el =>
+    el.classList.toggle('now', library.albums[+el.dataset.album]?.id === albumId));
+}
+
+// ---------- Der Rand: die Warteschlange als Achse ----------
+// Alle Zeiten stammen aus library.json. Titel ohne Dauer bekommen die
+// Durchschnittslaenge der Warteschlange, sonst faellt die Achse zusammen.
+let railDrag = null;     // {ziel: Sekunden} solange gezogen wird
+
+function dauer(i) {
+  const d = queue[i] && queue[i].track.duration;
+  if (d > 0) return d;
+  const bekannt = queue.map(q => q.track.duration).filter(d => d > 0);
+  return bekannt.length ? bekannt.reduce((a, b) => a + b, 0) / bekannt.length : 180;
+}
+function offsets() {
+  const o = [];
+  let a = 0;
+  for (let i = 0; i < queue.length; i++) { o.push(a); a += dauer(i); }
+  return o;
+}
+function gesamt() {
+  let a = 0;
+  for (let i = 0; i < queue.length; i++) a += dauer(i);
+  return a;
+}
+function globalPos() {
+  if (railDrag) return railDrag.ziel;
+  if (qIndex < 0) return 0;
+  return offsets()[qIndex] + (audio.currentTime || 0);
+}
+function indexAt(v) {
+  const o = offsets();
+  for (let k = o.length - 1; k >= 0; k--) if (v >= o[k]) return k;
+  return 0;
+}
+
+function buildRail() {
+  const o = offsets(), T = gesamt() || 1;
+  $('rticks').innerHTML = queue.map((_, i) =>
+    `<div class="rtick" data-tick="${i}" style="top:${o[i] / T * 100}%"></div>`).join('');
+  renderQueueList();
+}
+
+function renderQueueList() {
+  const list = $('qlist');
+  list.innerHTML = queue.map((q, i) => `
+    <button class="qitem" data-q="${i}">
+      <span class="t">${esc(q.track.title)}</span>
+      <span class="d num">${fmt(q.track.duration)}</span>
+    </button>`).join('');
+  list.querySelectorAll('[data-q]').forEach(el => el.addEventListener('click', () => {
+    qIndex = +el.dataset.q;
+    playCurrent();
+  }));
+  layoutQueueList();
+}
+
+// Kurze Titel laegen sonst uebereinander. Der laufende steht groesser und
+// traegt eine zweite Zeile — direkt darunter braucht es mehr Luft.
+function layoutQueueList() {
+  const list = $('qlist');
+  const h = list.clientHeight;
+  if (!h || !queue.length) return;
+  const o = offsets(), T = gesamt() || 1;
+  let last = -Infinity;
+  list.querySelectorAll('[data-q]').forEach((el, i) => {
+    const min = (i - 1 === qIndex) ? 62 : 34;
+    let top = o[i] / T * h;
+    if (top - last < min) top = last + min;
+    last = top;
+    el.style.top = top + 'px';
+  });
+}
+
+function renderProgress() {
+  const T = gesamt();
+  if (qIndex < 0 || !T) {
+    $('qcount').textContent = '0 / 0';
+    $('np-rest').textContent = '0:00';
+    return;
+  }
+  const o = offsets(), g = globalPos(), p = Math.min(100, g / T * 100);
+  const i = railDrag ? indexAt(g) : qIndex;
+  const lokal = g - o[i];
+
+  $('rdone').style.height = p + '%';
+  $('rknob').style.top = p + '%';
+  $('rband').style.top = (o[i] / T * 100) + '%';
+  $('rband').style.height = (dauer(i) / T * 100) + '%';
+  $('rnum').style.top = p + '%';
+  $('rnum').textContent = fmt(g);
+  document.querySelectorAll('[data-tick]').forEach(el =>
+    el.classList.toggle('past', +el.dataset.tick <= i));
+
+  $('qcount').textContent = `${i + 1} / ${queue.length}`;
+  $('np-rest').textContent = fmtLang(T - g);
+  $('np-next').textContent = i < queue.length - 1
+    ? queue[i + 1].track.title : 'Ende der Warteschlange';
+
+  $('peek-no').textContent = `Titel ${i + 1} von ${queue.length}`;
+  $('peek-title').textContent = queue[i].track.title;
+  $('peek-time').textContent = `${fmt(lokal)} — noch ${fmt(dauer(i) - lokal)}`;
+
+  document.querySelectorAll('[data-q]').forEach(el => {
+    const k = +el.dataset.q;
+    el.classList.toggle('now', k === i);
+    el.classList.toggle('past', k < i);
+  });
+}
+
+// Tippen und Ziehen sind zwei verschiedene Dinge: erst ab acht Punkten
+// Bewegung wird gespult, vorher bleibt es ein Tippen (= Warteschlange).
+(function bindRail() {
+  const rail = $('rail');
+  let aktiv = false, bewegt = false, startY = 0;
+  const zeitAn = e => {
+    const r = rail.getBoundingClientRect();
+    return Math.min(1, Math.max(0, (e.clientY - r.top) / r.height)) * gesamt();
+  };
+
+  rail.addEventListener('pointerdown', e => {
+    if (qIndex < 0) return;
+    aktiv = true; bewegt = false; startY = e.clientY;
+    rail.setPointerCapture(e.pointerId);
+  });
+  rail.addEventListener('pointermove', e => {
+    if (!aktiv) return;
+    if (!bewegt && Math.abs(e.clientY - startY) > 8) {
+      bewegt = true;
+      rail.classList.add('grabbing');
+      $('view-now').classList.add('dragging');
+      $('rhint').classList.add('gone');
+    }
+    if (bewegt) { railDrag = { ziel: zeitAn(e) }; renderProgress(); }
+  });
+  const ende = () => {
+    if (!aktiv) return;
+    aktiv = false;
+    if (!bewegt) { setQueueOpen(!openQueue); return; }
+    rail.classList.remove('grabbing');
+    $('view-now').classList.remove('dragging');
+    const ziel = railDrag ? railDrag.ziel : globalPos();
+    railDrag = null;
+    springeZu(ziel);
+  };
+  rail.addEventListener('pointerup', ende);
+  rail.addEventListener('pointercancel', ende);
+})();
+
+// Nah am Titelanfang faengt der Griff den Anfang — sonst trifft man ihn nie.
+function springeZu(sekunden) {
+  const T = gesamt();
+  if (!T) return;
+  let ziel = Math.min(Math.max(0, sekunden), T - 0.5);
+  const o = offsets();
+  const nah = o.find(x => Math.abs(x - ziel) < T * 0.012);
+  if (nah !== undefined) ziel = nah;
+
+  const i = indexAt(ziel);
+  const lokal = ziel - o[i];
+  if (i === qIndex) {
+    // gleicher Titel: nur die Position, kein Neuladen
+    if (isFinite(audio.duration)) audio.currentTime = Math.min(lokal, audio.duration - 0.3);
+    else { pendingSeek = lokal; }
+  } else {
+    qIndex = i;
+    pendingSeek = lokal;
+    playCurrent(!audio.paused || true);
+  }
+  renderProgress();
+}
+
+function setQueueOpen(v) {
+  openQueue = v;
+  $('view-now').classList.toggle('open', v);
+  $('qbtn').setAttribute('aria-expanded', String(v));
+  if (v) requestAnimationFrame(layoutQueueList);
+}
+
+// ---------- Ereignisse des Audio-Elements ----------
+audio.addEventListener('play', () => setPlayButton(true));
+audio.addEventListener('pause', () => { setPlayButton(false); saveSession(); });
+audio.addEventListener('ended', () => { if (hasNext()) playNext(); else setPlayButton(false); });
+audio.addEventListener('loadedmetadata', () => {
+  if (pendingSeek > 0 && isFinite(audio.duration)) {
+    audio.currentTime = Math.min(pendingSeek, audio.duration - 0.3);
+  }
+  pendingSeek = 0;
+});
+// Ein Titel, dessen Datei seit dem letzten Scan verschoben wurde, liefert 404.
+// Ohne diesen Handler bliebe der Player wortlos stehen.
+audio.addEventListener('error', () => {
+  if (!audio.src) return;
+  setPlayButton(false);
+  $('np-error').hidden = false;
+});
+audio.addEventListener('timeupdate', () => {
+  if (!railDrag) renderProgress();
+  const now = Date.now();
+  if (now - lastSaved > 5000) { lastSaved = now; saveSession(); }
+});
+
+if ('mediaSession' in navigator) {
+  const handlers = {
+    play: () => audio.play().catch(() => {}),
+    pause: () => audio.pause(),
+    previoustrack: playPrev,
+    nexttrack: playNext,
+  };
+  for (const [action, fn] of Object.entries(handlers)) {
+    try { navigator.mediaSession.setActionHandler(action, fn); } catch {}
+  }
+}
+
+// ---------- Bedienung ----------
+function setView(name) {
+  view = name;
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('on', v.id === 'view-' + name));
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.view === name));
+  if (name === 'now') requestAnimationFrame(layoutQueueList);
+  if (name === 'search') setTimeout(() => $('q').focus(), 60);
+}
+$('tabs').addEventListener('click', e => {
+  const b = e.target.closest('[data-view]');
+  if (b) setView(b.dataset.view);
+});
+
+$('play-btn').addEventListener('click', togglePlay);
+$('next-btn').addEventListener('click', playNext);
+$('prev-btn').addEventListener('click', playPrev);
+$('nextrow').addEventListener('click', playNext);
+$('qbtn').addEventListener('click', () => setQueueOpen(!openQueue));
+
+// Album- und Titelzeilen: ein Zuhoerer je Liste statt je Zeile
+document.addEventListener('click', e => {
+  const row = e.target.closest('.card[data-album], .row[data-album]');
+  if (!row) return;
+  const album = library.albums[+row.dataset.album];
+  if (!album) return;
+  if (row.dataset.track !== undefined) playFromAlbum(album, +row.dataset.track);
+  else openAlbum(album);
+});
+$('album-back').addEventListener('click', closeAlbum);
+
+let sucheTimer;
+$('q').addEventListener('input', () => {
+  $('searchbox').classList.toggle('has', !!$('q').value);
+  clearTimeout(sucheTimer);
+  sucheTimer = setTimeout(renderResults, 80);
+});
+$('q-clear').addEventListener('click', () => {
+  $('q').value = '';
+  $('searchbox').classList.remove('has');
+  renderResults();
+  $('q').focus();
+});
+
+$('settings-btn').addEventListener('click', () => {
+  $('settings-sheet').classList.add('on');
+  $('settings-sheet').setAttribute('aria-hidden', 'false');
+});
+$('settings-back').addEventListener('click', () => {
+  $('settings-sheet').classList.remove('on');
+  $('settings-sheet').setAttribute('aria-hidden', 'true');
+});
+
+window.addEventListener('resize', () => { if (view === 'now') layoutQueueList(); });
+
+// ---------- Sitzung ----------
+// Dieselben Schluessel und dieselbe Form wie index.html: auf demselben Geraet
+// laeuft die Sitzung zwischen beiden Ansichten weiter.
+let lastSaved = 0;
+
+function saveSession() {
+  if (qIndex < 0 || !queue.length) return;
+  store('session', {
+    items: queue.map(q => [q.album.id, q.track.id]),
+    qIndex,
+    position: Math.floor(audio.currentTime || 0),
+  });
+}
+
+function restoreSession() {
+  const saved = restore('session', null);
+  if (!saved || !Array.isArray(saved.items) || !saved.items.length) return;
+  const byId = new Map(library.albums.map(a => [a.id, a]));
+  const items = [];
+  let neuerIndex = 0;
+  saved.items.forEach(([albumId, trackId], i) => {
+    const album = byId.get(albumId);
+    const track = album && album.tracks.find(t => t.id === trackId);
+    if (!track) return;                        // Datei verschoben oder geloescht
+    if (i === saved.qIndex) neuerIndex = items.length;
+    items.push({ track, album });
+  });
+  if (!items.length) return;
+
+  queue = items;
+  qIndex = Math.min(neuerIndex, items.length - 1);
+  pendingSeek = saved.position || 0;
+  audio.preload = 'metadata';                  // sonst kommt kein loadedmetadata
+  buildRail();
+  playCurrent(false);                          // nie automatisch starten
+}
+
+window.addEventListener('pagehide', saveSession);
+
+// ---------- Start ----------
+shuffle = restore('shuffle', false);           // von der Schreibtischseite mitbenutzt
+audio.volume = Math.min(1, Math.max(0, restore('volume', 1)));
+audio.muted = restore('muted', false);
+buildSettings();
+applySettings();
+setPlayButton(false);
+loadLibrary().then(() => { if (qIndex < 0) restoreSession(); });
+</script>
+</body>
+</html>

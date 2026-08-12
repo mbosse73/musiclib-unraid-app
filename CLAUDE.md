@@ -6,9 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Musiklib: a minimal, fast music library for a personal MP3 collection. Runs as a small Docker container on an unraid NAS, scans a music directory, and serves a single HTML page with search and an integrated player, reachable from any device on the network. No database — everything the app knows lives in `library.json`.
 
-The application the container runs is still three files:
+The application the container runs is four files:
 - `app.py` — FastAPI backend: scanning, JSON API, streaming.
-- `index.html` — the entire frontend: HTML + CSS + vanilla JS in one file, no build step, no framework.
+- `index.html` — the desktop frontend at `/`: HTML + CSS + vanilla JS in one file, no build step, no framework.
+- `mobile.html` — the phone/tablet frontend at `/mobil`, same three endpoints, deliberately smaller in scope (see below).
 - `requirements.txt` — pinned deps: `fastapi`, `starlette`, `mutagen`, `uvicorn`, `uvloop`, `httptools`. `starlette` is pinned explicitly even though it only arrives via FastAPI: it provides the `FileResponse` that implements Range streaming, and versions before 1.3.1 parse Range headers in quadratic time (a single request stalls the event loop for minutes). `uvicorn` is installed without the `[standard]` extra — `uvloop` and `httptools` are listed directly instead, so the unused `websockets`/`watchfiles`/`PyYAML`/`python-dotenv` don't get pulled in.
 
 `conftest.py`, `test_app.py`, `test_frontend.py` and `requirements-dev.txt` exist only for local development — the compose `command` installs `requirements.txt` alone, so none of them ever reaches the container. `docker-compose.yml` and `README.md` (in German) cover unraid deployment; not relevant to app logic.
@@ -57,7 +58,7 @@ One trap the frontend tests already ran into: fixture tracks must be **long enou
    Scan state (`scan_state` global dict: running/progress/total/skipped/skipped_files/error) is polled by the frontend during a scan and is **not** persisted — it resets on restart.
 
    `run_claimed_scan()` is deliberately split: `_guard_music_dir()`, `_collect_mp3s()`, `_build_albums()` (the loop, incl. cache lookups), `_finalise_albums()` (track sorting + folder-cover fallback), then writing and `prune_covers()`. Cover art is fetched by `read_cover()` separately from `read_tags()` — that keeps `read_tags()`'s return value JSON-serialisable and therefore cacheable, which is the whole basis of the incremental scan. Don't merge them back.
-2. **Serve** — `/` returns `index.html` as-is; `/api/library` returns `library.json` as-is (no per-request transformation, no pagination — the frontend receives and filters the whole collection client-side).
+2. **Serve** — `/` returns `index.html` as-is, `/mobil` returns `mobile.html` as-is (no UA sniffing: iPad Safari reports a desktop UA, so the choice is the user's); `/api/library` returns `library.json` as-is (no per-request transformation, no pagination — the frontend receives and filters the whole collection client-side).
 3. **Stream** — `/api/stream/{track_id}` resolves the id via `tracks.json` and returns a `FileResponse`; Starlette's `FileResponse` handles HTTP Range requests natively, which is what makes seeking work.
 
 Scans are triggered two ways: automatically on startup if `library.json` doesn't exist yet (`lifespan` handler, runs in a background thread via `asyncio.to_thread`), or manually via `POST /api/scan` (also backgrounded, via `BackgroundTasks`). There is deliberately no periodic/automatic re-scan — it's manual only, to avoid waking an idle NAS. Re-running the app never triggers a rescan once `library.json` exists, even if the source files changed.
@@ -78,6 +79,16 @@ These follow from the code above and are easy to trip over:
 - **`scan_state` is guarded by `_scan_lock`.** `_claim_scan()` does the check-and-set atomically and `POST /api/scan` claims the slot *before* returning, so a status poll issued immediately after the POST always observes `running: true`. Don't reintroduce a bare flag check.
 - **`/api/stream` resolves paths through `_load_tracks()`**, which keeps `tracks.json` parsed in memory and reloads only when its mtime/size change. Don't go back to reading the file per request — every Range request during seeking hits this path.
 - **`scan_state["error"]` is a short, user-facing German message**, rendered as-is in the UI. Exception detail goes to the log via `log.exception`, not into the API response.
+
+**Frontend, second surface (`mobile.html`)** is served at `/mobil` and is a *separate, smaller* app against the same API — not a responsive variant of `index.html` and not a shared codebase. What it deliberately leaves out: scanning, the skipped-files list, the sort selector. What it adds: a settings sheet (currently one option, the accent colour) and the queue-as-axis player.
+- Light palette (`--paper` ivory, serif titles, spaced small caps) against `index.html`'s dark one — a phone is held in daylight. Both share the hairline/2px-radius vocabulary.
+- **Accent colours** live in `[data-akzent]` blocks on `:root` (`messing`, `petrol`, `gruen`). Each defines two tones: `--accent` carries fills and lines, `--accent-ink` carries text. The green's fill tone is deliberately lighter than text contrast would allow — that is why the second tone exists. Adding an accent means one CSS block plus one entry in the `AKZENTE` array.
+- **Settings** are one object in `localStorage` under `musiklib:einstellungen`, not one key per option, so later options need no new key. `applySettings()` is the single place that writes state to the DOM.
+- **The player is the queue axis** ("der Rand"): a hairline in the right margin with one tick per track. It does not label the tracks — names appear only while dragging (a readout) or when the axis is unfolded via the counter button. That is what removes the density limit a labelled axis would have.
+- Tap and drag on that rail are **separate gestures**: seeking starts only after 8px of movement, below that it is a tap that unfolds the queue. Don't merge them back — a tap that also seeks moves playback when the user only wanted to look.
+- Seeking across a track boundary goes through `springeZu()`, which reuses `pendingSeek` + `playCurrent()` — the same mechanism session restore uses.
+- Session keys (`musiklib:session`, `volume`, `muted`, `shuffle`) are **shared with `index.html` and must keep the same shape**; on one device the session continues between both views. `test_frontend.py::test_mobile_shares_the_session_with_the_desktop_page` guards that.
+- Tracks without a `duration` get the queue's average length, otherwise the axis collapses.
 
 **Frontend (`index.html`)** is one file with three parts in this order: `<style>` (CSS custom properties at the top of `:root` centralize theme — colors, fonts, `--player-h` — change those instead of scattering literal values), the DOM skeleton, then a single `<script>` with no modules/bundler. Key frontend concepts:
 - `library` (fetched from `/api/library`) is the full in-memory dataset; `filtered` is the current search-filtered subset; both are plain arrays of album objects re-rendered on every filter/tab change (no virtual DOM/diffing).
