@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de" data-akzent="messing">
+<html lang="de" data-thema="papier" data-akzent="messing">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
@@ -20,6 +20,13 @@
    Papier statt Nacht, weil man das Geraet im Hellen haelt; aus dem Gold
    wird ein Messing, weil helles Gold auf Weiss nicht traegt.
    ══════════════════════════════════════════════════════════════════════ */
+/* ── Themen ───────────────────────────────────────────────────────────
+   Ein Thema ist die ganze Palette, nicht nur ein Akzent: :root traegt
+   „Papier", [data-thema="wueste"] traegt „Desert Rose". Alles, was Farbe
+   hat, muss deshalb ueber ein Merkmal laufen — auch Schatten (--schatten
+   als RGB-Tripel) und der Schleier der Reiterleiste (--veil). Eine feste
+   Farbe im Regelwerk waere ein Loch, durch das Elfenbein in den Sand
+   laeuft. */
 :root{
   --paper:#FBF9F5;
   --tint:#F1EDE4;
@@ -27,8 +34,11 @@
   --ink-2:#5F574B;
   --ink-3:#766D5F;   /* lesbare Beischrift */
   --ink-4:#A0968A;   /* schmueckend: Haarlinien, Marken, Ruhezustaende */
+  --ink-5:rgba(36,30,24,.26);   /* Verklungenes: schon gespielte Titel */
   --line:rgba(36,30,24,.10);
   --line-2:rgba(36,30,24,.22);
+  --schatten:36,30,24;
+  --veil:rgba(251,249,245,.94);
   --warn:#9C4A2E;
   --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
   --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
@@ -54,6 +64,39 @@
   --accent:#4F8A46; --accent-ink:#3D6B36;
   --accent-soft:rgba(79,138,70,.10); --accent-mid:rgba(79,138,70,.42);
 }
+
+/* ── Thema „Desert Rose" ──────────────────────────────────────────────
+   Farben unveraendert aus der Themen-Sammlung: Sand, Sand hell, Clay,
+   Dusty Rose, Deep Burgundy. Zwei Abweichungen, beide bewusst:
+   die Schrift bleibt bei den Schriften des Hauses (FreeSans traegt keinen
+   Player), und Clay steht mit 2,4:1 auf Sand nur fuer Linien und Marken —
+   Text laeuft in Burgunder (7,9:1) oder in der dunkleren Akzentstufe.
+   --tint ist hier heller als --paper, nicht dunkler: im Sand ist die
+   zweite Flaeche das aufgehellte Passepartout, kein Schatten.
+   Steht nach den Akzenten, damit es deren Vorgabe auf :root ueberschreibt. */
+[data-thema="wueste"]{
+  --paper:#E8D5C4;   /* Sand */
+  --tint:#F3E7DA;    /* Sand hell */
+  --ink:#5D2E46;     /* Deep Burgundy */
+  --ink-2:rgba(93,46,70,.90);
+  --ink-3:rgba(93,46,70,.78);
+  --ink-4:rgba(93,46,70,.52);
+  --ink-5:rgba(93,46,70,.30);
+  --line:rgba(93,46,70,.14);
+  --line-2:rgba(93,46,70,.26);
+  --schatten:93,46,70;
+  --veil:rgba(232,213,196,.94);
+  --warn:#8E3B2A;
+  /* Vorgabe-Akzent des Themas: Clay traegt die Achse, wie im Entwurf. */
+  --accent:#B87D6D; --accent-ink:#854C3B;
+  --accent-soft:rgba(184,125,109,.16); --accent-mid:rgba(184,125,109,.55);
+}
+[data-thema="wueste"][data-akzent="rose"]{
+  --accent:#D4A5A5; --accent-ink:#8E4750;
+  --accent-soft:rgba(212,165,165,.20); --accent-mid:rgba(212,165,165,.62);
+}
+/* Die Form des Themas — Passepartout, Skala, Mittelachse — steht weiter
+   unten bei „Jetzt laeuft": sie muss den Rand ueberschreiben koennen. */
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:var(--paper);color:var(--ink)}
@@ -103,7 +146,7 @@ button{cursor:pointer}
   .grid{grid-template-columns:repeat(auto-fill,minmax(158px,1fr))}
 }
 .card .cov{width:100%;aspect-ratio:1;border-radius:1px;background:var(--tint);position:relative;
-  overflow:hidden;box-shadow:0 6px 18px rgba(36,30,24,.14)}
+  overflow:hidden;box-shadow:0 6px 18px rgba(var(--schatten),.14)}
 .card .cov img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .card .cov .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);
   font-style:italic;font-size:38px;color:var(--ink-4)}
@@ -165,7 +208,7 @@ button{cursor:pointer}
 .stage{flex:1;min-height:0;position:relative;padding:22px 78px 0 30px}
 .artwrap{position:relative}
 .art{width:100%;aspect-ratio:1;border-radius:1px;background:var(--tint);position:relative;overflow:hidden;
-  box-shadow:0 20px 44px rgba(36,30,24,.24);
+  box-shadow:0 20px 44px rgba(var(--schatten),.24);
   transition:width .55s cubic-bezier(.3,.8,.25,1),box-shadow .5s}
 .art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .art .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);
@@ -212,7 +255,7 @@ button{cursor:pointer}
 #view-now.dragging .veil{opacity:.9}
 #view-now.dragging .peek{opacity:1}
 #view-now.dragging .meta,#view-now.dragging .frame{opacity:0}
-#view-now.dragging .art{box-shadow:0 8px 20px rgba(36,30,24,.10)}
+#view-now.dragging .art{box-shadow:0 8px 20px rgba(var(--schatten),.10)}
 
 /* Aufgeklappt: das Bild tritt zurueck, die Titel treten hervor */
 .qlist{position:absolute;left:30px;right:92px;top:22px;bottom:8px;opacity:0;pointer-events:none;
@@ -229,7 +272,7 @@ button{cursor:pointer}
   font-variant-numeric:tabular-nums;opacity:0;transition:opacity .3s}
 .qitem.now .t{color:var(--ink);font-size:22px}
 .qitem.now .d{opacity:1;color:var(--ink-3)}
-.qitem.past .t{color:rgba(36,30,24,.26)}
+.qitem.past .t{color:var(--ink-5)}
 
 .foot{flex-shrink:0;padding:0 30px 22px;position:relative;z-index:7}
 .transport{display:flex;align-items:center;justify-content:center;gap:34px;padding-top:20px;
@@ -247,6 +290,108 @@ button{cursor:pointer}
 .nextrow .v{flex:1;min-width:0;font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-2);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .nextrow .rest{flex-shrink:0;display:flex;align-items:baseline;gap:8px}
+
+/* ══════════════ Desert Rose — „Die Skala" ══════════════
+   Das zweite Thema ist nicht nur eine Palette: die Warteschlange liegt hier
+   waagerecht unter dem Bild statt senkrecht im rechten Rand, und die Seite
+   steht auf einer Mittelachse statt links. Beide Achsen stehen im Markup,
+   das Thema zeigt eine davon — der Zustand (Warteschlange, Position) ist
+   derselbe, nur die Zeichnung wechselt. */
+.skala{display:none}
+[data-thema="wueste"] .rail,[data-thema="wueste"] .veil,
+[data-thema="wueste"] .peek,[data-thema="wueste"] .rhint{display:none}
+[data-thema="wueste"] .skala{display:block}
+
+/* Kopf: mittig, mit dem kurzen Strich des Entwurfs */
+[data-thema="wueste"] .lid{flex-direction:column;justify-content:center;gap:0;padding-bottom:0}
+[data-thema="wueste"] .lid .brand{display:none}
+[data-thema="wueste"] .qbtn{padding:2px 0 0}
+[data-thema="wueste"] .qbtn .n{letter-spacing:.3em}
+[data-thema="wueste"] .lid::after{content:'';width:26px;height:1px;background:var(--accent);margin-top:10px}
+
+/* Buehne: Bild, Beschriftung, Titel. Alle senkrechten Masse haengen an der
+   Bildschirmhoehe — auf einem kurzen Geraet (320x568) stapelten sich sonst
+   Bild, Beschriftung und Titel ueber den Fuss hinaus. overflow:hidden ist der
+   letzte Riegel: lieber ein angeschnittenes Bild als ein zerfallener Fuss. */
+[data-thema="wueste"] .stage{padding:14px 30px 0;display:flex;flex-direction:column;
+  align-items:center;overflow:hidden}
+/* Die Kachel weicht der Hoehe, nicht der Breite: was Kopf, Beschriftung,
+   Skala und Fuss brauchen, ist eine feste Groesse (rund 510 Punkte — inklusive einer zweiten Titelzeile) und kein
+   Anteil — deshalb eine Differenz und kein vh-Faktor. Auf gewoehnlichen
+   Geraeten greift die Deckelung bei 300, erst ein kurzer Bildschirm zieht das
+   Bild kleiner. svh statt vh, wo es geht: in Safari mit Adressleiste ist vh
+   die groessere, unsichtbare Hoehe. */
+[data-thema="wueste"] .artwrap{width:min(76vw,300px,calc(100vh - 512px));
+  width:min(76vw,300px,calc(100svh - 512px));
+  margin-top:clamp(4px,1.6vh,13px);flex-shrink:0}
+[data-thema="wueste"] .frame{inset:-13px;background:var(--tint);border-color:var(--line);
+  box-shadow:0 16px 34px rgba(var(--schatten),.16)}
+[data-thema="wueste"] .art{z-index:1;box-shadow:none}
+/* Beschriftung ueber dem Titel: Interpret in Versalien, Album kursiv */
+[data-thema="wueste"] .meta{display:flex;flex-direction:column;align-items:center;text-align:center;
+  margin-top:clamp(16px,3.4vh,30px);width:100%}
+[data-thema="wueste"] .meta .by{order:1;margin-top:0;font-size:10px;letter-spacing:.28em;color:var(--ink)}
+[data-thema="wueste"] .meta .alb{order:2;margin-top:6px;font-size:14px;color:var(--ink-3)}
+[data-thema="wueste"] .meta h2{order:3;margin-top:clamp(10px,2.4vh,22px);text-wrap:balance;
+  font-size:clamp(21px,6.2vw,26px)}
+[data-thema="wueste"] .meta .err{order:4}
+
+/* Die gravierte Skala: Haarraster, Marken je Titel, Zeiger */
+.skala{width:100%;padding:clamp(10px,2vh,18px) 0 4px;position:relative;touch-action:none}
+.ruler{position:relative;height:34px}
+.hairs{position:absolute;left:0;right:0;top:16px;height:7px;opacity:.5;
+  background-image:repeating-linear-gradient(90deg,var(--accent) 0 1px,transparent 1px 7px)}
+.base{position:absolute;left:0;right:0;top:16px;height:1px;background:var(--line-2)}
+.sdone{position:absolute;left:0;top:16px;height:2px;width:0;background:var(--accent)}
+.big{position:absolute;top:6px;width:1px;height:17px;background:var(--ink-4)}
+.big.past{background:var(--accent)}
+.sno{position:absolute;top:24px;transform:translateX(-50%);font-size:8.5px;letter-spacing:.12em;
+  color:var(--ink-4);font-variant-numeric:tabular-nums}
+.sno.on{color:var(--ink)}
+.mark{position:absolute;top:4px;width:0;height:0;border-left:5px solid transparent;
+  border-right:5px solid transparent;border-top:7px solid var(--ink);transform:translateX(-50%);z-index:3}
+.markline{position:absolute;top:11px;width:1px;height:16px;background:var(--ink);
+  transform:translateX(-50%);z-index:3}
+.bubble{position:absolute;bottom:calc(100% + 6px);transform:translateX(-50%);white-space:nowrap;
+  background:var(--ink);color:var(--tint);padding:5px 12px;font-size:10px;letter-spacing:.06em;
+  opacity:0;transition:opacity .18s;pointer-events:none;z-index:4;max-width:82vw;overflow:hidden;
+  text-overflow:ellipsis;box-shadow:0 6px 16px rgba(var(--schatten),.28)}
+/* Beim Ziehen sagt hier die Sprechblase, wo man landet — anders als am Rand
+   muss dafuer nichts zuruecktreten: die Skala steht neben dem Bild, nicht
+   darueber. Die Regeln des Randes werden deshalb zurueckgenommen. */
+[data-thema="wueste"] #view-now.dragging .bubble{opacity:1}
+[data-thema="wueste"] #view-now.dragging .meta,
+[data-thema="wueste"] #view-now.dragging .frame{opacity:1}
+[data-thema="wueste"] #view-now.dragging .art{box-shadow:none}
+.times{display:flex;justify-content:space-between;margin-top:8px;font-size:9.5px;letter-spacing:.14em;
+  color:var(--ink-3);font-variant-numeric:tabular-nums}
+
+/* Fuss: gefuellte Scheibe wie im Entwurf, „Als Naechstes" mittig.
+   Die Restzeit steht hier rechts in der Skala, nicht in der Zeile. */
+[data-thema="wueste"] .transport{gap:30px;border-top:none;padding-top:clamp(10px,2.2vh,18px)}
+[data-thema="wueste"] .nextrow{margin-top:clamp(10px,2.2vh,18px)}
+/* Die Scheibe traegt Burgunder wie im Entwurf, nicht den Akzent: der Akzent
+   liegt in der Skala. Sie ist immer gefuellt — das Zeichen sagt den Zustand. */
+[data-thema="wueste"] .play{width:60px;height:60px;border:none;background:var(--ink);
+  color:var(--tint);box-shadow:0 8px 18px rgba(var(--schatten),.30)}
+[data-thema="wueste"] .nextrow{flex-direction:column;align-items:center;gap:5px;margin-top:18px;
+  padding-top:14px;border-top:1px solid var(--line);text-align:center}
+[data-thema="wueste"] .nextrow .k{letter-spacing:.24em}
+[data-thema="wueste"] .nextrow .v{flex:none;max-width:100%;font-size:15px}
+[data-thema="wueste"] .nextrow .rest{display:none}
+
+/* Sand auf Ton traegt keine Schrift (1,9:1) — die Taste nimmt die dunklere
+   Akzentstufe und das aufgehellte Sand. */
+[data-thema="wueste"] .act{background:var(--accent-ink);color:var(--tint)}
+
+/* Aufgeklappt: ohne senkrechte Achse ist die Zeitlage keine Ordnung mehr —
+   die Warteschlange steht hier als gewoehnliche, mittige Liste. */
+[data-thema="wueste"] .qlist{left:24px;right:24px;top:14px;bottom:4px;text-align:center;
+  overflow-y:auto;padding:4px 0}
+[data-thema="wueste"] .qitem{position:static;width:100%;padding:7px 0;text-align:center}
+[data-thema="wueste"] .qitem .d{opacity:1}
+[data-thema="wueste"] #view-now.open .art{width:100%}
+[data-thema="wueste"] #view-now.open .artwrap{opacity:0;pointer-events:none;transition:opacity .3s}
 .nextrow .rest .num{font-family:var(--serif);font-size:15px;color:var(--ink-2)}
 
 /* ── Reiterleiste ── */
@@ -256,7 +401,7 @@ button{cursor:pointer}
    sie, die decken bewusst alles zu. */
 .tabs{position:fixed;left:0;right:0;bottom:0;height:calc(var(--tabs) + var(--safe));
   padding-bottom:var(--safe);z-index:75;display:flex;
-  background:rgba(251,249,245,.94);border-top:1px solid var(--line-2);
+  background:var(--veil);border-top:1px solid var(--line-2);
   backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);
   transition:transform .3s cubic-bezier(.3,.75,.2,1)}
 .tabs button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
@@ -292,7 +437,7 @@ button{cursor:pointer}
   padding:calc(env(safe-area-inset-top,0px) + 12px) 22px 6px;align-self:flex-start}
 .albhead{padding:6px 22px 2px;display:flex;gap:16px;align-items:flex-end}
 .albhead .cov{width:112px;height:112px;border-radius:1px;flex-shrink:0;position:relative;overflow:hidden;
-  background:var(--tint);box-shadow:0 10px 26px rgba(36,30,24,.2)}
+  background:var(--tint);box-shadow:0 10px 26px rgba(var(--schatten),.2)}
 .albhead .cov img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .albhead .cov .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);
   font-style:italic;font-size:36px;color:var(--ink-4)}
@@ -335,6 +480,14 @@ button{cursor:pointer}
 .choice .lbl{display:block;font-family:var(--serif);font-size:15px}
 .choice button[aria-pressed="true"] .lbl{color:var(--accent-ink)}
 .choice .cap{display:block;margin-top:5px;font-size:11px;line-height:1.5;color:var(--ink-4)}
+/* Themen brauchen mehr Zeile als zwei Woerter — untereinander statt nebeneinander */
+.choice.hoch{flex-direction:column}
+.choice.hoch button{display:flex;align-items:flex-start;gap:14px;padding:14px}
+.choice.hoch .lbl{flex-shrink:0;width:96px}
+.choice.hoch .cap{margin-top:0;flex:1;min-width:0}
+.choice .probe{flex-shrink:0;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid var(--line-2);margin-top:1px}
+.choice .probe i{display:block;width:9px;height:9px;border-radius:50%}
 .soon{padding:16px 22px 40px;font-size:12px;color:var(--ink-4);line-height:1.6}
 
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important}}
@@ -421,9 +574,25 @@ button{cursor:pointer}
       <div class="rnum num" id="rnum"></div>
       <div class="rhint" id="rhint">Ziehen zum Spulen</div>
     </div>
+
   </div>
 
   <div class="foot">
+    <!-- Die zweite Achse: waagerecht, nur im Thema „Desert Rose" sichtbar.
+         Sie steht im Fuss und nicht in der Buehne, damit ein kurzer
+         Bildschirm sie nicht unter den Titel schiebt. -->
+    <div class="skala" id="skala">
+      <div class="ruler" id="ruler">
+        <div class="hairs"></div>
+        <div class="base"></div>
+        <div class="sdone" id="sdone"></div>
+        <div id="sticks"></div>
+        <div class="markline" id="smarkline"></div>
+        <div class="mark" id="smark"></div>
+        <div class="bubble" id="sbubble"></div>
+      </div>
+      <div class="times"><span class="num" id="szeit"></span><span class="num" id="srest"></span></div>
+    </div>
     <div class="transport">
       <button class="tb" id="prev-btn" aria-label="Vorheriger Titel">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor">
@@ -484,8 +653,14 @@ button{cursor:pointer}
     <p class="set-sub">Gilt nur für dieses Gerät.</p>
 
     <div class="group">
+      <h2>Thema</h2>
+      <div class="hint">Farben, Anordnung und die Achse, auf der die Warteschlange liegt.</div>
+      <div class="choice hoch" id="themen"></div>
+    </div>
+
+    <div class="group">
       <h2>Farbakzent</h2>
-      <div class="hint">Färbt Abspielknopf, Achse und Hervorhebungen.</div>
+      <div class="hint">Färbt Abspielknopf, Achse und Hervorhebungen. Jedes Thema bringt eigene mit.</div>
       <div class="accents" id="accents"></div>
     </div>
 
@@ -533,29 +708,63 @@ function restore(key, fallback) {
 // ---------- Einstellungen ----------
 // Ein Objekt statt vieler Schluessel: spaetere Optionen brauchen dann keinen
 // neuen Eintrag in localStorage, nur ein weiteres Feld.
-const AKZENTE = [
-  { id: 'messing', name: 'Messing', farbe: '#8A6534' },
-  { id: 'petrol',  name: 'Petrol',  farbe: '#1F6470' },
-  { id: 'gruen',   name: 'Grün',    farbe: '#4F8A46' },
+// Ein Thema ist die ganze Erscheinung: Palette, Anordnung und die Achse, auf
+// der die Warteschlange liegt. Es bringt seine eigenen Akzente mit — Messing
+// auf Sand waere keine Wahl, sondern ein Fehler. Die Kennungen sind deshalb
+// ueber alle Themen hinweg eindeutig.
+const THEMEN = [
+  {
+    id: 'papier', name: 'Papier', cap: 'Elfenbein und Messing. Die Achse liegt im rechten Rand.',
+    farbe: '#FBF9F5', rand: '#8A6534', akzente: [
+      { id: 'messing', name: 'Messing', farbe: '#8A6534' },
+      { id: 'petrol',  name: 'Petrol',  farbe: '#1F6470' },
+      { id: 'gruen',   name: 'Grün',    farbe: '#4F8A46' },
+    ],
+  },
+  {
+    id: 'wueste', name: 'Desert Rose', cap: 'Sand und Burgunder. Die Achse liegt als Skala unter dem Bild.',
+    farbe: '#E8D5C4', rand: '#5D2E46', akzente: [
+      { id: 'ton',  name: 'Ton',  farbe: '#B87D6D' },
+      { id: 'rose', name: 'Rosé', farbe: '#D4A5A5' },
+    ],
+  },
 ];
 const LEISTEN = [
   { id: 'dauerhaft', name: 'Dauerhaft', cap: 'Steht immer unten.' },
   { id: 'bedarf',    name: 'Bei Bedarf', cap: 'Liegt unter dem Rand. Der Griff holt sie hervor.' },
 ];
-const EINSTELLUNGEN_STANDARD = { akzent: 'messing', leiste: 'dauerhaft' };
+const EINSTELLUNGEN_STANDARD = { thema: 'papier', akzent: 'messing', leiste: 'dauerhaft' };
 let settings = { ...EINSTELLUNGEN_STANDARD, ...(restore('einstellungen', null) || {}) };
 
 function gewaehlt(liste, wert, ersatz) {
   return liste.some(x => x.id === wert) ? wert : ersatz;
 }
+function themaVon(id) {
+  return THEMEN.find(t => t.id === id) || THEMEN[0];
+}
+function aktuellesThema() {
+  return themaVon(gewaehlt(THEMEN, settings.thema, 'papier'));
+}
+// Nur „Desert Rose" legt die Warteschlange waagerecht — an einer Stelle
+// gefragt, nicht an zehn verteilt.
+function skalaAktiv() {
+  return aktuellesThema().id === 'wueste';
+}
 
 function applySettings() {
-  const akzent = gewaehlt(AKZENTE, settings.akzent, 'messing');
+  const thema = aktuellesThema();
+  const akzent = gewaehlt(thema.akzente, settings.akzent, thema.akzente[0].id);
   const leiste = gewaehlt(LEISTEN, settings.leiste, 'dauerhaft');
+  document.documentElement.dataset.thema = thema.id;
   document.documentElement.dataset.akzent = akzent;
   document.documentElement.dataset.leiste = leiste;
-  document.querySelectorAll('#accents button').forEach(b => {
-    b.setAttribute('aria-pressed', String(b.dataset.akzent === akzent));
+  // Die Farbe der Statusleiste gehoert zum Thema, sonst steht am iPhone
+  // ein elfenbeinfarbener Streifen ueber dem Sand.
+  document.querySelector('meta[name="theme-color"]').setAttribute('content', thema.farbe);
+
+  renderAkzente(thema, akzent);
+  document.querySelectorAll('#themen button').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.wert === thema.id));
   });
   document.querySelectorAll('#leiste button').forEach(b => {
     b.setAttribute('aria-pressed', String(b.dataset.wert === leiste));
@@ -563,20 +772,50 @@ function applySettings() {
   // „Dauerhaft" laesst keinen eingeblendeten Zustand uebrig, den man
   // spaeter nicht mehr los wird.
   zeigeLeiste(leiste === 'dauerhaft');
-  // Die Hoehe der Buehne aendert sich mit dem Sockel — die Achse muss neu legen.
+  // Achsenwechsel und geaenderte Sockelhoehe: beide Achsen neu zeichnen.
+  renderProgress();
   if (view === 'now') requestAnimationFrame(layoutQueueList);
 }
 function setSetting(key, value) {
-  settings = { ...settings, [key]: value };
+  setSettings({ [key]: value });
+}
+function setSettings(teil) {
+  settings = { ...settings, ...teil };
   store('einstellungen', settings);
   applySettings();
 }
+// Die Akzente gehoeren dem Thema, also werden sie mit ihm neu gesetzt.
+function renderAkzente(thema, akzent) {
+  const feld = $('accents');
+  if (feld.dataset.fuer !== thema.id) {
+    feld.dataset.fuer = thema.id;
+    feld.innerHTML = thema.akzente.map(a => `
+      <button data-akzent="${a.id}" aria-pressed="false">
+        <span class="dot" style="background:${a.farbe}"></span>
+        <span class="lbl">${a.name}</span>
+      </button>`).join('');
+  }
+  feld.querySelectorAll('button').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.akzent === akzent));
+  });
+}
+
 function buildSettings() {
-  $('accents').innerHTML = AKZENTE.map(a => `
-    <button data-akzent="${a.id}" aria-pressed="false">
-      <span class="dot" style="background:${a.farbe}"></span>
-      <span class="lbl">${a.name}</span>
+  $('themen').innerHTML = THEMEN.map(t => `
+    <button data-wert="${t.id}" aria-pressed="false">
+      <span class="probe" style="background:${t.farbe}">
+        <i style="background:${t.rand}"></i></span>
+      <span class="lbl">${t.name}</span>
+      <span class="cap">${t.cap}</span>
     </button>`).join('');
+  $('themen').addEventListener('click', e => {
+    const b = e.target.closest('[data-wert]');
+    if (!b || b.dataset.wert === aktuellesThema().id) return;
+    // Der Akzent des alten Themas gilt im neuen nicht — mit ihm wechseln,
+    // sonst faellt applySettings ihn jedes Mal still zurueck.
+    setSettings({ thema: b.dataset.wert, akzent: themaVon(b.dataset.wert).akzente[0].id });
+  });
+
   $('accents').addEventListener('click', e => {
     const b = e.target.closest('[data-akzent]');
     if (b) setSetting('akzent', b.dataset.akzent);
@@ -906,10 +1145,17 @@ function indexAt(v) {
   return 0;
 }
 
+// Beide Achsen werden gebaut, nicht nur die sichtbare: ein Themenwechsel
+// waehrend des Hoerens findet die andere sonst leer vor.
 function buildRail() {
   const o = offsets(), T = gesamt() || 1;
+  const bei = i => o[i] / T * 100;
   $('rticks').innerHTML = queue.map((_, i) =>
-    `<div class="rtick" data-tick="${i}" style="top:${o[i] / T * 100}%"></div>`).join('');
+    `<div class="rtick" data-tick="${i}" style="top:${bei(i)}%"></div>`).join('');
+  $('sticks').innerHTML = queue.map((_, i) => `
+    <div class="big" data-tick="${i}" style="left:${bei(i)}%"></div>
+    <div class="sno num" data-no="${i}" style="left:${Math.min(98.6, Math.max(1.4, bei(i)))}%">${i + 1}</div>`
+  ).join('');
   renderQueueList();
 }
 
@@ -932,7 +1178,9 @@ function renderQueueList() {
 function layoutQueueList() {
   const list = $('qlist');
   const h = list.clientHeight;
-  if (!h || !queue.length) return;
+  // In der Skala ordnet die Zeit nicht mehr senkrecht — dort steht die
+  // Warteschlange als gewoehnliche Liste, ohne gesetzte Hoehen.
+  if (!h || !queue.length || skalaAktiv()) return;
   const o = offsets(), T = gesamt() || 1;
   let last = -Infinity;
   list.querySelectorAll('[data-q]').forEach((el, i) => {
@@ -955,12 +1203,8 @@ function renderProgress() {
   const i = railDrag ? indexAt(g) : qIndex;
   const lokal = g - o[i];
 
-  $('rdone').style.height = p + '%';
-  $('rknob').style.top = p + '%';
-  $('rband').style.top = (o[i] / T * 100) + '%';
-  $('rband').style.height = (dauer(i) / T * 100) + '%';
-  $('rnum').style.top = p + '%';
-  $('rnum').textContent = fmt(g);
+  if (skalaAktiv()) zeichneSkala(i, p, g, lokal, T);
+  else zeichneRand(i, p, g, T);
   document.querySelectorAll('[data-tick]').forEach(el =>
     el.classList.toggle('past', +el.dataset.tick <= i));
 
@@ -978,6 +1222,33 @@ function renderProgress() {
     el.classList.toggle('now', k === i);
     el.classList.toggle('past', k < i);
   });
+}
+
+// „Papier": die Achse steht senkrecht im rechten Rand.
+function zeichneRand(i, p, g, T) {
+  const o = offsets();
+  $('rdone').style.height = p + '%';
+  $('rknob').style.top = p + '%';
+  $('rband').style.top = (o[i] / T * 100) + '%';
+  $('rband').style.height = (dauer(i) / T * 100) + '%';
+  $('rnum').style.top = p + '%';
+  $('rnum').textContent = fmt(g);
+}
+
+// „Desert Rose": dieselbe Achse als waagerechte Skala unter dem Bild.
+// Links steht die Stelle im laufenden Titel, rechts der Rest der ganzen
+// Warteschlange — die Sprechblase nennt beim Ziehen, wo man landet.
+function zeichneSkala(i, p, g, lokal, T) {
+  $('sdone').style.width = p + '%';
+  $('smark').style.left = p + '%';
+  $('smarkline').style.left = p + '%';
+  $('szeit').textContent = fmt(lokal);
+  $('srest').textContent = `noch ${fmtLang(T - g)}`;
+  const blase = $('sbubble');
+  blase.style.left = Math.min(88, Math.max(12, p)) + '%';
+  blase.textContent = `${queue[i].track.title} · ${fmt(lokal)}`;
+  document.querySelectorAll('[data-no]').forEach(el =>
+    el.classList.toggle('on', +el.dataset.no === i));
 }
 
 // Tippen und Ziehen sind zwei verschiedene Dinge: erst ab acht Punkten
@@ -1017,6 +1288,39 @@ function renderProgress() {
   };
   rail.addEventListener('pointerup', ende);
   rail.addEventListener('pointercancel', ende);
+})();
+
+// Auf der waagerechten Skala ist ein Tippen eindeutig ein Spulen — sie
+// braucht die Trennung vom Rand nicht, wo dasselbe Tippen die Warteschlange
+// aufklappt. Gespult wird trotzdem erst beim Loslassen; unterwegs bewegt
+// sich nur die Anzeige, nicht die Wiedergabe.
+(function bindSkala() {
+  const skala = $('skala'), ruler = $('ruler');
+  let aktiv = false;
+  const zeitAn = e => {
+    const r = ruler.getBoundingClientRect();
+    return Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * gesamt();
+  };
+  const ziehe = e => { railDrag = { ziel: zeitAn(e) }; renderProgress(); };
+
+  skala.addEventListener('pointerdown', e => {
+    if (qIndex < 0) return;
+    aktiv = true;
+    skala.setPointerCapture(e.pointerId);
+    $('view-now').classList.add('dragging');
+    ziehe(e);
+  });
+  skala.addEventListener('pointermove', e => { if (aktiv) ziehe(e); });
+  const ende = () => {
+    if (!aktiv) return;
+    aktiv = false;
+    $('view-now').classList.remove('dragging');
+    const ziel = railDrag ? railDrag.ziel : globalPos();
+    railDrag = null;
+    springeZu(ziel);
+  };
+  skala.addEventListener('pointerup', ende);
+  skala.addEventListener('pointercancel', ende);
 })();
 
 // Nah am Titelanfang faengt der Griff den Anfang — sonst trifft man ihn nie.

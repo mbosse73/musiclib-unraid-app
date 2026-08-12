@@ -112,7 +112,8 @@ eine eigene, hellere Oberfläche fürs Handy. Sie greift auf dieselbe Sammlung z
 - **Drei Reiter:** Sammlung, Suche, Jetzt läuft. Ein Titel startet die Wiedergabe und wechselt in „Jetzt läuft".
 - **Die Achse am rechten Rand** ist die ganze Warteschlange: eine Marke je Titel. Daran ziehen spult — auch über Titelgrenzen hinweg. Kurzes Antippen (oder der Zähler oben rechts) klappt die Titelliste auf.
 - **Einstellungen** über das Zahnrad oben rechts in der Sammlung. Sie gelten nur für dieses Gerät und bleiben gespeichert:
-  - **Farbakzent:** Messing, Petrol oder Grün — färbt Abspielknopf, Achse und Hervorhebungen.
+  - **Thema:** _Papier_ (Elfenbein und Messing) oder _Desert Rose_ (Sand und Burgunder). Das ist mehr als die Farbe: bei Desert Rose sitzt das Cover in einem Passepartout, die Seite steht auf einer Mittelachse, und die Warteschlange liegt als gravierte Skala waagerecht unter dem Bild statt senkrecht im rechten Rand. Gespult wird dort durch Ziehen auf der Skala; eine Sprechblase nennt dabei den Titel, in dem man landet.
+  - **Farbakzent:** färbt Abspielknopf, Achse und Hervorhebungen. Jedes Thema bringt eigene mit — Papier: Messing, Petrol, Grün; Desert Rose: Ton, Rosé.
   - **Untere Leiste:** _Dauerhaft_ (Voreinstellung) oder _Bei Bedarf_. Bei Bedarf liegt sie unter dem Bildschirmrand, die Sammlung bekommt den freien Platz. Unten in der Mitte bleibt ein kurzer Strich stehen — ein Tippen darauf holt die Leiste hervor, nach der Wahl eines Reiters (oder nach ein paar Sekunden) geht sie von selbst zurück.
 - **Bewusst nicht enthalten:** Scannen, die Liste übersprungener Dateien und die Sortierwahl — das bleibt am Schreibtisch. Ohne WLAN zum NAS gibt es keine Musik; einen Offline-Betrieb kann die Seite über `http://` nicht bieten.
 - Wiedergabe, Pause und Titelwechsel funktionieren auch über Sperrbildschirm und Kopfhörertasten. Öffnet man auf demselben Gerät beide Ansichten, läuft die Sitzung nahtlos weiter.
