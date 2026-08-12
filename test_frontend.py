@@ -441,6 +441,32 @@ def test_mobile_library_renders(phone):
     assert "3 ALBEN" in phone.inner_text("#lib-sub").upper()
 
 
+def test_mobile_grid_never_scrolls_sideways(phone):
+    """Ein langer Interpretenname darf die Spalte nicht ueber den Rand schieben.
+
+    Rasterelemente sind von sich aus mindestens so breit wie ihr laengster
+    unumbrechbarer Inhalt. Die Interpretenzeile laeuft mit white-space:nowrap —
+    ohne min-width:0 an der Kachel wurde die Sammlung dadurch waagerecht
+    scrollbar. Die Namen werden hier zur Laufzeit gesetzt, damit die Sammlung
+    der uebrigen Tests unveraendert bleibt.
+    """
+    phone.evaluate("""() => {
+      library.albums[0].artist = 'Ein aussergewoehnlich langer Interpretenname';
+      library.albums[0].title = 'Donaudampfschifffahrtsgesellschaftskapitaenspatent';
+      renderGrid();
+    }""")
+    phone.wait_for_timeout(100)
+
+    breit = phone.evaluate("""() => {
+      const b = document.querySelector('#view-lib .body');
+      return { scroll: b.scrollWidth, sicht: b.clientWidth,
+               fenster: window.innerWidth,
+               karte: document.querySelector('.card').getBoundingClientRect().width };
+    }""")
+    assert breit["scroll"] <= breit["sicht"], "Sammlung scrollt waagerecht"
+    assert breit["karte"] <= breit["fenster"] / 2, "Kachel breiter als eine halbe Spalte"
+
+
 def test_mobile_search_finds_track_and_plays_it(phone):
     phone.click("button[data-view='search']")
     phone.fill("#q", "Kometenmelodie")
@@ -497,6 +523,67 @@ def test_mobile_accent_changes_and_survives_reload(phone, server, akzent, farbe)
     phone.reload(wait_until="domcontentloaded")
     phone.wait_for_selector(".card")
     assert phone.evaluate("document.documentElement.dataset.akzent") == akzent
+
+
+def waehle_leiste(phone, wert):
+    phone.click("#settings-btn")
+    phone.wait_for_timeout(200)
+    phone.click(f"#leiste button[data-wert='{wert}']")
+    phone.wait_for_timeout(200)
+    phone.click("#settings-back")
+    phone.wait_for_timeout(400)
+
+
+def test_mobile_bar_stays_put_by_default(phone):
+    assert phone.evaluate("document.documentElement.dataset.leiste") == "dauerhaft"
+    assert phone.eval_on_selector("#tabs", "el => getComputedStyle(el).visibility") == "visible"
+    assert phone.eval_on_selector("#grip", "el => getComputedStyle(el).display") == "none"
+
+
+def test_mobile_bar_on_demand_hides_and_can_be_summoned(phone):
+    hoehe = lambda: phone.eval_on_selector("#view-lib", "el => el.getBoundingClientRect().height")
+    vorher = hoehe()
+    waehle_leiste(phone, "bedarf")
+
+    # Weg — und die Sammlung bekommt den frei gewordenen Platz.
+    assert phone.eval_on_selector("#tabs", "el => getComputedStyle(el).visibility") == "hidden"
+    assert hoehe() > vorher
+
+    # Der Griff bleibt sichtbar: eine Geste, die man nicht sieht, ist keine.
+    assert phone.eval_on_selector("#grip", "el => getComputedStyle(el).display") != "none"
+    phone.click("#grip")
+    phone.wait_for_timeout(400)
+    assert phone.eval_on_selector("#tabs", "el => getComputedStyle(el).visibility") == "visible"
+
+    # Nach der Wahl eines Reiters geht sie von selbst zurueck.
+    phone.click("button[data-view='search']")
+    phone.wait_for_timeout(800)
+    assert phone.evaluate("view") == "search"
+    assert phone.eval_on_selector("#tabs", "el => getComputedStyle(el).visibility") == "hidden"
+
+
+def test_mobile_bar_setting_survives_reload_and_can_be_undone(phone):
+    waehle_leiste(phone, "bedarf")
+    phone.reload(wait_until="domcontentloaded")
+    phone.wait_for_selector(".card")
+    assert phone.evaluate("document.documentElement.dataset.leiste") == "bedarf"
+    assert phone.eval_on_selector("#tabs", "el => getComputedStyle(el).visibility") == "hidden"
+
+    waehle_leiste(phone, "dauerhaft")
+    assert phone.eval_on_selector("#tabs", "el => getComputedStyle(el).visibility") == "visible"
+    assert phone.eval_on_selector("#grip", "el => getComputedStyle(el).display") == "none"
+
+
+def test_mobile_settings_are_one_object_in_storage(phone):
+    """Spaetere Optionen sollen keinen neuen Schluessel brauchen."""
+    waehle_leiste(phone, "bedarf")
+    phone.click("#settings-btn")
+    phone.wait_for_timeout(200)
+    phone.click("#accents button[data-akzent='petrol']")
+    phone.wait_for_timeout(200)
+
+    gespeichert = json.loads(phone.evaluate("localStorage.getItem('musiklib:einstellungen')"))
+    assert gespeichert == {"akzent": "petrol", "leiste": "bedarf"}
 
 
 def test_mobile_shares_the_session_with_the_desktop_page(phone, server):

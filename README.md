@@ -111,7 +111,9 @@ eine eigene, hellere Oberfläche fürs Handy. Sie greift auf dieselbe Sammlung z
 - **Absichtlich keine automatische Weiterleitung:** iPad-Safari meldet sich als Schreibtisch-Browser, eine Erkennung nach Gerät ginge schief. Die Adresse `/mobil` wird also bewusst von Hand aufgerufen (bzw. einmal als Lesezeichen abgelegt).
 - **Drei Reiter:** Sammlung, Suche, Jetzt läuft. Ein Titel startet die Wiedergabe und wechselt in „Jetzt läuft".
 - **Die Achse am rechten Rand** ist die ganze Warteschlange: eine Marke je Titel. Daran ziehen spult — auch über Titelgrenzen hinweg. Kurzes Antippen (oder der Zähler oben rechts) klappt die Titelliste auf.
-- **Farbakzent** über das Zahnrad oben rechts in der Sammlung: Messing, Petrol oder Grün. Die Wahl gilt nur für dieses Gerät und bleibt gespeichert.
+- **Einstellungen** über das Zahnrad oben rechts in der Sammlung. Sie gelten nur für dieses Gerät und bleiben gespeichert:
+  - **Farbakzent:** Messing, Petrol oder Grün — färbt Abspielknopf, Achse und Hervorhebungen.
+  - **Untere Leiste:** _Dauerhaft_ (Voreinstellung) oder _Bei Bedarf_. Bei Bedarf liegt sie unter dem Bildschirmrand, die Sammlung bekommt den freien Platz. Unten in der Mitte bleibt ein kurzer Strich stehen — ein Tippen darauf holt die Leiste hervor, nach der Wahl eines Reiters (oder nach ein paar Sekunden) geht sie von selbst zurück.
 - **Bewusst nicht enthalten:** Scannen, die Liste übersprungener Dateien und die Sortierwahl — das bleibt am Schreibtisch. Ohne WLAN zum NAS gibt es keine Musik; einen Offline-Betrieb kann die Seite über `http://` nicht bieten.
 - Wiedergabe, Pause und Titelwechsel funktionieren auch über Sperrbildschirm und Kopfhörertasten. Öffnet man auf demselben Gerät beide Ansichten, läuft die Sitzung nahtlos weiter.
 
