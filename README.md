@@ -193,3 +193,14 @@ Bewusst weggelassen, damit es schlicht bleibt:
 ## Erweitern
 
 Da die UI eine einzige `index.html` ist, lässt sie sich problemlos selbst anpassen — Schriftarten, Farben, Layout sind über CSS-Variablen ganz oben in `<style>` zentralisiert. Die Backend-Logik ist gut 300 Zeilen Python und behandelt nur das Nötigste.
+
+Für Änderungen gibt es eine Testsuite, die lokal läuft und nie im Container landet:
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt -r requirements-dev.txt
+.venv/bin/python -m playwright install chromium   # einmalig, für die Frontend-Tests
+.venv/bin/python -m pytest -q
+```
+
+Sie prüft das Backend im Prozess und das Frontend in einem echten Browser und braucht dafür keine eigenen MP3s — die Testdateien erzeugt sie selbst. Ohne installierten Browser überspringt sie den Frontend-Teil und läuft trotzdem durch.

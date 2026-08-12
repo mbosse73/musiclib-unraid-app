@@ -11,21 +11,27 @@ The application the container runs is still three files:
 - `index.html` — the entire frontend: HTML + CSS + vanilla JS in one file, no build step, no framework.
 - `requirements.txt` — pinned deps: `fastapi`, `starlette`, `mutagen`, `uvicorn`, `uvloop`, `httptools`. `starlette` is pinned explicitly even though it only arrives via FastAPI: it provides the `FileResponse` that implements Range streaming, and versions before 1.3.1 parse Range headers in quadratic time (a single request stalls the event loop for minutes). `uvicorn` is installed without the `[standard]` extra — `uvloop` and `httptools` are listed directly instead, so the unused `websockets`/`watchfiles`/`PyYAML`/`python-dotenv` don't get pulled in.
 
-`test_app.py` and `requirements-dev.txt` exist only for local development — the compose `command` installs `requirements.txt` alone, so neither ever reaches the container. `docker-compose.yml` and `README.md` (in German) cover unraid deployment; not relevant to app logic.
+`conftest.py`, `test_app.py`, `test_frontend.py` and `requirements-dev.txt` exist only for local development — the compose `command` installs `requirements.txt` alone, so none of them ever reaches the container. `docker-compose.yml` and `README.md` (in German) cover unraid deployment; not relevant to app logic.
 
 ## Running locally
 
-There is no linter and no build step. There *is* a pytest suite covering the backend; run it before and after backend changes.
+There is no linter and no build step. There *is* a pytest suite; run it before and after changes.
 
 ```bash
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt -r requirements-dev.txt
-.venv/bin/python -m pytest -q            # whole suite, ~1 s
-.venv/bin/python -m pytest -q -k cover   # one group
+.venv/bin/python -m playwright install chromium   # once, for test_frontend.py
+.venv/bin/python -m pytest -q            # 51 tests, ~16 s
+.venv/bin/python -m pytest -q test_app.py        # backend only, <1 s
+.venv/bin/python -m pytest -q -k session         # one group
 MUSIC_DIR=/path/to/some/mp3s DATA_DIR=./data .venv/bin/python app.py   # serves on :8080
 ```
 
-The suite covers what has actually broken before: Range requests returning 206, cover-endpoint path traversal, the guards that stop a scan from wiping the catalog, cover extraction from a non-first track, the tag cache, and the scan lock. It builds its own MP3 fixtures, so it needs no audio files. Anything the frontend does is *not* covered — that still has to be checked by hand in a browser.
+`test_app.py` covers the backend in-process via `TestClient`: Range requests returning 206, cover-endpoint path traversal, the guards that stop a scan from wiping the catalog, cover extraction from a non-first track and from folder images, the tag cache, and the scan lock.
+
+`test_frontend.py` drives `index.html` in a real Chromium against `app.py` in a subprocess: search (incl. by track title), sorting, the player and its button/audio synchronisation, volume, shuffle, keyboard shortcuts, and session restore. Without the `playwright` package or a usable browser the whole module skips and the backend tests still run — so a missing browser is never a red suite. `MUSIKLIB_CHROME=/path/to/chrome` overrides browser discovery.
+
+Both files share MP3 fixture builders and the `app_env` fixture from `conftest.py`; the suite needs no audio files of its own. The frontend context blocks `fonts.googleapis.com`, so the tests neither wait on the network nor depend on internet access — keep that when adding pages, or the suite slows down by more than an order of magnitude.
 
 ```powershell
 $env:MUSIC_DIR = "C:\path\to\some\mp3s"   # defaults to /music
@@ -35,11 +41,9 @@ python app.py                              # PORT env var to change the port
 
 Open `http://localhost:8080`. Startup triggers a scan **only if `library.json` does not exist** — to force a re-scan during development, delete `DATA_DIR` or `POST /api/scan`.
 
-A fresh checkout has no music to scan. To create test fixtures without any audio files on hand, write raw MPEG1 Layer III frames (a `\xff\xfb\x90\x00` header + zero padding to 417 bytes, repeated) and tag them with `mutagen.id3`; `MP3()` parses these fine and reports a duration. Cover a few cases at once — fully tagged, partially tagged, untagged (exercises the "Unbekanntes Album" fallbacks), and a non-MP3 file named `.mp3` (must be silently skipped).
+A fresh checkout has no music to scan. `conftest.py`'s `write_mp3()` / `frames()` build fixtures without any audio files on hand: raw MPEG1 Layer III frames (a `\xff\xfb\x90\x00` header + zero padding to 417 bytes, repeated) tagged with `mutagen.id3`; `MP3()` parses these fine and reports a duration. Use the same helpers when scanning a directory by hand.
 
-Worth checking after backend changes, since nothing else will catch a regression:
-- `curl -H 'Range: bytes=0-99' .../api/stream/{id}` must return `206` with a `Content-Range` header — seeking on mobile depends on it.
-- `/api/cover/{name}` must reject `..`, `/` and `\` with a 404.
+One trap the frontend tests already ran into: fixture tracks must be **long enough that playback does not run past them** during a test (`TRACK_SECONDS = 30`). With one-second tracks the queue advances between assertions and failures look like real bugs.
 
 `.venv/` and `data/` are gitignored.
 

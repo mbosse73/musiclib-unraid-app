@@ -1,5 +1,5 @@
 """
-Tests fuer app.py.
+Backend-Tests fuer app.py.
 
 Laufen nur lokal, nie im Container:
 
@@ -7,63 +7,16 @@ Laufen nur lokal, nie im Container:
     .venv/bin/python -m pytest -q
     .venv/bin/python -m pytest -q -k cover      # einzelne Gruppe
 
-Es gibt keine echten MP3s im Repo. Die Fixtures schreiben rohe
-MPEG1-Layer-III-Frames (Header + Nullen, 417 Byte pro Frame) und taggen sie
-mit mutagen — mutagen liest die anstandslos und meldet eine Spieldauer.
+Fixture-Helfer und das app_env-Fixture stehen in conftest.py.
 """
 
-import importlib
 import json
-import sys
 from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
-from mutagen.id3 import ID3, APIC, TALB, TIT2, TPE1, TPE2, TRCK
 
-# 1x1 PNG — reicht als Coverbild, das mutagen und der Browser akzeptieren.
-PNG = bytes.fromhex(
-    "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c489"
-    "0000000d49444154789c63606060f80f00010401005fe5c34b0000000049454e44ae426082"
-)
-# Zweites, sichtbar anderes Bild — fuer den Test auf ausgetauschte Cover.
-PNG_ALT = bytes.fromhex(
-    "89504e470d0a1a0a0000000d494844520000000200000002080600000072b60d24"
-    "0000001149444154789c63f8cfc0f01f8419600c0047ca07f967596eb70000000049454e44ae426082"
-)
-SILENT_FRAMES = (b"\xff\xfb\x90\x00" + b"\x00" * 413) * 40
-
-
-def write_mp3(path: Path, *, title="Titel", artist="Interpret", album="Album",
-              album_artist=None, track="1", cover: bytes | None = None):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_bytes(SILENT_FRAMES)
-    tags = ID3()
-    tags.add(TIT2(encoding=3, text=title))
-    tags.add(TPE1(encoding=3, text=artist))
-    tags.add(TALB(encoding=3, text=album))
-    tags.add(TPE2(encoding=3, text=album_artist or artist))
-    if track:
-        tags.add(TRCK(encoding=3, text=track))
-    if cover:
-        tags.add(APIC(encoding=3, mime="image/png", type=3, desc="c", data=cover))
-    tags.save(path)
-    return path
-
-
-@pytest.fixture
-def app_env(tmp_path, monkeypatch):
-    """Frisch importiertes app-Modul mit eigenem MUSIC_DIR und DATA_DIR."""
-    music = tmp_path / "music"
-    data = tmp_path / "data"
-    music.mkdir()
-    data.mkdir()
-    monkeypatch.setenv("MUSIC_DIR", str(music))
-    monkeypatch.setenv("DATA_DIR", str(data))
-    sys.modules.pop("app", None)
-    app_module = importlib.import_module("app")
-    app_module.ensure_dirs()
-    return app_module, music, data
+from conftest import PNG, PNG_ALT, SILENT_FRAMES, write_mp3
 
 
 # --------------------------------------------------------------------------
