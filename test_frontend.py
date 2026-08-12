@@ -166,8 +166,10 @@ def album_titles(pg):
     return [t.strip() for t in pg.locator(".album .title").all_inner_texts()]
 
 
-def is_paused(pg):
-    return pg.evaluate("document.getElementById('audio').paused")
+def wait_for_search(pg, term):
+    """Suchbegriff eintippen und warten, bis die Entprellung durch ist."""
+    pg.fill("#search", term)
+    pg.wait_for_timeout(200)
 
 
 # --------------------------------------------------------------------------
@@ -180,8 +182,7 @@ def test_library_renders(page):
 
 
 def test_album_without_embedded_art_uses_folder_image(page):
-    page.fill("#search", "Erstes Album")
-    page.wait_for_timeout(200)
+    wait_for_search(page, "Erstes Album")
     assert page.locator(".album .cover img").count() == 1, "Ordner-Cover fehlt"
 
 
@@ -190,14 +191,12 @@ def test_album_without_embedded_art_uses_folder_image(page):
 # --------------------------------------------------------------------------
 
 def test_search_finds_album_by_track_title(page):
-    page.fill("#search", "Kometenmelodie")
-    page.wait_for_timeout(200)
+    wait_for_search(page, "Kometenmelodie")
     assert album_titles(page) == ["Autobahn"]
 
 
 def test_search_marks_the_matching_track(page):
-    page.fill("#search", "Kometenmelodie")
-    page.wait_for_timeout(200)
+    wait_for_search(page, "Kometenmelodie")
     page.locator(".album").first.click()
     page.wait_for_selector(".track")
     assert page.locator(".track.match").count() == 1
@@ -205,8 +204,7 @@ def test_search_marks_the_matching_track(page):
 
 
 def test_search_without_hits_shows_empty_state(page):
-    page.fill("#search", "gibtesnichtimkatalog")
-    page.wait_for_timeout(200)
+    wait_for_search(page, "gibtesnichtimkatalog")
     assert "Nichts gefunden" in page.inner_text("#empty")
 
 
@@ -241,13 +239,15 @@ def test_sort_choice_survives_reload(page, ctx, server):
 def test_player_starts_track_and_button_follows_audio(page):
     page.locator(".album", has_text="Autobahn").first.click()
     page.locator(".track").first.click()
-    page.wait_for_function("!document.getElementById('audio').paused")
-    assert page.inner_text("#play-btn") == "❚❚"
+
+    # Auf den Button warten, nicht auf audio.paused: der Button wird bewusst
+    # erst vom play-Event gesetzt, das kurz nach dem Zustandswechsel feuert.
+    # Ein Vergleich direkt nach "nicht mehr pausiert" waere ein Wettlauf.
+    page.wait_for_function("document.getElementById('play-btn').textContent === '❚❚'")
 
     # Von aussen pausieren (wie Sperrbildschirm oder Medientaste)
     page.evaluate("document.getElementById('audio').pause()")
-    page.wait_for_timeout(200)
-    assert page.inner_text("#play-btn") == "▶", "Button muss dem Audio-Zustand folgen"
+    page.wait_for_function("document.getElementById('play-btn').textContent === '▶'")
 
 
 def test_player_reports_a_dead_stream(page):
@@ -313,11 +313,9 @@ def test_space_toggles_playback(page):
     page.keyboard.press("Escape")
 
     page.keyboard.press("Space")
-    page.wait_for_timeout(250)
-    assert is_paused(page)
+    page.wait_for_function("document.getElementById('audio').paused")
     page.keyboard.press("Space")
-    page.wait_for_timeout(250)
-    assert not is_paused(page)
+    page.wait_for_function("!document.getElementById('audio').paused")
 
 
 def test_n_and_p_move_through_the_queue(page):
@@ -327,11 +325,9 @@ def test_n_and_p_move_through_the_queue(page):
     page.keyboard.press("Escape")
 
     page.keyboard.press("n")
-    page.wait_for_timeout(300)
-    assert page.evaluate("qIndex") == 1
+    page.wait_for_function("qIndex === 1")
     page.keyboard.press("p")
-    page.wait_for_timeout(300)
-    assert page.evaluate("qIndex") == 0
+    page.wait_for_function("qIndex === 0")
 
 
 def test_slash_focuses_search_and_typing_does_not_trigger_shortcuts(page):
