@@ -532,6 +532,17 @@ def index():
     return FileResponse(APP_DIR / "index.html", media_type="text/html")
 
 
+@app.get("/mobil")
+def mobile():
+    """Handy-Oberflaeche — dieselben Endpunkte, eigene Bedienung.
+
+    Bewusst keine Weiterleitung nach Geraetekennung: iPad-Safari meldet sich
+    als Schreibtisch, die Erkennung ginge also schief. Wer sie will, ruft
+    /mobil auf und legt sie auf den Home-Bildschirm.
+    """
+    return FileResponse(APP_DIR / "mobile.html", media_type="text/html")
+
+
 @app.get("/api/library")
 def get_library():
     if not LIBRARY_FILE.exists():

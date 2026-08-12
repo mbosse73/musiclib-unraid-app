@@ -1,0 +1,705 @@
+<title>Faden &amp; Cover</title>
+<style>
+/* ══════════════════════════════════════════════════════════════════════
+   Faden & Cover — zwei Entwürfe für „Jetzt läuft" am Handy.
+   Aufgabe: Achse und Bild auf einem Bildschirm, ohne dass eines von beiden
+   zur Briefmarke wird.
+
+   E · Der Rand      — eigener Entwurf, Elfenbein und Messing
+   F · Desert Rose   — Farben aus der Themen-Sammlung (theme-factory),
+                       Typografie ersetzt: FreeSans trägt keinen Player.
+   ══════════════════════════════════════════════════════════════════════ */
+:root{
+  /* Seite (folgt Entwurf E) */
+  --paper:#FBF9F5;
+  --stage:#F1EDE4;
+  --ink:#241E18;
+  --ink-2:#6B6155;
+  --ink-3:#A0968A;
+  --line:rgba(36,30,24,.10);
+  --line-2:rgba(36,30,24,.22);
+  --brass:#8A6534;
+  --brass-soft:rgba(138,101,52,.09);
+  --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--stage);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;padding-bottom:90px}
+::selection{background:rgba(138,101,52,.2)}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+button,input{font:inherit;color:inherit;background:none;border:none}
+
+.page{max-width:1200px;margin:0 auto;padding:0 32px}
+.caps{font-family:var(--sans);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3)}
+
+/* ── Kopf ── */
+.masthead{padding:84px 0 46px;max-width:70ch}
+.masthead .caps{margin-bottom:26px}
+.masthead h1{font-family:var(--serif);font-weight:400;font-size:clamp(42px,6.4vw,68px);line-height:1.05;
+  letter-spacing:-.015em;text-wrap:balance}
+.masthead h1 em{font-style:italic;color:var(--brass)}
+.masthead .lede{margin-top:22px;color:var(--ink-2);font-size:16px;max-width:58ch}
+.masthead .lede b{color:var(--ink);font-weight:600}
+.rule{height:1px;background:var(--line-2)}
+
+/* ── Zwei Telefone nebeneinander ── */
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:64px;padding:56px 0 0;align-items:start}
+@media (max-width:1000px){.pair{grid-template-columns:1fr;gap:72px;justify-items:center}}
+.col{display:flex;flex-direction:column;align-items:center;gap:34px;max-width:430px}
+.col .text{width:100%}
+.col h2{font-family:var(--serif);font-size:30px;font-weight:400;letter-spacing:-.01em;line-height:1.15}
+.col h2 .no{display:block;margin-bottom:12px;font-family:var(--sans);font-size:10px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--brass)}
+.col p{margin-top:14px;color:var(--ink-2);font-size:14.5px}
+.col .swatches{display:flex;gap:0;margin-top:20px;border:1px solid var(--line-2);border-radius:2px;overflow:hidden}
+.col .swatches i{flex:1;height:30px;display:block}
+.col .note{margin-top:16px;padding-left:14px;border-left:2px solid var(--brass);font-size:13px;color:var(--ink-2)}
+.col .note b{color:var(--ink);font-weight:600}
+.col dl{margin-top:22px;border-top:1px solid var(--line-2)}
+.col dl>div{display:grid;grid-template-columns:118px 1fr;gap:16px;padding:11px 0;border-bottom:1px solid var(--line);
+  font-size:13px}
+.col dt{font-family:var(--sans);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);
+  padding-top:3px}
+.col dd{color:var(--ink-2)}
+.col dd b{color:var(--ink);font-weight:600}
+
+/* ══════════ Telefon ══════════ */
+.phone{width:390px;height:844px;border-radius:46px;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;flex-shrink:0;
+  box-shadow:0 0 0 9px #E7E1D5,0 0 0 10px rgba(36,30,24,.16),0 40px 80px rgba(36,30,24,.20);
+  touch-action:none}
+.notch{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:112px;height:31px;
+  border-radius:18px;background:#1A1512;z-index:300}
+.homeind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:126px;height:4px;
+  border-radius:3px;background:rgba(36,30,24,.22);z-index:300}
+.sbar{height:54px;flex-shrink:0;display:flex;align-items:flex-end;justify-content:space-between;
+  padding:0 30px 9px;font-size:13px;font-weight:600;font-family:var(--sans)}
+.sbar .ic{display:flex;gap:6px;align-items:center}
+.screen{flex:1;min-height:0;display:flex;flex-direction:column;position:relative}
+
+/* Plattenhülle: steht für das echte Cover aus /api/cover */
+.art{position:relative;overflow:hidden}
+.art .sheen{position:absolute;inset:0;
+  background:radial-gradient(ellipse at 26% 16%,rgba(255,255,255,.34),transparent 56%),
+             radial-gradient(ellipse at 82% 96%,rgba(0,0,0,.22),transparent 62%)}
+.art .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);
+  font-style:italic;font-weight:400;color:rgba(255,255,255,.86)}
+
+/* ══════════════════ E · DER RAND ══════════════════ */
+.pE{background:var(--paper);color:var(--ink)}
+.pE .sbar{color:var(--ink)}
+.pE .lid{display:flex;align-items:baseline;justify-content:space-between;padding:2px 30px 0;flex-shrink:0}
+.pE .lid .b{font-family:var(--serif);font-size:14px;letter-spacing:.01em}
+.pE .lid .b em{font-style:italic;color:var(--brass)}
+/* Der Griff zur Warteschlange: Zähler plus drei Striche. Im aufgeklappten
+   Zustand tauschen Zeichen und Farbe, damit der Weg zurück derselbe ist. */
+.pE .qbtn{display:flex;align-items:center;gap:9px;cursor:pointer;padding:6px 0 6px 10px;
+  color:var(--ink-3);transition:color .25s;-webkit-tap-highlight-color:transparent}
+.pE .qbtn:active,.pE .qbtn[aria-expanded="true"]{color:var(--brass)}
+.pE .qbtn .n{font-family:var(--sans);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  font-variant-numeric:tabular-nums}
+.pE .qbtn .gl{display:flex;flex-direction:column;gap:3px;width:13px}
+.pE .qbtn .gl i{display:block;height:1px;background:currentColor;transition:width .3s,transform .3s}
+.pE .qbtn .gl i:nth-child(1){width:13px}
+.pE .qbtn .gl i:nth-child(2){width:9px}
+.pE .qbtn .gl i:nth-child(3){width:13px}
+/* aufgeklappt: aus den drei Strichen wird ein Schließkreuz-Andeutung */
+.pE .qbtn[aria-expanded="true"] .gl i:nth-child(1){transform:translateY(4px) rotate(9deg)}
+.pE .qbtn[aria-expanded="true"] .gl i:nth-child(2){width:13px;opacity:0}
+.pE .qbtn[aria-expanded="true"] .gl i:nth-child(3){transform:translateY(-4px) rotate(-9deg)}
+.pE .main{flex:1;min-height:0;position:relative;padding:22px 78px 0 30px}
+
+.pE .cov{width:100%;aspect-ratio:1;border-radius:1px;position:relative;
+  box-shadow:0 20px 44px rgba(36,30,24,.24);
+  transition:width .55s cubic-bezier(.3,.8,.25,1),opacity .45s ease,box-shadow .5s}
+/* die Passepartout-Linie: ein Haarrahmen mit Abstand, wie in einer Vitrine */
+.pE .frame{position:absolute;inset:-11px;border:1px solid var(--line-2);border-radius:1px;
+  transition:opacity .4s ease}
+.pE .meta{margin-top:34px;transition:opacity .4s ease,transform .5s cubic-bezier(.3,.8,.25,1)}
+.pE .meta h3{font-family:var(--serif);font-weight:400;font-size:27px;line-height:1.2;letter-spacing:-.01em;
+  text-wrap:balance}
+.pE .meta .by{margin-top:11px;font-family:var(--sans);font-size:10px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink-2)}
+.pE .meta .alb{margin-top:5px;font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-3)}
+
+/* Der Rand: die Achse steht dort, wo sonst nur Papier ist */
+.pE .rail{position:absolute;top:22px;bottom:14px;right:0;width:78px;z-index:5;touch-action:none;cursor:grab}
+.pE .rail.grabbing{cursor:grabbing}
+.pE .rline{position:absolute;top:0;bottom:0;right:30px;width:1px;background:var(--line-2)}
+.pE .rdone{position:absolute;top:0;right:29px;width:3px;height:0;background:var(--brass);border-radius:2px}
+.pE .rtick{position:absolute;right:24px;width:13px;height:1px;background:var(--line-2)}
+.pE .rtick.past{background:rgba(138,101,52,.45)}
+.pE .rband{position:absolute;right:28px;width:5px;background:var(--brass-soft);border-radius:3px;
+  transition:top .4s cubic-bezier(.3,.8,.25,1),height .4s cubic-bezier(.3,.8,.25,1)}
+.pE .rknob{position:absolute;right:30px;width:11px;height:11px;border-radius:50%;background:var(--paper);
+  border:1.5px solid var(--brass);transform:translate(50%,-50%);pointer-events:none;
+  transition:width .18s,height .18s,box-shadow .18s}
+.pE .rail.grabbing .rknob{width:17px;height:17px;box-shadow:0 0 0 7px var(--brass-soft)}
+.pE .rnum{position:absolute;right:44px;width:32px;text-align:right;transform:translateY(-50%);
+  font-family:var(--sans);font-size:9px;letter-spacing:.06em;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.pE .rhint{position:absolute;right:52px;bottom:0;font-family:var(--sans);font-size:8.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink-3);writing-mode:vertical-rl;transition:opacity .5s}
+.pE .rhint.gone{opacity:0}
+
+/* Beim Ziehen tritt der Titel nach vorn, das Bild nach hinten */
+.pE .peek{position:absolute;left:30px;right:92px;top:46%;transform:translateY(-50%);z-index:6;
+  opacity:0;pointer-events:none;transition:opacity .28s ease}
+.pE .peek.on{opacity:1}
+.pE .peek .n{font-family:var(--sans);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--brass)}
+.pE .peek h4{font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.15;margin-top:9px;
+  letter-spacing:-.01em}
+.pE .peek .t{margin-top:9px;font-family:var(--sans);font-size:11px;letter-spacing:.14em;color:var(--ink-2);
+  font-variant-numeric:tabular-nums}
+.pE .veil{position:absolute;inset:0;background:var(--paper);opacity:0;pointer-events:none;
+  transition:opacity .3s ease;z-index:4}
+.pE.dragging .veil{opacity:.9}
+.pE.dragging .cov{box-shadow:0 8px 20px rgba(36,30,24,.10)}
+/* solange gezogen wird, spricht nur das Ablesefeld — sonst steht der Titel
+   zweimal untereinander */
+.pE.dragging .meta,.pE.dragging .frame{opacity:0}
+
+/* Aufgeklappt: das Bild tritt zurück, die Titel treten hervor */
+.pE .list{position:absolute;left:30px;right:92px;top:22px;bottom:8px;opacity:0;pointer-events:none;
+  transition:opacity .4s ease;z-index:3;text-align:right}
+.pE.open .list{opacity:1;pointer-events:auto}
+.pE.open .cov{width:96px;opacity:.999}
+.pE.open .frame{opacity:0}
+.pE.open .meta{opacity:0;transform:translateY(8px)}
+.pE .list .it{position:absolute;right:0;left:0;cursor:pointer;transition:top .4s cubic-bezier(.3,.8,.25,1)}
+.pE .list .it .t{font-family:var(--serif);font-size:16px;color:var(--ink-3);line-height:1.25;
+  transition:color .3s,font-size .3s}
+.pE .list .it .d{font-family:var(--sans);font-size:9.5px;letter-spacing:.14em;color:var(--ink-3);margin-top:3px;
+  font-variant-numeric:tabular-nums;opacity:0;transition:opacity .3s}
+.pE .list .it.now .t{color:var(--ink);font-size:23px}
+.pE .list .it.now .d{opacity:1;color:var(--ink-2)}
+.pE .list .it.past .t{color:rgba(36,30,24,.24)}
+
+.pE .foot{flex-shrink:0;padding:0 30px 30px;position:relative;z-index:7}
+/* Die Transportzeile trägt nur die drei Knöpfe — mittig, ohne Gegengewicht */
+.pE .transport{display:flex;align-items:center;justify-content:center;gap:34px;padding-top:20px;
+  border-top:1px solid var(--line)}
+.pE .tb{width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--ink-2);
+  cursor:pointer}
+.pE .tb:active{color:var(--ink)}
+.pE .play{width:56px;height:56px;border-radius:50%;border:1px solid var(--brass);color:var(--brass);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:background .2s,color .2s,transform .12s}
+.pE .play:active{transform:scale(.95)}
+.pE .play.on{background:var(--brass);color:var(--paper)}
+/* Folgender Titel und Restzeit stehen auf einer Grundlinie: links, was kommt,
+   rechts, wie lange es noch dauert. Beide Seiten führt dieselbe kleine
+   Versalie an, damit die Zeile symmetrisch liest. */
+.pE .next{margin-top:20px;display:flex;align-items:baseline;gap:12px;cursor:pointer}
+.pE .next .k{font-family:var(--sans);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-3);flex-shrink:0}
+.pE .next .v{flex:1;min-width:0;font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pE .next .rest{flex-shrink:0;display:flex;align-items:baseline;gap:8px}
+.pE .next .rest .num{font-family:var(--serif);font-size:15px;color:var(--ink-2);
+  font-variant-numeric:tabular-nums;letter-spacing:.01em}
+
+/* ══════════════════ F · DESERT ROSE ══════════════════
+   Farben unverändert aus dem Thema: Sand, Dusty Rose, Clay, Deep Burgundy.
+   Clay trägt keinen Fließtext (2,4:1) — er bleibt Linie und Marke. */
+.pF{
+  --sand:#E8D5C4; --rose:#D4A5A5; --clay:#B87D6D; --burg:#5D2E46;
+  --sand-lt:#F3E7DA; --burg-2:rgba(93,46,70,.62); --burg-3:rgba(93,46,70,.34);
+  --f-line:rgba(93,46,70,.18);
+  background:var(--sand);color:var(--burg);
+}
+.pF .sbar{color:var(--burg)}
+.pF .lid{text-align:center;padding:2px 0 14px;flex-shrink:0}
+.pF .lid .t{font-family:var(--sans);font-size:9px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--burg-2)}
+.pF .lid .u{width:26px;height:1px;background:var(--clay);margin:10px auto 0}
+.pF .main{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;padding:0 30px}
+
+/* Passepartout: Bild in einem hellen Karton mit Haarrahmen */
+.pF .mat{width:100%;background:var(--sand-lt);padding:11px;border:1px solid var(--f-line);
+  box-shadow:0 16px 34px rgba(93,46,70,.16)}
+.pF .cov{width:100%;aspect-ratio:1;position:relative;overflow:hidden}
+.pF .label{text-align:center;margin-top:20px}
+.pF .label .who{font-family:var(--sans);font-size:10px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--burg)}
+.pF .label .what{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--burg-2);margin-top:6px}
+.pF .title{font-family:var(--serif);font-weight:400;font-size:26px;text-align:center;margin-top:24px;
+  line-height:1.2;letter-spacing:-.01em;text-wrap:balance}
+
+/* Der Faden als gravierte Skala — die Warteschlange von links nach rechts */
+.pF .scale{width:100%;margin-top:auto;padding-bottom:6px;position:relative;touch-action:none;cursor:grab}
+.pF .scale.grabbing{cursor:grabbing}
+.pF .ruler{position:relative;height:34px}
+.pF .hairs{position:absolute;left:0;right:0;top:16px;height:7px;opacity:.5;
+  background-image:repeating-linear-gradient(90deg,var(--clay) 0 1px,transparent 1px 7px)}
+.pF .base{position:absolute;left:0;right:0;top:16px;height:1px;background:var(--f-line)}
+.pF .done{position:absolute;left:0;top:16px;height:2px;background:var(--clay);width:0}
+.pF .big{position:absolute;top:6px;width:1px;height:17px;background:var(--burg-3)}
+.pF .big.past{background:var(--clay)}
+.pF .no{position:absolute;top:24px;transform:translateX(-50%);font-family:var(--sans);font-size:8.5px;
+  letter-spacing:.12em;color:var(--burg-3);font-variant-numeric:tabular-nums}
+.pF .no.on{color:var(--burg)}
+.pF .mark{position:absolute;top:4px;width:0;height:0;border-left:5px solid transparent;
+  border-right:5px solid transparent;border-top:7px solid var(--burg);transform:translateX(-50%);z-index:3}
+.pF .markline{position:absolute;top:11px;width:1px;height:16px;background:var(--burg);transform:translateX(-50%);z-index:3}
+.pF .times{display:flex;justify-content:space-between;margin-top:8px;font-family:var(--sans);font-size:9.5px;
+  letter-spacing:.14em;color:var(--burg-2);font-variant-numeric:tabular-nums}
+.pF .bubble{position:absolute;bottom:calc(100% + 6px);transform:translateX(-50%);white-space:nowrap;
+  background:var(--burg);color:var(--sand-lt);padding:5px 12px;font-family:var(--sans);font-size:10px;
+  letter-spacing:.06em;opacity:0;transition:opacity .18s;pointer-events:none;z-index:4;
+  box-shadow:0 6px 16px rgba(93,46,70,.28)}
+.pF .bubble.on{opacity:1}
+
+.pF .foot{flex-shrink:0;padding:22px 30px 30px}
+.pF .transport{display:flex;align-items:center;justify-content:center;gap:30px;position:relative}
+.pF .tb{width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--burg-2);
+  cursor:pointer}
+.pF .tb:active{color:var(--burg)}
+.pF .play{width:60px;height:60px;border-radius:50%;background:var(--burg);color:var(--sand-lt);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .12s;
+  box-shadow:0 8px 18px rgba(93,46,70,.3)}
+.pF .play:active{transform:scale(.95)}
+.pF .next{margin-top:22px;text-align:center;border-top:1px solid var(--f-line);padding-top:14px;cursor:pointer}
+.pF .next .k{font-family:var(--sans);font-size:8.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--burg-3)}
+.pF .next .v{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--burg-2);margin-top:5px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ── Schluss ── */
+.closing{margin-top:96px;padding-top:46px;border-top:1px solid var(--line-2);
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px}
+@media (max-width:1000px){.closing{grid-template-columns:1fr;gap:36px}}
+.closing h2{font-family:var(--serif);font-size:24px;font-weight:400;margin-bottom:16px}
+.closing p{color:var(--ink-2);font-size:14.5px;margin-bottom:14px}
+.closing p b{color:var(--ink);font-weight:600}
+.closing ul{list-style:none;border-top:1px solid var(--line)}
+.closing li{padding:13px 0;border-bottom:1px solid var(--line);font-size:14px;color:var(--ink-2);
+  display:grid;grid-template-columns:20px 1fr;gap:12px}
+.closing li .m{color:var(--brass)}
+.closing li b{color:var(--ink);font-weight:600}
+footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--line-2);font-family:var(--sans);
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+  display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important}}
+</style>
+
+<div class="page">
+  <div class="masthead">
+    <div class="caps">Musiklib — Entwurf, Jetzt läuft</div>
+    <h1>Faden <em>&amp;</em> Cover</h1>
+    <p class="lede">Beim letzten Entwurf musste das Bild weichen, damit die Achse Platz hat. Das ist kein Gesetz,
+    sondern eine Folge davon, dass der Faden alle Titel gleichzeitig anschreibt. <b>Schreibt er sie nur beim
+    Ziehen an, passen beide auf einen Bildschirm.</b> Zwei Wege, dasselbe zu tun — beide bedienbar.</p>
+  </div>
+  <div class="rule"></div>
+
+  <div class="pair">
+    <!-- ══════════ E ══════════ -->
+    <div class="col">
+      <div class="phone pE" data-m="E"></div>
+      <div class="text">
+        <h2><span class="no">Entwurf E</span>Der Rand</h2>
+        <p>Die Achse steht dort, wo sonst nur Papier ist: im rechten Rand, als Haarlinie mit einer Marke je
+        Titel. Sie schreibt nichts an — sie zeigt nur, wo man ist. Erst beim Ziehen tritt das Bild hinter einen
+        Schleier zurück und der Titel unter dem Griff nach vorn. Wer die ganze Liste will, tippt den Zähler oben
+        rechts an — oder den Rand: das Cover schrumpft auf eine Vignette, die Titel kommen rechtsbündig herein
+        wie ein Inhaltsverzeichnis.</p>
+        <div class="note" style="border-left-color:var(--ink-3)"><b>Am Telefon ausprobieren:</b> oben rechts auf
+        <span style="letter-spacing:.2em">2 / 4</span> tippen — das ist der Weg zur Liste und wieder zurück.
+        Am Rand ziehen spult; kurzes Antippen des Randes tut dasselbe wie der Zähler.</div>
+        <div class="swatches" aria-hidden="true">
+          <i style="background:#FBF9F5"></i><i style="background:#F1EDE4"></i><i style="background:#8A6534"></i>
+          <i style="background:#6B6155"></i><i style="background:#241E18"></i>
+        </div>
+        <div class="note"><b>Der Kniff:</b> Weil die Namen nur auf Verlangen erscheinen, gibt es keine
+        Zwölf-Titel-Grenze mehr. Vierzig Marken sind eine feine Skala — vierzig Namen wären ein Knäuel.</div>
+        <dl>
+          <div><dt>Grundton</dt><dd>Elfenbein und Messing, ein Haarrahmen wie in der Vitrine</dd></div>
+          <div><dt>Schrift</dt><dd>Serif für die Titel, gesperrte Versalien für die Beschriftung</dd></div>
+          <div><dt>Cover</dt><dd><b>bleibt groß</b> — es gibt den Platz nur beim Ziehen kurz ab</dd></div>
+          <div><dt>Warteschlange</dt><dd>beliebig lang; Namen erscheinen auf Verlangen</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <!-- ══════════ F ══════════ -->
+    <div class="col">
+      <div class="phone pF" data-m="F"></div>
+      <div class="text">
+        <h2><span class="no">Entwurf F · Desert Rose</span>Die Skala</h2>
+        <p>Aus der Themen-Sammlung stammen die Farben: Sand, Dusty Rose, Clay und Deep Burgundy — als einziges
+        der zehn Themen für einen Player brauchbar. Der Aufbau ist symmetrisch und ruhig: das Cover im
+        Passepartout, darunter eine Bildunterschrift wie am Museumsschild. Der Faden liegt hier waagerecht als
+        <em>gravierte Skala</em> — feine Haare, ein hoher Strich je Titelanfang, eine Marke für die Position.
+        Ziehen spult, die Sprechblase nennt Titel und Zeit.</p>
+        <div class="swatches" aria-hidden="true">
+          <i style="background:#E8D5C4"></i><i style="background:#F3E7DA"></i><i style="background:#D4A5A5"></i>
+          <i style="background:#B87D6D"></i><i style="background:#5D2E46"></i>
+        </div>
+        <div class="note"><b>Zwei Eingriffe am Thema.</b> FreeSans ist ersetzt — ein Player lebt von der
+        Schrift, und Folienschrift trägt das nicht. Und Clay hat auf Sand nur 2,4:1 Kontrast: er bleibt Linie
+        und Marke, Fließtext steht in Burgundy (7,9:1).</div>
+        <dl>
+          <div><dt>Grundton</dt><dd>Sand, warm und gedeckt; Burgundy als einzige dunkle Farbe</dd></div>
+          <div><dt>Schrift</dt><dd>gesperrte Versalien für den Namen, Serif kursiv für das Werk</dd></div>
+          <div><dt>Cover</dt><dd><b>bleibt groß</b> — die Skala braucht nur 34 Punkte Höhe</dd></div>
+          <div><dt>Warteschlange</dt><dd>gut bis etwa zwanzig Titel, dann rücken die Ziffern zusammen</dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div class="closing">
+    <div>
+      <h2>Welcher davon</h2>
+      <p><b>E, wenn die Sammlung im Vordergrund stehen soll.</b> Der Rand ist die einzige der bisherigen
+      Formen, die mit beliebig langen Warteschlangen umgeht, weil sie das Anschreiben von der Anzeige trennt.
+      Und sie hält das Cover groß, was bei einer Sammlung, die am Schreibtisch ein Cover-Raster ist, die
+      ehrlichere Fortsetzung ist.</p>
+      <p><b>F, wenn es wärmer sein soll.</b> Die Skala ist sofort verständlich — jeder hat schon einmal an
+      einem Radioknopf gedreht — und die symmetrische Anlage wirkt ruhiger. Preis: Die Ziffern brauchen Platz,
+      ab etwa zwanzig Titeln wird es eng, und für lange Warteschlangen bräuchte es weiterhin eine Liste.</p>
+      <p>Beide lassen sich mit jeder Navigation von vorhin verbinden — sie ersetzen nur den Bildschirm
+      „Jetzt läuft", nichts sonst.</p>
+    </div>
+    <div>
+      <h2>Was das im Code bedeutet</h2>
+      <ul>
+        <li><span class="m">→</span><span><b>Keine neuen Daten.</b> Achse, Marken und Restzeit kommen aus
+        <code>track.duration</code>, das steht längst in <code>library.json</code>.</span></li>
+        <li><span class="m">→</span><span><b>Zwei Zustände statt einem.</b> E braucht einen aufgeklappten
+        Zustand — ein Klassenwechsel, kein zweiter Bildschirm.</span></li>
+        <li><span class="m">→</span><span><b>Griffbereich abgrenzen.</b> Der Rand ist 62 Punkte breit und
+        trägt <code>touch-action:none</code>, sonst gewinnt die Scrollgeste.</span></li>
+        <li><span class="m">→</span><span><b>Schrift ist eine Entscheidung.</b> Beide Entwürfe verlassen die
+        Monospace von <code>index.html</code>. Am Handy ist das vertretbar — es ist eine eigene Datei —, aber
+        es ist ein bewusster Bruch, kein Versehen.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <span>Musiklib — mobile.html</span>
+    <span>Ziehen · Antippen · Abspielen</span>
+  </footer>
+</div>
+
+<script>
+'use strict';
+
+/* ═════════ Daten ═════════ */
+const ALBUM = {
+  t:'Kind of Blue', ar:'Miles Davis', y:1959,
+  c:['#9FB2C6','#42597A'],   // steht für die echte Plattenhülle aus /api/cover
+  tr:[['So What',562],['Freddie Freeloader',586],['Blue in Green',337],['All Blues',693]]
+};
+
+const fmt = s => { s = Math.max(0,Math.round(s)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
+const fmtLong = s => { s = Math.round(s); const h = Math.floor(s/3600), m = Math.round(s%3600/60);
+  return h ? `${h} Std ${m} Min` : `${m} Min`; };
+const clamp = (v,a,b) => Math.min(b,Math.max(a,v));
+const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+const sv = (w,inner,sw=1.4) => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none"
+  stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+const PREV = '<svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 20L9 12l10-8v16zM5 4h2v16H5z"/></svg>';
+const NEXT = '<svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M5 4l10 8-10 8V4zm14 0h2v16h-2z"/></svg>';
+const PLAY = w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
+const PAUSE = w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4.5h3.4v15H6zM14.6 4.5H18v15h-3.4z"/></svg>`;
+const SBAR = c => `<div class="sbar"><span>9:41</span><div class="ic">
+ <svg width="15" height="11" viewBox="0 0 14 10" fill="currentColor"><rect y="6.5" width="2.2" height="3.5" rx="1"/><rect x="3.8" y="4" width="2.2" height="6" rx="1"/><rect x="7.6" y="1.5" width="2.2" height="8.5" rx="1"/><rect x="11.4" width="2.2" height="10" rx="1" opacity=".35"/></svg>
+ <svg width="23" height="11" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="20" height="11" rx="3.5" stroke="currentColor" stroke-opacity=".35"/><rect x="2" y="2" width="14" height="8" rx="2" fill="currentColor"/></svg>
+</div></div>`;
+const ART = size => `<div class="sheen"></div><span class="ini" style="font-size:${size}px">K</span>`;
+const grad = `linear-gradient(152deg,${ALBUM.c[0]},${ALBUM.c[1]})`;
+
+/* ═════════ gemeinsames Modell ═════════ */
+class Player {
+  constructor(mode, root){
+    this.m = mode; this.root = root;
+    this.qi = 1; this.pos = 96; this.playing = true; this.dragging = false; this.open = false;
+    this.build();
+  }
+  $(s){ return this.root.querySelector(s); }
+  $$(s){ return [...this.root.querySelectorAll(s)]; }
+  get tracks(){ return ALBUM.tr; }
+  get offs(){ let o=[],a=0; for(const [,d] of ALBUM.tr){ o.push(a); a+=d; } return o; }
+  get total(){ return ALBUM.tr.reduce((s,[,d])=>s+d,0); }
+  get cur(){ return ALBUM.tr[this.qi]; }
+  get gpos(){ return this.offs[this.qi] + this.pos; }
+  idxAt(v){ const o=this.offs; for(let k=o.length-1;k>=0;k--) if(v>=o[k]) return k; return 0; }
+  setGlobal(v){ v = clamp(v,0,this.total-0.5); const i = this.idxAt(v);
+    this.qi = i; this.pos = v - this.offs[i]; this.sync(); }
+  snap(){ const g = this.gpos, tol = this.total*0.015;
+    const near = this.offs.find(o => Math.abs(o-g) < tol);
+    if (near !== undefined) this.setGlobal(near); }
+  toggle(){ this.playing = !this.playing; this.sync(); }
+  next(){ if (this.qi < ALBUM.tr.length-1){ this.qi++; this.pos = 0; } else this.pos = this.cur[1]-0.5;
+    this.sync(); }
+  prev(){ if (this.pos > 3 || this.qi === 0) this.pos = 0; else { this.qi--; this.pos = 0; } this.sync(); }
+  tick(dt){
+    if (!this.playing || this.dragging) return;
+    this.pos += dt;
+    if (this.pos >= this.cur[1]){
+      if (this.qi < ALBUM.tr.length-1){ this.qi++; this.pos = 0; }
+      else { this.pos = this.cur[1]-0.5; this.playing = false; }
+    }
+    this.sync();
+  }
+  build(){ this.m === 'E' ? this.buildE() : this.buildF(); }
+  sync(){ this.m === 'E' ? this.syncE() : this.syncF(); }
+
+  /* ══════════ E · Der Rand ══════════ */
+  buildE(){
+    const O = this.offs, T = this.total, pc = v => v/T*100;
+    this.root.innerHTML = `<div class="notch"></div>${SBAR()}
+      <div class="screen">
+        <div class="lid"><span class="b">Musiklib<em>.</em></span>
+          <button class="qbtn" data-pos aria-expanded="false">
+            <span class="n"></span>
+            <span class="gl"><i></i><i></i><i></i></span>
+          </button></div>
+        <div class="main">
+          <div style="position:relative">
+            <div class="art cov" style="background:${grad}">${ART(64)}</div>
+            <div class="frame"></div>
+          </div>
+          <div class="meta">
+            <h3>${esc(ALBUM.tr[0][0])}</h3>
+            <div class="by">${esc(ALBUM.ar)}</div>
+            <div class="alb">${esc(ALBUM.t)} · ${ALBUM.y}</div>
+          </div>
+          <div class="veil"></div>
+          <div class="list" data-list>
+            ${ALBUM.tr.map(([t,d],i) => `<div class="it" data-it="${i}" style="top:${pc(O[i])}%">
+              <div class="t">${esc(t)}</div><div class="d">${fmt(d)}</div></div>`).join('')}
+          </div>
+          <div class="peek" data-peek>
+            <div class="n" data-pn></div><h4 data-ph></h4><div class="t" data-pt></div>
+          </div>
+          <div class="rail" data-rail>
+            <div class="rline"></div>
+            <div class="rband" data-band></div>
+            ${ALBUM.tr.map((_,i) => `<div class="rtick" data-tick="${i}" style="top:${pc(O[i])}%"></div>`).join('')}
+            <div class="rdone" data-done></div>
+            <div class="rknob" data-knob></div>
+            <div class="rnum" data-num></div>
+            <div class="rhint" data-hint>Ziehen zum Spulen</div>
+          </div>
+        </div>
+        <div class="foot">
+          <div class="transport">
+            <span class="tb" data-prev>${PREV}</span>
+            <span class="play on" data-pp>${PAUSE(20)}</span>
+            <span class="tb" data-next>${NEXT}</span>
+          </div>
+          <div class="next" data-nextrow>
+            <span class="k">Danach</span>
+            <span class="v" data-un></span>
+            <span class="rest"><span class="k">Noch</span><span class="num" data-rest></span></span>
+          </div>
+        </div>
+      </div><div class="homeind"></div>`;
+
+    this.$('[data-pp]').onclick = () => this.toggle();
+    this.$('[data-next]').onclick = () => this.next();
+    this.$('[data-prev]').onclick = () => this.prev();
+    this.$('[data-nextrow]').onclick = () => this.next();
+    this.$$('[data-it]').forEach(n => n.onclick = () => {
+      this.qi = +n.dataset.it; this.pos = 0; this.playing = true; this.sync(); });
+
+    // Der Zähler oben rechts ist der sichtbare Griff zur Liste. Ohne ihn
+    // hing das Aufklappen an einem Antippen des Randes, auf das nichts hinwies.
+    this.$('[data-pos]').onclick = () => this.setOpen(!this.open);
+
+    const rail = this.$('[data-rail]');
+    const at = e => { const r = rail.getBoundingClientRect();
+      return clamp((e.clientY-r.top)/r.height, 0, 1) * this.total; };
+    // Tippen und Ziehen sind zwei verschiedene Dinge: erst ab acht Punkten
+    // Bewegung wird gespult, vorher bleibt es ein Tippen (= Liste).
+    let pending = false, moved = false, startY = 0;
+    const beginDrag = () => {
+      moved = true; this.dragging = true;
+      rail.classList.add('grabbing');
+      this.root.classList.add('dragging');
+      this.$('[data-peek]').classList.add('on');
+      this.$('[data-hint]').classList.add('gone');
+    };
+    rail.addEventListener('pointerdown', e => {
+      startY = e.clientY; moved = false; pending = true;
+      rail.setPointerCapture(e.pointerId);
+    });
+    rail.addEventListener('pointermove', e => {
+      if (!pending) return;
+      if (!moved && Math.abs(e.clientY - startY) > 8) beginDrag();
+      if (moved) this.setGlobal(at(e));
+    });
+    const end = () => {
+      if (!pending) return;
+      pending = false;
+      if (moved){
+        this.snap();
+        this.dragging = false;
+        rail.classList.remove('grabbing');
+        this.root.classList.remove('dragging');
+        this.$('[data-peek]').classList.remove('on');
+      } else {
+        this.setOpen(!this.open);
+      }
+      this.sync();
+    };
+    rail.addEventListener('pointerup', end);
+    rail.addEventListener('pointercancel', end);
+
+    this.sync();
+  }
+  setOpen(v){
+    this.open = v;
+    this.root.classList.toggle('open', v);
+    const p = this.$('[data-pos]');
+    if (p) p.setAttribute('aria-expanded', String(v));
+    this.layoutList();
+  }
+
+  /* Im aufgeklappten Zustand dürfen die Namen nicht übereinander liegen. */
+  layoutList(){
+    const list = this.$('[data-list]');
+    if (!list) return;
+    const h = list.clientHeight;
+    if (!h) return;
+    const O = this.offs, T = this.total;
+    let last = -Infinity;
+    list.querySelectorAll('[data-it]').forEach((n,i) => {
+      const min = (i-1 === this.qi) ? 62 : 34;
+      let top = O[i]/T*h;
+      if (top - last < min) top = last + min;
+      last = top;
+      n.style.top = top + 'px';
+    });
+  }
+
+  syncE(){
+    const T = this.total, p = this.gpos/T*100, [ct,cd] = this.cur;
+    this.$('[data-pp]').innerHTML = this.playing ? PAUSE(20) : PLAY(22);
+    this.$('[data-pp]').classList.toggle('on', this.playing);
+    this.$('[data-pos] .n').textContent = `${this.qi+1} / ${ALBUM.tr.length}`;
+    this.$('.meta h3').textContent = ct;
+    this.$('[data-rest]').textContent = fmt(T - this.gpos);
+    this.$('[data-un]').textContent = this.qi < ALBUM.tr.length-1
+      ? ALBUM.tr[this.qi+1][0] : 'Ende der Warteschlange';
+
+    this.$('[data-done]').style.height = p + '%';
+    this.$('[data-knob]').style.top = p + '%';
+    const band = this.$('[data-band]');
+    band.style.top = (this.offs[this.qi]/T*100) + '%';
+    band.style.height = (cd/T*100) + '%';
+    const num = this.$('[data-num]');
+    num.style.top = p + '%'; num.textContent = fmt(this.gpos);
+    this.$$('[data-tick]').forEach(n => n.classList.toggle('past', +n.dataset.tick <= this.qi));
+
+    this.$('[data-pn]').textContent = `Titel ${this.qi+1} von ${ALBUM.tr.length}`;
+    this.$('[data-ph]').textContent = ct;
+    this.$('[data-pt]').textContent = `${fmt(this.pos)} — noch ${fmt(cd - this.pos)}`;
+
+    this.$$('[data-it]').forEach(n => {
+      const i = +n.dataset.it;
+      n.classList.toggle('now', i === this.qi);
+      n.classList.toggle('past', i < this.qi);
+    });
+    if (this._lq !== this.qi){ this._lq = this.qi; this.layoutList(); }
+  }
+
+  /* ══════════ F · Desert Rose ══════════ */
+  buildF(){
+    const O = this.offs, T = this.total, pc = v => v/T*100;
+    this.root.innerHTML = `<div class="notch"></div>${SBAR()}
+      <div class="screen">
+        <div class="lid"><div class="t">Warteschlange</div><div class="u"></div></div>
+        <div class="main">
+          <div class="mat"><div class="art cov" style="background:${grad}">${ART(66)}</div></div>
+          <div class="label">
+            <div class="who">${esc(ALBUM.ar)}</div>
+            <div class="what">${esc(ALBUM.t)} · ${ALBUM.y}</div>
+          </div>
+          <div class="title" data-title></div>
+          <div class="scale" data-scale>
+            <div class="ruler">
+              <div class="hairs"></div><div class="base"></div>
+              <div class="done" data-done></div>
+              ${ALBUM.tr.map((_,i) => `<div class="big" data-big="${i}" style="left:${pc(O[i])}%"></div>
+                <div class="no" data-no="${i}" style="left:${clamp(pc(O[i]),1.4,98.6)}%">${i+1}</div>`).join('')}
+              <div class="markline" data-markline></div><div class="mark" data-mark></div>
+              <div class="bubble" data-bubble></div>
+            </div>
+            <div class="times"><span data-tl></span><span data-tr></span></div>
+          </div>
+        </div>
+        <div class="foot">
+          <div class="transport">
+            <span class="tb" data-prev>${PREV}</span>
+            <span class="play" data-pp>${PAUSE(22)}</span>
+            <span class="tb" data-next>${NEXT}</span>
+          </div>
+          <div class="next" data-nextrow><div class="k">Als Nächstes</div><div class="v" data-un></div></div>
+        </div>
+      </div><div class="homeind"></div>`;
+
+    this.$('[data-pp]').onclick = () => this.toggle();
+    this.$('[data-next]').onclick = () => this.next();
+    this.$('[data-prev]').onclick = () => this.prev();
+    this.$('[data-nextrow]').onclick = () => this.next();
+
+    const sc = this.$('[data-scale]');
+    const ruler = sc.querySelector('.ruler');
+    const at = e => { const r = ruler.getBoundingClientRect();
+      return clamp((e.clientX-r.left)/r.width, 0, 1) * this.total; };
+    sc.addEventListener('pointerdown', e => {
+      this.dragging = true; sc.classList.add('grabbing');
+      this.$('[data-bubble]').classList.add('on');
+      sc.setPointerCapture(e.pointerId); this.setGlobal(at(e));
+    });
+    sc.addEventListener('pointermove', e => { if (this.dragging) this.setGlobal(at(e)); });
+    const end = () => {
+      if (!this.dragging) return;
+      this.snap(); this.dragging = false;
+      sc.classList.remove('grabbing');
+      this.$('[data-bubble]').classList.remove('on');
+      this.sync();
+    };
+    sc.addEventListener('pointerup', end);
+    sc.addEventListener('pointercancel', end);
+
+    this.sync();
+  }
+
+  syncF(){
+    const T = this.total, p = this.gpos/T*100, [ct,cd] = this.cur;
+    this.$('[data-pp]').innerHTML = this.playing ? PAUSE(22) : PLAY(24);
+    this.$('[data-title]').textContent = ct;
+    this.$('[data-done]').style.width = p + '%';
+    this.$('[data-mark]').style.left = p + '%';
+    this.$('[data-markline]').style.left = p + '%';
+    this.$('[data-tl]').textContent = fmt(this.pos);
+    this.$('[data-tr]').textContent = `noch ${fmtLong(T - this.gpos)}`;
+    this.$('[data-un]').textContent = this.qi < ALBUM.tr.length-1
+      ? ALBUM.tr[this.qi+1][0] : 'Ende der Warteschlange';
+    const bub = this.$('[data-bubble]');
+    bub.style.left = clamp(p, 12, 88) + '%';
+    bub.textContent = `${ct} · ${fmt(this.pos)}`;
+    this.$$('[data-big]').forEach(n => n.classList.toggle('past', +n.dataset.big <= this.qi));
+    this.$$('[data-no]').forEach(n => n.classList.toggle('on', +n.dataset.no === this.qi));
+  }
+}
+
+/* ═════════ Start ═════════ */
+const players = [...document.querySelectorAll('.phone')].map(el => new Player(el.dataset.m, el));
+requestAnimationFrame(() => players.forEach(p => { if (p.layoutList) p.layoutList(); }));
+let last = 0;
+(function loop(ts){
+  const dt = last ? Math.min(.25,(ts-last)/1000) : 0; last = ts;
+  players.forEach(p => p.tick(dt));
+  requestAnimationFrame(loop);
+})(0);
+</script>

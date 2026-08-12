@@ -414,3 +414,104 @@ def test_album_cards_keep_content_visibility(page):
     # Ohne das rendert eine grosse Sammlung jede Karte, auch ausserhalb des Bildes.
     assert page.eval_on_selector(".album", "el => getComputedStyle(el).contentVisibility") == "auto"
     assert page.eval_on_selector(".album", "el => getComputedStyle(el).containIntrinsicSize") != "none"
+
+
+# --------------------------------------------------------------------------
+# Handy-Oberflaeche (/mobil)
+# --------------------------------------------------------------------------
+
+@pytest.fixture
+def phone(browser, server):
+    """Eigener Kontext im Handy-Format — mit Beruehrung statt Maus."""
+    context = browser.new_context(viewport={"width": 390, "height": 844},
+                                  device_scale_factor=2, is_mobile=True, has_touch=True)
+    pg = context.new_page()
+    pg.errors = []
+    pg.on("pageerror", lambda e: pg.errors.append(str(e)))
+    pg.goto(server + "/mobil", wait_until="domcontentloaded")
+    pg.wait_for_selector(".card")
+    yield pg
+    assert pg.errors == [], f"JavaScript-Fehler auf der Seite: {pg.errors}"
+    context.close()
+
+
+def test_mobile_library_renders(phone):
+    assert phone.locator(".card").count() == 3
+    # inner_text liefert die per CSS gesetzten Versalien zurueck
+    assert "3 ALBEN" in phone.inner_text("#lib-sub").upper()
+
+
+def test_mobile_search_finds_track_and_plays_it(phone):
+    phone.click("button[data-view='search']")
+    phone.fill("#q", "Kometenmelodie")
+    phone.wait_for_timeout(200)
+    phone.locator(".row[data-track]").first.click()
+
+    phone.wait_for_function("!document.getElementById('audio').paused")
+    # Ein gestarteter Titel wechselt in die Ansicht, in der man ihn bedient.
+    assert phone.evaluate("view") == "now"
+    assert phone.inner_text("#np-title") == "Kometenmelodie"
+
+
+def test_mobile_rail_seeks_across_a_track_boundary(phone):
+    phone.locator(".card", has_text="Autobahn").first.click()
+    phone.wait_for_selector(".trk")
+    phone.locator(".trk").first.click()
+    phone.wait_for_function("!document.getElementById('audio').paused")
+    assert phone.evaluate("qIndex") == 0
+
+    # Ziel liegt im zweiten Titel — der Faden muss dafuer den Titel wechseln.
+    phone.evaluate("springeZu(offsets()[1] + 5)")
+    phone.wait_for_function("qIndex === 1")
+    assert phone.inner_text("#np-title") == "Kometenmelodie"
+
+
+def test_mobile_queue_unfolds_and_folds_again(phone):
+    phone.locator(".card", has_text="Autobahn").first.click()
+    phone.locator(".trk").first.click()
+    phone.wait_for_function("!document.getElementById('audio').paused")
+
+    phone.click("#qbtn")
+    phone.wait_for_timeout(300)
+    assert phone.get_attribute("#qbtn", "aria-expanded") == "true"
+    assert phone.locator(".qitem").count() == 2
+
+    phone.click("#qbtn")
+    phone.wait_for_timeout(300)
+    assert phone.get_attribute("#qbtn", "aria-expanded") == "false"
+
+
+@pytest.mark.parametrize("akzent,farbe", [
+    ("petrol", "rgb(31, 100, 112)"),
+    ("gruen", "rgb(79, 138, 70)"),
+])
+def test_mobile_accent_changes_and_survives_reload(phone, server, akzent, farbe):
+    phone.click("#settings-btn")
+    phone.wait_for_timeout(200)
+    phone.click(f"#accents button[data-akzent='{akzent}']")
+    phone.wait_for_timeout(200)
+
+    assert phone.evaluate("document.documentElement.dataset.akzent") == akzent
+    assert phone.eval_on_selector("#play-btn", "el => getComputedStyle(el).borderColor") == farbe
+
+    phone.reload(wait_until="domcontentloaded")
+    phone.wait_for_selector(".card")
+    assert phone.evaluate("document.documentElement.dataset.akzent") == akzent
+
+
+def test_mobile_shares_the_session_with_the_desktop_page(phone, server):
+    """Beide Ansichten benutzen denselben Schluessel und dieselbe Form."""
+    phone.locator(".card", has_text="Autobahn").first.click()
+    phone.locator(".trk").nth(1).click()
+    phone.wait_for_function("!document.getElementById('audio').paused")
+    phone.evaluate("document.getElementById('audio').pause()")
+    phone.evaluate("saveSession()")
+
+    gespeichert = json.loads(phone.evaluate("localStorage.getItem('musiklib:session')"))
+    assert gespeichert["qIndex"] == 1
+    assert len(gespeichert["items"][0]) == 2, "Form muss [albumId, trackId] bleiben"
+
+    phone.goto(server, wait_until="domcontentloaded")   # dieselbe Herkunft: Schreibtischseite
+    phone.wait_for_selector(".album")
+    phone.wait_for_function("document.getElementById('now-title').textContent !== '—'")
+    assert phone.inner_text("#now-title") == "Kometenmelodie"

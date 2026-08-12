@@ -50,12 +50,13 @@ Per Windows-Explorer / macOS Finder auf den unraid-Server:
 \\<unraid-ip>\appdata\
 ```
 
-Dort einen neuen Ordner `musiklib` anlegen und drei Dateien hineinkopieren:
+Dort einen neuen Ordner `musiklib` anlegen und vier Dateien hineinkopieren:
 
 ```
 \\<unraid-ip>\appdata\musiklib\
 ├── app.py
 ├── index.html
+├── mobile.html
 └── requirements.txt
 ```
 
@@ -96,6 +97,24 @@ Oder im unraid-Dashboard beim `musiklib`-Container auf **WebUI** klicken — das
 
 Beim allerersten Start scannt die App automatisch. Bei einer Sammlung mit ein paar tausend Titeln dauert das ein paar Minuten. Der Punkt oben rechts in der App zeigt den Fortschritt.
 
+## Am Handy und am iPad
+
+Neben der Schreibtischseite liegt unter
+
+```
+http://<unraid-ip>:8080/mobil
+```
+
+eine eigene, hellere Oberfläche fürs Handy. Sie greift auf dieselbe Sammlung zu und **spielt auf dem Gerät selbst** — installiert wird nichts, es ist eine normale Webseite.
+
+- **Wie eine App:** in Safari auf _Teilen → Zum Home-Bildschirm_. Dann liegt ein Symbol auf dem Startbildschirm und die Seite startet ohne Browserleiste. Beim nächsten Öffnen ist automatisch die aktuelle Fassung da — es gibt nichts zu aktualisieren.
+- **Absichtlich keine automatische Weiterleitung:** iPad-Safari meldet sich als Schreibtisch-Browser, eine Erkennung nach Gerät ginge schief. Die Adresse `/mobil` wird also bewusst von Hand aufgerufen (bzw. einmal als Lesezeichen abgelegt).
+- **Drei Reiter:** Sammlung, Suche, Jetzt läuft. Ein Titel startet die Wiedergabe und wechselt in „Jetzt läuft".
+- **Die Achse am rechten Rand** ist die ganze Warteschlange: eine Marke je Titel. Daran ziehen spult — auch über Titelgrenzen hinweg. Kurzes Antippen (oder der Zähler oben rechts) klappt die Titelliste auf.
+- **Farbakzent** über das Zahnrad oben rechts in der Sammlung: Messing, Petrol oder Grün. Die Wahl gilt nur für dieses Gerät und bleibt gespeichert.
+- **Bewusst nicht enthalten:** Scannen, die Liste übersprungener Dateien und die Sortierwahl — das bleibt am Schreibtisch. Ohne WLAN zum NAS gibt es keine Musik; einen Offline-Betrieb kann die Seite über `http://` nicht bieten.
+- Wiedergabe, Pause und Titelwechsel funktionieren auch über Sperrbildschirm und Kopfhörertasten. Öffnet man auf demselben Gerät beide Ansichten, läuft die Sitzung nahtlos weiter.
+
 ## Bedienung
 
 - Die **Suche** filtert Alben, Interpreten und Titel gleichzeitig in Echtzeit. Wird ein Album wegen eines Titels gefunden, ist dieser Titel beim Öffnen des Albums golden markiert.
@@ -109,7 +128,7 @@ Beim allerersten Start scannt die App automatisch. Bei einer Sammlung mit ein pa
 
 ## Updates und Wartung
 
-**Code-Änderungen einfach per SMB einspielen**: `app.py` oder `index.html` in `/mnt/user/appdata/musiklib/` ersetzen, dann:
+**Code-Änderungen einfach per SMB einspielen**: `app.py`, `index.html` oder `mobile.html` in `/mnt/user/appdata/musiklib/` ersetzen, dann:
 
 - **HTML-Änderung**: nur Browser-Reload, kein Container-Neustart nötig.
 - **Python-Änderung**: Container neu starten (unraid → musiklib → Restart).
