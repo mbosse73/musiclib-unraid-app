@@ -341,10 +341,17 @@ button,input{font:inherit;color:inherit}
 .thint{position:absolute;left:88px;bottom:0;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
   color:var(--ink-3);transition:opacity .5s;z-index:5}
 .thint.gone{opacity:0}
-.tfoot{flex-shrink:0;padding:10px 22px 14px;display:flex;align-items:center;justify-content:center;
-  gap:16px;border-top:1px solid var(--hair);position:relative}
-.tfoot .rest{position:absolute;right:22px;top:50%;transform:translateY(-50%);
-  font-size:10.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.tfoot{flex-shrink:0;padding:12px 22px 6px;display:flex;align-items:center;justify-content:center;
+  gap:22px;border-top:1px solid var(--hair)}
+/* Folgender Titel und Restzeit stehen auf einer Grundlinie: was als Nächstes
+   kommt, und wie lange es bis zum Ende der Warteschlange noch dauert. */
+.tnextrow{flex-shrink:0;padding:0 22px 16px;display:flex;align-items:baseline;gap:10px;
+  cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tnextrow .k{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);flex-shrink:0}
+.tnextrow .v{flex:1;min-width:0;font-size:12.5px;color:var(--ink-2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tnextrow .rest{flex-shrink:0;font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums;
+  letter-spacing:.04em}
 /* Warnung, wenn die Warteschlange für den Faden zu lang wird */
 .toolong{margin:0 22px 10px;padding:9px 12px;border:1px solid var(--hair-strong);border-left:2px solid var(--warn);
   border-radius:2px;font-size:11px;color:var(--ink-2);line-height:1.5;display:none}
@@ -798,6 +805,10 @@ class Phone {
         <button class="tb small" data-prev>${I.prevS}</button>
         <button class="pp" style="width:52px;height:52px" data-pp>${PLAY(22)}</button>
         <button class="tb small" data-next>${I.nextS}</button>
+      </div>
+      <div class="tnextrow" data-tnextrow>
+        <span class="k">Als Nächstes</span>
+        <span class="v" data-tun></span>
         <span class="rest" data-trest></span>
       </div>
     </div>`;
@@ -919,6 +930,8 @@ class Phone {
     if (sh) sh.onclick = () => { this.shuffle = !this.shuffle; sh.classList.toggle('on', this.shuffle); };
     const un = this.$('[data-upnext]');
     if (un) un.onclick = () => this.next();
+    const tn = this.$('[data-tnextrow]');
+    if (tn) tn.onclick = () => this.next();
     this.$('[data-back]').onclick = () => this.$('[data-albsheet]').classList.remove('on');
 
     this.buildScrub(); this.buildThread();
@@ -1121,8 +1134,12 @@ class Phone {
     this._lastQi = -1;
     this.layoutNodes();
 
+    const long = this.queue.length > 12;
     const tl = this.$('[data-toolong]');
-    if (tl) tl.classList.toggle('on', this.queue.length > 12);
+    if (tl) tl.classList.toggle('on', long);
+    // bei dichter Liste läge der Hinweis auf den untersten Titeln
+    const hint0 = f.querySelector('[data-thint]');
+    if (hint0) hint0.style.display = long ? 'none' : '';
 
     const hit = f.querySelector('[data-thit]');
     if (hit.dataset.bound) return;
@@ -1214,6 +1231,8 @@ class Phone {
     if (f){
       set('[data-qc]', e => e.textContent = `${this.queue.length} Titel · noch ${fmtLong(T - this.gpos)}`);
       set('[data-trest]', e => e.textContent = `−${fmtH(T - this.gpos)}`);
+      set('[data-tun]', e => e.textContent = this.qi < this.queue.length-1
+        ? TRACKS[this.queue[this.qi+1]].t : 'Ende der Warteschlange');
       f.querySelector('[data-tdone]').style.height = p + '%';
       f.querySelector('[data-tknob]').style.top = p + '%';
       const band = f.querySelector('[data-tband]');
