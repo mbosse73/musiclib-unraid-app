@@ -183,7 +183,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
   --tinte:#1B1B25; --tinte-2:#6E6E82; --tinte-3:#A6A6B8;
   --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
   background:var(--grund);color:var(--tinte);font-family:var(--sans);height:100%;overflow:hidden;
-  display:flex;flex-direction:column}
+  display:flex;flex-direction:column;position:relative}
 .mg *{font-family:inherit}
 .mg .kissen{background:var(--karte);border-radius:26px;
   box-shadow:-9px -9px 20px var(--hell),10px 10px 26px var(--dunkel)}
@@ -196,6 +196,39 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
   background:var(--karte);box-shadow:-5px -5px 12px var(--hell),6px 6px 14px var(--dunkel)}
 .mg .rund:active{box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
 .mg .kopfz .mitte{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--tinte-3)}
+.mg .rund.an{color:var(--tinte);box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
+
+/* ── Bibliothek: dieselbe weiche Fläche, eine Ebene darüber ── */
+.mg .bib{position:absolute;inset:0;z-index:60;background:var(--grund);padding:22px 26px 26px;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.mg .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.mg .bib .bkopf{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:6px 0 16px;flex:none}
+.mg .bib h2{font-size:26px;font-weight:700;letter-spacing:-.02em}
+.mg .bib .suchfeld{display:flex;align-items:center;gap:12px;height:52px;padding:0 20px;
+  border-radius:26px;flex:none;margin-bottom:16px;background:var(--karte);
+  box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
+.mg .bib .suchfeld svg{color:var(--tinte-3);flex:none}
+.mg .bib .suchfeld input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:var(--tinte);font-size:16px}
+.mg .bib .suchfeld input::placeholder{color:var(--tinte-3)}
+.mg .bib .bliste{flex:1;min-height:0;overflow:hidden}
+.mg .bib .bz{display:flex;align-items:center;gap:16px;padding:10px;border-radius:34px;cursor:pointer;
+  margin-bottom:10px}
+.mg .bib .bz .pl{width:54px;height:54px;border-radius:50%;flex:none;display:grid;place-items:center;
+  color:#fff;font-size:19px;font-weight:700;box-shadow:0 5px 12px rgba(30,30,60,.2)}
+.mg .bib .bz .m{flex:1;min-width:0}
+.mg .bib .bz .m>span{display:block}
+.mg .bib .bz .t{font-size:15.5px;font-weight:700;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.mg .bib .bz .s{font-size:12.5px;color:var(--tinte-3);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.mg .bib .bz.an{background:var(--karte);
+  box-shadow:-6px -6px 14px var(--hell),7px 7px 18px var(--dunkel)}
+.mg .bib .bfuss{flex:none;padding-top:10px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--tinte-3);text-align:center}
+@media (prefers-reduced-motion:reduce){.mg .bib{transition:none}}
 
 /* ── Plattenspieler ── */
 .mg .deck{position:relative;width:var(--dk,470px);height:calc(var(--dk,470px) * .84);flex:none;
@@ -259,7 +292,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
   --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
   --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
   background:var(--nacht);color:var(--hell);font-family:var(--sans);height:100%;overflow:hidden;
-  display:flex;flex-direction:column}
+  display:flex;flex-direction:column;position:relative}
 .aa *{font-family:inherit}
 
 /* ── obere Karte ── */
@@ -270,6 +303,39 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 .aa .eck{width:44px;height:44px;border-radius:13px;background:var(--hell);display:grid;place-items:center;
   color:var(--tinte);box-shadow:0 1px 2px rgba(20,16,14,.08)}
 .aa .eck.cov{color:#fff;font-family:var(--serif);font-size:19px;font-weight:400}
+.aa .eck.an{background:var(--rot);color:#fff}
+.aa .kz .rechts{display:flex;align-items:center;gap:10px}
+
+/* ── Bibliothek: die Karte klappt über den ganzen Bildschirm ── */
+.aa .bib{position:absolute;inset:0;z-index:60;background:var(--papier);color:var(--tinte);
+  padding:20px 26px 26px;display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.aa .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.aa .bib .bkopf{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:8px 0 14px}
+.aa .bib h2{font-family:var(--serif);font-size:27px;font-weight:400}
+.aa .bib .suchzeile{display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(20,16,14,.18);
+  padding-bottom:12px;margin-bottom:6px}
+.aa .bib .suchzeile svg{color:var(--tinte-3);flex:none}
+.aa .bib .suchzeile input{flex:1;min-width:0;background:none;border:none;outline:none;font-size:17px;
+  color:var(--tinte);font-family:var(--serif)}
+.aa .bib .suchzeile input::placeholder{color:var(--tinte-3)}
+.aa .bib .bliste{flex:1;min-height:0;overflow:hidden}
+.aa .bib .bz{display:flex;align-items:center;gap:14px;padding:13px 2px;cursor:pointer;
+  border-bottom:1px solid rgba(20,16,14,.10)}
+.aa .bib .bz .pkt{width:10px;height:10px;border-radius:50%;flex:none}
+.aa .bib .bz .m{flex:1;min-width:0}
+.aa .bib .bz .m>span{display:block}
+.aa .bib .bz .t{font-family:var(--serif);font-size:17px;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.aa .bib .bz .s{font-size:12px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.aa .bib .bz .n{font-size:11.5px;color:var(--tinte-3);white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+.aa .bib .bz.an .t{color:var(--rot)}
+.aa .bib .bfuss{flex:none;padding-top:12px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--tinte-3)}
+@media (prefers-reduced-motion:reduce){.aa .bib{transition:none}}
 .aa h1{font-family:var(--serif);font-weight:400;font-size:var(--tg,38px);line-height:1.05;
   letter-spacing:-.01em;text-align:center;text-wrap:balance}
 .aa .ar{margin-top:10px;text-align:center;font-size:15px;color:var(--tinte-3)}
@@ -349,11 +415,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
   box-shadow:-8px -8px 18px var(--hell),9px 9px 22px var(--dunkel)}
 .kl .scheibe .bild{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;color:#fff;
   font-size:calc(var(--sg,190px) / 4);font-weight:800;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);animation:kldreh 6s linear infinite}
-.kl .scheibe .bild.halt{animation-play-state:paused}
-@keyframes kldreh{to{transform:rotate(360deg)}}
-.kl .gross{width:var(--gg,64px);height:var(--gg,64px);border-radius:50%;display:grid;place-items:center;
-  color:var(--tinte-2)}
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
 
 .kl .titelzeile{text-align:center;padding:0 var(--pad,26px) var(--tzu,16px);flex:none}
 .kl .titelzeile h1{font-size:var(--tg,22px);font-weight:800;letter-spacing:-.01em;white-space:nowrap;
@@ -393,11 +455,10 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
    Genommen: der Tonarm IST die Spulleiste. Der Knopf am Balken steht dort,
    wo die Nadel steht — ziehen heißt spulen, und es sieht aus wie das Gerät.
    Gedreht: das Gerät steht um 90° gekippt zur Vorlage — Teller links,
-   Tonarm rechts, Skalen am rechten Rand. So sitzt der Arm dort, wo er an
-   jedem echten Laufwerk sitzt, und der Tonkopf wandert von oben nach unten.
-   Der Arm ist kein Drehtonarm, sondern ein Tangentialarm: feste Führung,
-   Schlitten, Ausleger, Tonkopf. Der Tonkopf hängt immer unten und behält
-   seine Ausrichtung — nur so ist auf einen Blick klar, wo die Nadel steht.
+   Tonarm rechts. So sitzt der Arm dort, wo er an jedem echten Laufwerk sitzt.
+   Er ist ein Drehtonarm: Lager außerhalb der Platte, Rohr schräg darüber,
+   Tonkopf auf der Rille, Gegengewicht hinten. Er schwenkt mit der Position
+   nach innen — und genau an ihm wird auch gespult.
    ══════════════════════════════════════════════════════════════════════════ */
 .dp{
   --grund:#EFEFEC; --slab:#F6F6F3; --tief:#25251F;
@@ -405,7 +466,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
   --linie:rgba(26,26,22,.18);
   --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
   background:var(--grund);color:var(--tinte);font-family:var(--sans);height:100%;overflow:hidden;
-  display:flex;flex-direction:column}
+  display:flex;flex-direction:column;position:relative}
 .dp *{font-family:inherit}
 .dp .kap{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--tinte-2)}
 
@@ -432,34 +493,38 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 .dp .teller .dorn{position:absolute;left:50%;top:50%;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;
   border-radius:50%;background:var(--tief);z-index:2}
 
-/* ── Tonarm als Spulleiste, senkrecht am rechten Rand ──
-   Kein Drehtonarm, sondern ein Tangentialarm: eine feste Führung, darauf ein
-   Schlitten, daran der Ausleger und am Ende der Tonkopf. Der Tonkopf hängt
-   immer unten und bleibt immer gleich ausgerichtet — er wandert nur mit der
-   Position nach innen, so wie bei einem echten Tangentiallaufwerk. */
-.dp .armzeile{position:absolute;top:0;bottom:0;left:var(--ax,76%);width:96px;margin-left:-48px;
-  cursor:pointer;touch-action:none}
-.dp .schiene{position:absolute;top:8%;bottom:8%;left:50%;width:3px;margin-left:-1.5px;border-radius:2px;
-  background:linear-gradient(180deg,rgba(26,26,22,.55),rgba(26,26,22,.30))}
-.dp .schiene::before,.dp .schiene::after{content:'';position:absolute;left:50%;width:17px;height:3px;
-  margin-left:-8.5px;border-radius:2px;background:var(--tief)}
-.dp .schiene::before{top:-3px}
-.dp .schiene::after{bottom:-3px}
-.dp .schlitten{position:absolute;left:50%;width:26px;height:46px;margin-left:-13px;border-radius:3px;
-  transform:translateY(-50%);transition:top .18s linear;
-  background:linear-gradient(180deg,#3C3C36,#17170F);box-shadow:0 3px 9px rgba(26,26,22,.4)}
-.dp .schlitten::after{content:'';position:absolute;left:50%;top:50%;width:12px;height:1px;
-  margin:-.5px 0 0 -6px;background:rgba(255,255,255,.30)}
-.dp .ausleger{position:absolute;right:100%;top:50%;width:var(--aus,76px);height:6px;margin-top:-3px;
-  border-radius:3px;background:linear-gradient(180deg,#F2F2EE,#B4B4AA);
-  box-shadow:0 2px 6px rgba(0,0,0,.35)}
-.dp .tonkopf{position:absolute;left:-6px;top:-9px;width:24px;height:32px;border-radius:3px 3px 4px 4px;
-  background:linear-gradient(150deg,#FAFAF6,#BFBFB6);box-shadow:0 3px 8px rgba(0,0,0,.4),
-    inset 0 0 0 1px rgba(26,26,22,.18)}
-.dp .tonkopf::before{content:'';position:absolute;left:5px;right:5px;top:7px;height:1.5px;
+/* ── Tonarm ──
+   Ein Drehtonarm, wie er sein soll: Lager rechts außerhalb der Platte, von
+   dort das Rohr schräg über den Teller, am Ende der Tonkopf, der auf der
+   Rille liegt. Er wandert mit der Position nach innen. Angefasst wird er
+   selbst — eine unsichtbare Griffzone entlang des Rohrs; gespult wird über
+   den Winkel um das Lager, also mit derselben Bewegung wie am echten Gerät. */
+.dp .tonarm{position:absolute;left:var(--alx,84%);top:var(--aly,15%);width:0;height:0;z-index:3;
+  transform:rotate(var(--aw,30deg));transform-origin:0 0;
+  transition:transform .45s cubic-bezier(.4,0,.2,1)}
+.dp .tonarm.zieht{transition:none}
+.dp .lager{position:absolute;left:-27px;top:-27px;width:54px;height:54px;border-radius:50%;
+  background:radial-gradient(circle at 34% 30%,#FDFDFB,#D6D6CE 58%,#A9A9A0);
+  box-shadow:0 4px 12px rgba(26,26,22,.30),inset 0 0 0 1px rgba(255,255,255,.7)}
+.dp .lager::after{content:'';position:absolute;inset:34%;border-radius:50%;background:var(--tief);
+  opacity:.75}
+.dp .rohr{position:absolute;left:-4px;top:16px;width:8px;height:var(--arm,300px);border-radius:5px;
+  background:linear-gradient(90deg,#9C9C94,#F4F4F0 42%,#C6C6BE);
+  box-shadow:0 3px 8px rgba(26,26,22,.28)}
+.dp .gegen{position:absolute;left:-9px;top:-46px;width:18px;height:34px;border-radius:9px;
+  background:linear-gradient(150deg,#3C3C36,#17170F);box-shadow:0 2px 6px rgba(26,26,22,.35)}
+.dp .kopf{position:absolute;left:-13px;top:calc(var(--arm,300px) + 12px);width:26px;height:34px;
+  border-radius:3px 3px 5px 5px;transform:rotate(-22deg);transform-origin:50% 0;
+  background:linear-gradient(150deg,#FBFBF7,#BFBFB6);
+  box-shadow:0 3px 9px rgba(0,0,0,.42),inset 0 0 0 1px rgba(26,26,22,.16)}
+.dp .kopf::before{content:'';position:absolute;left:5px;right:5px;top:8px;height:1.5px;
   background:rgba(26,26,22,.30)}
-.dp .tonkopf::after{content:'';position:absolute;left:50%;bottom:-7px;width:2px;height:8px;margin-left:-1px;
+.dp .kopf::after{content:'';position:absolute;left:50%;bottom:-6px;width:2px;height:7px;margin-left:-1px;
   border-radius:1px;background:var(--tief)}
+/* unsichtbarer Streifen entlang des Rohrs — sonst trifft niemand 8 px */
+.dp .griffzone{position:absolute;left:-26px;top:0;width:52px;height:calc(var(--arm,300px) + 60px);
+  cursor:grab;touch-action:none}
+.dp .griffzone:active{cursor:grabbing}
 
 /* ── zwei Skalen, rechts neben dem Arm ── */
 .dp .skalen{position:absolute;left:var(--sx,92%);top:50%;transform:translate(-50%,-50%);display:flex;
@@ -483,6 +548,37 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 .dp .transport .pp{width:52px;height:52px;border-radius:50%;background:var(--tief);color:var(--slab);
   display:grid;place-items:center}
 
+/* ── Bibliothek: eine Blende in derselben Frontplattenfarbe ── */
+.dp .bib{position:absolute;inset:0;z-index:60;background:var(--slab);padding:40px 46px 34px;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.dp .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.dp .bib .bkopf{display:flex;align-items:center;gap:26px;border-bottom:1px solid var(--linie);
+  padding-bottom:16px;margin-bottom:10px}
+.dp .bib h2{font-size:22px;font-weight:500;letter-spacing:-.01em;flex:none}
+.dp .suchzeile{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+.dp .suchzeile svg{color:var(--tinte-3);flex:none}
+.dp .suchzeile input{flex:1;min-width:0;background:none;border:none;outline:none;font-size:16px;
+  color:var(--tinte)}
+.dp .suchzeile input::placeholder{color:var(--tinte-3)}
+.dp .bib .zu{width:44px;height:44px;border-radius:50%;border:1px solid var(--linie);flex:none;
+  display:grid;place-items:center;color:var(--tinte-2)}
+.dp .bib .bliste{flex:1;min-height:0;overflow:hidden}
+.dp .bz{display:flex;align-items:center;gap:16px;padding:13px 4px;cursor:pointer;
+  border-bottom:1px solid rgba(26,26,22,.08)}
+.dp .bz:hover{background:rgba(26,26,22,.035)}
+.dp .bz .pl{width:34px;height:34px;border-radius:50%;flex:none;display:grid;place-items:center;
+  color:#fff;font-size:13px;font-weight:600}
+.dp .bz .m{flex:1;min-width:0}
+.dp .bz .m>span{display:block}
+.dp .bz .t{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dp .bz .s{font-size:12px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dp .bz .n{font-size:12px;color:var(--tinte-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.dp .bz.an .t{font-weight:600}
+.dp .bib .bfuss{flex:none;padding-top:14px}
+@media (prefers-reduced-motion:reduce){.dp .bib{transition:none}}
+.dp .transport button.an{color:var(--tinte)}
+
 /* ── Liste (PC) ── */
 .dp .liste{flex:1;min-width:0;padding:44px 46px 0;overflow:hidden}
 .dp .liste .kopfz{display:flex;justify-content:space-between;align-items:baseline;
@@ -498,22 +594,15 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 .dp .lz.an .nr{color:var(--tinte)}
 .dp.quer{flex-direction:row}
 
-/* ── Variante 1: Gerät links, Schrift rechts (statt untereinander) ──
-   Der ganze Bildschirm ist die Frontplatte; die Schrift steht darauf,
-   nicht daneben — deshalb trägt hier die Wurzel den Plattenton und die
-   Platte selbst weder Rand noch Schatten. */
-.dp.zwei{flex-direction:row;background:var(--slab)}
-.dp.zwei .slab{flex:1;min-width:0;height:auto;background:transparent;box-shadow:none;
-  display:flex;align-items:center;justify-content:center}
-/* Das Gerät selbst ist quadratisch — eine Platte, kein Streifen. */
-.dp .geraet{position:relative;width:var(--gq,560px);height:var(--gq,560px);flex:none;border-radius:3px;
-  background:var(--slab);
-  box-shadow:inset 0 0 0 1px rgba(26,26,22,.16),0 22px 46px rgba(26,26,22,.14)}
-.dp.zwei .seitentext{width:var(--stw,300px);flex:none;display:flex;flex-direction:column;
-  justify-content:center;padding:0 var(--stp,30px)}
-.dp.zwei .text{flex-direction:column;align-items:flex-start;gap:16px;padding:0}
-.dp.zwei .text .zeit{text-align:left}
-.dp.zwei .transport{justify-content:flex-start;padding-top:30px;gap:22px}
+/* ── Variante 1: das Gerät nimmt die ganze Breite ein und ist quadratisch;
+   Titel, Zeit und Transport stehen darunter auf der Frontplatte. ── */
+.dp.voll{background:var(--slab)}
+.dp.voll .slab{flex:none;background:transparent;box-shadow:none;padding:0}
+.dp.voll .geraet{width:100%;aspect-ratio:1;height:auto;box-shadow:none;background:transparent}
+.dp.voll .unten{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;
+  padding:0 46px 30px}
+.dp.voll .text{padding:0}
+.dp.voll .transport{padding-top:26px}
 /* ── Blatt 07 ── */
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -534,6 +623,34 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 .sk .kz{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;
   padding:26px 34px;z-index:5}
 .sk .kz button{color:var(--hell-2)}
+.sk .kz button.an{color:var(--leucht)}
+
+/* ── Bibliothek: eine zweite Karte über der ersten ── */
+.sk .bib{position:absolute;inset:0;z-index:60;padding:56px 64px 44px;display:flex;flex-direction:column;
+  background:rgba(8,10,17,.96);
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.sk .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.sk .bib .bkopf{display:flex;align-items:baseline;gap:34px;border-bottom:1px solid var(--linie);
+  padding-bottom:16px;margin-bottom:10px}
+.sk .bib h2{font-size:15px;font-weight:300;letter-spacing:.34em;text-transform:uppercase;flex:none}
+.sk .bib .suchfeld{flex:1;min-width:0;display:flex;align-items:center;gap:12px}
+.sk .bib .suchfeld svg{color:var(--hell-3);flex:none}
+.sk .bib .suchfeld input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--hell);
+  font-size:17px;letter-spacing:.06em}
+.sk .bib .suchfeld input::placeholder{color:var(--hell-3);letter-spacing:.1em}
+.sk .bib .zu{color:var(--hell-2);flex:none}
+.sk .bib .bliste{flex:1;min-height:0;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;
+  gap:0 54px;align-content:start}
+.sk .bib .bz{display:flex;align-items:baseline;gap:16px;padding:12px 0;
+  border-bottom:1px solid var(--linie-2);cursor:pointer;color:var(--hell-3);font-size:14px;
+  letter-spacing:.04em}
+.sk .bib .bz:hover{color:var(--hell-2)}
+.sk .bib .bz .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sk .bib .bz .n{font-size:11px;white-space:nowrap}
+.sk .bib .bz.an{color:var(--leucht)}
+.sk .bib .bfuss{flex:none;padding-top:16px;font-size:10px;letter-spacing:.34em;text-transform:uppercase;
+  color:var(--hell-3)}
+@media (prefers-reduced-motion:reduce){.sk .bib{transition:none}}
 
 /* ── Rillenbild ── */
 .sk .platte{position:absolute;left:var(--pl,50%);top:var(--pt,42%);transform:translate(-50%,-50%);
@@ -828,7 +945,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
   --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
   background:radial-gradient(80% 60% at 50% 0%,#1B1B1F,var(--nacht) 70%);
   color:var(--hell);font-family:var(--sans);height:100%;overflow:hidden;
-  display:flex;flex-direction:column;padding:var(--pad,34px);gap:var(--gap,30px)}
+  display:flex;flex-direction:column;padding:var(--pad,34px);gap:var(--gap,30px);position:relative}
 .rk *{font-family:inherit}
 .rk .kap{font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--hell-3)}
 .rk .metallflaeche{
@@ -914,6 +1031,43 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
   display:grid;place-items:center;background:linear-gradient(180deg,#333438,#212226);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 4px 10px rgba(0,0,0,.5)}
 .rk .transport button.pp{color:var(--orange)}
+.rk .transport button.an{color:var(--orange);background:linear-gradient(180deg,#212226,#333438)}
+
+/* ── Bibliothek: die Klappe im Gerät ── */
+.rk .bib{position:absolute;inset:0;z-index:60;padding:34px 40px;display:flex;flex-direction:column;
+  background:rgba(10,10,13,.94);backdrop-filter:blur(4px);
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.rk .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.rk .bib .bkopf{display:flex;align-items:center;gap:24px;margin-bottom:20px}
+.rk .bib h2{font-size:22px;font-weight:600;letter-spacing:-.01em;flex:none}
+.rk .bib .suchfeld{flex:1;min-width:0;display:flex;align-items:center;gap:10px;height:46px;padding:0 16px;
+  border-radius:4px;background:linear-gradient(180deg,#141416,#1E1F22);
+  box-shadow:inset 0 1px 4px rgba(0,0,0,.8),inset 0 0 0 1px rgba(255,255,255,.08)}
+.rk .bib .suchfeld svg{color:var(--hell-3);flex:none}
+.rk .bib .suchfeld input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:var(--hell);font-size:15px}
+.rk .bib .suchfeld input::placeholder{color:var(--hell-3)}
+.rk .bib .zu{width:46px;height:46px;border-radius:4px;flex:none;display:grid;place-items:center;
+  color:var(--hell-2);background:linear-gradient(180deg,#333438,#212226);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 4px 10px rgba(0,0,0,.5)}
+.rk .bib .bliste{flex:1;min-height:0;overflow:hidden;display:grid;
+  grid-template-columns:repeat(var(--bsp,3),1fr);gap:10px 14px;align-content:start}
+.rk .bib .bz{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:4px;cursor:pointer;
+  background:linear-gradient(160deg,#26272B,#1A1B1E);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 4px 10px rgba(0,0,0,.4)}
+.rk .bib .bz:hover{background:linear-gradient(160deg,#2E2F34,#202126)}
+.rk .bib .bz .pl{width:44px;height:44px;border-radius:3px;flex:none;display:grid;place-items:center;
+  color:#fff;font-size:16px;font-weight:600}
+.rk .bib .bz .m{flex:1;min-width:0}
+.rk .bib .bz .m>span{display:block}
+.rk .bib .bz .t{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk .bib .bz .s{font-size:11.5px;color:var(--hell-3);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.rk .bib .bz.an{box-shadow:inset 0 0 0 1.5px var(--orange)}
+.rk .bib .bz.an .t{color:var(--orange)}
+.rk .bib .bfuss{flex:none;padding-top:14px;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--hell-3)}
+@media (prefers-reduced-motion:reduce){.rk .bib{transition:none}}
 /* ── Blatt 12 ── */
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -945,11 +1099,15 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
     inset 0 1px 0 rgba(255,255,255,.9);transition:top .12s}
 .sg .schieber .griff::after{content:'';position:absolute;left:4px;right:4px;top:50%;height:1px;
   background:rgba(34,34,28,.35)}
-.sg .fenster{background:#F6F6F0;border-radius:6px;padding:10px 14px;width:96px;
-  box-shadow:inset 0 0 0 1px rgba(34,34,28,.2)}
+.sg .fenster{border-radius:5px;padding:10px 14px;width:96px;
+  background:linear-gradient(180deg,rgba(255,255,255,.42),rgba(255,255,255,.16));
+  box-shadow:inset 0 0 0 1px rgba(34,34,28,.16),inset 0 1px 0 rgba(255,255,255,.5)}
 .sg .fenster .z{font-family:var(--mono);font-size:15px;color:var(--tinte-3);text-align:center;
   line-height:1.7;font-variant-numeric:tabular-nums;cursor:pointer}
 .sg .fenster .z.an{color:var(--terra);font-weight:700}
+/* die Zeilen trennen Haarlinien, nicht Farbe — die Anzeige soll Teil der
+   Frontplatte bleiben und nicht wie ein aufgeklebtes Display wirken */
+.sg .fenster.breit .z + .z{border-top:1px solid rgba(34,34,28,.10)}
 
 /* ── Werkzeugseite: eine senkrechte Achse, daneben die Anzeige ──
    Auf der Achse steht der Lautstärkeregler über die volle Höhe und darunter,
@@ -967,7 +1125,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 .sg .fenster.breit .z b{font-weight:400;color:var(--tinte-3);font-variant-numeric:tabular-nums}
 .sg .fenster.breit .z span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:13.5px}
 .sg .fenster.breit .z .d{flex:none;font-size:11.5px;color:var(--tinte-3);font-variant-numeric:tabular-nums}
-.sg .fenster.breit .z.an{background:rgba(212,120,78,.12)}
+.sg .fenster.breit .z.an{background:rgba(212,120,78,.14);box-shadow:inset 2px 0 0 var(--terra)}
 .sg .fenster.breit .z.an b,.sg .fenster.breit .z.an span{color:var(--terra)}
 .sg .schalter{width:var(--sd,84px);height:var(--sd,84px);border-radius:50%;flex:none;cursor:pointer;
   background:#F6F6F0;border:1.5px solid var(--tinte);display:grid;place-items:center;
@@ -1002,6 +1160,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 .sg .bib .bz .pl i{width:46%;height:46%;border-radius:50%;background:var(--terra);display:grid;
   place-items:center;color:#2A1409;font-size:9px;font-weight:800}
 .sg .bib .bz .m{flex:1;min-width:0}
+.sg .bib .bz .m>span{display:block}
 .sg .bib .bz .t{font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis}
 .sg .bib .bz .s{font-size:12px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
@@ -1079,7 +1238,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
   --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
   --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
   background:radial-gradient(80% 70% at 50% 20%,#241812,#150D09 75%);
-  color:var(--tinte);font-family:var(--sans);height:100%;overflow:hidden;
+  color:var(--tinte);font-family:var(--sans);height:100%;overflow:hidden;position:relative;
   display:flex;flex-direction:column;gap:var(--gap,26px);padding:var(--pad,30px);justify-content:center}
 .nc *{font-family:inherit}
 .nc .kap{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--tinte-2)}
@@ -1163,6 +1322,41 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 .nc .band .griff{position:absolute;width:14px;height:20px;border-radius:2px;margin-left:-7px;
   background:linear-gradient(180deg,#F2ECDC,#B0A78E);box-shadow:0 2px 4px rgba(0,0,0,.4);
   transition:left .18s linear}
+.nc .tasten button.an{background:linear-gradient(180deg,#C8C0A8,#EDE7D6);color:var(--zeiger)}
+
+/* ── Bibliothek: eine Schublade in der Frontplatte ── */
+.nc .bib{position:absolute;inset:0;z-index:60;padding:30px 38px;display:flex;flex-direction:column;
+  background:linear-gradient(178deg,#F0EBDB,var(--front) 40%,var(--front-2));
+  box-shadow:inset 0 0 0 2px rgba(42,36,26,.18);
+  opacity:0;pointer-events:none;transform:translateY(12px);transition:opacity .22s,transform .22s}
+.nc .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.nc .bib .bkopf{display:flex;align-items:center;gap:24px;border-bottom:1px solid rgba(42,36,26,.28);
+  padding-bottom:14px;margin-bottom:14px}
+.nc .bib h2{font-family:var(--serif);font-size:24px;font-weight:400;letter-spacing:.02em;flex:none;
+  color:var(--gravur);text-shadow:0 1px 0 rgba(255,255,255,.6)}
+.nc .bib .suchfeld{flex:1;min-width:0;display:flex;align-items:center;gap:10px;height:44px;padding:0 14px;
+  border-radius:3px;background:rgba(42,36,26,.06);box-shadow:inset 0 1px 3px rgba(42,36,26,.25)}
+.nc .bib .suchfeld svg{color:var(--tinte-3);flex:none}
+.nc .bib .suchfeld input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:var(--tinte);font-size:15px}
+.nc .bib .suchfeld input::placeholder{color:var(--tinte-3)}
+.nc .bib .bliste{flex:1;min-height:0;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;
+  gap:0 28px;align-content:start}
+.nc .bib .bz{display:flex;align-items:center;gap:14px;padding:9px 6px;cursor:pointer;
+  border-bottom:1px solid rgba(42,36,26,.14)}
+.nc .bib .bz:hover{background:rgba(42,36,26,.05)}
+.nc .bib .bz .pl{width:12px;height:12px;border-radius:50%;flex:none;
+  box-shadow:inset 0 0 0 1px rgba(42,36,26,.35)}
+.nc .bib .bz .m{flex:1;min-width:0}
+.nc .bib .bz .m>span{display:block}
+.nc .bib .bz .t{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nc .bib .bz .s{font-size:11.5px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.nc .bib .bz .n{font-size:11px;color:var(--tinte-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.nc .bib .bz.an .t{color:var(--zeiger)}
+.nc .bib .bfuss{flex:none;padding-top:12px;font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--tinte-3)}
+@media (prefers-reduced-motion:reduce){.nc .bib{transition:none}}
 
 </style></head><body>
 <div class="seite" id="verzeichnis">
@@ -1203,8 +1397,8 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
         <td>Handy</td></tr>
       <tr><td><b>05 Kieselliste</b></td><td>Kissenschiene</td><td>Die ganze Warteschlange</td>
         <td>Handy</td></tr>
-      <tr><td><b>06 Die Platte</b></td><td class="mit">Tonarm, senkrecht rechts</td>
-        <td>Nichts — am PC eine Textliste</td><td>iPad hoch · PC</td></tr>
+      <tr><td><b>06 Die Platte</b></td><td class="mit">Drehtonarm schwenken</td>
+        <td>Nichts — am PC eine Textliste mit Suche</td><td>iPad hoch · PC</td></tr>
       <tr><td><b>07 Sternkarte</b></td><td class="mit">Rillen der Platte</td><td>Titel</td>
         <td>iPad quer</td></tr>
       <tr><td><b>08 Kassette</b></td><td class="mit">Wickel und Bandleiste</td>
@@ -1239,6 +1433,13 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
       <code>_demo.js</code>, weil sie Papier sind. <code>ipad.html</code> und <code>pc.html</code>
       werden einzelne Dateien ohne Bauwerkzeug — über SMB zu ändern, ohne Neustart des
       Containers.</span></li>
+      <li><span><b>Bibliothek und Suche in jedem Blatt.</b> Immer hinter <em>einem</em> Knopf, immer
+      als Blende über dem Gerät, nie als eigene Seite: Auswurftaste am Kassettendeck, am Verstärker
+      und am Rack, Rasterzeichen am Telefon und im Weißraum, Schalter mit Lampe am Pult. Gesucht wird
+      überall über denselben Blob aus Album, Interpret und Titelnamen — die Mechanik steht einmal in
+      <code>_demo.js</code>, das Aussehen bringt jedes Blatt selbst mit. Einzige Ausnahme: wo die
+      Sammlung ohnehin offen daneben liegt (Kassette am PC, Die Platte am PC), steht die Suchzeile
+      direkt über der Liste.</span></li>
       <li><span><b>Der Knopf folgt dem Ton, nicht dem Klick.</b> In allen Entwürfen wird Abspielen/Pause
       aus dem Zustand gesetzt, nie neben dem Aufruf — die Regel aus <code>index.html</code>, damit
       Sperrbildschirm und Tastatur nicht auseinanderlaufen.</span></li>
@@ -1271,8 +1472,9 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
     Knöpfe. Das Format passt hier ohne Anpassung — <b>die Vorlage ist ein Telefonentwurf</b>. Die Liste
     zum Stöbern liegt eine Ebene tiefer; auf dem Bildschirm steht nur, was läuft. Die beiden Knöpfe, die
     in der Vorlage unten am Laufwerk sitzen, sind gestrichen — <b>Lautstärke regelt am Telefon die
-    Gerätetaste</b>, und einen zweiten Weg zur Sammlung braucht dieser Entwurf nicht. Das Laufwerk ist
-    damit reines Bild.
+    Gerätetaste</b>. Das Laufwerk ist damit reines Bild; der Weg zur Sammlung liegt oben rechts in der
+    Kopfzeile, wo er auch hingehört: ein Knopf, dahinter <b>Bibliothek und Suche</b> in derselben
+    weichen Fläche.
     <span class="probier"><b>Ausprobieren:</b> die Balken antippen; der Tonarm wandert mit der
     Position nach innen.</span></p>
     <div class="buehne">
@@ -1282,7 +1484,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
     </div>
     <dl class="zettel">
       <div><dt>Stärke</dt><dd>Große Ziele, alles im Daumenbereich</dd></div>
-      <div><dt>Schwäche</dt><dd>Ein Bildschirm, ein Titel — <b>Album- und Titelwahl liegen außerhalb</b></dd></div>
+      <div><dt>Schwäche</dt><dd>Ein Bildschirm, ein Titel — die Liste liegt eine Ebene tiefer</dd></div>
       <div><dt>Verhältnis zu mobile.html</dt><dd>Alternative, kein Ersatz: dort ist die Achse die Warteschlange</dd></div>
       <div><dt>Aufwand</dt><dd>gering — ein Bildschirm, keine zweite Ebene</dd></div>
     </dl>
@@ -1331,8 +1533,10 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
     wechselt: aus der Notizkarte wird die Warteschlange, aus Aufnehmen/Stopp/Pause wird
     <b>zurück/abspielen/weiter</b>. Die Zeit steht groß, weil sie das Einzige ist, das sich ständig
     ändert.
+    Oben rechts, neben dem Cover-Chip, öffnet ein Knopf die <b>Bibliothek</b> — dieselbe weiße Karte,
+    nur über den ganzen Bildschirm, mit einer Suchzeile in Antiqua.
     <span class="probier"><b>Ausprobieren:</b> im Ausschlag spulen, unten in der Liste einen Titel
-    wählen.</span></p>
+    wählen, oben rechts die Bibliothek öffnen und „köln" tippen.</span></p>
     <div class="buehne">
       <div class="rahmen telefon">
         <div class="schirm"><div class="kerbe"></div><div class="aa" id="b03v1"></div><div class="griff"></div></div>
@@ -1384,9 +1588,10 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 
   <section class="entwurf">
     <div class="ekopf"><h2>Variante 2 · Kiesel</h2><span class="marke geraet">Handy · 390 × 844</span></div>
-    <p class="etext">Am Telefon steht der Kopf über der Liste, sonst ändert sich nichts. Die Vorlage ist
-    hier eins zu eins brauchbar — inklusive der beiden Knöpfe neben dem Cover, aus denen bei uns
-    <b>Album öffnen</b> und <b>Zufall</b> werden.
+    <p class="etext">Am Telefon steht der Kopf über der Liste, sonst ändert sich nichts. Die beiden
+    Knöpfe neben dem Cover sind gestrichen, und das Cover <b>dreht sich nicht</b>: In einem Entwurf,
+    dessen einzige Bewegung die laufende Zeile ist, wäre eine rotierende Scheibe die zweite — und
+    zwei Bewegungen streiten sich um denselben Blick.
     <span class="probier"><b>Ausprobieren:</b> an der Linie ziehen; sie ist die einzige Vertiefung
     im ganzen Entwurf.</span></p>
     <div class="buehne">
@@ -1398,6 +1603,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
       <div><dt>Stärke</dt><dd>Sehr große Ziele, nichts zu erklären</dd></div>
       <div><dt>Schwäche</dt><dd>Fünf Zeilen sichtbar — <b>bei 18 Titeln wird gescrollt</b></dd></div>
       <div><dt>Farbe</dt><dd>Keine. Bewusst: die Cover sind die Farbe</dd></div>
+      <div><dt>Ruhe</dt><dd>Nichts dreht sich — <b>bewegt ist nur die laufende Zeile</b></dd></div>
       <div><dt>Verhältnis zu mobile.html</dt><dd>Gegenentwurf: Liste statt Achse</dd></div>
     </dl>
   </section>
@@ -1442,22 +1648,21 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 
   <section class="entwurf">
     <div class="ekopf"><h2>Variante 1 · Gerät</h2><span class="marke geraet">iPad hoch · 834 × 1194</span></div>
-    <p class="etext">Das iPad wird zum Gegenstand: links das Laufwerk, rechts eine schmale Spalte mit
-    Titel, Zeit und Transport. <b>Nebeneinander statt übereinander</b> — so bleibt das Gerät ein Gerät
-    und die Schrift steht daneben wie eine Gravur, nicht wie eine Bildunterschrift. Das Laufwerk selbst
-    ist <b>quadratisch</b> und nimmt fast die ganze linke Hälfte ein: eine Platte, kein Streifen. Wer
-    mehr will als abspielen, muss wischen — <b>hier gibt es nichts als das Stück, das läuft</b>.
-    <span class="probier"><b>Ausprobieren:</b> die schwarze Nadel am rechten Balken nach oben oder unten
-    ziehen. Die kleinen Skalen daneben sind Lautstärke und Balance.</span></p>
+    <p class="etext">Das iPad wird zum Gegenstand: Das Laufwerk ist <b>quadratisch und nimmt die volle
+    Breite ein</b> — eine Platte, kein Streifen. Darunter, auf derselben Frontplatte, stehen Titel,
+    Zeit und die Tasten. Wer mehr will als abspielen, drückt rechts das Listenzeichen: dahinter liegen
+    <b>Bibliothek und Suche</b>.
+    <span class="probier"><b>Ausprobieren:</b> den Tonarm anfassen und schwenken — er spult. Die
+    Skalen rechts sind Lautstärke und Balance, das Listenzeichen öffnet die Bibliothek.</span></p>
     <div class="buehne">
       <div class="rahmen ipad-hoch">
-        <div class="schirm"><div class="dp zwei" id="b06v1"></div></div>
+        <div class="schirm"><div class="dp voll" id="b06v1"></div></div>
       </div>
     </div>
     <dl class="zettel">
       <div><dt>Stärke</dt><dd>Nichts abzulesen, alles zu greifen</dd></div>
       <div><dt>Schwäche</dt><dd><b>Keine Sammlung</b> — Auswahl passiert woanders</dd></div>
-      <div><dt>Detail</dt><dd>Tangentialarm: Schlitten auf der Schiene, <b>Tonkopf immer unten</b></dd></div>
+      <div><dt>Detail</dt><dd>Drehtonarm: <b>schwenken heißt spulen</b></dd></div>
       <div><dt>Aufwand</dt><dd>gering — eine Leiste, ein Kreis</dd></div>
     </dl>
   </section>
@@ -1466,10 +1671,10 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
     <div class="ekopf"><h2>Variante 2 · Werkstisch</h2><span class="marke geraet">PC · 1440 × 900</span></div>
     <p class="etext">Am Schreibtisch ist die Strenge zu streng: Das Gerät bleibt links in Originalgröße,
     rechts steht die Sammlung als <b>reine Textliste</b> — keine Cover, keine Kacheln, nur Nummer, Titel,
-    Interpret, Länge. Der Tonarm steht dabei genau zwischen beidem: <b>am rechten Rand des Geräts</b>,
-    also auf dem Weg zur Liste und nicht hinter ihr.
-    <span class="probier"><b>Ausprobieren:</b> in der Liste eine Zeile anklicken; der Teller nimmt das
-    Cover als Mittelaufkleber. Gespult wird am Arm zwischen Teller und Liste.</span></p>
+    Interpret, Länge — mit einer <b>Suchzeile darüber</b>. Einen Knopf braucht sie nicht: Was ohnehin
+    offen daneben liegt, muss man nicht erst aufrufen (Variante 1 hat dafür die Blende).
+    <span class="probier"><b>Ausprobieren:</b> rechts „blue" tippen, eine Zeile anklicken; der Teller
+    nimmt das Cover als Mittelaufkleber. Gespult wird am Arm.</span></p>
     <div class="buehne">
       <div class="rahmen pc">
         <div class="schirm">
@@ -1489,20 +1694,23 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
   <div class="schluss">
     <h2>Was das im Code bedeutet</h2>
     <ol>
-      <li><span><b>Der Tonarm als Leiste braucht eine Trefferfläche.</b> Die sichtbare Führung ist 3 px
-      breit; angefasst wird ein unsichtbarer Streifen von 96 px. Ohne den trifft niemand die Nadel —
-      am iPad schon gar nicht. Senkrecht kommt dazu: <code>touch-action:none</code> ist Pflicht, sonst
-      gewinnt die Scrollgeste des Browsers gegen den Zug am Arm.</span></li>
+      <li><span><b>Der Arm braucht eine Griffzone.</b> Das Rohr ist 8 px breit; angefasst wird ein
+      unsichtbarer Streifen von 52 px, der mitrotiert. Gespult wird über den Winkel um das Lager
+      (<code>atan2</code>), also mit derselben Bewegung wie am echten Gerät.
+      <code>touch-action:none</code> ist Pflicht, sonst gewinnt die Scrollgeste des Browsers.</span></li>
       <li><span><b>Die Nadel darf nicht springen, während man zieht.</b> Position aus der Uhr nur
       übernehmen, wenn gerade nicht gezogen wird; sonst zuckt der Griff bei jedem
       <code>timeupdate</code> zurück.</span></li>
       <li><span><b>Die Textliste ist der billigste Weg zu einer großen Sammlung.</b> Kein
       <code>/api/cover</code>, kein <code>content-visibility</code>-Kunstgriff — 900 Zeilen Text
       scrollen ohne Nachdenken.</span></li>
-      <li><span><b>Ausleger und Tonkopf sind hell, der Schlitten dunkel.</b> Der Arm liegt über der
-      schwarzen Platte, der Schlitten über der hellen Frontplatte — beide brauchen den jeweils anderen
-      Kontrast, sonst verschwindet die Hälfte des Arms. Das ist kein Materialrealismus, sondern
+      <li><span><b>Der Arm ist hell, das Gegengewicht dunkel.</b> Das Rohr liegt über der schwarzen
+      Platte, das Lager über der hellen Frontplatte — jedes Stück braucht den Kontrast seines
+      Untergrunds, sonst verschwindet die Hälfte des Arms. Das ist kein Materialrealismus, sondern
       Lesbarkeit.</span></li>
+      <li><span><b>Während man zieht, darf die Uhr den Arm nicht bewegen.</b> Beim Ziehen fällt die
+      Übergangsanimation weg (<code>.zieht</code>), sonst läuft der Arm der Hand um 0,45 s
+      hinterher.</span></li>
       <li><span><b>Der Mittelaufkleber ist das Cover.</b> Rund beschnitten auf 24 % Durchmesser fällt vom
       Bild fast nichts auf — genug, um Alben zu unterscheiden, zu wenig, um Text zu lesen. Das ist der
       Preis dieser Form.</span></li>
@@ -1535,7 +1743,10 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
     Muster ohne Aussage; übrig bleibt die Platte auf schwarzem Grund. Die Rillen sind das einzige
     Bedienelement neben drei Knöpfen: <b>ein Spieler, den man aus zwei Metern sieht</b> und aus einem
     bedient.
-    <span class="probier"><b>Ausprobieren:</b> am Ring ziehen; der Arm folgt der Position nach innen.</span></p>
+    Oben rechts öffnet ein Knopf die <b>Bibliothek</b>: dieselbe Nachtseite, eine Suchzeile, zwei
+    Spalten Text — keine Kacheln, denn Cover kommen in diesem Entwurf nicht vor.
+    <span class="probier"><b>Ausprobieren:</b> am Ring ziehen; oben rechts die Bibliothek öffnen und
+    „part" oder „pärt" tippen.</span></p>
     <div class="buehne">
       <div class="rahmen ipad-quer">
         <div class="schirm"><div class="sk" id="b07v2"></div></div>
@@ -2179,6 +2390,44 @@ function bindDrag(el, cb, opts = {}){
   el.addEventListener('pointercancel', ende);
 }
 
+/* ═════════ Bibliothek ═════════
+   Jedes Blatt bringt sein eigenes Aussehen mit — eine Blende, ein Suchfeld,
+   eine Liste, ein Knopf. Filtern, Zeichnen, Markieren und Öffnen ist überall
+   dasselbe und steht deshalb hier.
+
+   o = {knopf, zu, blende, feld, liste, treffer, deck, zeile(album), leer} */
+function bindBibliothek(o){
+  const markiere = () => [...o.liste.children].forEach(el =>
+    el.classList.toggle('an', el.dataset.alb === o.deck.album.id));
+
+  const zeichne = () => {
+    const treffer = suche(o.feld.value);
+    o.liste.innerHTML = treffer.map(o.zeile).join('') || (o.leer || '');
+    if (o.treffer) o.treffer.textContent = o.feld.value.trim()
+      ? `${treffer.length} von ${ALBUMS.length} Alben` : `${ALBUMS.length} Alben`;
+    [...o.liste.children].forEach(el => el.dataset.alb && (el.onclick = () => {
+      const a = ALBUMS.find(x => x.id === el.dataset.alb);
+      o.deck.queue = a.tr.map((_,i) => `${a.id}-${i}`);
+      o.deck.qi = 0; o.deck.pos = 0; o.deck.playing = true; o.deck.render();
+      zeige(false);
+    }));
+    markiere();
+  };
+
+  const zeige = auf => {
+    o.blende.classList.toggle('auf', auf);
+    if (o.knopf) o.knopf.classList.toggle('an', auf);
+    if (auf) setTimeout(() => o.feld.focus(), 60);      // erst sichtbar, dann Fokus
+  };
+
+  if (o.knopf) o.knopf.onclick = () => zeige(!o.blende.classList.contains('auf'));
+  if (o.zu)    o.zu.onclick    = () => zeige(false);
+  o.feld.oninput = zeichne;
+  o.feld.addEventListener('keydown', ev => { if (ev.key === 'Escape') zeige(false); });
+  zeichne();
+  return {zeichne, markiere, zeige};
+}
+
 /* Cover als Verlauf mit Initial — im echten Spieler steht dort /api/cover. */
 function coverHTML(a, cls = 'cov', extra = ''){
   return `<div class="${cls}" style="background:${grad(a)}"${extra}><span class="ini">${ini(a)}</span></div>`;
@@ -2233,7 +2482,7 @@ const spielerHTML = (dw, al) => `
   <div class="kopfz">
     <button class="rund">${I.back(20)}</button>
     <span class="mitte">Jetzt läuft</span>
-    <button class="rund">${I.dots(20)}</button>
+    <button class="rund" data-bib title="Bibliothek">${I.grid(20)}</button>
   </div>
   <div class="spieler">
     ${deckHTML(dw)}
@@ -2247,8 +2496,18 @@ const spielerHTML = (dw, al) => `
     </div>
   </div>`;
 
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf"><h2>Bibliothek</h2>
+      <button class="rund" data-bib-zu>${I.x(19)}</button></div>
+    <label class="suchfeld">${I.search(18)}
+      <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
 document.getElementById('b02v2').innerHTML = `<div class="sbar" style="color:#1B1B25">
-    <span>9:41</span><div class="ic">${I.vol(15)}</div></div>` + spielerHTML(312, 104);
+    <span>9:41</span><div class="ic">${I.vol(15)}</div></div>` + spielerHTML(312, 104) + bibHTML;
 
 function verdrahte(wurzel, deck, armLang){
   const $  = s => wurzel.querySelector(s);
@@ -2262,6 +2521,16 @@ function verdrahte(wurzel, deck, armLang){
   $('[data-prev]').onclick = () => deck.prev();
   bindDrag($('[data-balken]'), f => deck.seek(f));
 
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="pl" style="background:${grad(a)}">${ini(a)}</span>
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)} · ${a.tr.length} Titel</span></span></div>`,
+    leer: '<div class="bz"><span class="m"><span class="s">Nichts gefunden.</span></span></div>',
+  });
+
   let letzter = null;
   deck.onRender = d => {
     const t = d.track, a = d.album;
@@ -2270,6 +2539,7 @@ function verdrahte(wurzel, deck, armLang){
       $('[data-titel]').textContent = t.t;
       $('[data-ar]').textContent = a.ar;
       $('[data-label]').textContent = ini(a);
+      bib.markiere();
       const w = wave(t.id, balken.length);
       balken.forEach((b,i) => b.style.height = Math.round(28 + w[i]*72) + '%');
     }
@@ -2299,7 +2569,10 @@ const karteHTML = n => `
     <div class="kz">
       <button class="eck">${I.back(20)}</button>
       <span class="mitte">Jetzt läuft</span>
-      <button class="eck cov" data-cov></button>
+      <span class="rechts">
+        <button class="eck" data-bib title="Bibliothek">${I.grid(19)}</button>
+        <button class="eck cov" data-cov></button>
+      </span>
     </div>
     <h1 data-titel></h1>
     <div class="ar" data-ar></div>
@@ -2307,6 +2580,16 @@ const karteHTML = n => `
     <div class="welle" data-welle><div class="punkte"></div>${'<b></b>'.repeat(n)}
       <div class="kopfl" data-kopf></div></div>
     <div class="fuss"><span data-vor></span><span data-rest></span></div>
+  </div>`;
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf"><h2>Bibliothek</h2>
+      <button class="eck" data-bib-zu>${I.x(19)}</button></div>
+    <label class="suchzeile">${I.search(17)}
+      <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
   </div>`;
 
 const tastenHTML = `
@@ -2326,7 +2609,7 @@ const qtafelHTML = `
 document.getElementById('b03v1').innerHTML =
   `<div class="sbar" style="color:#14100E;background:var(--papier)"><span>9:41</span>
      <div class="ic">${I.vol(15)}</div></div>` +
-  karteHTML(46) + `<div class="unten">${qtafelHTML}</div>` + tastenHTML;
+  karteHTML(46) + `<div class="unten">${qtafelHTML}</div>` + tastenHTML + bibHTML;
 
 function verdrahte(wurzel, deck, opts){
   const $  = s => wurzel.querySelector(s);
@@ -2355,6 +2638,17 @@ function verdrahte(wurzel, deck, opts){
     $$('[data-alb]').forEach(el => el.onclick = () => spielAlbum(el.dataset.alb));
   }
 
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="pkt" style="background:${grad(a)}"></span>
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)} · ${a.y}</span></span>
+        <span class="n">${a.tr.length} · ${fmtLang(albDur(a))}</span></div>`,
+    leer: '<div class="bz" style="border:none"><span class="m"><span class="t">Nichts gefunden.</span></span></div>',
+  });
+
   const qKasten = $('[data-queue]');
   let letztesAlbum = null, letzter = null;
   deck.onRender = d => {
@@ -2370,6 +2664,7 @@ function verdrahte(wurzel, deck, opts){
       $('[data-qlen]').textContent = fmtLang(d.total);
       $('[data-cov]').textContent = ini(a);
       $('[data-cov]').style.background = grad(a);
+      bib.markiere();
     }
     [...qKasten.children].forEach((el,i) => el.classList.toggle('an', i === d.qi));
     if (letzter !== t.id){
@@ -2405,9 +2700,7 @@ const kopfHTML = `
     <button class="rund heraus">${I.dots(19)}</button>
   </div>
   <div class="buehne">
-    <button class="gross heraus">${I.heart(21)}</button>
     <div class="scheibe"><div class="bild" data-bild></div></div>
-    <button class="gross heraus">${I.shuffle(21)}</button>
   </div>
   <div class="titelzeile"><h1 data-titel></h1><div class="ar" data-ar></div></div>
   <div class="lauf">
@@ -2461,7 +2754,6 @@ function verdrahte(wurzel, deck, stil){
     $('[data-voll]').style.width = `calc(${(d.frac*100).toFixed(2)}% - 6px)`;
     $('[data-jetzt]').textContent = fmt(d.pos);
     $('[data-ende]').textContent  = '−' + fmt(d.rest);
-    $('[data-bild]').classList.toggle('halt', !d.playing);
   };
   deck.render();
 }
@@ -2481,11 +2773,10 @@ const inhaltHTML = `
   <div class="teller" data-teller>
     <div class="mitte"><div class="cov" data-cov></div></div><span class="dorn"></span>
   </div>
-  <div class="armzeile" data-arm>
-    <span class="schiene"></span>
-    <span class="schlitten" data-nadel>
-      <span class="ausleger"><span class="tonkopf"></span></span>
-    </span>
+  <div class="tonarm" data-arm>
+    <span class="lager"></span><span class="gegen"></span>
+    <span class="rohr"></span><span class="kopf"></span>
+    <span class="griffzone" data-griff></span>
   </div>
   <div class="skalen">
     <div class="skala" data-vol><i data-volz></i><span>Vol</span></div>
@@ -2507,15 +2798,31 @@ const textHTML = `
     <button data-prev>${I.prev(22)}</button>
     <button class="pp" data-pp>${I.pause(20)}</button>
     <button data-next>${I.next(22)}</button>
+    <button data-bib title="Bibliothek">${I.list(22)}</button>
+  </div>`;
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Bibliothek</h2>
+      <label class="suchzeile">${I.search(18)}
+        <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
+      <button class="zu" data-bib-zu>${I.x(18)}</button>
+    </div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss kap" data-btreffer></div>
   </div>`;
 
 document.getElementById('b06v1').innerHTML =
-  slabHTML(0, true) + `<div class="seitentext">${textHTML}</div>`;
+  slabHTML(0, true) + `<div class="unten">${textHTML}</div>` + bibHTML;
 
 document.getElementById('b06v2').innerHTML =
   `<div style="width:720px;flex:none;display:flex;flex-direction:column">${slabHTML(664, false)}${textHTML}</div>
    <div class="liste">
      <div class="kopfz"><span class="kap">Sammlung</span><span class="kap" data-anz></span></div>
+     <label class="suchzeile" style="border-bottom:1px solid var(--linie);padding:10px 0 12px">
+       ${I.search(17)}
+       <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
      <div data-liste></div>
    </div>`;
 
@@ -2528,29 +2835,68 @@ function verdrahte(wurzel, deck, stil){
   $('[data-next]').onclick = () => deck.next();
   $('[data-prev]').onclick = () => deck.prev();
 
-  /* der Balken steht senkrecht und reicht von 9 % bis 91 % der Höhe —
-     oben ist Anfang, unten ist Ende, dazwischen liegt die Nadel */
-  let zieht = false;
-  bindDrag($('[data-arm]'), (f, art) => {
-    zieht = art !== 'end' && art !== 'tap';
-    deck.seek(clamp((f - .09) / .82, 0, 1));
-  }, {achse:'y'});
+  /* Der Arm schwenkt zwischen AUSSEN (Anfang) und INNEN (Ende). Gezogen wird
+     am Rohr; maßgeblich ist der Winkel des Zeigers um das Lager. */
+  const AUSSEN = 26, INNEN = 47;
+  const arm = $('[data-arm]');
+  const setzeWinkel = f => arm.style.setProperty('--aw',
+    (AUSSEN + clamp(f,0,1) * (INNEN - AUSSEN)).toFixed(2) + 'deg');
+  let zieht = false, lager = null;
+  const winkelWert = ev => {
+    const g = Math.atan2(ev.clientY - lager.y, ev.clientX - lager.x) * 180/Math.PI;  // 0° = rechts
+    return clamp(((g - 90) - AUSSEN) / (INNEN - AUSSEN), 0, 1);   // senkrecht nach unten = 0°
+  };
+  const griff = $('[data-griff]');
+  griff.addEventListener('pointerdown', ev => {
+    const r = arm.getBoundingClientRect();          // Breite 0 → das ist das Lager
+    lager = {x:r.left, y:r.top};
+    zieht = true; arm.classList.add('zieht');
+    griff.setPointerCapture(ev.pointerId);
+    deck.seek(winkelWert(ev)); ev.preventDefault();
+  });
+  griff.addEventListener('pointermove', ev => { if (zieht) deck.seek(winkelWert(ev)); });
+  const losLassen = () => { zieht = false; arm.classList.remove('zieht'); };
+  griff.addEventListener('pointerup', losLassen);
+  griff.addEventListener('pointercancel', losLassen);
   bindDrag($('[data-vol]'), f => deck.setVol(1 - f), {achse:'y'});
 
-  const liste = $('[data-liste]');
-  if (liste){
-    const zeilen = TLIST.filter(t => ['sat','bac','koe','par','blu'].includes(t.al)).slice(0,16);
+  /* Variante 2: die Sammlung liegt offen daneben — dort ist die Suche eine
+     Zeile über der Liste, kein Knopf: was schon sichtbar ist, muss man nicht
+     erst aufrufen. Variante 1 hat dafür die Blende. */
+  const liste = $('[data-liste]'), feldListe = liste && $('[data-suche]');
+  function zeichneTextliste(){
+    const alben = suche(feldListe.value);
+    const zeilen = alben.flatMap(a => a.tr.map(([t,d],i) =>
+      ({id:`${a.id}-${i}`, t, d, ar:a.ar}))).slice(0,17);
     liste.innerHTML = zeilen.map((t,i) => `
       <div class="lz" data-t="${t.id}"><span class="nr">${String(i+1).padStart(2,'0')}</span>
-        <span class="t">${esc(t.t)}</span><span class="ar">${esc(albOf(t).ar)}</span>
-        <span class="d">${fmt(t.d)}</span></div>`).join('');
-    $('[data-anz]').textContent = zeilen.length + ' von ' + TLIST.length;
+        <span class="t">${esc(t.t)}</span><span class="ar">${esc(t.ar)}</span>
+        <span class="d">${fmt(t.d)}</span></div>`).join('') ||
+      '<div class="lz" style="border:none"><span class="t">Nichts gefunden.</span></div>';
+    $('[data-anz]').textContent = feldListe.value.trim()
+      ? `${alben.length} von ${ALBUMS.length} Alben` : `${zeilen.length} von ${TLIST.length} Titeln`;
     $$('[data-t]').forEach(el => el.onclick = () => {
       const t = TRACKS[el.dataset.t], a = albOf(t);
       deck.queue = a.tr.map((_,i) => `${a.id}-${i}`);
       deck.qi = t.no - 1; deck.pos = 0; deck.playing = true; deck.render();
     });
+    markiereListe();
   }
+  const markiereListe = () => liste &&
+    $$('[data-t]').forEach(el => el.classList.toggle('an', el.dataset.t === deck.queue[deck.qi]));
+  if (liste){ feldListe.oninput = zeichneTextliste; zeichneTextliste(); }
+
+  const blende = $('[data-bib-blende]');
+  const bib = blende && bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende,
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="pl" style="background:${grad(a)}">${ini(a)}</span>
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)} · ${a.y}</span></span>
+        <span class="n">${a.tr.length} · ${fmtLang(albDur(a))}</span></div>`,
+    leer: '<div class="bz" style="border:none"><span class="m"><span class="t">Nichts gefunden.</span></span></div>',
+  });
 
   let letzter = null;
   deck.onRender = d => {
@@ -2561,10 +2907,9 @@ function verdrahte(wurzel, deck, stil){
       $('[data-ar]').textContent = a.ar + ' · ' + a.t + ' · ' + a.y;
       $('[data-cov]').textContent = ini(a);
       $('[data-cov]').style.background = grad(a);
-      $$('[data-t]').forEach(el => el.classList.toggle('an', el.dataset.t === t.id));
+      markiereListe(); if (bib) bib.markiere();
     }
-    const hoehe = (9 + d.frac*82).toFixed(2) + '%';
-    if (!zieht) $('[data-nadel]').style.top = hoehe;
+    setzeWinkel(d.frac);
     $('[data-jetzt]').textContent = fmt(d.pos);
     $('[data-ende]').textContent  = fmt(d.dur);
     $('[data-pp]').innerHTML = d.playing ? I.pause(20) : I.play(20);
@@ -2574,8 +2919,8 @@ function verdrahte(wurzel, deck, stil){
   deck.render();
 }
 verdrahte(document.getElementById('b06v1'), d1,
-  {'--gq':'560px','--td':'430px','--tx':'41%','--ty':'50%','--ax':'84%','--sx':'93%','--aus':'86px',
-   '--tg':'24px','--stw':'260px','--stp':'26px'});
+  {'--td':'560px','--tx':'42%','--ty':'50%','--sx':'93%','--tg':'26px',
+   '--alx':'85%','--aly':'13%','--arm':'320px'});
 verdrahte(document.getElementById('b06v2'), d2,
   {'--td':'400px','--tx':'41%','--ty':'50%','--ax':'74%','--sx':'90%','--tp':'26px','--tg':'22px',
    '--trp':'18px'});
@@ -2618,9 +2963,21 @@ const schriftHTML = `
 
 const kzHTML = `
   <div class="kz"><button>${I.back(20)}</button><span class="kap">Musiklib</span>
-    <button>${I.list(20)}</button></div>`;
+    <button data-bib title="Bibliothek">${I.list(20)}</button></div>`;
 
-document.getElementById('b07v2').innerHTML = kzHTML + platteHTML + schriftHTML;
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Bibliothek</h2>
+      <label class="suchfeld">${I.search(17)}
+        <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
+      <button class="zu" data-bib-zu>${I.x(19)}</button>
+    </div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
+document.getElementById('b07v2').innerHTML = kzHTML + platteHTML + schriftHTML + bibHTML;
 
 function verdrahte(wurzel, deck, stil){
   const $  = s => wurzel.querySelector(s);
@@ -2648,6 +3005,15 @@ function verdrahte(wurzel, deck, stil){
   platte.addEventListener('pointerup',     () => zieht = false);
   platte.addEventListener('pointercancel', () => zieht = false);
 
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="t">${esc(a.t)} — ${esc(a.ar)}</span>
+        <span class="n">${a.y} · ${fmtLang(albDur(a))}</span></div>`,
+    leer: '<div class="bz" style="border:none"><span class="t">Nichts gefunden.</span></div>',
+  });
+
   const qKasten = $('[data-queue]');
   let letztesAlbum = null, letzter = null;
   deck.onRender = d => {
@@ -2662,6 +3028,7 @@ function verdrahte(wurzel, deck, stil){
     if (qKasten) [...qKasten.children].forEach((el,i) => el.classList.toggle('an', i === d.qi));
     if (letzter !== t.id){
       letzter = t.id;
+      bib.markiere();
       $('[data-titel]').textContent = t.t;
       $('[data-alb]').textContent = a.t;
       $('[data-ar]').textContent = a.ar;
@@ -2990,6 +3357,22 @@ verdrahte(document.getElementById('b10v2'), d2,
 const d1 = new Deck('kob', {qi:2, pos:120, speed:8});
 const d2 = new Deck('koe', {qi:0, pos:200, speed:8});
 
+/* Auswurf öffnet die Bibliothek — dieselbe Taste wie der Transport daneben */
+const AUSWURF = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M12 5.4l7.4 9.2H4.6z"/><rect x="4.6" y="16.4" width="14.8" height="2.6" rx="1.1"/></svg>`;
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Bibliothek</h2>
+      <label class="suchfeld">${I.search(18)}
+        <input type="search" placeholder="Album, Interpret oder Titel suchen …" data-suche></label>
+      <button class="zu" data-bib-zu>${I.x(18)}</button>
+    </div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
 const reiheHTML = n => `
   <div class="reihe metallflaeche" data-reihe style="--n:${n}"></div>`;
 
@@ -3022,11 +3405,12 @@ const pultHTML = `
       <button data-prev>${I.prev(18)}</button>
       <button class="pp" data-pp>${I.pause(20)}</button>
       <button data-next>${I.next(18)}</button>
+      <button data-bib title="Bibliothek">${AUSWURF}</button>
     </div>
   </div>`;
 
-document.getElementById('b11v1').innerHTML = reiheHTML(3) + pultHTML;
-document.getElementById('b11v2').innerHTML = reiheHTML(2) + pultHTML;
+document.getElementById('b11v1').innerHTML = reiheHTML(3) + pultHTML + bibHTML;
+document.getElementById('b11v2').innerHTML = reiheHTML(2) + pultHTML + bibHTML;
 
 function verdrahte(wurzel, deck, stil, anzahl){
   const $  = s => wurzel.querySelector(s);
@@ -3061,6 +3445,16 @@ function verdrahte(wurzel, deck, stil, anzahl){
   rad.addEventListener('pointerup', los);
   rad.addEventListener('pointercancel', los);
 
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="pl" style="background:${grad(a)}">${ini(a)}</span>
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)} · ${a.y} · ${fmtLang(albDur(a))}</span></span></div>`,
+    leer: '<div class="bz" style="box-shadow:none;background:none"><span class="s">Nichts gefunden.</span></div>',
+  });
+
   function zeigeReihe(d){
     const start = ALBUMS.findIndex(a => a.id === d.album.id);
     const um = Array.from({length:anzahl}, (_,k) => ALBUMS[(start + k) % ALBUMS.length]);
@@ -3082,7 +3476,7 @@ function verdrahte(wurzel, deck, stil, anzahl){
   let letztesAlbum = null, letzter = null;
   deck.onRender = d => {
     const t = d.track, a = d.album;
-    if (letztesAlbum !== a.id){ letztesAlbum = a.id; zeigeReihe(d); }
+    if (letztesAlbum !== a.id){ letztesAlbum = a.id; zeigeReihe(d); bib.markiere(); }
     if (letzter !== t.id){
       letzter = t.id;
       $('[data-titel]').textContent = t.t;
@@ -3099,10 +3493,10 @@ function verdrahte(wurzel, deck, stil, anzahl){
   deck.render();
 }
 verdrahte(document.getElementById('b11v1'), d1,
-  {'--rh':'430px','--rd':'180px','--tg':'26px','--hw':'160px'}, 3);
+  {'--rh':'430px','--rd':'180px','--tg':'26px','--hw':'160px','--bsp':'3'}, 3);
 verdrahte(document.getElementById('b11v2'), d2,
   {'--rh':'380px','--rd':'220px','--tg':'28px','--hw':'150px','--pad':'30px','--pg':'34px','--pp':'34px',
-   '--tb':'56px'}, 2);
+   '--tb':'56px','--bsp':'2'}, 2);
 })();
 
 })();/* ── Blatt 12 ── */
@@ -3263,6 +3657,25 @@ verdrahte(document.getElementById('b12v1'), d1,
 const d1 = new Deck('koe', {qi:2, pos:180, speed:8});
 const d2 = new Deck('ohi', {qi:1, pos:60,  speed:8});
 
+/* Auswurf — dasselbe Zeichen wie am Kassettendeck, dieselbe Taste wie die
+   drei daneben: sie öffnet die Bibliothek in der Frontplatte. */
+const AUSWURF = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M12 5.4l7.4 9.2H4.6z"/><rect x="4.6" y="16.4" width="14.8" height="2.6" rx="1.1"/></svg>`;
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Bibliothek</h2>
+      <label class="suchfeld">${I.search(17)}
+        <input type="search" placeholder="Album, Interpret oder Titel suchen …" data-suche></label>
+      <button class="zu" data-bib-zu style="width:44px;height:44px;border-radius:3px;
+        background:linear-gradient(180deg,#EDE7D6,#C8C0A8);box-shadow:inset 0 1px 0 rgba(255,255,255,.8),
+        0 2px 4px rgba(0,0,0,.3);display:grid;place-items:center">${I.x(18)}</button>
+    </div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
 /* Zeigerinstrument: Skala als Bogen, Zeiger als Linie */
 const instrumentHTML = (kanal) => `
   <div class="instrument">
@@ -3323,11 +3736,12 @@ const platteHTML = `
         <button data-prev>${I.prev(18)}</button>
         <button data-pp>${I.pause(18)}</button>
         <button data-next>${I.next(18)}</button>
+        <button data-bib title="Bibliothek">${AUSWURF}</button>
       </div>
     </div>
   </div>`;
 
-document.getElementById('b13v1').innerHTML = `
+document.getElementById('b13v1').innerHTML = bibHTML + `
   <div class="geraet"><div class="front">${messwerkHTML}
     <div class="marke">Musiklib <em>M-13</em></div><div class="typ">STEREO · 2 × 40 W</div>
     <div style="height:22px"></div></div></div>
@@ -3335,7 +3749,7 @@ document.getElementById('b13v1').innerHTML = `
     <div class="marke">Musiklib <em>V-13</em></div><div class="typ">VORSTUFE</div>
     <div style="height:22px"></div></div></div>`;
 
-document.getElementById('b13v2').innerHTML = `
+document.getElementById('b13v2').innerHTML = bibHTML + `
   <div class="geraet"><div class="front">${messwerkHTML}
     <div style="height:20px"></div>${platteHTML}
     <div class="marke">Musiklib <em>M-13</em></div><div class="typ">VOLLVERSTÄRKER</div>
@@ -3369,6 +3783,17 @@ function verdrahte(wurzel, deck, stil){
     });
   }, 90);
 
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="pl" style="background:${grad(a)}"></span>
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)} · ${a.y}</span></span>
+        <span class="n">${a.tr.length} · ${fmtLang(albDur(a))}</span></div>`,
+    leer: '<div class="bz" style="border:none;cursor:default"><span class="s">Nichts gefunden.</span></div>',
+  });
+
   const waehler = $('[data-waehler]');
   let letztesAlbum = null, letzter = null;
   deck.onRender = d => {
@@ -3384,6 +3809,7 @@ function verdrahte(wurzel, deck, stil){
       letzter = t.id;
       $('[data-titel]').textContent = t.t;
       $('[data-unter]').textContent = a.ar + ' — ' + a.t + ' · ' + a.y;
+      bib.markiere();
     }
     $('[data-voll]').style.width  = (d.frac*100).toFixed(2) + '%';
     $('[data-griff]').style.left  = (d.frac*100).toFixed(2) + '%';

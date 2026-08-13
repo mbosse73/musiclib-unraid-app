@@ -19,6 +19,34 @@
 .sk .kz{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;
   padding:26px 34px;z-index:5}
 .sk .kz button{color:var(--hell-2)}
+.sk .kz button.an{color:var(--leucht)}
+
+/* ── Bibliothek: eine zweite Karte über der ersten ── */
+.sk .bib{position:absolute;inset:0;z-index:60;padding:56px 64px 44px;display:flex;flex-direction:column;
+  background:rgba(8,10,17,.96);
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.sk .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.sk .bib .bkopf{display:flex;align-items:baseline;gap:34px;border-bottom:1px solid var(--linie);
+  padding-bottom:16px;margin-bottom:10px}
+.sk .bib h2{font-size:15px;font-weight:300;letter-spacing:.34em;text-transform:uppercase;flex:none}
+.sk .bib .suchfeld{flex:1;min-width:0;display:flex;align-items:center;gap:12px}
+.sk .bib .suchfeld svg{color:var(--hell-3);flex:none}
+.sk .bib .suchfeld input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--hell);
+  font-size:17px;letter-spacing:.06em}
+.sk .bib .suchfeld input::placeholder{color:var(--hell-3);letter-spacing:.1em}
+.sk .bib .zu{color:var(--hell-2);flex:none}
+.sk .bib .bliste{flex:1;min-height:0;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;
+  gap:0 54px;align-content:start}
+.sk .bib .bz{display:flex;align-items:baseline;gap:16px;padding:12px 0;
+  border-bottom:1px solid var(--linie-2);cursor:pointer;color:var(--hell-3);font-size:14px;
+  letter-spacing:.04em}
+.sk .bib .bz:hover{color:var(--hell-2)}
+.sk .bib .bz .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sk .bib .bz .n{font-size:11px;white-space:nowrap}
+.sk .bib .bz.an{color:var(--leucht)}
+.sk .bib .bfuss{flex:none;padding-top:16px;font-size:10px;letter-spacing:.34em;text-transform:uppercase;
+  color:var(--hell-3)}
+@media (prefers-reduced-motion:reduce){.sk .bib{transition:none}}
 
 /* ── Rillenbild ── */
 .sk .platte{position:absolute;left:var(--pl,50%);top:var(--pt,42%);transform:translate(-50%,-50%);
@@ -81,7 +109,10 @@
     Muster ohne Aussage; übrig bleibt die Platte auf schwarzem Grund. Die Rillen sind das einzige
     Bedienelement neben drei Knöpfen: <b>ein Spieler, den man aus zwei Metern sieht</b> und aus einem
     bedient.
-    <span class="probier"><b>Ausprobieren:</b> am Ring ziehen; der Arm folgt der Position nach innen.</span></p>
+    Oben rechts öffnet ein Knopf die <b>Bibliothek</b>: dieselbe Nachtseite, eine Suchzeile, zwei
+    Spalten Text — keine Kacheln, denn Cover kommen in diesem Entwurf nicht vor.
+    <span class="probier"><b>Ausprobieren:</b> am Ring ziehen; oben rechts die Bibliothek öffnen und
+    „part" oder „pärt" tippen.</span></p>
     <div class="buehne">
       <div class="rahmen ipad-quer">
         <div class="schirm"><div class="sk" id="v2"></div></div>
@@ -154,9 +185,21 @@ const schriftHTML = `
 
 const kzHTML = `
   <div class="kz"><button>${I.back(20)}</button><span class="kap">Musiklib</span>
-    <button>${I.list(20)}</button></div>`;
+    <button data-bib title="Bibliothek">${I.list(20)}</button></div>`;
 
-document.getElementById('v2').innerHTML = kzHTML + platteHTML + schriftHTML;
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Bibliothek</h2>
+      <label class="suchfeld">${I.search(17)}
+        <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
+      <button class="zu" data-bib-zu>${I.x(19)}</button>
+    </div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
+document.getElementById('v2').innerHTML = kzHTML + platteHTML + schriftHTML + bibHTML;
 
 function verdrahte(wurzel, deck, stil){
   const $  = s => wurzel.querySelector(s);
@@ -184,6 +227,15 @@ function verdrahte(wurzel, deck, stil){
   platte.addEventListener('pointerup',     () => zieht = false);
   platte.addEventListener('pointercancel', () => zieht = false);
 
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="t">${esc(a.t)} — ${esc(a.ar)}</span>
+        <span class="n">${a.y} · ${fmtLang(albDur(a))}</span></div>`,
+    leer: '<div class="bz" style="border:none"><span class="t">Nichts gefunden.</span></div>',
+  });
+
   const qKasten = $('[data-queue]');
   let letztesAlbum = null, letzter = null;
   deck.onRender = d => {
@@ -198,6 +250,7 @@ function verdrahte(wurzel, deck, stil){
     if (qKasten) [...qKasten.children].forEach((el,i) => el.classList.toggle('an', i === d.qi));
     if (letzter !== t.id){
       letzter = t.id;
+      bib.markiere();
       $('[data-titel]').textContent = t.t;
       $('[data-alb]').textContent = a.t;
       $('[data-ar]').textContent = a.ar;

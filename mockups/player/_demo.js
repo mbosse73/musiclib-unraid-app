@@ -189,6 +189,44 @@ function bindDrag(el, cb, opts = {}){
   el.addEventListener('pointercancel', ende);
 }
 
+/* ═════════ Bibliothek ═════════
+   Jedes Blatt bringt sein eigenes Aussehen mit — eine Blende, ein Suchfeld,
+   eine Liste, ein Knopf. Filtern, Zeichnen, Markieren und Öffnen ist überall
+   dasselbe und steht deshalb hier.
+
+   o = {knopf, zu, blende, feld, liste, treffer, deck, zeile(album), leer} */
+function bindBibliothek(o){
+  const markiere = () => [...o.liste.children].forEach(el =>
+    el.classList.toggle('an', el.dataset.alb === o.deck.album.id));
+
+  const zeichne = () => {
+    const treffer = suche(o.feld.value);
+    o.liste.innerHTML = treffer.map(o.zeile).join('') || (o.leer || '');
+    if (o.treffer) o.treffer.textContent = o.feld.value.trim()
+      ? `${treffer.length} von ${ALBUMS.length} Alben` : `${ALBUMS.length} Alben`;
+    [...o.liste.children].forEach(el => el.dataset.alb && (el.onclick = () => {
+      const a = ALBUMS.find(x => x.id === el.dataset.alb);
+      o.deck.queue = a.tr.map((_,i) => `${a.id}-${i}`);
+      o.deck.qi = 0; o.deck.pos = 0; o.deck.playing = true; o.deck.render();
+      zeige(false);
+    }));
+    markiere();
+  };
+
+  const zeige = auf => {
+    o.blende.classList.toggle('auf', auf);
+    if (o.knopf) o.knopf.classList.toggle('an', auf);
+    if (auf) setTimeout(() => o.feld.focus(), 60);      // erst sichtbar, dann Fokus
+  };
+
+  if (o.knopf) o.knopf.onclick = () => zeige(!o.blende.classList.contains('auf'));
+  if (o.zu)    o.zu.onclick    = () => zeige(false);
+  o.feld.oninput = zeichne;
+  o.feld.addEventListener('keydown', ev => { if (ev.key === 'Escape') zeige(false); });
+  zeichne();
+  return {zeichne, markiere, zeige};
+}
+
 /* Cover als Verlauf mit Initial — im echten Spieler steht dort /api/cover. */
 function coverHTML(a, cls = 'cov', extra = ''){
   return `<div class="${cls}" style="background:${grad(a)}"${extra}><span class="ini">${ini(a)}</span></div>`;

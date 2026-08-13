@@ -12,7 +12,7 @@
   --tinte:#1B1B25; --tinte-2:#6E6E82; --tinte-3:#A6A6B8;
   --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
   background:var(--grund);color:var(--tinte);font-family:var(--sans);height:100%;overflow:hidden;
-  display:flex;flex-direction:column}
+  display:flex;flex-direction:column;position:relative}
 .mg *{font-family:inherit}
 .mg .kissen{background:var(--karte);border-radius:26px;
   box-shadow:-9px -9px 20px var(--hell),10px 10px 26px var(--dunkel)}
@@ -25,6 +25,39 @@
   background:var(--karte);box-shadow:-5px -5px 12px var(--hell),6px 6px 14px var(--dunkel)}
 .mg .rund:active{box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
 .mg .kopfz .mitte{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--tinte-3)}
+.mg .rund.an{color:var(--tinte);box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
+
+/* ── Bibliothek: dieselbe weiche Fläche, eine Ebene darüber ── */
+.mg .bib{position:absolute;inset:0;z-index:60;background:var(--grund);padding:22px 26px 26px;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.mg .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.mg .bib .bkopf{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:6px 0 16px;flex:none}
+.mg .bib h2{font-size:26px;font-weight:700;letter-spacing:-.02em}
+.mg .bib .suchfeld{display:flex;align-items:center;gap:12px;height:52px;padding:0 20px;
+  border-radius:26px;flex:none;margin-bottom:16px;background:var(--karte);
+  box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
+.mg .bib .suchfeld svg{color:var(--tinte-3);flex:none}
+.mg .bib .suchfeld input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:var(--tinte);font-size:16px}
+.mg .bib .suchfeld input::placeholder{color:var(--tinte-3)}
+.mg .bib .bliste{flex:1;min-height:0;overflow:hidden}
+.mg .bib .bz{display:flex;align-items:center;gap:16px;padding:10px;border-radius:34px;cursor:pointer;
+  margin-bottom:10px}
+.mg .bib .bz .pl{width:54px;height:54px;border-radius:50%;flex:none;display:grid;place-items:center;
+  color:#fff;font-size:19px;font-weight:700;box-shadow:0 5px 12px rgba(30,30,60,.2)}
+.mg .bib .bz .m{flex:1;min-width:0}
+.mg .bib .bz .m>span{display:block}
+.mg .bib .bz .t{font-size:15.5px;font-weight:700;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.mg .bib .bz .s{font-size:12.5px;color:var(--tinte-3);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.mg .bib .bz.an{background:var(--karte);
+  box-shadow:-6px -6px 14px var(--hell),7px 7px 18px var(--dunkel)}
+.mg .bib .bfuss{flex:none;padding-top:10px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--tinte-3);text-align:center}
+@media (prefers-reduced-motion:reduce){.mg .bib{transition:none}}
 
 /* ── Plattenspieler ── */
 .mg .deck{position:relative;width:var(--dk,470px);height:calc(var(--dk,470px) * .84);flex:none;
@@ -97,8 +130,9 @@
     Knöpfe. Das Format passt hier ohne Anpassung — <b>die Vorlage ist ein Telefonentwurf</b>. Die Liste
     zum Stöbern liegt eine Ebene tiefer; auf dem Bildschirm steht nur, was läuft. Die beiden Knöpfe, die
     in der Vorlage unten am Laufwerk sitzen, sind gestrichen — <b>Lautstärke regelt am Telefon die
-    Gerätetaste</b>, und einen zweiten Weg zur Sammlung braucht dieser Entwurf nicht. Das Laufwerk ist
-    damit reines Bild.
+    Gerätetaste</b>. Das Laufwerk ist damit reines Bild; der Weg zur Sammlung liegt oben rechts in der
+    Kopfzeile, wo er auch hingehört: ein Knopf, dahinter <b>Bibliothek und Suche</b> in derselben
+    weichen Fläche.
     <span class="probier"><b>Ausprobieren:</b> die Balken antippen; der Tonarm wandert mit der
     Position nach innen.</span></p>
     <div class="buehne">
@@ -108,7 +142,7 @@
     </div>
     <dl class="zettel">
       <div><dt>Stärke</dt><dd>Große Ziele, alles im Daumenbereich</dd></div>
-      <div><dt>Schwäche</dt><dd>Ein Bildschirm, ein Titel — <b>Album- und Titelwahl liegen außerhalb</b></dd></div>
+      <div><dt>Schwäche</dt><dd>Ein Bildschirm, ein Titel — die Liste liegt eine Ebene tiefer</dd></div>
       <div><dt>Verhältnis zu mobile.html</dt><dd>Alternative, kein Ersatz: dort ist die Achse die Warteschlange</dd></div>
       <div><dt>Aufwand</dt><dd>gering — ein Bildschirm, keine zweite Ebene</dd></div>
     </dl>
@@ -153,7 +187,7 @@ const spielerHTML = (dw, al) => `
   <div class="kopfz">
     <button class="rund">${I.back(20)}</button>
     <span class="mitte">Jetzt läuft</span>
-    <button class="rund">${I.dots(20)}</button>
+    <button class="rund" data-bib title="Bibliothek">${I.grid(20)}</button>
   </div>
   <div class="spieler">
     ${deckHTML(dw)}
@@ -167,8 +201,18 @@ const spielerHTML = (dw, al) => `
     </div>
   </div>`;
 
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf"><h2>Bibliothek</h2>
+      <button class="rund" data-bib-zu>${I.x(19)}</button></div>
+    <label class="suchfeld">${I.search(18)}
+      <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
 document.getElementById('v2').innerHTML = `<div class="sbar" style="color:#1B1B25">
-    <span>9:41</span><div class="ic">${I.vol(15)}</div></div>` + spielerHTML(312, 104);
+    <span>9:41</span><div class="ic">${I.vol(15)}</div></div>` + spielerHTML(312, 104) + bibHTML;
 
 function verdrahte(wurzel, deck, armLang){
   const $  = s => wurzel.querySelector(s);
@@ -182,6 +226,16 @@ function verdrahte(wurzel, deck, armLang){
   $('[data-prev]').onclick = () => deck.prev();
   bindDrag($('[data-balken]'), f => deck.seek(f));
 
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="pl" style="background:${grad(a)}">${ini(a)}</span>
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)} · ${a.tr.length} Titel</span></span></div>`,
+    leer: '<div class="bz"><span class="m"><span class="s">Nichts gefunden.</span></span></div>',
+  });
+
   let letzter = null;
   deck.onRender = d => {
     const t = d.track, a = d.album;
@@ -190,6 +244,7 @@ function verdrahte(wurzel, deck, armLang){
       $('[data-titel]').textContent = t.t;
       $('[data-ar]').textContent = a.ar;
       $('[data-label]').textContent = ini(a);
+      bib.markiere();
       const w = wave(t.id, balken.length);
       balken.forEach((b,i) => b.style.height = Math.round(28 + w[i]*72) + '%');
     }

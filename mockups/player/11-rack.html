@@ -17,7 +17,7 @@
   --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
   background:radial-gradient(80% 60% at 50% 0%,#1B1B1F,var(--nacht) 70%);
   color:var(--hell);font-family:var(--sans);height:100%;overflow:hidden;
-  display:flex;flex-direction:column;padding:var(--pad,34px);gap:var(--gap,30px)}
+  display:flex;flex-direction:column;padding:var(--pad,34px);gap:var(--gap,30px);position:relative}
 .rk *{font-family:inherit}
 .rk .kap{font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--hell-3)}
 .rk .metallflaeche{
@@ -103,6 +103,43 @@
   display:grid;place-items:center;background:linear-gradient(180deg,#333438,#212226);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 4px 10px rgba(0,0,0,.5)}
 .rk .transport button.pp{color:var(--orange)}
+.rk .transport button.an{color:var(--orange);background:linear-gradient(180deg,#212226,#333438)}
+
+/* ── Bibliothek: die Klappe im Gerät ── */
+.rk .bib{position:absolute;inset:0;z-index:60;padding:34px 40px;display:flex;flex-direction:column;
+  background:rgba(10,10,13,.94);backdrop-filter:blur(4px);
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.rk .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.rk .bib .bkopf{display:flex;align-items:center;gap:24px;margin-bottom:20px}
+.rk .bib h2{font-size:22px;font-weight:600;letter-spacing:-.01em;flex:none}
+.rk .bib .suchfeld{flex:1;min-width:0;display:flex;align-items:center;gap:10px;height:46px;padding:0 16px;
+  border-radius:4px;background:linear-gradient(180deg,#141416,#1E1F22);
+  box-shadow:inset 0 1px 4px rgba(0,0,0,.8),inset 0 0 0 1px rgba(255,255,255,.08)}
+.rk .bib .suchfeld svg{color:var(--hell-3);flex:none}
+.rk .bib .suchfeld input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:var(--hell);font-size:15px}
+.rk .bib .suchfeld input::placeholder{color:var(--hell-3)}
+.rk .bib .zu{width:46px;height:46px;border-radius:4px;flex:none;display:grid;place-items:center;
+  color:var(--hell-2);background:linear-gradient(180deg,#333438,#212226);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 4px 10px rgba(0,0,0,.5)}
+.rk .bib .bliste{flex:1;min-height:0;overflow:hidden;display:grid;
+  grid-template-columns:repeat(var(--bsp,3),1fr);gap:10px 14px;align-content:start}
+.rk .bib .bz{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:4px;cursor:pointer;
+  background:linear-gradient(160deg,#26272B,#1A1B1E);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 4px 10px rgba(0,0,0,.4)}
+.rk .bib .bz:hover{background:linear-gradient(160deg,#2E2F34,#202126)}
+.rk .bib .bz .pl{width:44px;height:44px;border-radius:3px;flex:none;display:grid;place-items:center;
+  color:#fff;font-size:16px;font-weight:600}
+.rk .bib .bz .m{flex:1;min-width:0}
+.rk .bib .bz .m>span{display:block}
+.rk .bib .bz .t{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk .bib .bz .s{font-size:11.5px;color:var(--hell-3);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.rk .bib .bz.an{box-shadow:inset 0 0 0 1.5px var(--orange)}
+.rk .bib .bz.an .t{color:var(--orange)}
+.rk .bib .bfuss{flex:none;padding-top:14px;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--hell-3)}
+@media (prefers-reduced-motion:reduce){.rk .bib{transition:none}}
 </style>
 
 <div class="seite">
@@ -193,6 +230,22 @@
 const d1 = new Deck('kob', {qi:2, pos:120, speed:8});
 const d2 = new Deck('koe', {qi:0, pos:200, speed:8});
 
+/* Auswurf öffnet die Bibliothek — dieselbe Taste wie der Transport daneben */
+const AUSWURF = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M12 5.4l7.4 9.2H4.6z"/><rect x="4.6" y="16.4" width="14.8" height="2.6" rx="1.1"/></svg>`;
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Bibliothek</h2>
+      <label class="suchfeld">${I.search(18)}
+        <input type="search" placeholder="Album, Interpret oder Titel suchen …" data-suche></label>
+      <button class="zu" data-bib-zu>${I.x(18)}</button>
+    </div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
 const reiheHTML = n => `
   <div class="reihe metallflaeche" data-reihe style="--n:${n}"></div>`;
 
@@ -225,11 +278,12 @@ const pultHTML = `
       <button data-prev>${I.prev(18)}</button>
       <button class="pp" data-pp>${I.pause(20)}</button>
       <button data-next>${I.next(18)}</button>
+      <button data-bib title="Bibliothek">${AUSWURF}</button>
     </div>
   </div>`;
 
-document.getElementById('v1').innerHTML = reiheHTML(3) + pultHTML;
-document.getElementById('v2').innerHTML = reiheHTML(2) + pultHTML;
+document.getElementById('v1').innerHTML = reiheHTML(3) + pultHTML + bibHTML;
+document.getElementById('v2').innerHTML = reiheHTML(2) + pultHTML + bibHTML;
 
 function verdrahte(wurzel, deck, stil, anzahl){
   const $  = s => wurzel.querySelector(s);
@@ -264,6 +318,16 @@ function verdrahte(wurzel, deck, stil, anzahl){
   rad.addEventListener('pointerup', los);
   rad.addEventListener('pointercancel', los);
 
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="pl" style="background:${grad(a)}">${ini(a)}</span>
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)} · ${a.y} · ${fmtLang(albDur(a))}</span></span></div>`,
+    leer: '<div class="bz" style="box-shadow:none;background:none"><span class="s">Nichts gefunden.</span></div>',
+  });
+
   function zeigeReihe(d){
     const start = ALBUMS.findIndex(a => a.id === d.album.id);
     const um = Array.from({length:anzahl}, (_,k) => ALBUMS[(start + k) % ALBUMS.length]);
@@ -285,7 +349,7 @@ function verdrahte(wurzel, deck, stil, anzahl){
   let letztesAlbum = null, letzter = null;
   deck.onRender = d => {
     const t = d.track, a = d.album;
-    if (letztesAlbum !== a.id){ letztesAlbum = a.id; zeigeReihe(d); }
+    if (letztesAlbum !== a.id){ letztesAlbum = a.id; zeigeReihe(d); bib.markiere(); }
     if (letzter !== t.id){
       letzter = t.id;
       $('[data-titel]').textContent = t.t;
@@ -302,9 +366,9 @@ function verdrahte(wurzel, deck, stil, anzahl){
   deck.render();
 }
 verdrahte(document.getElementById('v1'), d1,
-  {'--rh':'430px','--rd':'180px','--tg':'26px','--hw':'160px'}, 3);
+  {'--rh':'430px','--rd':'180px','--tg':'26px','--hw':'160px','--bsp':'3'}, 3);
 verdrahte(document.getElementById('v2'), d2,
   {'--rh':'380px','--rd':'220px','--tg':'28px','--hw':'150px','--pad':'30px','--pg':'34px','--pp':'34px',
-   '--tb':'56px'}, 2);
+   '--tb':'56px','--bsp':'2'}, 2);
 })();
 </script>

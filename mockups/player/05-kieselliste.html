@@ -32,11 +32,7 @@
   box-shadow:-8px -8px 18px var(--hell),9px 9px 22px var(--dunkel)}
 .kl .scheibe .bild{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;color:#fff;
   font-size:calc(var(--sg,190px) / 4);font-weight:800;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);animation:kldreh 6s linear infinite}
-.kl .scheibe .bild.halt{animation-play-state:paused}
-@keyframes kldreh{to{transform:rotate(360deg)}}
-.kl .gross{width:var(--gg,64px);height:var(--gg,64px);border-radius:50%;display:grid;place-items:center;
-  color:var(--tinte-2)}
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
 
 .kl .titelzeile{text-align:center;padding:0 var(--pad,26px) var(--tzu,16px);flex:none}
 .kl .titelzeile h1{font-size:var(--tg,22px);font-weight:800;letter-spacing:-.01em;white-space:nowrap;
@@ -89,9 +85,10 @@
 
   <section class="entwurf">
     <div class="ekopf"><h2>Variante 2 · Kiesel</h2><span class="marke geraet">Handy · 390 × 844</span></div>
-    <p class="etext">Am Telefon steht der Kopf über der Liste, sonst ändert sich nichts. Die Vorlage ist
-    hier eins zu eins brauchbar — inklusive der beiden Knöpfe neben dem Cover, aus denen bei uns
-    <b>Album öffnen</b> und <b>Zufall</b> werden.
+    <p class="etext">Am Telefon steht der Kopf über der Liste, sonst ändert sich nichts. Die beiden
+    Knöpfe neben dem Cover sind gestrichen, und das Cover <b>dreht sich nicht</b>: In einem Entwurf,
+    dessen einzige Bewegung die laufende Zeile ist, wäre eine rotierende Scheibe die zweite — und
+    zwei Bewegungen streiten sich um denselben Blick.
     <span class="probier"><b>Ausprobieren:</b> an der Linie ziehen; sie ist die einzige Vertiefung
     im ganzen Entwurf.</span></p>
     <div class="buehne">
@@ -103,6 +100,7 @@
       <div><dt>Stärke</dt><dd>Sehr große Ziele, nichts zu erklären</dd></div>
       <div><dt>Schwäche</dt><dd>Fünf Zeilen sichtbar — <b>bei 18 Titeln wird gescrollt</b></dd></div>
       <div><dt>Farbe</dt><dd>Keine. Bewusst: die Cover sind die Farbe</dd></div>
+      <div><dt>Ruhe</dt><dd>Nichts dreht sich — <b>bewegt ist nur die laufende Zeile</b></dd></div>
       <div><dt>Verhältnis zu mobile.html</dt><dd>Gegenentwurf: Liste statt Achse</dd></div>
     </dl>
   </section>
@@ -141,9 +139,7 @@ const kopfHTML = `
     <button class="rund heraus">${I.dots(19)}</button>
   </div>
   <div class="buehne">
-    <button class="gross heraus">${I.heart(21)}</button>
     <div class="scheibe"><div class="bild" data-bild></div></div>
-    <button class="gross heraus">${I.shuffle(21)}</button>
   </div>
   <div class="titelzeile"><h1 data-titel></h1><div class="ar" data-ar></div></div>
   <div class="lauf">
@@ -197,7 +193,6 @@ function verdrahte(wurzel, deck, stil){
     $('[data-voll]').style.width = `calc(${(d.frac*100).toFixed(2)}% - 6px)`;
     $('[data-jetzt]').textContent = fmt(d.pos);
     $('[data-ende]').textContent  = '−' + fmt(d.rest);
-    $('[data-bild]').classList.toggle('halt', !d.playing);
   };
   deck.render();
 }

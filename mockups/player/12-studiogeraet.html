@@ -30,11 +30,15 @@
     inset 0 1px 0 rgba(255,255,255,.9);transition:top .12s}
 .sg .schieber .griff::after{content:'';position:absolute;left:4px;right:4px;top:50%;height:1px;
   background:rgba(34,34,28,.35)}
-.sg .fenster{background:#F6F6F0;border-radius:6px;padding:10px 14px;width:96px;
-  box-shadow:inset 0 0 0 1px rgba(34,34,28,.2)}
+.sg .fenster{border-radius:5px;padding:10px 14px;width:96px;
+  background:linear-gradient(180deg,rgba(255,255,255,.42),rgba(255,255,255,.16));
+  box-shadow:inset 0 0 0 1px rgba(34,34,28,.16),inset 0 1px 0 rgba(255,255,255,.5)}
 .sg .fenster .z{font-family:var(--mono);font-size:15px;color:var(--tinte-3);text-align:center;
   line-height:1.7;font-variant-numeric:tabular-nums;cursor:pointer}
 .sg .fenster .z.an{color:var(--terra);font-weight:700}
+/* die Zeilen trennen Haarlinien, nicht Farbe — die Anzeige soll Teil der
+   Frontplatte bleiben und nicht wie ein aufgeklebtes Display wirken */
+.sg .fenster.breit .z + .z{border-top:1px solid rgba(34,34,28,.10)}
 
 /* ── Werkzeugseite: eine senkrechte Achse, daneben die Anzeige ──
    Auf der Achse steht der Lautstärkeregler über die volle Höhe und darunter,
@@ -52,7 +56,7 @@
 .sg .fenster.breit .z b{font-weight:400;color:var(--tinte-3);font-variant-numeric:tabular-nums}
 .sg .fenster.breit .z span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:13.5px}
 .sg .fenster.breit .z .d{flex:none;font-size:11.5px;color:var(--tinte-3);font-variant-numeric:tabular-nums}
-.sg .fenster.breit .z.an{background:rgba(212,120,78,.12)}
+.sg .fenster.breit .z.an{background:rgba(212,120,78,.14);box-shadow:inset 2px 0 0 var(--terra)}
 .sg .fenster.breit .z.an b,.sg .fenster.breit .z.an span{color:var(--terra)}
 .sg .schalter{width:var(--sd,84px);height:var(--sd,84px);border-radius:50%;flex:none;cursor:pointer;
   background:#F6F6F0;border:1.5px solid var(--tinte);display:grid;place-items:center;
@@ -87,6 +91,7 @@
 .sg .bib .bz .pl i{width:46%;height:46%;border-radius:50%;background:var(--terra);display:grid;
   place-items:center;color:#2A1409;font-size:9px;font-weight:800}
 .sg .bib .bz .m{flex:1;min-width:0}
+.sg .bib .bz .m>span{display:block}
 .sg .bib .bz .t{font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis}
 .sg .bib .bz .s{font-size:12px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;

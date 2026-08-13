@@ -16,7 +16,7 @@
   --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
   --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
   background:var(--nacht);color:var(--hell);font-family:var(--sans);height:100%;overflow:hidden;
-  display:flex;flex-direction:column}
+  display:flex;flex-direction:column;position:relative}
 .aa *{font-family:inherit}
 
 /* ── obere Karte ── */
@@ -27,6 +27,39 @@
 .aa .eck{width:44px;height:44px;border-radius:13px;background:var(--hell);display:grid;place-items:center;
   color:var(--tinte);box-shadow:0 1px 2px rgba(20,16,14,.08)}
 .aa .eck.cov{color:#fff;font-family:var(--serif);font-size:19px;font-weight:400}
+.aa .eck.an{background:var(--rot);color:#fff}
+.aa .kz .rechts{display:flex;align-items:center;gap:10px}
+
+/* ── Bibliothek: die Karte klappt über den ganzen Bildschirm ── */
+.aa .bib{position:absolute;inset:0;z-index:60;background:var(--papier);color:var(--tinte);
+  padding:20px 26px 26px;display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.aa .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.aa .bib .bkopf{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:8px 0 14px}
+.aa .bib h2{font-family:var(--serif);font-size:27px;font-weight:400}
+.aa .bib .suchzeile{display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(20,16,14,.18);
+  padding-bottom:12px;margin-bottom:6px}
+.aa .bib .suchzeile svg{color:var(--tinte-3);flex:none}
+.aa .bib .suchzeile input{flex:1;min-width:0;background:none;border:none;outline:none;font-size:17px;
+  color:var(--tinte);font-family:var(--serif)}
+.aa .bib .suchzeile input::placeholder{color:var(--tinte-3)}
+.aa .bib .bliste{flex:1;min-height:0;overflow:hidden}
+.aa .bib .bz{display:flex;align-items:center;gap:14px;padding:13px 2px;cursor:pointer;
+  border-bottom:1px solid rgba(20,16,14,.10)}
+.aa .bib .bz .pkt{width:10px;height:10px;border-radius:50%;flex:none}
+.aa .bib .bz .m{flex:1;min-width:0}
+.aa .bib .bz .m>span{display:block}
+.aa .bib .bz .t{font-family:var(--serif);font-size:17px;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.aa .bib .bz .s{font-size:12px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.aa .bib .bz .n{font-size:11.5px;color:var(--tinte-3);white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+.aa .bib .bz.an .t{color:var(--rot)}
+.aa .bib .bfuss{flex:none;padding-top:12px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--tinte-3)}
+@media (prefers-reduced-motion:reduce){.aa .bib{transition:none}}
 .aa h1{font-family:var(--serif);font-weight:400;font-size:var(--tg,38px);line-height:1.05;
   letter-spacing:-.01em;text-align:center;text-wrap:balance}
 .aa .ar{margin-top:10px;text-align:center;font-size:15px;color:var(--tinte-3)}
@@ -98,8 +131,10 @@
     wechselt: aus der Notizkarte wird die Warteschlange, aus Aufnehmen/Stopp/Pause wird
     <b>zurück/abspielen/weiter</b>. Die Zeit steht groß, weil sie das Einzige ist, das sich ständig
     ändert.
+    Oben rechts, neben dem Cover-Chip, öffnet ein Knopf die <b>Bibliothek</b> — dieselbe weiße Karte,
+    nur über den ganzen Bildschirm, mit einer Suchzeile in Antiqua.
     <span class="probier"><b>Ausprobieren:</b> im Ausschlag spulen, unten in der Liste einen Titel
-    wählen.</span></p>
+    wählen, oben rechts die Bibliothek öffnen und „köln" tippen.</span></p>
     <div class="buehne">
       <div class="rahmen telefon">
         <div class="schirm"><div class="kerbe"></div><div class="aa" id="v1"></div><div class="griff"></div></div>
@@ -146,7 +181,10 @@ const karteHTML = n => `
     <div class="kz">
       <button class="eck">${I.back(20)}</button>
       <span class="mitte">Jetzt läuft</span>
-      <button class="eck cov" data-cov></button>
+      <span class="rechts">
+        <button class="eck" data-bib title="Bibliothek">${I.grid(19)}</button>
+        <button class="eck cov" data-cov></button>
+      </span>
     </div>
     <h1 data-titel></h1>
     <div class="ar" data-ar></div>
@@ -154,6 +192,16 @@ const karteHTML = n => `
     <div class="welle" data-welle><div class="punkte"></div>${'<b></b>'.repeat(n)}
       <div class="kopfl" data-kopf></div></div>
     <div class="fuss"><span data-vor></span><span data-rest></span></div>
+  </div>`;
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf"><h2>Bibliothek</h2>
+      <button class="eck" data-bib-zu>${I.x(19)}</button></div>
+    <label class="suchzeile">${I.search(17)}
+      <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
   </div>`;
 
 const tastenHTML = `
@@ -173,7 +221,7 @@ const qtafelHTML = `
 document.getElementById('v1').innerHTML =
   `<div class="sbar" style="color:#14100E;background:var(--papier)"><span>9:41</span>
      <div class="ic">${I.vol(15)}</div></div>` +
-  karteHTML(46) + `<div class="unten">${qtafelHTML}</div>` + tastenHTML;
+  karteHTML(46) + `<div class="unten">${qtafelHTML}</div>` + tastenHTML + bibHTML;
 
 function verdrahte(wurzel, deck, opts){
   const $  = s => wurzel.querySelector(s);
@@ -202,6 +250,17 @@ function verdrahte(wurzel, deck, opts){
     $$('[data-alb]').forEach(el => el.onclick = () => spielAlbum(el.dataset.alb));
   }
 
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="pkt" style="background:${grad(a)}"></span>
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)} · ${a.y}</span></span>
+        <span class="n">${a.tr.length} · ${fmtLang(albDur(a))}</span></div>`,
+    leer: '<div class="bz" style="border:none"><span class="m"><span class="t">Nichts gefunden.</span></span></div>',
+  });
+
   const qKasten = $('[data-queue]');
   let letztesAlbum = null, letzter = null;
   deck.onRender = d => {
@@ -217,6 +276,7 @@ function verdrahte(wurzel, deck, opts){
       $('[data-qlen]').textContent = fmtLang(d.total);
       $('[data-cov]').textContent = ini(a);
       $('[data-cov]').style.background = grad(a);
+      bib.markiere();
     }
     [...qKasten.children].forEach((el,i) => el.classList.toggle('an', i === d.qi));
     if (letzter !== t.id){
