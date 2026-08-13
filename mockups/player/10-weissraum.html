@@ -81,9 +81,17 @@
   display:flex;flex-direction:column;
   opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
 .wr .bib.auf{opacity:1;pointer-events:auto;transform:none}
-.wr .bib .bkopf{display:flex;justify-content:space-between;align-items:flex-end;
-  border-bottom:1px solid var(--linie);padding-bottom:18px;margin-bottom:8px}
-.wr .bib h2{font-size:30px;font-weight:400;letter-spacing:-.02em}
+.wr .bib .bkopf{display:flex;align-items:flex-end;gap:34px;
+  border-bottom:1px solid var(--linie);padding-bottom:16px;margin-bottom:8px}
+.wr .bib h2{font-size:30px;font-weight:400;letter-spacing:-.02em;flex:none}
+/* Suche im Ton des Entwurfs: eine Zeile, keine Kiste */
+.wr .bib .suchfeld{flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding-bottom:6px}
+.wr .bib .suchfeld svg{color:var(--tinte-3);flex:none}
+.wr .bib .suchfeld input{flex:1;min-width:0;font-size:19px;font-weight:400;color:var(--tinte);
+  background:none;border:none;outline:none;letter-spacing:-.01em}
+.wr .bib .suchfeld input::placeholder{color:var(--tinte-3)}
+.wr .bib .bfuss{flex:none;padding-top:16px;font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--tinte-3)}
 .wr .bib .zu{width:46px;height:46px;border-radius:50%;border:1px solid var(--linie);display:grid;
   place-items:center;color:var(--tinte-2)}
 .wr .bib .spalten{columns:2;column-gap:60px;overflow:hidden}
@@ -125,9 +133,10 @@
     nichts sonst da ist, kann der Titel <b>42 px groß</b> sein. Der Tonarm wandert mit der Position nach
     innen; das ist die zweite Anzeige neben der Linie und die einzige, die man aus drei Metern sieht.
     Der letzte Knopf der Zeile ist <b>nicht die Lautstärke</b>, sondern die Sammlung: Lautstärke regelt
-    man am iPad an der Gerätetaste, ein Album findet man nur hier.
+    man am iPad an der Gerätetaste, ein Album findet man nur hier. In der Blende steht die Suche als
+    <b>eine Zeile über der Liste</b>, ohne Kasten — im Ton des Entwurfs.
     <span class="probier"><b>Ausprobieren:</b> an der Haarlinie ziehen; rechts unten das Rasterzeichen
-    antippen — die Sammlung legt sich als Blende darüber, ein Album schließt sie wieder.</span></p>
+    antippen, dann tippen: „blue", „satie", „river" — gesucht wird auch in Titelnamen.</span></p>
     <div class="buehne">
       <div class="rahmen ipad-quer">
         <div class="schirm"><div class="wr" id="v1"></div></div>
@@ -147,8 +156,11 @@
     <p class="etext">Am Schreibtisch ist die reine Ruhe eine Verschwendung: 1440 px tragen mehr. Die
     Platte rückt nach rechts über den Rand, links steht die Warteschlange als <b>Register in
     Haarlinien</b> — Text, keine Kacheln. Damit bleibt der Entwurf leise und wird trotzdem brauchbar.
-    <span class="probier"><b>Ausprobieren:</b> links einen Titel wählen — der Aufkleber wechselt die
-    Farbe.</span></p>
+    Der letzte Knopf ist auch hier die <b>Sammlung samt Suche</b>, nicht die Lautstärke: am Schreibtisch
+    regelt man sie am Verstärker oder am Betriebssystem, und die Suche ist das, was 900 Alben erst
+    zugänglich macht.
+    <span class="probier"><b>Ausprobieren:</b> links einen Titel wählen; das Rasterzeichen öffnet die
+    Sammlung mit Suchzeile.</span></p>
     <div class="buehne">
       <div class="rahmen pc">
         <div class="schirm">
@@ -180,10 +192,12 @@
       <li><span><b>Große Schrift braucht <code>text-wrap:balance</code>.</b> Sonst hängt bei
       zweizeiligen Titeln ein einzelnes Wort in der zweiten Zeile — bei 42 px fällt das sofort
       auf.</span></li>
-      <li><span><b>Lautstärke muss nicht auf den Bildschirm.</b> Am iPad und am Telefon liegen die
-      Tasten am Gerät, und <code>musiklib:volume</code> gilt ohnehin über alle Oberflächen hinweg. Der
-      freigewordene Platz trägt hier die Sammlung — am PC bleibt es beim Regler, denn dort gibt es
-      keine Gerätetaste.</span></li>
+      <li><span><b>Lautstärke muss nicht auf den Bildschirm.</b> Am iPad liegen die Tasten am Gerät,
+      am PC am Verstärker; <code>musiklib:volume</code> gilt ohnehin über alle Oberflächen hinweg. Der
+      freigewordene Platz trägt in beiden Varianten die Sammlung.</span></li>
+      <li><span><b>Suchen heißt hier: Blende auf, Fokus ins Feld.</b> Ein <code>setTimeout(…, 60)</code>
+      nach dem Einblenden — vorher nimmt ein Element mit <code>pointer-events:none</code> den Fokus
+      nicht an. Am iPad öffnet das die Bildschirmtastatur; wer nur stöbern will, tippt daneben.</span></li>
     </ol>
   </div>
 
@@ -202,6 +216,18 @@ const platteHTML = `
     <div class="label" data-label></div><span class="loch"></span>
   </div>
   <div class="arm" data-arm><span class="lager"></span><span class="rohr"></span><span class="kopf"></span></div>`;
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Sammlung</h2>
+      <label class="suchfeld">${I.search(18)}
+        <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
+      <button class="zu" data-bib-zu>${I.x(19)}</button>
+    </div>
+    <div class="spalten" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
 
 const spalteHTML = bibliothek => `
   <div class="spalte">
@@ -228,15 +254,12 @@ const spalteHTML = bibliothek => `
 document.getElementById('v1').innerHTML =
   `<span class="kap ecke">Musiklib</span><span class="kap ecke2">Seite A</span>` +
   platteHTML + spalteHTML(true) +
-  `<div class="bib" data-bib-blende>
-     <div class="bkopf"><h2>Sammlung</h2>
-       <button class="zu" data-bib-zu>${I.down(20)}</button></div>
-     <div class="spalten" data-bibliothek></div>
-   </div>`;
+  bibHTML;
 
 document.getElementById('v2').innerHTML =
-  `<span class="kap ecke">Musiklib</span>` + platteHTML + spalteHTML(false) +
-  `<div class="register"><span class="kap">Warteschlange</span><div data-queue></div></div>`;
+  `<span class="kap ecke">Musiklib</span>` + platteHTML + spalteHTML(true) +
+  `<div class="register"><span class="kap">Warteschlange</span><div data-queue></div></div>` +
+  bibHTML;
 
 function verdrahte(wurzel, deck, stil){
   const $  = s => wurzel.querySelector(s);
@@ -249,20 +272,37 @@ function verdrahte(wurzel, deck, stil){
 
   /* Bibliothek: eine Blende über dem Bild, kein Seitenwechsel */
   const blende = $('[data-bib-blende]');
+  let zeichneBib = () => {};
+  const markiereBib = () => blende && [...$('[data-bibliothek]').children]
+    .forEach(el => el.classList.toggle('an', el.dataset.alb === deck.album.id));
   if (blende){
-    $('[data-bib]').onclick    = () => blende.classList.toggle('auf');
+    $('[data-bib]').onclick    = () => {
+      const auf = !blende.classList.contains('auf');
+      blende.classList.toggle('auf', auf);
+      if (auf) setTimeout(() => $('[data-suche]').focus(), 60);
+    };
     $('[data-bib-zu]').onclick = () => blende.classList.remove('auf');
-    $('[data-bibliothek]').innerHTML = ALBUMS.map(a => `
-      <div class="bz" data-alb="${a.id}">
-        <span class="pkt" style="background:${grad(a)}"></span>
-        <span class="t">${esc(a.t)} — ${esc(a.ar)}</span>
-        <span class="n">${a.tr.length} · ${fmtLang(albDur(a))}</span></div>`).join('');
-    [...$('[data-bibliothek]').children].forEach(el => el.onclick = () => {
-      const a = ALBUMS.find(x => x.id === el.dataset.alb);
-      deck.queue = a.tr.map((_,i) => `${a.id}-${i}`);
-      deck.qi = 0; deck.pos = 0; deck.playing = true; deck.render();
-      blende.classList.remove('auf');
-    });
+    const liste = $('[data-bibliothek]'), feld = $('[data-suche]');
+    zeichneBib = () => {
+      const treffer = suche(feld.value);
+      liste.innerHTML = treffer.map(a => `
+        <div class="bz" data-alb="${a.id}">
+          <span class="pkt" style="background:${grad(a)}"></span>
+          <span class="t">${esc(a.t)} — ${esc(a.ar)}</span>
+          <span class="n">${a.tr.length} · ${fmtLang(albDur(a))}</span></div>`).join('') ||
+        '<div class="bz" style="border:none"><span class="t">Nichts gefunden.</span></div>';
+      $('[data-btreffer]').textContent = feld.value.trim()
+        ? `${treffer.length} von ${ALBUMS.length} Alben` : `${ALBUMS.length} Alben`;
+      [...liste.children].forEach(el => el.dataset.alb && (el.onclick = () => {
+        const a = ALBUMS.find(x => x.id === el.dataset.alb);
+        deck.queue = a.tr.map((_,i) => `${a.id}-${i}`);
+        deck.qi = 0; deck.pos = 0; deck.playing = true; deck.render();
+        blende.classList.remove('auf');
+      }));
+      markiereBib();
+    };
+    feld.oninput = zeichneBib;
+    zeichneBib();
   }
 
   const qKasten = $('[data-queue]');
@@ -279,8 +319,7 @@ function verdrahte(wurzel, deck, stil){
     if (qKasten) [...qKasten.children].forEach((el,i) => el.classList.toggle('an', i === d.qi));
     if (letzter !== t.id){
       letzter = t.id;
-      if (blende) [...$('[data-bibliothek]').children]
-        .forEach(el => el.classList.toggle('an', el.dataset.alb === a.id));
+      markiereBib();
       $('[data-titel]').textContent = t.t;
       $('[data-ar]').textContent = a.ar;
       $('[data-alb]').textContent = a.t + ' · ' + a.y;

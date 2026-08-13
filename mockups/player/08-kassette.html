@@ -107,6 +107,17 @@
 .ks .fach .spine{margin:0}
 @media (prefers-reduced-motion:reduce){.ks .fach{transition:none}}
 
+/* Suche — im Regal wie im Fach dasselbe Feld */
+.ks .suchfeld{display:flex;align-items:center;gap:10px;height:42px;padding:0 14px;border-radius:4px;
+  background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(236,240,248,.16);margin-bottom:14px}
+.ks .suchfeld svg{color:var(--hell-3);flex:none}
+.ks .suchfeld input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:var(--hell);font-size:14px}
+.ks .suchfeld input::placeholder{color:var(--hell-3)}
+.ks .fach .suchfeld{flex:1;margin:0;height:48px}
+.ks .treffer{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--hell-3);
+  padding-top:12px}
+
 /* ── Regal ── */
 .ks .regal{width:var(--rw,300px);flex:none;border-left:1px solid rgba(255,255,255,.09);padding:30px 26px;
   overflow:hidden;background:rgba(0,0,0,.16)}
@@ -145,8 +156,10 @@
     <p class="etext">Die Kassette liegt in der Mitte, darunter das Zählwerk und fünf Tasten mit
     Druckpunkt. Rechts steht die Sammlung als <b>Regal</b> — jedes Album ein Rücken, wie im Schuhkarton.
     Das Umschalten ist derselbe Griff wie damals: Kassette raus, Kassette rein.
-    <span class="probier"><b>Ausprobieren:</b> rechts ein Album wählen, an der orangen Leiste spulen,
-    Play drücken — die Naben halten an.</span></p>
+    Über dem Regal steht die <b>Suche</b>: sie filtert Album, Interpret und Titelnamen, während man
+    tippt.
+    <span class="probier"><b>Ausprobieren:</b> rechts „jarrett" oder „blue" tippen, ein Album wählen,
+    an der orangen Leiste spulen, Play drücken — die Naben halten an.</span></p>
     <div class="buehne">
       <div class="rahmen pc">
         <div class="schirm">
@@ -157,7 +170,7 @@
     </div>
     <dl class="zettel">
       <div><dt>Stärke</dt><dd>Fortschritt <b>ohne Zahl und ohne Balken</b></dd></div>
-      <div><dt>Schwäche</dt><dd>Nur ein Album zurzeit — das Regal ist die ganze Navigation</dd></div>
+      <div><dt>Schwäche</dt><dd>Nur ein Album zurzeit — <b>Regal und Suche</b> sind die ganze Navigation</dd></div>
       <div><dt>Detail</dt><dd>Wickelradien aus der Gesamtlaufzeit, nicht aus dem Einzeltitel</dd></div>
       <div><dt>Cover</dt><dd>Kommen nicht vor: das Etikett ist Schrift</dd></div>
     </dl>
@@ -169,8 +182,9 @@
     Tasten sind so breit wie Daumen. Ganz rechts steht die <b>Auswurftaste</b> — dieselbe Taste wie die
     anderen, dasselbe Zeichen wie an jedem Deck. Sie wirft keine Kassette aus, sondern öffnet das
     Fach: die Bibliothek. Wer eine neue Kassette einlegt, schließt es damit auch wieder.
-    <span class="probier"><b>Ausprobieren:</b> ▲ ganz rechts drücken, ein Album wählen — das Fach
-    schließt sich und das Band läuft von vorn.</span></p>
+    Im Fach steht dieselbe <b>Suche</b> wie am PC, gleich mit Fokus.
+    <span class="probier"><b>Ausprobieren:</b> ▲ ganz rechts drücken, „river" tippen, das Album
+    wählen — das Fach schließt sich und das Band läuft von vorn.</span></p>
     <div class="buehne">
       <div class="rahmen ipad-quer">
         <div class="schirm"><div class="ks" id="v2"></div></div>
@@ -263,15 +277,23 @@ const bedienHTML = auswurf => `
 
 document.getElementById('v1').innerHTML =
   `<div class="buehne">${kassHTML}${bedienHTML(false)}</div>
-   <div class="regal"><span class="kap">Regal</span><div data-regal></div></div>`;
+   <div class="regal"><span class="kap">Regal</span>
+     <label class="suchfeld">${I.search(16)}
+       <input type="search" placeholder="Suchen …" data-suche></label>
+     <div data-regal></div>
+     <div class="treffer" data-treffer></div>
+   </div>`;
 document.getElementById('v2').innerHTML =
   `<div class="buehne">${kassHTML}${bedienHTML(true)}</div>
    <div class="fach" data-fach>
      <div class="fkopf">
        <h2><span class="kap">Kassettenfach</span>Regal</h2>
+       <label class="suchfeld">${I.search(17)}
+         <input type="search" placeholder="Album, Interpret oder Titel suchen …" data-suche></label>
        <button class="zu" data-zu>${AUSWURF}</button>
      </div>
      <div class="raster" data-regal></div>
+     <div class="treffer" data-treffer></div>
    </div>`;
 
 function verdrahte(wurzel, deck, stil){
@@ -291,24 +313,37 @@ function verdrahte(wurzel, deck, stil){
   const fach = $('[data-fach]');
   if (fach){
     const auf = zu => fach.classList.toggle('auf', zu);
-    $('[data-auswurf]').onclick = () => auf(!fach.classList.contains('auf'));
+    $('[data-auswurf]').onclick = () => {
+      const offen = !fach.classList.contains('auf');
+      auf(offen);
+      if (offen) setTimeout(() => $('[data-suche]').focus(), 60);
+    };
     $('[data-zu]').onclick      = () => auf(false);
   }
 
-  const regal = $('[data-regal]');
-  if (regal){
-    regal.innerHTML = ALBUMS.slice(0, fach ? 8 : 7).map(a => `
+  const regal = $('[data-regal]'), feld = $('[data-suche]');
+  function zeichneRegal(){
+    const treffer = suche(feld.value);
+    regal.innerHTML = treffer.map(a => `
       <div class="spine" data-alb="${a.id}">
         <span class="farbe" style="background:${grad(a)}"></span>
         <div class="m"><div class="t">${esc(a.t)}</div>
-          <div class="s">${esc(a.ar)} · ${fmtLang(albDur(a))}</div></div></div>`).join('');
-    $$('.spine').forEach(el => el.onclick = () => {
+          <div class="s">${esc(a.ar)} · ${fmtLang(albDur(a))}</div></div></div>`).join('') ||
+      '<div class="spine" style="box-shadow:none"><div class="m"><div class="s">Nichts gefunden.</div></div></div>';
+    $('[data-treffer]').textContent = feld.value.trim()
+      ? `${treffer.length} von ${ALBUMS.length} Kassetten` : `${ALBUMS.length} Kassetten`;
+    $$('.spine').forEach(el => el.dataset.alb && (el.onclick = () => {
       const a = ALBUMS.find(x => x.id === el.dataset.alb);
       deck.queue = a.tr.map((_,i) => `${a.id}-${i}`);
       deck.qi = 0; deck.pos = 0; deck.playing = true; deck.render();
       if (fach) fach.classList.remove('auf');       // eingelegt heißt: Fach zu
-    });
+    }));
+    markiereRegal();
   }
+  const markiereRegal = () =>
+    $$('.spine').forEach(el => el.classList.toggle('an', el.dataset.alb === deck.album.id));
+  feld.oninput = zeichneRegal;
+  zeichneRegal();
 
   /* Wickelradius über die Fläche, nicht über den Radius */
   const radius = f => Math.sqrt(rNabe*rNabe + (rVoll*rVoll - rNabe*rNabe) * clamp(f,0,1));
@@ -320,7 +355,7 @@ function verdrahte(wurzel, deck, stil){
       letztesAlbum = a.id;
       $('[data-etalb]').textContent = a.t;
       $('[data-ar]').textContent = a.ar + ' · ' + a.tr.length + ' Titel';
-      $$('.spine').forEach(el => el.classList.toggle('an', el.dataset.alb === a.id));
+      markiereRegal();
     }
     const f  = d.gpos / d.total;
     const linksX = 22, rechtsX = 78;                          // in Prozent des Fensters

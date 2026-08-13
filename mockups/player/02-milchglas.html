@@ -55,7 +55,6 @@
   box-shadow:-4px -4px 10px var(--hell),5px 5px 12px var(--dunkel);display:grid;place-items:center;
   color:var(--tinte-3)}
 .mg .deck .knopf.l{left:6%;bottom:7%}
-.mg .deck .knopf.r{right:7%;bottom:7%}
 
 /* ── Titel, Ausschlag, Transport ── */
 .mg .titel{text-align:center;margin-top:26px}
@@ -100,7 +99,9 @@
     <div class="ekopf"><h2>Variante 2 · Kissen</h2><span class="marke geraet">Handy · 390 × 844</span></div>
     <p class="etext">Der dritte Bildschirm der Vorlage, eins zu eins: Laufwerk, Titel, Ausschlag, drei
     Knöpfe. Das Format passt hier ohne Anpassung — <b>die Vorlage ist ein Telefonentwurf</b>. Die Liste
-    zum Stöbern liegt eine Ebene tiefer; auf dem Bildschirm steht nur, was läuft.
+    zum Stöbern liegt eine Ebene tiefer; auf dem Bildschirm steht nur, was läuft. Der Lautstärkeknopf
+    am Laufwerk ist gestrichen: <b>am Telefon regelt das die Gerätetaste</b>. Der verbliebene Knopf
+    links unten öffnet das laufende Album.
     <span class="probier"><b>Ausprobieren:</b> die Balken antippen; der Tonarm wandert mit der
     Position nach innen.</span></p>
     <div class="buehne">
@@ -150,7 +151,6 @@ const deckHTML = w => `
     <div class="teller" data-teller><div class="label" data-label></div></div>
     <div class="arm" data-arm></div>
     <div class="knopf l">${I.disc(20)}</div>
-    <div class="knopf r">${I.vol(20)}</div>
   </div>`;
 
 const spielerHTML = (dw, al) => `

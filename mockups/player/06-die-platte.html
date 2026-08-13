@@ -9,7 +9,10 @@
    wo die Nadel steht — ziehen heißt spulen, und es sieht aus wie das Gerät.
    Gedreht: das Gerät steht um 90° gekippt zur Vorlage — Teller links,
    Tonarm rechts, Skalen am rechten Rand. So sitzt der Arm dort, wo er an
-   jedem echten Laufwerk sitzt, und die Nadel wandert von oben nach unten.
+   jedem echten Laufwerk sitzt, und der Tonkopf wandert von oben nach unten.
+   Der Arm ist kein Drehtonarm, sondern ein Tangentialarm: feste Führung,
+   Schlitten, Ausleger, Tonkopf. Der Tonkopf hängt immer unten und behält
+   seine Ausrichtung — nur so ist auf einen Blick klar, wo die Nadel steht.
    ══════════════════════════════════════════════════════════════════════════ */
 .dp{
   --grund:#EFEFEC; --slab:#F6F6F3; --tief:#25251F;
@@ -44,19 +47,34 @@
 .dp .teller .dorn{position:absolute;left:50%;top:50%;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;
   border-radius:50%;background:var(--tief);z-index:2}
 
-/* ── Tonarm als Spulleiste, senkrecht am rechten Rand ── */
-.dp .armzeile{position:absolute;top:0;bottom:0;left:var(--ax,76%);width:76px;margin-left:-38px;
+/* ── Tonarm als Spulleiste, senkrecht am rechten Rand ──
+   Kein Drehtonarm, sondern ein Tangentialarm: eine feste Führung, darauf ein
+   Schlitten, daran der Ausleger und am Ende der Tonkopf. Der Tonkopf hängt
+   immer unten und bleibt immer gleich ausgerichtet — er wandert nur mit der
+   Position nach innen, so wie bei einem echten Tangentiallaufwerk. */
+.dp .armzeile{position:absolute;top:0;bottom:0;left:var(--ax,76%);width:96px;margin-left:-48px;
   cursor:pointer;touch-action:none}
-.dp .arm{position:absolute;top:9%;bottom:9%;left:50%;width:7px;margin-left:-3.5px;border-radius:4px;
-  background:var(--tief)}
-/* der Knick des Arms sitzt jetzt oben und zeigt zur hinteren Ecke */
-.dp .arm::before{content:'';position:absolute;top:-42px;left:0;width:7px;height:52px;
-  border-radius:4px;background:var(--tief);transform:rotate(28deg);transform-origin:50% 100%}
-.dp .kreis{position:absolute;left:50%;width:96px;height:96px;border-radius:50%;border:1px solid var(--linie);
-  transform:translate(-50%,-50%);transition:top .18s linear;pointer-events:none}
-.dp .nadel{position:absolute;left:50%;width:48px;height:48px;border-radius:50%;background:var(--tief);
-  transform:translate(-50%,-50%);transition:top .18s linear;
-  box-shadow:0 4px 10px rgba(26,26,22,.28)}
+.dp .schiene{position:absolute;top:8%;bottom:8%;left:50%;width:3px;margin-left:-1.5px;border-radius:2px;
+  background:linear-gradient(180deg,rgba(26,26,22,.55),rgba(26,26,22,.30))}
+.dp .schiene::before,.dp .schiene::after{content:'';position:absolute;left:50%;width:17px;height:3px;
+  margin-left:-8.5px;border-radius:2px;background:var(--tief)}
+.dp .schiene::before{top:-3px}
+.dp .schiene::after{bottom:-3px}
+.dp .schlitten{position:absolute;left:50%;width:26px;height:46px;margin-left:-13px;border-radius:3px;
+  transform:translateY(-50%);transition:top .18s linear;
+  background:linear-gradient(180deg,#3C3C36,#17170F);box-shadow:0 3px 9px rgba(26,26,22,.4)}
+.dp .schlitten::after{content:'';position:absolute;left:50%;top:50%;width:12px;height:1px;
+  margin:-.5px 0 0 -6px;background:rgba(255,255,255,.30)}
+.dp .ausleger{position:absolute;right:100%;top:50%;width:var(--aus,76px);height:6px;margin-top:-3px;
+  border-radius:3px;background:linear-gradient(180deg,#F2F2EE,#B4B4AA);
+  box-shadow:0 2px 6px rgba(0,0,0,.35)}
+.dp .tonkopf{position:absolute;left:-6px;top:-9px;width:24px;height:32px;border-radius:3px 3px 4px 4px;
+  background:linear-gradient(150deg,#FAFAF6,#BFBFB6);box-shadow:0 3px 8px rgba(0,0,0,.4),
+    inset 0 0 0 1px rgba(26,26,22,.18)}
+.dp .tonkopf::before{content:'';position:absolute;left:5px;right:5px;top:7px;height:1.5px;
+  background:rgba(26,26,22,.30)}
+.dp .tonkopf::after{content:'';position:absolute;left:50%;bottom:-7px;width:2px;height:8px;margin-left:-1px;
+  border-radius:1px;background:var(--tief)}
 
 /* ── zwei Skalen, rechts neben dem Arm ── */
 .dp .skalen{position:absolute;left:var(--sx,92%);top:50%;transform:translate(-50%,-50%);display:flex;
@@ -100,7 +118,12 @@
    nicht daneben — deshalb trägt hier die Wurzel den Plattenton und die
    Platte selbst weder Rand noch Schatten. */
 .dp.zwei{flex-direction:row;background:var(--slab)}
-.dp.zwei .slab{flex:1;min-width:0;height:auto;background:transparent;box-shadow:none}
+.dp.zwei .slab{flex:1;min-width:0;height:auto;background:transparent;box-shadow:none;
+  display:flex;align-items:center;justify-content:center}
+/* Das Gerät selbst ist quadratisch — eine Platte, kein Streifen. */
+.dp .geraet{position:relative;width:var(--gq,560px);height:var(--gq,560px);flex:none;border-radius:3px;
+  background:var(--slab);
+  box-shadow:inset 0 0 0 1px rgba(26,26,22,.16),0 22px 46px rgba(26,26,22,.14)}
 .dp.zwei .seitentext{width:var(--stw,300px);flex:none;display:flex;flex-direction:column;
   justify-content:center;padding:0 var(--stp,30px)}
 .dp.zwei .text{flex-direction:column;align-items:flex-start;gap:16px;padding:0}
@@ -129,11 +152,11 @@
 
   <section class="entwurf">
     <div class="ekopf"><h2>Variante 1 · Gerät</h2><span class="marke geraet">iPad hoch · 834 × 1194</span></div>
-    <p class="etext">Das iPad wird zum Gegenstand: links das Laufwerk über die ganze Höhe, rechts eine
-    schmale Spalte mit Titel, Zeit und Transport. <b>Nebeneinander statt übereinander</b> — so bleibt das
-    Gerät ein Gerät und die Schrift steht daneben wie eine Gravur auf der Frontplatte, nicht wie eine
-    Bildunterschrift. Wer mehr will als abspielen, muss wischen: <b>hier gibt es nichts als das Stück,
-    das läuft</b>.
+    <p class="etext">Das iPad wird zum Gegenstand: links das Laufwerk, rechts eine schmale Spalte mit
+    Titel, Zeit und Transport. <b>Nebeneinander statt übereinander</b> — so bleibt das Gerät ein Gerät
+    und die Schrift steht daneben wie eine Gravur, nicht wie eine Bildunterschrift. Das Laufwerk selbst
+    ist <b>quadratisch</b> und nimmt fast die ganze linke Hälfte ein: eine Platte, kein Streifen. Wer
+    mehr will als abspielen, muss wischen — <b>hier gibt es nichts als das Stück, das läuft</b>.
     <span class="probier"><b>Ausprobieren:</b> die schwarze Nadel am rechten Balken nach oben oder unten
     ziehen. Die kleinen Skalen daneben sind Lautstärke und Balance.</span></p>
     <div class="buehne">
@@ -144,7 +167,7 @@
     <dl class="zettel">
       <div><dt>Stärke</dt><dd>Nichts abzulesen, alles zu greifen</dd></div>
       <div><dt>Schwäche</dt><dd><b>Keine Sammlung</b> — Auswahl passiert woanders</dd></div>
-      <div><dt>Detail</dt><dd>Arm rechts wie am echten Gerät: <b>oben Anfang, unten Ende</b></dd></div>
+      <div><dt>Detail</dt><dd>Tangentialarm: Schlitten auf der Schiene, <b>Tonkopf immer unten</b></dd></div>
       <div><dt>Aufwand</dt><dd>gering — eine Leiste, ein Kreis</dd></div>
     </dl>
   </section>
@@ -176,8 +199,8 @@
   <div class="schluss">
     <h2>Was das im Code bedeutet</h2>
     <ol>
-      <li><span><b>Der Tonarm als Leiste braucht eine Trefferfläche.</b> Der sichtbare Balken ist 7 px
-      breit; angefasst wird ein unsichtbarer Streifen von 76 px. Ohne den trifft niemand die Nadel —
+      <li><span><b>Der Tonarm als Leiste braucht eine Trefferfläche.</b> Die sichtbare Führung ist 3 px
+      breit; angefasst wird ein unsichtbarer Streifen von 96 px. Ohne den trifft niemand die Nadel —
       am iPad schon gar nicht. Senkrecht kommt dazu: <code>touch-action:none</code> ist Pflicht, sonst
       gewinnt die Scrollgeste des Browsers gegen den Zug am Arm.</span></li>
       <li><span><b>Die Nadel darf nicht springen, während man zieht.</b> Position aus der Uhr nur
@@ -186,6 +209,10 @@
       <li><span><b>Die Textliste ist der billigste Weg zu einer großen Sammlung.</b> Kein
       <code>/api/cover</code>, kein <code>content-visibility</code>-Kunstgriff — 900 Zeilen Text
       scrollen ohne Nachdenken.</span></li>
+      <li><span><b>Ausleger und Tonkopf sind hell, der Schlitten dunkel.</b> Der Arm liegt über der
+      schwarzen Platte, der Schlitten über der hellen Frontplatte — beide brauchen den jeweils anderen
+      Kontrast, sonst verschwindet die Hälfte des Arms. Das ist kein Materialrealismus, sondern
+      Lesbarkeit.</span></li>
       <li><span><b>Der Mittelaufkleber ist das Cover.</b> Rund beschnitten auf 24 % Durchmesser fällt vom
       Bild fast nichts auf — genug, um Alben zu unterscheiden, zu wenig, um Text zu lesen. Das ist der
       Preis dieser Form.</span></li>
@@ -202,22 +229,27 @@
 const d1 = new Deck('ryu', {qi:1, pos:96,  speed:6});
 const d2 = new Deck('sat', {qi:0, pos:52,  speed:6});
 
-const slabHTML = h => `
+const inhaltHTML = `
+  <div class="marke">Musiklib</div>
+  <div class="seit">Seite A</div>
+  <div class="teller" data-teller>
+    <div class="mitte"><div class="cov" data-cov></div></div><span class="dorn"></span>
+  </div>
+  <div class="armzeile" data-arm>
+    <span class="schiene"></span>
+    <span class="schlitten" data-nadel>
+      <span class="ausleger"><span class="tonkopf"></span></span>
+    </span>
+  </div>
+  <div class="skalen">
+    <div class="skala" data-vol><i data-volz></i><span>Vol</span></div>
+    <div class="skala"><i style="transform:rotate(12deg)"></i><span>Bal</span></div>
+  </div>`;
+
+/* quadrat: das Gerät steht als eigene Fläche mittig auf der Frontplatte */
+const slabHTML = (h, quadrat) => `
   <div class="slab"${h ? ` style="height:${h}px"` : ''}>
-    <div class="marke">Musiklib</div>
-    <div class="seit">Seite A</div>
-    <div class="teller" data-teller>
-      <div class="mitte"><div class="cov" data-cov></div></div><span class="dorn"></span>
-    </div>
-    <div class="armzeile" data-arm>
-      <span class="arm"></span>
-      <span class="kreis" data-kreis></span>
-      <span class="nadel" data-nadel></span>
-    </div>
-    <div class="skalen">
-      <div class="skala" data-vol><i data-volz></i><span>Vol</span></div>
-      <div class="skala"><i style="transform:rotate(12deg)"></i><span>Bal</span></div>
-    </div>
+    ${quadrat ? `<div class="geraet">${inhaltHTML}</div>` : inhaltHTML}
   </div>`;
 
 const textHTML = `
@@ -232,10 +264,10 @@ const textHTML = `
   </div>`;
 
 document.getElementById('v1').innerHTML =
-  slabHTML(0) + `<div class="seitentext">${textHTML}</div>`;
+  slabHTML(0, true) + `<div class="seitentext">${textHTML}</div>`;
 
 document.getElementById('v2').innerHTML =
-  `<div style="width:720px;flex:none;display:flex;flex-direction:column">${slabHTML(664)}${textHTML}</div>
+  `<div style="width:720px;flex:none;display:flex;flex-direction:column">${slabHTML(664, false)}${textHTML}</div>
    <div class="liste">
      <div class="kopfz"><span class="kap">Sammlung</span><span class="kap" data-anz></span></div>
      <div data-liste></div>
@@ -286,7 +318,7 @@ function verdrahte(wurzel, deck, stil){
       $$('[data-t]').forEach(el => el.classList.toggle('an', el.dataset.t === t.id));
     }
     const hoehe = (9 + d.frac*82).toFixed(2) + '%';
-    if (!zieht){ $('[data-nadel]').style.top = hoehe; $('[data-kreis]').style.top = hoehe; }
+    if (!zieht) $('[data-nadel]').style.top = hoehe;
     $('[data-jetzt]').textContent = fmt(d.pos);
     $('[data-ende]').textContent  = fmt(d.dur);
     $('[data-pp]').innerHTML = d.playing ? I.pause(20) : I.play(20);
@@ -296,7 +328,8 @@ function verdrahte(wurzel, deck, stil){
   deck.render();
 }
 verdrahte(document.getElementById('v1'), d1,
-  {'--td':'380px','--tx':'41%','--ty':'50%','--ax':'83%','--sx':'94%','--tg':'25px','--stw':'300px'});
+  {'--gq':'560px','--td':'430px','--tx':'41%','--ty':'50%','--ax':'84%','--sx':'93%','--aus':'86px',
+   '--tg':'24px','--stw':'260px','--stp':'26px'});
 verdrahte(document.getElementById('v2'), d2,
   {'--td':'400px','--tx':'41%','--ty':'50%','--ax':'74%','--sx':'90%','--tp':'26px','--tg':'22px',
    '--trp':'18px'});
