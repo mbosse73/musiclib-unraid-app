@@ -302,9 +302,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 .aa .kz .mitte{font-size:13px;color:var(--tinte-2)}
 .aa .eck{width:44px;height:44px;border-radius:13px;background:var(--hell);display:grid;place-items:center;
   color:var(--tinte);box-shadow:0 1px 2px rgba(20,16,14,.08)}
-.aa .eck.cov{color:#fff;font-family:var(--serif);font-size:19px;font-weight:400}
 .aa .eck.an{background:var(--rot);color:#fff}
-.aa .kz .rechts{display:flex;align-items:center;gap:10px}
 
 /* ── Bibliothek: die Karte klappt über den ganzen Bildschirm ── */
 .aa .bib{position:absolute;inset:0;z-index:60;background:var(--papier);color:var(--tinte);
@@ -396,7 +394,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
   --tinte:#1C1C1C; --tinte-2:#6A6A6A; --tinte-3:#9A9A9A;
   --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
   background:var(--grund);color:var(--tinte);font-family:var(--sans);height:100%;overflow:hidden;
-  display:flex;flex-direction:column}
+  display:flex;flex-direction:column;position:relative}
 .kl *{font-family:inherit}
 .kl .heraus{background:var(--karte);box-shadow:-6px -6px 14px var(--hell),7px 7px 16px var(--dunkel)}
 .kl .hinein{background:var(--karte);box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
@@ -446,6 +444,37 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 .kl .zeile.an .knopf{color:var(--tinte);box-shadow:inset -3px -3px 8px var(--hell),inset 4px 4px 10px var(--dunkel)}
 .kl .strich{width:16px;height:3px;border-radius:2px;background:currentColor;display:block}
 .kl .fuss{text-align:center;font-size:11px;color:var(--tinte-3);padding:0 0 14px;flex:none}
+.kl .rund.an{box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel);
+  color:var(--tinte)}
+
+/* ── Bibliothek: dieselben Kiesel, eine Ebene darüber ── */
+.kl .bib{position:absolute;inset:0;z-index:60;background:var(--grund);padding:16px 26px 20px;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.kl .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.kl .bib .bkopf{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:8px 0 14px;flex:none}
+.kl .bib h2{font-size:13px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+.kl .bib .suchfeld{display:flex;align-items:center;gap:12px;height:50px;padding:0 20px;flex:none;
+  border-radius:25px;margin-bottom:14px;background:var(--karte);
+  box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
+.kl .bib .suchfeld svg{color:var(--tinte-3);flex:none}
+.kl .bib .suchfeld input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:var(--tinte);font-size:15.5px}
+.kl .bib .suchfeld input::placeholder{color:var(--tinte-3)}
+.kl .bib .bliste{flex:1;min-height:0;overflow:hidden}
+.kl .bib .bz{display:flex;align-items:center;gap:16px;padding:12px 16px;border-radius:20px;
+  cursor:pointer;margin-bottom:8px}
+.kl .bib .bz .m{flex:1;min-width:0}
+.kl .bib .bz .m>span{display:block}
+.kl .bib .bz .t{font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kl .bib .bz .s{font-size:13px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.kl .bib .bz .n{font-size:12px;color:var(--tinte-3);white-space:nowrap}
+.kl .bib .bz.an{background:var(--karte);
+  box-shadow:-6px -6px 14px var(--hell),7px 7px 18px var(--dunkel)}
+.kl .bib .bfuss{flex:none;text-align:center;font-size:11px;color:var(--tinte-3);padding-top:6px}
+@media (prefers-reduced-motion:reduce){.kl .bib{transition:none}}
 /* ── Blatt 06 ── */
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -514,7 +543,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 .dp .gegen{position:absolute;left:-9px;top:-46px;width:18px;height:34px;border-radius:9px;
   background:linear-gradient(150deg,#3C3C36,#17170F);box-shadow:0 2px 6px rgba(26,26,22,.35)}
 .dp .kopf{position:absolute;left:-13px;top:calc(var(--arm,300px) + 12px);width:26px;height:34px;
-  border-radius:3px 3px 5px 5px;transform:rotate(-22deg);transform-origin:50% 0;
+  border-radius:3px 3px 5px 5px;transform:rotate(22deg);transform-origin:50% 0;
   background:linear-gradient(150deg,#FBFBF7,#BFBFB6);
   box-shadow:0 3px 9px rgba(0,0,0,.42),inset 0 0 0 1px rgba(26,26,22,.16)}
 .dp .kopf::before{content:'';position:absolute;left:5px;right:5px;top:8px;height:1.5px;
@@ -526,7 +555,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
   cursor:grab;touch-action:none}
 .dp .griffzone:active{cursor:grabbing}
 
-/* ── zwei Skalen, rechts neben dem Arm ── */
+/* ── Skalen und, in Variante 1, der Bibliotheksknopf darunter ── */
 .dp .skalen{position:absolute;left:var(--sx,92%);top:50%;transform:translate(-50%,-50%);display:flex;
   flex-direction:column;align-items:center;gap:52px}
 .dp .skala{width:64px;height:64px;border-radius:50%;border:1px solid var(--linie);position:relative;
@@ -535,6 +564,8 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
   position:absolute;top:10px;left:50%;margin-left:-.75px}
 .dp .skala span{position:absolute;left:50%;bottom:-17px;transform:translateX(-50%);font-size:8px;
   letter-spacing:.14em;text-transform:uppercase;color:var(--tinte-3)}
+.dp .skala.knopf{border-color:var(--tief);background:var(--tief);color:var(--slab);cursor:pointer}
+.dp .skala.knopf.an{background:var(--slab);color:var(--tief);border:1px solid var(--tief)}
 
 /* ── Schrift unter der Platte ── */
 .dp .text{padding:var(--tp,28px) 42px 0;display:flex;align-items:flex-start;justify-content:space-between;
@@ -1533,8 +1564,8 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
     wechselt: aus der Notizkarte wird die Warteschlange, aus Aufnehmen/Stopp/Pause wird
     <b>zurück/abspielen/weiter</b>. Die Zeit steht groß, weil sie das Einzige ist, das sich ständig
     ändert.
-    Oben rechts, neben dem Cover-Chip, öffnet ein Knopf die <b>Bibliothek</b> — dieselbe weiße Karte,
-    nur über den ganzen Bildschirm, mit einer Suchzeile in Antiqua.
+    Oben rechts öffnet ein Knopf die <b>Bibliothek</b> — dieselbe weiße Karte, nur über den ganzen
+    Bildschirm, mit einer Suchzeile in Antiqua.
     <span class="probier"><b>Ausprobieren:</b> im Ausschlag spulen, unten in der Liste einen Titel
     wählen, oben rechts die Bibliothek öffnen und „köln" tippen.</span></p>
     <div class="buehne">
@@ -1592,8 +1623,10 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
     Knöpfe neben dem Cover sind gestrichen, und das Cover <b>dreht sich nicht</b>: In einem Entwurf,
     dessen einzige Bewegung die laufende Zeile ist, wäre eine rotierende Scheibe die zweite — und
     zwei Bewegungen streiten sich um denselben Blick.
-    <span class="probier"><b>Ausprobieren:</b> an der Linie ziehen; sie ist die einzige Vertiefung
-    im ganzen Entwurf.</span></p>
+    Oben rechts sitzt der einzige verbliebene Knopf: dahinter liegen <b>Bibliothek und Suche</b>, in
+    denselben Kieseln wie die Warteschlange.
+    <span class="probier"><b>Ausprobieren:</b> an der Linie ziehen — sie ist die einzige Vertiefung im
+    Entwurf; oben rechts die Bibliothek öffnen und „jarrett" tippen.</span></p>
     <div class="buehne">
       <div class="rahmen telefon">
         <div class="schirm"><div class="kerbe"></div><div class="kl" id="b05v2"></div><div class="griff"></div></div>
@@ -1650,10 +1683,10 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
     <div class="ekopf"><h2>Variante 1 · Gerät</h2><span class="marke geraet">iPad hoch · 834 × 1194</span></div>
     <p class="etext">Das iPad wird zum Gegenstand: Das Laufwerk ist <b>quadratisch und nimmt die volle
     Breite ein</b> — eine Platte, kein Streifen. Darunter, auf derselben Frontplatte, stehen Titel,
-    Zeit und die Tasten. Wer mehr will als abspielen, drückt rechts das Listenzeichen: dahinter liegen
-    <b>Bibliothek und Suche</b>.
-    <span class="probier"><b>Ausprobieren:</b> den Tonarm anfassen und schwenken — er spult. Die
-    Skalen rechts sind Lautstärke und Balance, das Listenzeichen öffnet die Bibliothek.</span></p>
+    Zeit und <b>genau drei Tasten</b>: zurück, abspielen, weiter. Die Bibliothek hängt nicht dort,
+    sondern am Gerät selbst — als dritter Knopf unter den beiden Skalen, in derselben Flucht.
+    <span class="probier"><b>Ausprobieren:</b> den Tonarm anfassen und schwenken — er spult. Rechts
+    unter „Vol" und „Bal" öffnet das Listenzeichen die Bibliothek.</span></p>
     <div class="buehne">
       <div class="rahmen ipad-hoch">
         <div class="schirm"><div class="dp voll" id="b06v1"></div></div>
@@ -1704,6 +1737,10 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
       <li><span><b>Die Textliste ist der billigste Weg zu einer großen Sammlung.</b> Kein
       <code>/api/cover</code>, kein <code>content-visibility</code>-Kunstgriff — 900 Zeilen Text
       scrollen ohne Nachdenken.</span></li>
+      <li><span><b>Der Tonkopf knickt zur Plattenmitte.</b> Ein Headshell steht schräg zum Rohr, damit
+      die Nadel möglichst tangential in der Rille sitzt — und zwar nach <em>innen</em>. Nach außen
+      gekippt sieht er sofort falsch aus, auch für jemanden, der nie einen Tonarm eingestellt
+      hat.</span></li>
       <li><span><b>Der Arm ist hell, das Gegengewicht dunkel.</b> Das Rohr liegt über der schwarzen
       Platte, das Lager über der hellen Frontplatte — jedes Stück braucht den Kontrast seines
       Untergrunds, sonst verschwindet die Hälfte des Arms. Das ist kein Materialrealismus, sondern
@@ -2569,10 +2606,7 @@ const karteHTML = n => `
     <div class="kz">
       <button class="eck">${I.back(20)}</button>
       <span class="mitte">Jetzt läuft</span>
-      <span class="rechts">
-        <button class="eck" data-bib title="Bibliothek">${I.grid(19)}</button>
-        <button class="eck cov" data-cov></button>
-      </span>
+      <button class="eck" data-bib title="Bibliothek">${I.grid(19)}</button>
     </div>
     <h1 data-titel></h1>
     <div class="ar" data-ar></div>
@@ -2662,8 +2696,6 @@ function verdrahte(wurzel, deck, opts){
       }).join('');
       [...qKasten.children].forEach(el => el.onclick = () => d.jump(+el.dataset.q));
       $('[data-qlen]').textContent = fmtLang(d.total);
-      $('[data-cov]').textContent = ini(a);
-      $('[data-cov]').style.background = grad(a);
       bib.markiere();
     }
     [...qKasten.children].forEach((el,i) => el.classList.toggle('an', i === d.qi));
@@ -2697,7 +2729,7 @@ const kopfHTML = `
   <div class="kz">
     <button class="rund heraus">${I.back(19)}</button>
     <span class="mitte">Jetzt läuft</span>
-    <button class="rund heraus">${I.dots(19)}</button>
+    <button class="rund heraus" data-bib title="Bibliothek">${I.grid(19)}</button>
   </div>
   <div class="buehne">
     <div class="scheibe"><div class="bild" data-bild></div></div>
@@ -2711,14 +2743,34 @@ const kopfHTML = `
 const listeHTML = `<div class="liste" data-liste></div>
   <div class="fuss">Musiklib · <span data-alb></span></div>`;
 
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf"><h2>Bibliothek</h2>
+      <button class="rund heraus" data-bib-zu>${I.x(19)}</button></div>
+    <label class="suchfeld">${I.search(18)}
+      <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
 document.getElementById('b05v2').innerHTML =
   `<div class="sbar" style="color:#1C1C1C"><span>9:41</span><div class="ic">${I.vol(15)}</div></div>` +
-  kopfHTML + listeHTML;
+  kopfHTML + listeHTML + bibHTML;
 
 function verdrahte(wurzel, deck, stil){
   const $  = s => wurzel.querySelector(s);
   Object.entries(stil).forEach(([k,v]) => wurzel.style.setProperty(k, v));
   bindDrag($('[data-bahn]'), f => deck.seek(f));
+
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)} · ${a.tr.length} Titel</span></span>
+        <span class="n">${fmtLang(albDur(a))}</span></div>`,
+    leer: '<div class="bz"><span class="m"><span class="s">Nichts gefunden.</span></span></div>',
+  });
 
   const liste = $('[data-liste]');
   let letztesAlbum = null;
@@ -2742,6 +2794,7 @@ function verdrahte(wurzel, deck, stil){
       $('[data-bild]').style.background = grad(a);
       $('[data-bild]').textContent = ini(a);
       $('[data-alb]').textContent = a.t;
+      bib.markiere();
     }
     [...liste.children].forEach((el,i) => {
       const an = i === d.qi;
@@ -2767,7 +2820,7 @@ verdrahte(document.getElementById('b05v2'), d2, {});
 const d1 = new Deck('ryu', {qi:1, pos:96,  speed:6});
 const d2 = new Deck('sat', {qi:0, pos:52,  speed:6});
 
-const inhaltHTML = `
+const inhalt = bibKnopf => `
   <div class="marke">Musiklib</div>
   <div class="seit">Seite A</div>
   <div class="teller" data-teller>
@@ -2781,12 +2834,15 @@ const inhaltHTML = `
   <div class="skalen">
     <div class="skala" data-vol><i data-volz></i><span>Vol</span></div>
     <div class="skala"><i style="transform:rotate(12deg)"></i><span>Bal</span></div>
+    ${bibKnopf ? `<button class="skala knopf" data-bib title="Bibliothek">${I.list(19)}</button>` : ''}
   </div>`;
 
-/* quadrat: das Gerät steht als eigene Fläche mittig auf der Frontplatte */
-const slabHTML = (h, quadrat) => `
+/* quadrat: das Gerät steht als eigene Fläche mittig auf der Frontplatte.
+   bibKnopf: nur Variante 1 trägt den Bibliotheksknopf — unter den Skalen,
+   in derselben Flucht, damit unten wirklich nur der Transport steht. */
+const slabHTML = (h, quadrat, bibKnopf) => `
   <div class="slab"${h ? ` style="height:${h}px"` : ''}>
-    ${quadrat ? `<div class="geraet">${inhaltHTML}</div>` : inhaltHTML}
+    ${quadrat ? `<div class="geraet">${inhalt(bibKnopf)}</div>` : inhalt(bibKnopf)}
   </div>`;
 
 const textHTML = `
@@ -2798,7 +2854,6 @@ const textHTML = `
     <button data-prev>${I.prev(22)}</button>
     <button class="pp" data-pp>${I.pause(20)}</button>
     <button data-next>${I.next(22)}</button>
-    <button data-bib title="Bibliothek">${I.list(22)}</button>
   </div>`;
 
 const bibHTML = `
@@ -2814,10 +2869,10 @@ const bibHTML = `
   </div>`;
 
 document.getElementById('b06v1').innerHTML =
-  slabHTML(0, true) + `<div class="unten">${textHTML}</div>` + bibHTML;
+  slabHTML(0, true, true) + `<div class="unten">${textHTML}</div>` + bibHTML;
 
 document.getElementById('b06v2').innerHTML =
-  `<div style="width:720px;flex:none;display:flex;flex-direction:column">${slabHTML(664, false)}${textHTML}</div>
+  `<div style="width:720px;flex:none;display:flex;flex-direction:column">${slabHTML(664, false, false)}${textHTML}</div>
    <div class="liste">
      <div class="kopfz"><span class="kap">Sammlung</span><span class="kap" data-anz></span></div>
      <label class="suchzeile" style="border-bottom:1px solid var(--linie);padding:10px 0 12px">

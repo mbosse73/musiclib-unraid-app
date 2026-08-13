@@ -26,9 +26,7 @@
 .aa .kz .mitte{font-size:13px;color:var(--tinte-2)}
 .aa .eck{width:44px;height:44px;border-radius:13px;background:var(--hell);display:grid;place-items:center;
   color:var(--tinte);box-shadow:0 1px 2px rgba(20,16,14,.08)}
-.aa .eck.cov{color:#fff;font-family:var(--serif);font-size:19px;font-weight:400}
 .aa .eck.an{background:var(--rot);color:#fff}
-.aa .kz .rechts{display:flex;align-items:center;gap:10px}
 
 /* ── Bibliothek: die Karte klappt über den ganzen Bildschirm ── */
 .aa .bib{position:absolute;inset:0;z-index:60;background:var(--papier);color:var(--tinte);
@@ -131,8 +129,8 @@
     wechselt: aus der Notizkarte wird die Warteschlange, aus Aufnehmen/Stopp/Pause wird
     <b>zurück/abspielen/weiter</b>. Die Zeit steht groß, weil sie das Einzige ist, das sich ständig
     ändert.
-    Oben rechts, neben dem Cover-Chip, öffnet ein Knopf die <b>Bibliothek</b> — dieselbe weiße Karte,
-    nur über den ganzen Bildschirm, mit einer Suchzeile in Antiqua.
+    Oben rechts öffnet ein Knopf die <b>Bibliothek</b> — dieselbe weiße Karte, nur über den ganzen
+    Bildschirm, mit einer Suchzeile in Antiqua.
     <span class="probier"><b>Ausprobieren:</b> im Ausschlag spulen, unten in der Liste einen Titel
     wählen, oben rechts die Bibliothek öffnen und „köln" tippen.</span></p>
     <div class="buehne">
@@ -181,10 +179,7 @@ const karteHTML = n => `
     <div class="kz">
       <button class="eck">${I.back(20)}</button>
       <span class="mitte">Jetzt läuft</span>
-      <span class="rechts">
-        <button class="eck" data-bib title="Bibliothek">${I.grid(19)}</button>
-        <button class="eck cov" data-cov></button>
-      </span>
+      <button class="eck" data-bib title="Bibliothek">${I.grid(19)}</button>
     </div>
     <h1 data-titel></h1>
     <div class="ar" data-ar></div>
@@ -274,8 +269,6 @@ function verdrahte(wurzel, deck, opts){
       }).join('');
       [...qKasten.children].forEach(el => el.onclick = () => d.jump(+el.dataset.q));
       $('[data-qlen]').textContent = fmtLang(d.total);
-      $('[data-cov]').textContent = ini(a);
-      $('[data-cov]').style.background = grad(a);
       bib.markiere();
     }
     [...qKasten.children].forEach((el,i) => el.classList.toggle('an', i === d.qi));

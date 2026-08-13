@@ -13,7 +13,7 @@
   --tinte:#1C1C1C; --tinte-2:#6A6A6A; --tinte-3:#9A9A9A;
   --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
   background:var(--grund);color:var(--tinte);font-family:var(--sans);height:100%;overflow:hidden;
-  display:flex;flex-direction:column}
+  display:flex;flex-direction:column;position:relative}
 .kl *{font-family:inherit}
 .kl .heraus{background:var(--karte);box-shadow:-6px -6px 14px var(--hell),7px 7px 16px var(--dunkel)}
 .kl .hinein{background:var(--karte);box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
@@ -63,6 +63,37 @@
 .kl .zeile.an .knopf{color:var(--tinte);box-shadow:inset -3px -3px 8px var(--hell),inset 4px 4px 10px var(--dunkel)}
 .kl .strich{width:16px;height:3px;border-radius:2px;background:currentColor;display:block}
 .kl .fuss{text-align:center;font-size:11px;color:var(--tinte-3);padding:0 0 14px;flex:none}
+.kl .rund.an{box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel);
+  color:var(--tinte)}
+
+/* ── Bibliothek: dieselben Kiesel, eine Ebene darüber ── */
+.kl .bib{position:absolute;inset:0;z-index:60;background:var(--grund);padding:16px 26px 20px;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.kl .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.kl .bib .bkopf{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:8px 0 14px;flex:none}
+.kl .bib h2{font-size:13px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+.kl .bib .suchfeld{display:flex;align-items:center;gap:12px;height:50px;padding:0 20px;flex:none;
+  border-radius:25px;margin-bottom:14px;background:var(--karte);
+  box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
+.kl .bib .suchfeld svg{color:var(--tinte-3);flex:none}
+.kl .bib .suchfeld input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:var(--tinte);font-size:15.5px}
+.kl .bib .suchfeld input::placeholder{color:var(--tinte-3)}
+.kl .bib .bliste{flex:1;min-height:0;overflow:hidden}
+.kl .bib .bz{display:flex;align-items:center;gap:16px;padding:12px 16px;border-radius:20px;
+  cursor:pointer;margin-bottom:8px}
+.kl .bib .bz .m{flex:1;min-width:0}
+.kl .bib .bz .m>span{display:block}
+.kl .bib .bz .t{font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kl .bib .bz .s{font-size:13px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.kl .bib .bz .n{font-size:12px;color:var(--tinte-3);white-space:nowrap}
+.kl .bib .bz.an{background:var(--karte);
+  box-shadow:-6px -6px 14px var(--hell),7px 7px 18px var(--dunkel)}
+.kl .bib .bfuss{flex:none;text-align:center;font-size:11px;color:var(--tinte-3);padding-top:6px}
+@media (prefers-reduced-motion:reduce){.kl .bib{transition:none}}
 </style>
 
 <div class="seite">
@@ -89,8 +120,10 @@
     Knöpfe neben dem Cover sind gestrichen, und das Cover <b>dreht sich nicht</b>: In einem Entwurf,
     dessen einzige Bewegung die laufende Zeile ist, wäre eine rotierende Scheibe die zweite — und
     zwei Bewegungen streiten sich um denselben Blick.
-    <span class="probier"><b>Ausprobieren:</b> an der Linie ziehen; sie ist die einzige Vertiefung
-    im ganzen Entwurf.</span></p>
+    Oben rechts sitzt der einzige verbliebene Knopf: dahinter liegen <b>Bibliothek und Suche</b>, in
+    denselben Kieseln wie die Warteschlange.
+    <span class="probier"><b>Ausprobieren:</b> an der Linie ziehen — sie ist die einzige Vertiefung im
+    Entwurf; oben rechts die Bibliothek öffnen und „jarrett" tippen.</span></p>
     <div class="buehne">
       <div class="rahmen telefon">
         <div class="schirm"><div class="kerbe"></div><div class="kl" id="v2"></div><div class="griff"></div></div>
@@ -136,7 +169,7 @@ const kopfHTML = `
   <div class="kz">
     <button class="rund heraus">${I.back(19)}</button>
     <span class="mitte">Jetzt läuft</span>
-    <button class="rund heraus">${I.dots(19)}</button>
+    <button class="rund heraus" data-bib title="Bibliothek">${I.grid(19)}</button>
   </div>
   <div class="buehne">
     <div class="scheibe"><div class="bild" data-bild></div></div>
@@ -150,14 +183,34 @@ const kopfHTML = `
 const listeHTML = `<div class="liste" data-liste></div>
   <div class="fuss">Musiklib · <span data-alb></span></div>`;
 
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf"><h2>Bibliothek</h2>
+      <button class="rund heraus" data-bib-zu>${I.x(19)}</button></div>
+    <label class="suchfeld">${I.search(18)}
+      <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
 document.getElementById('v2').innerHTML =
   `<div class="sbar" style="color:#1C1C1C"><span>9:41</span><div class="ic">${I.vol(15)}</div></div>` +
-  kopfHTML + listeHTML;
+  kopfHTML + listeHTML + bibHTML;
 
 function verdrahte(wurzel, deck, stil){
   const $  = s => wurzel.querySelector(s);
   Object.entries(stil).forEach(([k,v]) => wurzel.style.setProperty(k, v));
   bindDrag($('[data-bahn]'), f => deck.seek(f));
+
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)} · ${a.tr.length} Titel</span></span>
+        <span class="n">${fmtLang(albDur(a))}</span></div>`,
+    leer: '<div class="bz"><span class="m"><span class="s">Nichts gefunden.</span></span></div>',
+  });
 
   const liste = $('[data-liste]');
   let letztesAlbum = null;
@@ -181,6 +234,7 @@ function verdrahte(wurzel, deck, stil){
       $('[data-bild]').style.background = grad(a);
       $('[data-bild]').textContent = ini(a);
       $('[data-alb]').textContent = a.t;
+      bib.markiere();
     }
     [...liste.children].forEach((el,i) => {
       const an = i === d.qi;

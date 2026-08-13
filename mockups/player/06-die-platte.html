@@ -67,7 +67,7 @@
 .dp .gegen{position:absolute;left:-9px;top:-46px;width:18px;height:34px;border-radius:9px;
   background:linear-gradient(150deg,#3C3C36,#17170F);box-shadow:0 2px 6px rgba(26,26,22,.35)}
 .dp .kopf{position:absolute;left:-13px;top:calc(var(--arm,300px) + 12px);width:26px;height:34px;
-  border-radius:3px 3px 5px 5px;transform:rotate(-22deg);transform-origin:50% 0;
+  border-radius:3px 3px 5px 5px;transform:rotate(22deg);transform-origin:50% 0;
   background:linear-gradient(150deg,#FBFBF7,#BFBFB6);
   box-shadow:0 3px 9px rgba(0,0,0,.42),inset 0 0 0 1px rgba(26,26,22,.16)}
 .dp .kopf::before{content:'';position:absolute;left:5px;right:5px;top:8px;height:1.5px;
@@ -79,7 +79,7 @@
   cursor:grab;touch-action:none}
 .dp .griffzone:active{cursor:grabbing}
 
-/* ── zwei Skalen, rechts neben dem Arm ── */
+/* ── Skalen und, in Variante 1, der Bibliotheksknopf darunter ── */
 .dp .skalen{position:absolute;left:var(--sx,92%);top:50%;transform:translate(-50%,-50%);display:flex;
   flex-direction:column;align-items:center;gap:52px}
 .dp .skala{width:64px;height:64px;border-radius:50%;border:1px solid var(--linie);position:relative;
@@ -88,6 +88,8 @@
   position:absolute;top:10px;left:50%;margin-left:-.75px}
 .dp .skala span{position:absolute;left:50%;bottom:-17px;transform:translateX(-50%);font-size:8px;
   letter-spacing:.14em;text-transform:uppercase;color:var(--tinte-3)}
+.dp .skala.knopf{border-color:var(--tief);background:var(--tief);color:var(--slab);cursor:pointer}
+.dp .skala.knopf.an{background:var(--slab);color:var(--tief);border:1px solid var(--tief)}
 
 /* ── Schrift unter der Platte ── */
 .dp .text{padding:var(--tp,28px) 42px 0;display:flex;align-items:flex-start;justify-content:space-between;
@@ -181,10 +183,10 @@
     <div class="ekopf"><h2>Variante 1 · Gerät</h2><span class="marke geraet">iPad hoch · 834 × 1194</span></div>
     <p class="etext">Das iPad wird zum Gegenstand: Das Laufwerk ist <b>quadratisch und nimmt die volle
     Breite ein</b> — eine Platte, kein Streifen. Darunter, auf derselben Frontplatte, stehen Titel,
-    Zeit und die Tasten. Wer mehr will als abspielen, drückt rechts das Listenzeichen: dahinter liegen
-    <b>Bibliothek und Suche</b>.
-    <span class="probier"><b>Ausprobieren:</b> den Tonarm anfassen und schwenken — er spult. Die
-    Skalen rechts sind Lautstärke und Balance, das Listenzeichen öffnet die Bibliothek.</span></p>
+    Zeit und <b>genau drei Tasten</b>: zurück, abspielen, weiter. Die Bibliothek hängt nicht dort,
+    sondern am Gerät selbst — als dritter Knopf unter den beiden Skalen, in derselben Flucht.
+    <span class="probier"><b>Ausprobieren:</b> den Tonarm anfassen und schwenken — er spult. Rechts
+    unter „Vol" und „Bal" öffnet das Listenzeichen die Bibliothek.</span></p>
     <div class="buehne">
       <div class="rahmen ipad-hoch">
         <div class="schirm"><div class="dp voll" id="v1"></div></div>
@@ -235,6 +237,10 @@
       <li><span><b>Die Textliste ist der billigste Weg zu einer großen Sammlung.</b> Kein
       <code>/api/cover</code>, kein <code>content-visibility</code>-Kunstgriff — 900 Zeilen Text
       scrollen ohne Nachdenken.</span></li>
+      <li><span><b>Der Tonkopf knickt zur Plattenmitte.</b> Ein Headshell steht schräg zum Rohr, damit
+      die Nadel möglichst tangential in der Rille sitzt — und zwar nach <em>innen</em>. Nach außen
+      gekippt sieht er sofort falsch aus, auch für jemanden, der nie einen Tonarm eingestellt
+      hat.</span></li>
       <li><span><b>Der Arm ist hell, das Gegengewicht dunkel.</b> Das Rohr liegt über der schwarzen
       Platte, das Lager über der hellen Frontplatte — jedes Stück braucht den Kontrast seines
       Untergrunds, sonst verschwindet die Hälfte des Arms. Das ist kein Materialrealismus, sondern
@@ -258,7 +264,7 @@
 const d1 = new Deck('ryu', {qi:1, pos:96,  speed:6});
 const d2 = new Deck('sat', {qi:0, pos:52,  speed:6});
 
-const inhaltHTML = `
+const inhalt = bibKnopf => `
   <div class="marke">Musiklib</div>
   <div class="seit">Seite A</div>
   <div class="teller" data-teller>
@@ -272,12 +278,15 @@ const inhaltHTML = `
   <div class="skalen">
     <div class="skala" data-vol><i data-volz></i><span>Vol</span></div>
     <div class="skala"><i style="transform:rotate(12deg)"></i><span>Bal</span></div>
+    ${bibKnopf ? `<button class="skala knopf" data-bib title="Bibliothek">${I.list(19)}</button>` : ''}
   </div>`;
 
-/* quadrat: das Gerät steht als eigene Fläche mittig auf der Frontplatte */
-const slabHTML = (h, quadrat) => `
+/* quadrat: das Gerät steht als eigene Fläche mittig auf der Frontplatte.
+   bibKnopf: nur Variante 1 trägt den Bibliotheksknopf — unter den Skalen,
+   in derselben Flucht, damit unten wirklich nur der Transport steht. */
+const slabHTML = (h, quadrat, bibKnopf) => `
   <div class="slab"${h ? ` style="height:${h}px"` : ''}>
-    ${quadrat ? `<div class="geraet">${inhaltHTML}</div>` : inhaltHTML}
+    ${quadrat ? `<div class="geraet">${inhalt(bibKnopf)}</div>` : inhalt(bibKnopf)}
   </div>`;
 
 const textHTML = `
@@ -289,7 +298,6 @@ const textHTML = `
     <button data-prev>${I.prev(22)}</button>
     <button class="pp" data-pp>${I.pause(20)}</button>
     <button data-next>${I.next(22)}</button>
-    <button data-bib title="Bibliothek">${I.list(22)}</button>
   </div>`;
 
 const bibHTML = `
@@ -305,10 +313,10 @@ const bibHTML = `
   </div>`;
 
 document.getElementById('v1').innerHTML =
-  slabHTML(0, true) + `<div class="unten">${textHTML}</div>` + bibHTML;
+  slabHTML(0, true, true) + `<div class="unten">${textHTML}</div>` + bibHTML;
 
 document.getElementById('v2').innerHTML =
-  `<div style="width:720px;flex:none;display:flex;flex-direction:column">${slabHTML(664, false)}${textHTML}</div>
+  `<div style="width:720px;flex:none;display:flex;flex-direction:column">${slabHTML(664, false, false)}${textHTML}</div>
    <div class="liste">
      <div class="kopfz"><span class="kap">Sammlung</span><span class="kap" data-anz></span></div>
      <label class="suchzeile" style="border-bottom:1px solid var(--linie);padding:10px 0 12px">
