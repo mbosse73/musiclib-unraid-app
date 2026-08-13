@@ -15,7 +15,7 @@
   --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
   --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
   background:radial-gradient(90% 70% at 50% 30%,#2E2E34,var(--grund) 70%);
-  color:var(--hell);font-family:var(--sans);height:100%;overflow:hidden;display:flex}
+  color:var(--hell);font-family:var(--sans);height:100%;overflow:hidden;display:flex;position:relative}
 .ks *{font-family:inherit}
 .ks .kap{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--hell-3)}
 
@@ -91,6 +91,22 @@
 .ks .tasten button.rot{background:linear-gradient(180deg,#EE8A54,var(--orange));color:#25150C;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 3px 0 #8E3A14,0 6px 12px rgba(0,0,0,.45)}
 
+/* ── Kassettenfach: die Bibliothek hinter der Auswurftaste ── */
+.ks .fach{position:absolute;inset:0;z-index:30;padding:34px 40px;display:flex;flex-direction:column;
+  background:rgba(12,12,16,.86);backdrop-filter:blur(4px);
+  opacity:0;pointer-events:none;transform:translateY(16px);transition:opacity .22s,transform .22s}
+.ks .fach.auf{opacity:1;pointer-events:auto;transform:none}
+.ks .fach .fkopf{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.ks .fach h2{font-size:21px;font-weight:600;letter-spacing:-.01em}
+.ks .fach h2 span{display:block;margin-top:4px}
+.ks .fach .zu{width:52px;height:44px;border-radius:4px;color:#22222A;display:grid;place-items:center;
+  background:linear-gradient(180deg,#DDE0E6,#B4B8C2);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 3px 0 #6E727C}
+.ks .fach .raster{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;overflow:hidden;flex:1;
+  align-content:start}
+.ks .fach .spine{margin:0}
+@media (prefers-reduced-motion:reduce){.ks .fach{transition:none}}
+
 /* ── Regal ── */
 .ks .regal{width:var(--rw,300px);flex:none;border-left:1px solid rgba(255,255,255,.09);padding:30px 26px;
   overflow:hidden;background:rgba(0,0,0,.16)}
@@ -149,10 +165,12 @@
 
   <section class="entwurf">
     <div class="ekopf"><h2>Variante 2 · Handgerät</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
-    <p class="etext">Ohne Regal, dafür groß: die Kassette füllt das iPad fast randlos, die Tasten sind so
-    breit wie Daumen. Das ist der Entwurf für das Gerät, das <b>neben der Anlage liegt</b> — anfassen,
-    drücken, weiterhören.
-    <span class="probier"><b>Ausprobieren:</b> die Tasten drücken; sie geben nach wie echte.</span></p>
+    <p class="etext">Ohne dauerhaftes Regal, dafür groß: die Kassette füllt das iPad fast randlos, die
+    Tasten sind so breit wie Daumen. Ganz rechts steht die <b>Auswurftaste</b> — dieselbe Taste wie die
+    anderen, dasselbe Zeichen wie an jedem Deck. Sie wirft keine Kassette aus, sondern öffnet das
+    Fach: die Bibliothek. Wer eine neue Kassette einlegt, schließt es damit auch wieder.
+    <span class="probier"><b>Ausprobieren:</b> ▲ ganz rechts drücken, ein Album wählen — das Fach
+    schließt sich und das Band läuft von vorn.</span></p>
     <div class="buehne">
       <div class="rahmen ipad-quer">
         <div class="schirm"><div class="ks" id="v2"></div></div>
@@ -160,7 +178,7 @@
     </div>
     <dl class="zettel">
       <div><dt>Stärke</dt><dd>Tasten, die man <b>ohne Hinsehen</b> trifft</dd></div>
-      <div><dt>Schwäche</dt><dd>Titelliste fehlt ganz — nur vor und zurück</dd></div>
+      <div><dt>Schwäche</dt><dd>Titelliste fehlt weiter — <b>Alben ja, einzelne Titel nein</b></dd></div>
       <div><dt>Hochkant</dt><dd>Trägt nicht: eine Kassette ist quer</dd></div>
       <div><dt>Aufwand</dt><dd>mittel — die Wickel sind Rechnerei, sonst CSS</dd></div>
     </dl>
@@ -182,6 +200,10 @@
       <li><span><b>Die Naben drehen nur bei Ton.</b> <code>animation-play-state</code> am
       <code>play</code>/<code>pause</code>-Ereignis — die einzige Stelle, an der dieser Entwurf zeigt,
       ob überhaupt etwas läuft.</span></li>
+      <li><span><b>Die Auswurftaste ist kein Sonderfall.</b> Sie sieht aus wie die vier daneben und
+      liegt in derselben Reihe — eine Taste mehr, kein zweites Bedienkonzept. Was sie öffnet, ist eine
+      Blende über dem Gerät (<code>position:absolute;inset:0</code>), keine eigene Seite: das Gerät
+      bleibt darunter stehen, die Kassette läuft weiter.</span></li>
     </ol>
   </div>
 
@@ -217,7 +239,11 @@ const kassHTML = `
     <span class="laufwerk" data-lauf></span>
   </div>`;
 
-const bedienHTML = `
+/* Auswurf: dieselbe Taste wie die anderen, nur mit dem Zeichen von 1985 */
+const AUSWURF = `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M12 5.4l7.4 9.2H4.6z"/><rect x="4.6" y="16.4" width="14.8" height="2.6" rx="1.1"/></svg>`;
+
+const bedienHTML = auswurf => `
   <div class="zaehler">
     <span class="kap">Zählwerk</span>
     <span class="fach" data-zaehler></span>
@@ -232,12 +258,21 @@ const bedienHTML = `
     <button class="rot" data-pp>${I.play(20)}</button>
     <button data-vor>${I.fwd(20)}</button>
     <button data-next>${I.next(20)}</button>
+    ${auswurf ? `<button data-auswurf>${AUSWURF}</button>` : ''}
   </div>`;
 
 document.getElementById('v1').innerHTML =
-  `<div class="buehne">${kassHTML}${bedienHTML}</div>
+  `<div class="buehne">${kassHTML}${bedienHTML(false)}</div>
    <div class="regal"><span class="kap">Regal</span><div data-regal></div></div>`;
-document.getElementById('v2').innerHTML = `<div class="buehne">${kassHTML}${bedienHTML}</div>`;
+document.getElementById('v2').innerHTML =
+  `<div class="buehne">${kassHTML}${bedienHTML(true)}</div>
+   <div class="fach" data-fach>
+     <div class="fkopf">
+       <h2><span class="kap">Kassettenfach</span>Regal</h2>
+       <button class="zu" data-zu>${AUSWURF}</button>
+     </div>
+     <div class="raster" data-regal></div>
+   </div>`;
 
 function verdrahte(wurzel, deck, stil){
   const $  = s => wurzel.querySelector(s);
@@ -253,9 +288,16 @@ function verdrahte(wurzel, deck, stil){
   $('[data-zurueck]').onclick  = () => deck.seekGlobal(deck.gpos - 30);
   bindDrag($('[data-band]'), f => deck.seekGlobal(f * deck.total));
 
+  const fach = $('[data-fach]');
+  if (fach){
+    const auf = zu => fach.classList.toggle('auf', zu);
+    $('[data-auswurf]').onclick = () => auf(!fach.classList.contains('auf'));
+    $('[data-zu]').onclick      = () => auf(false);
+  }
+
   const regal = $('[data-regal]');
   if (regal){
-    regal.innerHTML = ALBUMS.slice(0,7).map(a => `
+    regal.innerHTML = ALBUMS.slice(0, fach ? 8 : 7).map(a => `
       <div class="spine" data-alb="${a.id}">
         <span class="farbe" style="background:${grad(a)}"></span>
         <div class="m"><div class="t">${esc(a.t)}</div>
@@ -264,6 +306,7 @@ function verdrahte(wurzel, deck, stil){
       const a = ALBUMS.find(x => x.id === el.dataset.alb);
       deck.queue = a.tr.map((_,i) => `${a.id}-${i}`);
       deck.qi = 0; deck.pos = 0; deck.playing = true; deck.render();
+      if (fach) fach.classList.remove('auf');       // eingelegt heißt: Fach zu
     });
   }
 

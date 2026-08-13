@@ -112,9 +112,11 @@
 
   <section class="entwurf">
     <div class="ekopf"><h2>Variante 2 · Vollbild</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
-    <p class="etext">Ohne Randspalte, dafür mittig: das iPad als aufgestelltes Bild. Die Rillen sind hier
-    das einzige Bedienelement neben drei Knöpfen — <b>ein Spieler, den man aus zwei Metern sieht</b> und
-    aus einem bedient.
+    <p class="etext">Ohne Randspalte, ohne Liniennetz, dafür mittig: das iPad als aufgestelltes Bild.
+    Die Diagonalen der Vorlage fallen hier weg — auf einem Gerät, das dauerhaft im Raum steht, sind sie
+    Muster ohne Aussage; übrig bleibt die Platte auf schwarzem Grund. Die Rillen sind das einzige
+    Bedienelement neben drei Knöpfen: <b>ein Spieler, den man aus zwei Metern sieht</b> und aus einem
+    bedient.
     <span class="probier"><b>Ausprobieren:</b> am Ring ziehen; der Arm folgt der Position nach innen.</span></p>
     <div class="buehne">
       <div class="rahmen ipad-quer">
@@ -125,7 +127,7 @@
       <div><dt>Stärke</dt><dd>Ruhig, groß, aus der Ferne lesbar</dd></div>
       <div><dt>Schwäche</dt><dd>Titelwechsel nur über die Knöpfe</dd></div>
       <div><dt>Schrift</dt><dd>Gesperrte Versalien — <b>lange Titel brechen nicht</b>, sie werden gekürzt</dd></div>
-      <div><dt>Aufwand</dt><dd>gering — 18 <code>&lt;circle&gt;</code> und eine Klasse</dd></div>
+      <div><dt>Unterschied zu 1</dt><dd>Kein Liniennetz — <b>nur Platte, Schrift, Knöpfe</b></dd></div>
     </dl>
   </section>
 
@@ -138,9 +140,10 @@
       <li><span><b>Ein Ring je Achtzehntel ist eine Wahl.</b> Bei 18 Ringen springt ein Klick um bis zu
       3 % der Laufzeit — bei einem 11-Minuten-Stück sind das 20 Sekunden. Wer genauer will, nimmt
       zusätzlich den Winkel des Klicks (also <code>atan2</code>) als Feinanteil.</span></li>
-      <li><span><b>Die Linien im Hintergrund sind ein <code>&lt;svg&gt;</code></b> mit sechs
-      <code>&lt;line&gt;</code>, nicht ein Bild. Bei einem Bild müsste es für jede Bildschirmgröße neu
-      geschnitten werden.</span></li>
+      <li><span><b>Das Liniennetz ist ein <code>&lt;svg&gt;</code></b> mit sechs
+      <code>&lt;line&gt;</code>, kein Bild — ein Bild müsste für jede Bildschirmgröße neu geschnitten
+      werden. Variante 2 lässt es ganz weg: es ist ein einzelner Baustein, kein Bestandteil des
+      Entwurfs, und genau das macht es zur freien Entscheidung.</span></li>
       <li><span><b>Dunkel heißt <code>theme-color</code> setzen.</b> Sonst malt Safari auf dem iPad
       einen hellen Streifen über das Nachtblau — dieselbe Falle, die <code>mobile.html</code> bereits
       kennt.</span></li>
@@ -202,7 +205,7 @@ const kzHTML = `
 
 document.getElementById('v1').innerHTML = netzHTML + kzHTML + platteHTML + schriftHTML +
   `<div class="rand"><span class="kap">Warteschlange</span><div data-queue></div></div>`;
-document.getElementById('v2').innerHTML = netzHTML + kzHTML + platteHTML + schriftHTML;
+document.getElementById('v2').innerHTML = kzHTML + platteHTML + schriftHTML;
 
 function verdrahte(wurzel, deck, stil){
   const $  = s => wurzel.querySelector(s);

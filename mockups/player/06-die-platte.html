@@ -4,9 +4,12 @@
 /* ══════════════════════════════════════════════════════════════════════════
    Blatt 06 — Vorlage: ein Plattenspieler ohne ein einziges Wort. Weiße
    Platte, schwarzer Teller, der Tonarm ein gerader Balken, zwei kleine
-   Skalen unten.
+   Skalen daneben.
    Genommen: der Tonarm IST die Spulleiste. Der Knopf am Balken steht dort,
    wo die Nadel steht — ziehen heißt spulen, und es sieht aus wie das Gerät.
+   Gedreht: das Gerät steht um 90° gekippt zur Vorlage — Teller links,
+   Tonarm rechts, Skalen am rechten Rand. So sitzt der Arm dort, wo er an
+   jedem echten Laufwerk sitzt, und die Nadel wandert von oben nach unten.
    ══════════════════════════════════════════════════════════════════════════ */
 .dp{
   --grund:#EFEFEC; --slab:#F6F6F3; --tief:#25251F;
@@ -24,16 +27,16 @@
 .dp .marke{position:absolute;left:34px;top:32px;width:52px;height:52px;border-radius:50%;
   border:1px solid var(--linie);display:grid;place-items:center;font-size:8px;letter-spacing:.16em;
   text-transform:uppercase;color:var(--tinte-3)}
-.dp .seit{position:absolute;right:26px;top:34px;writing-mode:vertical-rl;font-size:11px;
+.dp .seit{position:absolute;left:34px;bottom:30px;font-size:11px;
   letter-spacing:.42em;text-transform:uppercase;color:var(--tinte-3)}
-.dp .teller{position:absolute;left:50%;transform:translateX(-50%);top:var(--to,74px);
+.dp .teller{position:absolute;left:var(--tx,42%);top:var(--ty,50%);transform:translate(-50%,-50%);
   width:var(--td,420px);height:var(--td,420px);border-radius:50%;
   background:
     repeating-radial-gradient(circle at 50% 50%,#2A2A26 0 1.4px,#333330 1.4px 2.8px),
     radial-gradient(circle at 34% 28%,rgba(255,255,255,.12),transparent 52%);
   box-shadow:0 16px 34px rgba(26,26,22,.22);animation:dpdreh 4.4s linear infinite}
 .dp .teller.halt{animation-play-state:paused}
-@keyframes dpdreh{to{transform:translateX(-50%) rotate(360deg)}}
+@keyframes dpdreh{to{transform:translate(-50%,-50%) rotate(360deg)}}
 .dp .teller .mitte{position:absolute;inset:31%;border-radius:50%;background:var(--slab);
   display:grid;place-items:center;box-shadow:0 0 0 1px rgba(26,26,22,.12)}
 .dp .teller .mitte .cov{width:76%;height:76%;border-radius:50%;display:grid;place-items:center;color:#fff;
@@ -41,28 +44,29 @@
 .dp .teller .dorn{position:absolute;left:50%;top:50%;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;
   border-radius:50%;background:var(--tief);z-index:2}
 
-/* ── Tonarm als Spulleiste ── */
-.dp .armzeile{position:absolute;left:0;right:0;top:var(--ao,530px);height:64px;cursor:pointer;
-  touch-action:none}
-.dp .arm{position:absolute;left:9%;right:9%;top:50%;height:7px;border-radius:4px;background:var(--tief);
-  transform:translateY(-50%)}
-.dp .arm::before{content:'';position:absolute;left:-42px;top:-1px;width:52px;height:7px;
-  border-radius:4px;background:var(--tief);transform:rotate(30deg);transform-origin:100% 50%}
-.dp .kreis{position:absolute;top:50%;width:96px;height:96px;border-radius:50%;border:1px solid var(--linie);
-  transform:translate(-50%,-50%);transition:left .18s linear;pointer-events:none}
-.dp .nadel{position:absolute;top:50%;width:48px;height:48px;border-radius:50%;background:var(--tief);
-  transform:translate(-50%,-50%);transition:left .18s linear;
+/* ── Tonarm als Spulleiste, senkrecht am rechten Rand ── */
+.dp .armzeile{position:absolute;top:0;bottom:0;left:var(--ax,76%);width:76px;margin-left:-38px;
+  cursor:pointer;touch-action:none}
+.dp .arm{position:absolute;top:9%;bottom:9%;left:50%;width:7px;margin-left:-3.5px;border-radius:4px;
+  background:var(--tief)}
+/* der Knick des Arms sitzt jetzt oben und zeigt zur hinteren Ecke */
+.dp .arm::before{content:'';position:absolute;top:-42px;left:0;width:7px;height:52px;
+  border-radius:4px;background:var(--tief);transform:rotate(28deg);transform-origin:50% 100%}
+.dp .kreis{position:absolute;left:50%;width:96px;height:96px;border-radius:50%;border:1px solid var(--linie);
+  transform:translate(-50%,-50%);transition:top .18s linear;pointer-events:none}
+.dp .nadel{position:absolute;left:50%;width:48px;height:48px;border-radius:50%;background:var(--tief);
+  transform:translate(-50%,-50%);transition:top .18s linear;
   box-shadow:0 4px 10px rgba(26,26,22,.28)}
 
-/* ── zwei Skalen ── */
-.dp .skalen{position:absolute;left:0;right:0;top:var(--so,614px);display:flex;justify-content:center;
-  gap:70px}
+/* ── zwei Skalen, rechts neben dem Arm ── */
+.dp .skalen{position:absolute;left:var(--sx,92%);top:50%;transform:translate(-50%,-50%);display:flex;
+  flex-direction:column;align-items:center;gap:52px}
 .dp .skala{width:64px;height:64px;border-radius:50%;border:1px solid var(--linie);position:relative;
   display:grid;place-items:center;cursor:pointer;touch-action:none}
 .dp .skala i{width:1.5px;height:22px;background:var(--tinte);display:block;transform-origin:50% 100%;
   position:absolute;top:10px;left:50%;margin-left:-.75px}
-.dp .skala span{position:absolute;right:-24px;bottom:6px;font-size:8px;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--tinte-3)}
+.dp .skala span{position:absolute;left:50%;bottom:-17px;transform:translateX(-50%);font-size:8px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--tinte-3)}
 
 /* ── Schrift unter der Platte ── */
 .dp .text{padding:var(--tp,28px) 42px 0;display:flex;align-items:flex-start;justify-content:space-between;
@@ -99,7 +103,9 @@
       <h1>Die Platte</h1>
       <p class="lede">Die strengste der Vorlagen: ein Gerät, kein Wort. Übernommen ist der eine Gedanke,
       der daraus eine Bedienung macht — <b>der Tonarm ist die Spulleiste</b>. Die Nadel steht dort, wo das
-      Stück steht; sie zu schieben ist dasselbe wie zu spulen.</p>
+      Stück steht; sie zu schieben ist dasselbe wie zu spulen. Gegenüber dem Foto steht das Gerät um
+      <b>90° gedreht</b>: Teller links, Arm rechts, so wie an jedem Laufwerk — die Nadel wandert dann
+      von oben nach unten.</p>
       <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
     </div>
     <figure class="vorlage">
@@ -114,8 +120,8 @@
     <p class="etext">Das iPad wird zum Gegenstand: Die Platte füllt den Bildschirm bis auf eine schmale
     Schriftzeile. Wer mehr will als abspielen, muss dafür wischen — <b>hier gibt es nichts als das Stück,
     das läuft</b>. Aufgestellt neben der Anlage ist das keine Einschränkung, sondern der Zweck.
-    <span class="probier"><b>Ausprobieren:</b> die schwarze Nadel am Balken ziehen. Die kleinen Skalen
-    sind Lautstärke und Balance.</span></p>
+    <span class="probier"><b>Ausprobieren:</b> die schwarze Nadel am rechten Balken nach oben oder unten
+    ziehen. Die kleinen Skalen daneben sind Lautstärke und Balance.</span></p>
     <div class="buehne">
       <div class="rahmen ipad-hoch">
         <div class="schirm"><div class="dp" id="v1"></div></div>
@@ -124,7 +130,7 @@
     <dl class="zettel">
       <div><dt>Stärke</dt><dd>Nichts abzulesen, alles zu greifen</dd></div>
       <div><dt>Schwäche</dt><dd><b>Keine Sammlung</b> — Auswahl passiert woanders</dd></div>
-      <div><dt>Detail</dt><dd>Nadelposition = Abspielposition, eine Zahl, zwei Anzeigen</dd></div>
+      <div><dt>Detail</dt><dd>Arm rechts wie am echten Gerät: <b>oben Anfang, unten Ende</b></dd></div>
       <div><dt>Aufwand</dt><dd>gering — eine Leiste, ein Kreis</dd></div>
     </dl>
   </section>
@@ -133,9 +139,10 @@
     <div class="ekopf"><h2>Variante 2 · Werkstisch</h2><span class="marke geraet">PC · 1440 × 900</span></div>
     <p class="etext">Am Schreibtisch ist die Strenge zu streng: Das Gerät bleibt links in Originalgröße,
     rechts steht die Sammlung als <b>reine Textliste</b> — keine Cover, keine Kacheln, nur Nummer, Titel,
-    Interpret, Länge. Damit hat der Entwurf beides: das Gerät zum Anfassen und die Liste zum Suchen.
-    <span class="probier"><b>Ausprobieren:</b> rechts eine Zeile anklicken; der Teller nimmt das Cover
-    als Mittelaufkleber.</span></p>
+    Interpret, Länge. Der Tonarm steht dabei genau zwischen beidem: <b>am rechten Rand des Geräts</b>,
+    also auf dem Weg zur Liste und nicht hinter ihr.
+    <span class="probier"><b>Ausprobieren:</b> in der Liste eine Zeile anklicken; der Teller nimmt das
+    Cover als Mittelaufkleber. Gespult wird am Arm zwischen Teller und Liste.</span></p>
     <div class="buehne">
       <div class="rahmen pc">
         <div class="schirm">
@@ -156,8 +163,9 @@
     <h2>Was das im Code bedeutet</h2>
     <ol>
       <li><span><b>Der Tonarm als Leiste braucht eine Trefferfläche.</b> Der sichtbare Balken ist 7 px
-      hoch; angefasst wird ein unsichtbarer Streifen von 64 px. Ohne den trifft niemand die Nadel —
-      am iPad schon gar nicht.</span></li>
+      breit; angefasst wird ein unsichtbarer Streifen von 76 px. Ohne den trifft niemand die Nadel —
+      am iPad schon gar nicht. Senkrecht kommt dazu: <code>touch-action:none</code> ist Pflicht, sonst
+      gewinnt die Scrollgeste des Browsers gegen den Zug am Arm.</span></li>
       <li><span><b>Die Nadel darf nicht springen, während man zieht.</b> Position aus der Uhr nur
       übernehmen, wenn gerade nicht gezogen wird; sonst zuckt der Griff bei jedem
       <code>timeupdate</code> zurück.</span></li>
@@ -227,13 +235,14 @@ function verdrahte(wurzel, deck, stil){
   $('[data-next]').onclick = () => deck.next();
   $('[data-prev]').onclick = () => deck.prev();
 
-  /* der Balken reicht von 9 % bis 91 % der Breite — dazwischen liegt die Nadel */
+  /* der Balken steht senkrecht und reicht von 9 % bis 91 % der Höhe —
+     oben ist Anfang, unten ist Ende, dazwischen liegt die Nadel */
   let zieht = false;
   bindDrag($('[data-arm]'), (f, art) => {
     zieht = art !== 'end' && art !== 'tap';
     deck.seek(clamp((f - .09) / .82, 0, 1));
-  });
-  bindDrag($('[data-vol]'), f => deck.setVol(f), {achse:'x'});
+  }, {achse:'y'});
+  bindDrag($('[data-vol]'), f => deck.setVol(1 - f), {achse:'y'});
 
   const liste = $('[data-liste]');
   if (liste){
@@ -261,8 +270,8 @@ function verdrahte(wurzel, deck, stil){
       $('[data-cov]').style.background = grad(a);
       $$('[data-t]').forEach(el => el.classList.toggle('an', el.dataset.t === t.id));
     }
-    const links = (9 + d.frac*82).toFixed(2) + '%';
-    if (!zieht){ $('[data-nadel]').style.left = links; $('[data-kreis]').style.left = links; }
+    const hoehe = (9 + d.frac*82).toFixed(2) + '%';
+    if (!zieht){ $('[data-nadel]').style.top = hoehe; $('[data-kreis]').style.top = hoehe; }
     $('[data-jetzt]').textContent = fmt(d.pos);
     $('[data-ende]').textContent  = fmt(d.dur);
     $('[data-pp]').innerHTML = d.playing ? I.pause(20) : I.play(20);
@@ -272,8 +281,9 @@ function verdrahte(wurzel, deck, stil){
   deck.render();
 }
 verdrahte(document.getElementById('v1'), d1,
-  {'--td':'520px','--to':'80px','--ao':'632px','--so':'706px','--tp':'34px','--tg':'26px'});
+  {'--td':'470px','--tx':'42%','--ty':'50%','--ax':'76%','--sx':'92%','--tp':'34px','--tg':'26px'});
 verdrahte(document.getElementById('v2'), d2,
-  {'--td':'392px','--to':'62px','--ao':'474px','--so':'544px','--tp':'26px','--tg':'22px','--trp':'18px'});
+  {'--td':'400px','--tx':'41%','--ty':'50%','--ax':'74%','--sx':'90%','--tp':'26px','--tg':'22px',
+   '--trp':'18px'});
 })();
 </script>
