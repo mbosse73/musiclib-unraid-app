@@ -1300,6 +1300,58 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 .sg .fenster .z.an::before{content:'—';position:absolute;margin-left:-22px;color:var(--terra)}
 .sg .zeile{display:flex;align-items:center;gap:16px}
 
+/* ── Variante 1: ein langer Regler, eine Anzeige, ein Schalter ── */
+.sg .w1{flex-direction:row;align-items:stretch;gap:var(--w1g,46px)}
+.sg .langfeld{display:flex;flex-direction:column;align-items:center;gap:12px;flex:none}
+.sg .schieber.lang{height:auto;flex:1;width:40px}
+.sg .rechts{flex:1;min-width:0;display:flex;flex-direction:column;gap:26px}
+.sg .obenreihe{flex:1;min-height:0;display:flex;gap:var(--w1g,46px);align-items:stretch}
+.sg .obenreihe .schieberfeld{justify-content:flex-start}
+.sg .obenreihe .schieber{flex:1;height:auto}
+.sg .anzeigefeld{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:12px}
+.sg .fenster.breit{width:100%;flex:1;min-height:0;padding:12px 14px;display:flex;flex-direction:column;
+  justify-content:center;gap:2px}
+.sg .fenster.breit .z{display:flex;align-items:baseline;gap:12px;text-align:left;padding:3px 4px;
+  border-radius:3px;white-space:nowrap;overflow:hidden}
+.sg .fenster.breit .z b{font-weight:400;color:var(--tinte-3);font-variant-numeric:tabular-nums}
+.sg .fenster.breit .z span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:13.5px}
+.sg .fenster.breit .z.an{background:rgba(212,120,78,.12)}
+.sg .fenster.breit .z.an b,.sg .fenster.breit .z.an span{color:var(--terra)}
+.sg .fenster.breit .z.an::before{content:none}
+.sg .untenreihe{flex:none;display:flex;align-items:center;gap:18px}
+.sg .schalter{width:var(--sd,84px);height:var(--sd,84px);border-radius:50%;flex:none;cursor:pointer;
+  background:#F6F6F0;border:1.5px solid var(--tinte);display:grid;place-items:center;
+  box-shadow:0 4px 10px rgba(34,34,28,.18)}
+.sg .schalter i{width:24px;height:24px;border-radius:50%;background:rgba(34,34,28,.16);display:block;
+  transition:background .18s,box-shadow .18s}
+.sg .schalter.an i{background:var(--terra);box-shadow:0 0 14px rgba(212,120,78,.75)}
+.sg .untenreihe .beschriftung{display:flex;flex-direction:column;gap:3px}
+.sg .untenreihe .beschriftung b{font-size:15px;font-weight:700}
+.sg .untenreihe .beschriftung span{font-size:12.5px;color:var(--tinte-2)}
+
+/* Bibliothek als Blende über dem ganzen Gerät */
+.sg .bib{position:absolute;inset:0;z-index:50;background:rgba(228,228,213,.97);padding:44px 56px;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.sg .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.sg .bib .bkopf{display:flex;justify-content:space-between;align-items:flex-end;
+  border-bottom:1.5px solid var(--tinte);padding-bottom:16px;margin-bottom:20px}
+.sg .bib h2{font-size:28px;font-weight:800;letter-spacing:-.02em}
+.sg .bib .raster{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;overflow:hidden;
+  align-content:start}
+.sg .bib .bk{cursor:pointer;text-align:center}
+.sg .bib .bk .scheibe{width:100%;aspect-ratio:1;border-radius:50%;position:relative;
+  background:repeating-radial-gradient(circle at 50% 50%,#161612 0 1.5px,#22221D 1.5px 3px);
+  box-shadow:0 6px 16px rgba(34,34,28,.22);display:grid;place-items:center}
+.sg .bib .bk .scheibe i{width:44%;height:44%;border-radius:50%;background:var(--terra);display:grid;
+  place-items:center;color:#2A1409;font-size:15px;font-weight:800}
+.sg .bib .bk .t{margin-top:10px;font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.sg .bib .bk .s{font-size:12px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.sg .bib .bk.an .t{color:var(--terra)}
+@media (prefers-reduced-motion:reduce){.sg .bib{transition:none}}
+
 /* ── rechte Seite: Platte ── */
 .sg .quelle{flex:1;min-width:0;position:relative;z-index:2;display:flex;flex-direction:column;
   align-items:center;justify-content:center;padding:24px 30px}
@@ -1506,7 +1558,8 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
         <td>Titel; Sammlung am iPad hinter einem Knopf, am PC das Register</td><td>iPad quer · PC</td></tr>
       <tr><td><b>11 Rack</b></td><td class="mit">Metallrad (drehen)</td><td>Zwei bis drei Alben</td>
         <td>PC · iPad quer</td></tr>
-      <tr><td><b>12 Studiogerät</b></td><td>Leiste unter der Platte</td><td>Album, fünf Titelnummern</td>
+      <tr><td><b>12 Studiogerät</b></td><td>Leiste unter der Platte</td>
+        <td>Album und Titelliste mit Namen; Bibliothek hinter einem Schalter</td>
         <td>PC · iPad quer</td></tr>
       <tr><td><b>13 Nussbaum &amp; Champagner</b></td><td>Leiste an der Frontplatte</td>
         <td>Titel, vier Titel zur Wahl, <b>Pegel</b></td><td>PC · iPad quer</td></tr>
@@ -2438,11 +2491,13 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 
   <section class="entwurf">
     <div class="ekopf"><h2>Variante 1 · Pult</h2><span class="marke geraet">PC · 1440 × 900</span></div>
-    <p class="etext">Die Aufteilung der Vorlage, mit unseren Beschriftungen: zwei Schieber (Lautstärke,
-    Balance), zwei Knöpfe (Tiefen, Höhen) und ein kleines Fenster, in dem <b>die Titel des Albums
-    stehen</b> — dort, wo die Vorlage die Kabelqualität führt. Rechts läuft die Platte.
-    <span class="probier"><b>Ausprobieren:</b> Schieber ziehen, Knöpfe drehen, im Fenster einen Titel
-    wählen, an der Platte spulen.</span></p>
+    <p class="etext">Die Aufteilung der Vorlage, aber nur mit dem, was die App wirklich kann: Tiefen und
+    Höhen sind weg — sie wären Attrappen (siehe unten). Übrig bleiben drei Dinge, und die dürfen dafür
+    groß sein: <b>die Lautstärke als langer Schieber über die volle Höhe</b>, daneben Balance und die
+    Titelanzeige mit Nummer und Namen, darunter ein Schalter, der die Bibliothek öffnet. Auch die blasse
+    Hintergrundschrift ist gestrichen — auf einer Frontplatte steht kein Wasserzeichen.
+    <span class="probier"><b>Ausprobieren:</b> den langen Schieber ziehen, in der Anzeige einen Titel
+    wählen, den Schalter drücken — die Lampe geht an und die Bibliothek legt sich darüber.</span></p>
     <div class="buehne">
       <div class="rahmen pc">
         <div class="schirm">
@@ -2452,10 +2507,10 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
       </div>
     </div>
     <dl class="zettel">
-      <div><dt>Stärke</dt><dd>Regler, die man <b>im Vorbeigehen trifft</b></dd></div>
-      <div><dt>Schwäche</dt><dd>Tiefen/Höhen tut die App heute nicht — Attrappe</dd></div>
-      <div><dt>Sammlung</dt><dd>Nur das laufende Album; alles andere eine Ebene tiefer</dd></div>
-      <div><dt>Aufwand</dt><dd>mittel — Knöpfe sind Winkel, Schieber sind Prozente</dd></div>
+      <div><dt>Stärke</dt><dd>Ein Regler über die volle Höhe — <b>trifft man ohne zu zielen</b></dd></div>
+      <div><dt>Ehrlichkeit</dt><dd>Kein Regler, der nichts regelt</dd></div>
+      <div><dt>Sammlung</dt><dd>Hinter dem Schalter, als Blende über dem Gerät</dd></div>
+      <div><dt>Anzeige</dt><dd>Nummer <b>und</b> Name — das Fenster ist breit genug dafür</dd></div>
     </dl>
   </section>
 
@@ -2482,19 +2537,22 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
   <div class="schluss">
     <h2>Was das im Code bedeutet</h2>
     <ol>
-      <li><span><b>Tiefen und Höhen wären echte Arbeit.</b> Dafür bräuchte es die Web Audio API:
-      <code>MediaElementSource</code> plus zwei <code>BiquadFilter</code>. Das ist machbar, verändert
-      aber die Wiedergabe von Grund auf — und iOS spielt dann nur noch nach einer Nutzergeste. Solange
-      das nicht gewollt ist, gehören die beiden Knöpfe nicht in die Oberfläche.</span></li>
+      <li><span><b>Tiefen und Höhen wären echte Arbeit</b> — deshalb stehen sie in Variante 1 nicht
+      mehr da. Dafür bräuchte es die Web Audio API: <code>MediaElementSource</code> plus zwei
+      <code>BiquadFilter</code>. Das ist machbar, verändert aber die Wiedergabe von Grund auf — und iOS
+      spielt dann nur noch nach einer Nutzergeste. Variante 2 zeigt weiter, wie die Vorlage mit den
+      Knöpfen aussieht; gebaut wird Variante 1.</span></li>
       <li><span><b>Balance dagegen ist billig:</b> ein <code>StereoPannerNode</code> oder, ganz ohne
       Web Audio, gar nichts — dann bleibt der Knopf Zierde. Lieber eine Attrappe weniger als eine
       Bedienung, die nichts tut.</span></li>
-      <li><span><b>Das Zahlenfenster ist die Titelliste.</b> Fünf Zeilen, die mitlaufen — mehr passt
-      nicht. Bei längeren Alben muss es scrollen und die laufende Zeile in der Mitte halten,
-      sonst verliert man den Bezug.</span></li>
-      <li><span><b>Die großen blassen Buchstaben sind Text, kein Bild.</b> Ein
-      <code>&lt;div&gt;</code> mit 4,5 % Deckkraft — mit <code>pointer-events:none</code>, sonst
-      fängt es Klicks ab, die den Reglern gelten.</span></li>
+      <li><span><b>Die Titelanzeige führt Nummer und Namen.</b> Sechs Zeilen passen; bei längeren Alben
+      muss sie scrollen und die laufende Zeile in der Mitte halten, sonst verliert man den Bezug. Namen
+      brauchen Breite — deshalb ist die linke Hälfte in Variante 1 um 150 px gewachsen, sonst steht dort
+      „Gymnopédi…“ statt „Gymnopédie No. 1“.</span></li>
+      <li><span><b>Die großen blassen Buchstaben gibt es nur noch in Variante 2.</b> Sie sind Text,
+      kein Bild: ein <code>&lt;div&gt;</code> mit 4,5 % Deckkraft und <code>pointer-events:none</code>,
+      sonst fängt es Klicks ab, die den Reglern gelten. In Variante 1 fällt es weg — eine Frontplatte
+      trägt Beschriftung, kein Wasserzeichen.</span></li>
     </ol>
   </div>
 
@@ -2797,7 +2855,7 @@ const BLAETTER = [
   ['11','rack','Rack','11.22.42',
    'Gebürstetes Metall, Cover als Leuchtflächen, Rad zum Spulen.',['PC','iPad quer']],
   ['12','studiogeraet','Studiogerät','11.25.10',
-   'Salbei und Terracotta: links die Regler, rechts die Platte.',['PC','iPad quer']],
+   'Salbei und Terracotta: links ein langer Regler und die Titelanzeige, rechts die Platte.',['PC','iPad quer']],
   ['13','nussbaum-und-champagner','Nussbaum &amp; Champagner','11.32.25',
    'Holz, Champagner, zwei Zeiger — sie schlagen nur aus, solange Ton läuft.',['PC','iPad quer']],
 ];
@@ -4167,6 +4225,34 @@ const werkzeugHTML = `
     </div>
   </div>`;
 
+/* Variante 1: Lautstärke über die volle Höhe, daneben Balance und Titelanzeige,
+   darunter der Schalter, der die Bibliothek öffnet. Keine Klangregler. */
+const werkzeug1HTML = `
+  <div class="werkzeug w1">
+    <div class="langfeld">
+      <div class="schieber lang" data-vol><span class="stange"></span>
+        <span class="griff" data-volgriff></span></div>
+      <span class="kap">Lautstärke</span>
+    </div>
+    <div class="rechts">
+      <div class="obenreihe">
+        <div class="schieberfeld">
+          <div class="schieber" data-bal><span class="stange"></span>
+            <span class="griff" data-balgriff></span></div>
+          <span class="kap">Balance</span>
+        </div>
+        <div class="anzeigefeld">
+          <div class="fenster breit" data-fenster></div>
+          <span class="kap">Titel</span>
+        </div>
+      </div>
+      <div class="untenreihe">
+        <button class="schalter" data-bib><i></i></button>
+        <span class="beschriftung"><b>Bibliothek</b><span>Alben auswählen</span></span>
+      </div>
+    </div>
+  </div>`;
+
 const quelleHTML = `
   <div class="quelle">
     <div class="plattenfeld">
@@ -4189,7 +4275,12 @@ const quelleHTML = `
   </div>`;
 
 document.getElementById('b12v1').innerHTML =
-  `<div class="geist">musiklib</div>` + werkzeugHTML + quelleHTML;
+  werkzeug1HTML + quelleHTML +
+  `<div class="bib" data-bib-blende>
+     <div class="bkopf"><h2>Bibliothek</h2>
+       <button class="schalter" data-bib-zu style="--sd:56px"><i></i></button></div>
+     <div class="raster" data-bibliothek></div>
+   </div>`;
 document.getElementById('b12v2').innerHTML =
   `<div class="geist">musiklib</div>` + werkzeugHTML + quelleHTML;
 
@@ -4211,15 +4302,35 @@ function verdrahte(wurzel, deck, stil){
     {achse:'y'});
   setzeSchieber($('[data-balgriff]'), balance);
 
-  /* Knöpfe: 270° Bereich, Zeiger folgt dem Winkel */
+  /* Knöpfe: 270° Bereich, Zeiger folgt dem Winkel — nur in Variante 2 vorhanden */
   [['[data-tief]','[data-tiefz]',.5],['[data-hoch]','[data-hochz]',.62],['[data-mix]','[data-mixz]',.4]]
     .forEach(([kn, ze, start]) => {
       const el = $(kn), zeiger = $(ze);
+      if (!el) return;
       let w = start;
       const zeichne = () => zeiger.style.transform = `rotate(${(-135 + w*270).toFixed(1)}deg)`;
       zeichne();
       bindDrag(el, f => { w = f; zeichne(); }, {achse:'y', umgekehrt:true});
     });
+
+  /* Schalter: die Bibliothek legt sich über das Gerät */
+  const blende = $('[data-bib-blende]');
+  if (blende){
+    const schalter = $('[data-bib]');
+    const zeige = auf => { blende.classList.toggle('auf', auf); schalter.classList.toggle('an', auf); };
+    schalter.onclick        = () => zeige(!blende.classList.contains('auf'));
+    $('[data-bib-zu]').onclick = () => zeige(false);
+    $('[data-bibliothek]').innerHTML = ALBUMS.map(a => `
+      <div class="bk" data-alb="${a.id}">
+        <div class="scheibe"><i>${ini(a)}</i></div>
+        <div class="t">${esc(a.t)}</div><div class="s">${esc(a.ar)} · ${a.y}</div></div>`).join('');
+    [...$('[data-bibliothek]').children].forEach(el => el.onclick = () => {
+      const a = ALBUMS.find(x => x.id === el.dataset.alb);
+      deck.queue = a.tr.map((_,i) => `${a.id}-${i}`);
+      deck.qi = 0; deck.pos = 0; deck.playing = true; deck.render();
+      zeige(false);
+    });
+  }
 
   const fenster = $('[data-fenster]');
   let letztesAlbum = null, letzter = null;
@@ -4227,11 +4338,16 @@ function verdrahte(wurzel, deck, stil){
     const t = d.track, a = d.album;
     if (letztesAlbum !== a.id){
       letztesAlbum = a.id;
-      fenster.innerHTML = d.queue.slice(0,5).map((id,i) =>
-        `<div class="z" data-q="${i}">${String(i+1).padStart(2,'0')}</div>`).join('');
+      const breit = fenster.classList.contains('breit');
+      fenster.innerHTML = d.queue.slice(0, breit ? 6 : 5).map((id,i) => breit
+        ? `<div class="z" data-q="${i}"><b>${String(i+1).padStart(2,'0')}</b>
+             <span>${esc(TRACKS[id].t)}</span></div>`
+        : `<div class="z" data-q="${i}">${String(i+1).padStart(2,'0')}</div>`).join('');
       [...fenster.children].forEach(el => el.onclick = () => d.jump(+el.dataset.q));
       $('[data-lab]').textContent  = a.t;
       $('[data-lab2]').textContent = a.ar + ' · ' + a.y;
+      if (blende) [...$('[data-bibliothek]').children]
+        .forEach(el => el.classList.toggle('an', el.dataset.alb === a.id));
     }
     [...fenster.children].forEach((el,i) => el.classList.toggle('an', i === d.qi));
     if (letzter !== t.id){
@@ -4252,7 +4368,7 @@ function verdrahte(wurzel, deck, stil){
   deck.render();
 }
 verdrahte(document.getElementById('b12v1'), d1,
-  {'--td':'430px','--al':'320px','--bw':'420px','--gg':'320px'});
+  {'--td':'400px','--al':'300px','--bw':'400px','--ww':'620px','--w1g':'40px','--wp':'44px 46px'});
 verdrahte(document.getElementById('b12v2'), d2,
   {'--td':'330px','--al':'250px','--bw':'380px','--gg':'260px','--ww':'100%','--wp':'22px 40px',
    '--sh':'120px','--kd':'70px','--tz':'18px','--wg':'22px','--sg2':'70px','--kg':'70px',
