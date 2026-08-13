@@ -88,8 +88,10 @@
   position:absolute;top:10px;left:50%;margin-left:-.75px}
 .dp .skala span{position:absolute;left:50%;bottom:-17px;transform:translateX(-50%);font-size:8px;
   letter-spacing:.14em;text-transform:uppercase;color:var(--tinte-3)}
-.dp .skala.knopf{border-color:var(--tief);background:var(--tief);color:var(--slab);cursor:pointer}
-.dp .skala.knopf.an{background:var(--slab);color:var(--tief);border:1px solid var(--tief)}
+/* der Bibliotheksknopf ist eine Skala wie die anderen: heller Grund,
+   feine Kontur, dunkles Zeichen — geöffnet zieht die Kontur nur an */
+.dp .skala.knopf{background:var(--slab);color:var(--tinte);cursor:pointer}
+.dp .skala.knopf.an{border-color:var(--tief);box-shadow:inset 0 0 0 1px var(--tief)}
 
 /* ── Schrift unter der Platte ── */
 .dp .text{padding:var(--tp,28px) 42px 0;display:flex;align-items:flex-start;justify-content:space-between;
