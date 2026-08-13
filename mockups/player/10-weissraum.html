@@ -1,0 +1,347 @@
+<title>10 · Weißraum</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 10 — Vorlage: eine Platte auf weißem Grund, sonst nichts. Kein
+   Gerät, kein Rahmen, kein Text.
+   Genommen: der Mut zur leeren Fläche. Alles, was hier steht, musste sich
+   den Platz verdienen — und die Platte läuft über den Bildschirmrand hinaus,
+   damit sie groß sein darf, ohne alles zu verdrängen.
+   ══════════════════════════════════════════════════════════════════════════ */
+.wr{
+  --papier:#FCFCFB; --tinte:#141414; --tinte-2:#6C6C6C; --tinte-3:#ADADAD;
+  --linie:rgba(20,20,20,.12);
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  background:var(--papier);color:var(--tinte);font-family:var(--sans);height:100%;overflow:hidden;
+  position:relative}
+.wr *{font-family:inherit}
+.wr .kap{font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--tinte-3)}
+
+/* ── Platte ── */
+.wr .platte{position:absolute;width:var(--pd,760px);height:var(--pd,760px);border-radius:50%;
+  left:var(--px,-160px);top:50%;margin-top:calc(var(--pd,760px) / -2);
+  background:
+    repeating-radial-gradient(circle at 50% 50%,#050505 0 1.3px,#131313 1.3px 2.6px),
+    radial-gradient(circle at 30% 22%,rgba(255,255,255,.16),transparent 40%),
+    radial-gradient(circle at 72% 78%,rgba(255,255,255,.10),transparent 38%);
+  box-shadow:0 30px 70px rgba(20,20,20,.22);animation:wrdreh 5.4s linear infinite}
+.wr .platte.halt{animation-play-state:paused}
+@keyframes wrdreh{to{transform:rotate(360deg)}}
+.wr .platte .label{position:absolute;inset:35%;border-radius:50%;display:grid;place-items:center;
+  color:#fff;font-size:calc(var(--pd,760px) / 22);font-weight:500;letter-spacing:.02em;text-align:center;
+  padding:14%;box-shadow:0 0 0 1px rgba(0,0,0,.4)}
+.wr .platte .loch{position:absolute;left:50%;top:50%;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;
+  border-radius:50%;background:var(--papier);z-index:3}
+
+/* Tonarm — Chrom, aus der Ecke */
+.wr .arm{position:absolute;left:var(--ax,52%);top:var(--ay,8%);width:9px;height:var(--al,300px);
+  transform-origin:50% 22px;transition:transform .5s cubic-bezier(.4,0,.2,1);pointer-events:none}
+.wr .arm .rohr{position:absolute;left:0;right:0;top:22px;bottom:34px;border-radius:5px;
+  background:linear-gradient(90deg,#8E8E92,#F2F2F4 40%,#C8C8CC 62%,#7C7C82);
+  box-shadow:0 2px 6px rgba(20,20,20,.28)}
+.wr .arm .lager{position:absolute;left:50%;top:0;width:44px;height:44px;margin-left:-22px;border-radius:50%;
+  background:radial-gradient(circle at 34% 28%,#FDFDFD,#C4C4C8 58%,#8A8A90);
+  box-shadow:0 4px 12px rgba(20,20,20,.3)}
+.wr .arm .kopf{position:absolute;left:50%;bottom:0;width:26px;height:40px;margin-left:-13px;border-radius:4px;
+  background:linear-gradient(120deg,#F4F4F6,#A8A8AE);box-shadow:0 3px 8px rgba(20,20,20,.3);
+  transform:rotate(-14deg)}
+
+/* ── Schriftspalte ── */
+.wr .spalte{position:absolute;right:var(--sr,74px);top:50%;transform:translateY(-50%);
+  width:var(--sw,420px)}
+.wr .spalte .kap{display:block;margin-bottom:20px}
+.wr .spalte h1{font-size:var(--tg,42px);font-weight:400;letter-spacing:-.025em;line-height:1.08;
+  text-wrap:balance}
+.wr .spalte .ar{margin-top:14px;font-size:17px;color:var(--tinte-2)}
+.wr .spalte .alb{margin-top:3px;font-size:14px;color:var(--tinte-3)}
+.wr .faden{margin-top:34px;position:relative;height:22px;display:flex;align-items:center;cursor:pointer;
+  touch-action:none}
+.wr .faden .linie{position:absolute;left:0;right:0;height:1px;background:var(--linie)}
+.wr .faden .voll{position:absolute;left:0;height:1px;background:var(--tinte)}
+.wr .faden .punkt{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--tinte);
+  margin-left:-4.5px;transition:left .18s linear}
+.wr .zeiten{display:flex;justify-content:space-between;font-size:11.5px;color:var(--tinte-3);
+  font-variant-numeric:tabular-nums;margin-top:4px}
+.wr .knoepfe{display:flex;align-items:center;gap:26px;margin-top:30px}
+.wr .knoepfe button{color:var(--tinte-2)}
+.wr .knoepfe .pp{width:54px;height:54px;border-radius:50%;border:1px solid var(--linie);color:var(--tinte);
+  display:grid;place-items:center}
+
+/* ── Warteschlange als Register ── */
+.wr .register{position:absolute;left:var(--rl,74px);top:50%;transform:translateY(-50%);width:300px}
+.wr .register .kap{display:block;margin-bottom:14px}
+.wr .rz{display:flex;align-items:baseline;gap:14px;padding:9px 0;border-bottom:1px solid var(--linie);
+  cursor:pointer;font-size:14px;color:var(--tinte-3)}
+.wr .rz:hover{color:var(--tinte-2)}
+.wr .rz .nr{font-size:10px;letter-spacing:.1em;width:16px}
+.wr .rz .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wr .rz.an{color:var(--tinte)}
+/* ── Bibliothek hinter dem Knopf ── */
+.wr .bib{position:absolute;inset:0;z-index:40;background:rgba(252,252,251,.97);padding:56px 74px;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.wr .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.wr .bib .bkopf{display:flex;align-items:flex-end;gap:34px;
+  border-bottom:1px solid var(--linie);padding-bottom:16px;margin-bottom:8px}
+.wr .bib h2{font-size:30px;font-weight:400;letter-spacing:-.02em;flex:none}
+/* Suche im Ton des Entwurfs: eine Zeile, keine Kiste */
+.wr .bib .suchfeld{flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding-bottom:6px}
+.wr .bib .suchfeld svg{color:var(--tinte-3);flex:none}
+.wr .bib .suchfeld input{flex:1;min-width:0;font-size:19px;font-weight:400;color:var(--tinte);
+  background:none;border:none;outline:none;letter-spacing:-.01em}
+.wr .bib .suchfeld input::placeholder{color:var(--tinte-3)}
+.wr .bib .bfuss{flex:none;padding-top:16px;font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--tinte-3)}
+.wr .bib .zu{width:46px;height:46px;border-radius:50%;border:1px solid var(--linie);display:grid;
+  place-items:center;color:var(--tinte-2)}
+.wr .bib .spalten{columns:2;column-gap:60px;overflow:hidden}
+.wr .bib .bz{display:flex;align-items:baseline;gap:16px;padding:13px 0;
+  border-bottom:1px solid var(--linie);cursor:pointer;break-inside:avoid;font-size:15px}
+.wr .bib .bz:hover .t{color:var(--tinte)}
+.wr .bib .bz .pkt{width:9px;height:9px;border-radius:50%;flex:none;align-self:center}
+.wr .bib .bz .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  color:var(--tinte-2)}
+.wr .bib .bz .n{font-size:12px;color:var(--tinte-3);white-space:nowrap}
+.wr .bib .bz.an .t{color:var(--tinte)}
+@media (prefers-reduced-motion:reduce){.wr .bib{transition:none}}
+
+.wr .ecke{position:absolute;left:34px;top:28px}
+.wr .ecke2{position:absolute;right:34px;top:28px}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 10</div>
+      <h1>Weißraum</h1>
+      <p class="lede">Die Vorlage besteht aus einer Platte und viel Nichts. Als Spieler heißt das: alles,
+      was auf dem Bildschirm steht, musste sich den Platz verdienen — <b>Titel, Interpret, eine Haarlinie
+      als Position</b>, drei Knöpfe. Die Platte hängt über den Rand hinaus, damit sie groß sein kann,
+      ohne den Rest zu verdrängen.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <img src="../../mckups_player/Bildschirmfoto%202026-08-13%20um%2011.06.13.png" alt="Vorlage">
+      <figcaption>Vorlage · 11.06.13</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Aufgeschlagen</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
+    <p class="etext">Links die Platte, rechts der Satz. Mehr steht nicht auf dem Bildschirm — und weil
+    nichts sonst da ist, kann der Titel <b>42 px groß</b> sein. Der Tonarm wandert mit der Position nach
+    innen; das ist die zweite Anzeige neben der Linie und die einzige, die man aus drei Metern sieht.
+    Der letzte Knopf der Zeile ist <b>nicht die Lautstärke</b>, sondern die Sammlung: Lautstärke regelt
+    man am iPad an der Gerätetaste, ein Album findet man nur hier. In der Blende steht die Suche als
+    <b>eine Zeile über der Liste</b>, ohne Kasten — im Ton des Entwurfs.
+    <span class="probier"><b>Ausprobieren:</b> an der Haarlinie ziehen; rechts unten das Rasterzeichen
+    antippen, dann tippen: „blue", „satie", „river" — gesucht wird auch in Titelnamen.</span></p>
+    <div class="buehne">
+      <div class="rahmen ipad-quer">
+        <div class="schirm"><div class="wr" id="v1"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Ruhe. Nichts blinkt, nichts wirbt</dd></div>
+      <div><dt>Schwäche</dt><dd><b>Keine Warteschlange</b> — man sieht nicht, was kommt</dd></div>
+      <div><dt>Sammlung</dt><dd>Hinter einem Knopf, als Blende — <b>nie neben dem Bild</b></dd></div>
+      <div><dt>Cover</dt><dd>Als Mittelaufkleber, rund beschnitten</dd></div>
+      <div><dt>Aufwand</dt><dd>gering — ein Kreis, eine Linie, drei Knöpfe</dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Register</h2><span class="marke geraet">PC · 1440 × 900</span></div>
+    <p class="etext">Am Schreibtisch ist die reine Ruhe eine Verschwendung: 1440 px tragen mehr. Die
+    Platte rückt nach rechts über den Rand, links steht die Warteschlange als <b>Register in
+    Haarlinien</b> — Text, keine Kacheln. Damit bleibt der Entwurf leise und wird trotzdem brauchbar.
+    Der letzte Knopf ist auch hier die <b>Sammlung samt Suche</b>, nicht die Lautstärke: am Schreibtisch
+    regelt man sie am Verstärker oder am Betriebssystem, und die Suche ist das, was 900 Alben erst
+    zugänglich macht.
+    <span class="probier"><b>Ausprobieren:</b> links einen Titel wählen; das Rasterzeichen öffnet die
+    Sammlung mit Suchzeile.</span></p>
+    <div class="buehne">
+      <div class="rahmen pc">
+        <div class="schirm">
+          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
+          <div class="flaeche"><div class="wr" id="v2"></div></div>
+        </div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Leise <b>und</b> vollständig</dd></div>
+      <div><dt>Schwäche</dt><dd>Die halbe Platte liegt außerhalb des Bildes</dd></div>
+      <div><dt>Sammlung</dt><dd>Fehlt weiterhin — das hier ist ein Spieler, kein Katalog</dd></div>
+      <div><dt>Nähe zu index.html</dt><dd>gering — dort ist die Sammlung die Hauptsache</dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Über den Rand hinaus heißt <code>overflow:hidden</code> am Container</b> — und
+      negative Randwerte statt Skalierung. Ein <code>transform:scale</code> auf der Platte würde die
+      Rillen mitskalieren und sie flau machen.</span></li>
+      <li><span><b>Eine Haarlinie ist schwer zu treffen.</b> Sichtbar 1 px, anfassbar 22 px: die
+      Trefferfläche ist ein durchsichtiger Streifen darum. Am iPad ist das Pflicht, mit der Maus
+      Komfort.</span></li>
+      <li><span><b>Der Aufkleber ist der einzige Farbträger.</b> Ohne Cover bleibt der Verlauf aus
+      <code>album.c</code> — auf Weiß ist das genug Unterscheidung; ein zweiter farbiger Bereich wäre
+      hier schon zu viel.</span></li>
+      <li><span><b>Große Schrift braucht <code>text-wrap:balance</code>.</b> Sonst hängt bei
+      zweizeiligen Titeln ein einzelnes Wort in der zweiten Zeile — bei 42 px fällt das sofort
+      auf.</span></li>
+      <li><span><b>Lautstärke muss nicht auf den Bildschirm.</b> Am iPad liegen die Tasten am Gerät,
+      am PC am Verstärker; <code>musiklib:volume</code> gilt ohnehin über alle Oberflächen hinweg. Der
+      freigewordene Platz trägt in beiden Varianten die Sammlung.</span></li>
+      <li><span><b>Suchen heißt hier: Blende auf, Fokus ins Feld.</b> Ein <code>setTimeout(…, 60)</code>
+      nach dem Einblenden — vorher nimmt ein Element mit <code>pointer-events:none</code> den Fokus
+      nicht an. Am iPad öffnet das die Bildschirmtastatur; wer nur stöbern will, tippt daneben.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für ipad.html / pc.html</span><span>Blatt 10 · Weißraum</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+const d1 = new Deck('ryu', {qi:2, pos:90,  speed:7});
+const d2 = new Deck('blu', {qi:0, pos:44,  speed:7});
+
+const platteHTML = `
+  <div class="platte" data-platte>
+    <div class="label" data-label></div><span class="loch"></span>
+  </div>
+  <div class="arm" data-arm><span class="lager"></span><span class="rohr"></span><span class="kopf"></span></div>`;
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Sammlung</h2>
+      <label class="suchfeld">${I.search(18)}
+        <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
+      <button class="zu" data-bib-zu>${I.x(19)}</button>
+    </div>
+    <div class="spalten" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
+const spalteHTML = bibliothek => `
+  <div class="spalte">
+    <span class="kap">Jetzt läuft</span>
+    <h1 data-titel></h1>
+    <div class="ar" data-ar></div>
+    <div class="alb" data-alb></div>
+    <div class="faden" data-faden>
+      <span class="linie"></span><span class="voll" data-voll></span><span class="punkt" data-punkt></span>
+    </div>
+    <div class="zeiten"><span data-jetzt></span><span data-ende></span></div>
+    <div class="knoepfe">
+      <button data-prev>${I.prev(20)}</button>
+      <button class="pp" data-pp>${I.pause(20)}</button>
+      <button data-next>${I.next(20)}</button>
+      <span style="flex:1"></span>
+      <button>${I.shuffle(18)}</button>
+      ${bibliothek
+        ? `<button data-bib title="Sammlung">${I.grid(18)}</button>`
+        : `<button>${I.vol(18)}</button>`}
+    </div>
+  </div>`;
+
+document.getElementById('v1').innerHTML =
+  `<span class="kap ecke">Musiklib</span><span class="kap ecke2">Seite A</span>` +
+  platteHTML + spalteHTML(true) +
+  bibHTML;
+
+document.getElementById('v2').innerHTML =
+  `<span class="kap ecke">Musiklib</span>` + platteHTML + spalteHTML(true) +
+  `<div class="register"><span class="kap">Warteschlange</span><div data-queue></div></div>` +
+  bibHTML;
+
+function verdrahte(wurzel, deck, stil){
+  const $  = s => wurzel.querySelector(s);
+  Object.entries(stil).forEach(([k,v]) => wurzel.style.setProperty(k, v));
+
+  $('[data-pp]').onclick   = () => deck.toggle();
+  $('[data-next]').onclick = () => deck.next();
+  $('[data-prev]').onclick = () => deck.prev();
+  bindDrag($('[data-faden]'), f => deck.seek(f));
+
+  /* Bibliothek: eine Blende über dem Bild, kein Seitenwechsel */
+  const blende = $('[data-bib-blende]');
+  let zeichneBib = () => {};
+  const markiereBib = () => blende && [...$('[data-bibliothek]').children]
+    .forEach(el => el.classList.toggle('an', el.dataset.alb === deck.album.id));
+  if (blende){
+    $('[data-bib]').onclick    = () => {
+      const auf = !blende.classList.contains('auf');
+      blende.classList.toggle('auf', auf);
+      if (auf) setTimeout(() => $('[data-suche]').focus(), 60);
+    };
+    $('[data-bib-zu]').onclick = () => blende.classList.remove('auf');
+    const liste = $('[data-bibliothek]'), feld = $('[data-suche]');
+    zeichneBib = () => {
+      const treffer = suche(feld.value);
+      liste.innerHTML = treffer.map(a => `
+        <div class="bz" data-alb="${a.id}">
+          <span class="pkt" style="background:${grad(a)}"></span>
+          <span class="t">${esc(a.t)} — ${esc(a.ar)}</span>
+          <span class="n">${a.tr.length} · ${fmtLang(albDur(a))}</span></div>`).join('') ||
+        '<div class="bz" style="border:none"><span class="t">Nichts gefunden.</span></div>';
+      $('[data-btreffer]').textContent = feld.value.trim()
+        ? `${treffer.length} von ${ALBUMS.length} Alben` : `${ALBUMS.length} Alben`;
+      [...liste.children].forEach(el => el.dataset.alb && (el.onclick = () => {
+        const a = ALBUMS.find(x => x.id === el.dataset.alb);
+        deck.queue = a.tr.map((_,i) => `${a.id}-${i}`);
+        deck.qi = 0; deck.pos = 0; deck.playing = true; deck.render();
+        blende.classList.remove('auf');
+      }));
+      markiereBib();
+    };
+    feld.oninput = zeichneBib;
+    zeichneBib();
+  }
+
+  const qKasten = $('[data-queue]');
+  let letztesAlbum = null, letzter = null;
+  deck.onRender = d => {
+    const t = d.track, a = d.album;
+    if (qKasten && letztesAlbum !== a.id){
+      letztesAlbum = a.id;
+      qKasten.innerHTML = d.queue.map((id,i) => `
+        <div class="rz" data-q="${i}"><span class="nr">${String(i+1).padStart(2,'0')}</span>
+          <span class="t">${esc(TRACKS[id].t)}</span><span>${fmt(TRACKS[id].d)}</span></div>`).join('');
+      [...qKasten.children].forEach(el => el.onclick = () => d.jump(+el.dataset.q));
+    }
+    if (qKasten) [...qKasten.children].forEach((el,i) => el.classList.toggle('an', i === d.qi));
+    if (letzter !== t.id){
+      letzter = t.id;
+      markiereBib();
+      $('[data-titel]').textContent = t.t;
+      $('[data-ar]').textContent = a.ar;
+      $('[data-alb]').textContent = a.t + ' · ' + a.y;
+      $('[data-label]').textContent = a.t;
+      $('[data-label]').style.background = grad(a);
+    }
+    const f = d.frac;
+    $('[data-voll]').style.width = (f*100).toFixed(2) + '%';
+    $('[data-punkt]').style.left = (f*100).toFixed(2) + '%';
+    $('[data-jetzt]').textContent = fmt(d.pos);
+    $('[data-ende]').textContent  = '−' + fmt(d.rest);
+    $('[data-pp]').innerHTML = d.playing ? I.pause(20) : I.play(20);
+    $('[data-platte]').classList.toggle('halt', !d.playing);
+    $('[data-arm]').style.transform = `rotate(${(26 + 17*f).toFixed(1)}deg)`;
+  };
+  deck.render();
+}
+verdrahte(document.getElementById('v1'), d1,
+  {'--pd':'700px','--px':'-150px','--ax':'40%','--ay':'6%','--al':'300px',
+   '--sr':'70px','--sw':'420px','--tg':'44px'});
+verdrahte(document.getElementById('v2'), d2,
+  {'--pd':'720px','--px':'960px','--ax':'92%','--ay':'4%','--al':'320px',
+   '--sr':'520px','--sw':'380px','--tg':'40px','--rl':'70px'});
+})();
+</script>

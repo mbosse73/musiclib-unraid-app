@@ -1,0 +1,271 @@
+<title>07 · Sternkarte</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 07 — Vorlage: Plakat statt Programm. Nachtblau, die Platte nur aus
+   dünnen Kreisen, dazu Linien wie in einer Sternkarte, gesperrte Versalien.
+   Genommen: die Rillen als Anzeige. Jeder Ring ist ein Stück der Laufzeit;
+   was gespielt ist, leuchtet.
+   ══════════════════════════════════════════════════════════════════════════ */
+.sk{
+  --nacht:#0A0C14; --nacht-2:#0F1220; --linie:rgba(190,206,255,.22); --linie-2:rgba(190,206,255,.09);
+  --hell:#E8ECF8; --hell-2:#9AA4C2; --hell-3:#5A6485; --leucht:#CBD7FF;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  background:radial-gradient(120% 90% at 50% 40%,#141829 0%,var(--nacht) 62%);
+  color:var(--hell);font-family:var(--sans);height:100%;overflow:hidden;position:relative}
+.sk *{font-family:inherit}
+.sk .kap{font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--hell-3)}
+
+.sk .kz{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;
+  padding:26px 34px;z-index:5}
+.sk .kz button{color:var(--hell-2)}
+.sk .kz button.an{color:var(--leucht)}
+
+/* ── Bibliothek: eine zweite Karte über der ersten ── */
+.sk .bib{position:absolute;inset:0;z-index:60;padding:56px 64px 44px;display:flex;flex-direction:column;
+  background:rgba(8,10,17,.96);
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.sk .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.sk .bib .bkopf{display:flex;align-items:baseline;gap:34px;border-bottom:1px solid var(--linie);
+  padding-bottom:16px;margin-bottom:10px}
+.sk .bib h2{font-size:15px;font-weight:300;letter-spacing:.34em;text-transform:uppercase;flex:none}
+.sk .bib .suchfeld{flex:1;min-width:0;display:flex;align-items:center;gap:12px}
+.sk .bib .suchfeld svg{color:var(--hell-3);flex:none}
+.sk .bib .suchfeld input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--hell);
+  font-size:17px;letter-spacing:.06em}
+.sk .bib .suchfeld input::placeholder{color:var(--hell-3);letter-spacing:.1em}
+.sk .bib .zu{color:var(--hell-2);flex:none}
+.sk .bib .bliste{flex:1;min-height:0;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;
+  gap:0 54px;align-content:start}
+.sk .bib .bz{display:flex;align-items:baseline;gap:16px;padding:12px 0;
+  border-bottom:1px solid var(--linie-2);cursor:pointer;color:var(--hell-3);font-size:14px;
+  letter-spacing:.04em}
+.sk .bib .bz:hover{color:var(--hell-2)}
+.sk .bib .bz .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sk .bib .bz .n{font-size:11px;white-space:nowrap}
+.sk .bib .bz.an{color:var(--leucht)}
+.sk .bib .bfuss{flex:none;padding-top:16px;font-size:10px;letter-spacing:.34em;text-transform:uppercase;
+  color:var(--hell-3)}
+@media (prefers-reduced-motion:reduce){.sk .bib{transition:none}}
+
+/* ── Rillenbild ── */
+.sk .platte{position:absolute;left:var(--pl,50%);top:var(--pt,42%);transform:translate(-50%,-50%);
+  width:var(--pd,440px);height:var(--pd,440px);cursor:pointer;touch-action:none}
+.sk .platte svg{width:100%;height:100%;overflow:visible}
+.sk .platte circle.rille{fill:none;stroke:var(--linie);stroke-width:1;transition:stroke .3s,opacity .3s}
+.sk .platte circle.rille.war{stroke:var(--leucht);opacity:.95}
+.sk .platte circle.loch{fill:var(--hell)}
+.sk .arm{position:absolute;left:84%;top:2%;width:2px;height:var(--ar,210px);background:
+  linear-gradient(180deg,rgba(232,236,248,.85),rgba(232,236,248,.3));transform-origin:50% 0;
+  pointer-events:none;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.sk .arm::after{content:'';position:absolute;left:50%;top:-13px;width:26px;height:26px;margin-left:-13px;
+  border-radius:50%;border:1.5px solid rgba(232,236,248,.8)}
+.sk .glanz{position:absolute;left:50%;top:calc(var(--pt,42%) + var(--pd,440px)/2 + 46px);
+  transform:translateX(-50%);width:var(--pd,440px);height:24px;
+  background:radial-gradient(ellipse at 50% 50%,rgba(203,215,255,.55),transparent 68%);
+  filter:blur(6px);pointer-events:none;opacity:.7}
+
+/* ── Schrift ── */
+.sk .schrift{position:absolute;left:0;right:0;top:var(--st,70%);text-align:center;padding:0 40px}
+.sk .schrift h1{font-size:var(--tg,44px);font-weight:300;letter-spacing:.28em;text-transform:uppercase;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-indent:.28em}
+.sk .schrift .zeilen{margin-top:26px;display:flex;flex-direction:column;gap:9px;align-items:center}
+.sk .schrift .z1{font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--hell-2)}
+.sk .schrift .z2{font-size:19px;letter-spacing:.14em;text-transform:uppercase}
+.sk .schrift .z3{font-size:12px;letter-spacing:.16em;color:var(--hell-3)}
+
+/* ── Bedienung ── */
+.sk .leiste{position:absolute;left:50%;transform:translateX(-50%);bottom:var(--lb,54px);
+  display:flex;align-items:center;gap:30px}
+.sk .leiste button{color:var(--hell-2)}
+.sk .leiste .pp{width:56px;height:56px;border-radius:50%;border:1px solid var(--linie);color:var(--hell);
+  display:grid;place-items:center}
+.sk .leiste .uhr{font-size:12px;letter-spacing:.14em;color:var(--hell-3);font-variant-numeric:tabular-nums;
+  min-width:52px;text-align:center}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 07</div>
+      <h1>Sternkarte</h1>
+      <p class="lede">Die Vorlage ist ein Plakat: Nachtblau, dünne Linien, gesperrte Versalien, eine
+      Platte, die nur aus Rillen besteht. Als Spieler taugt sie, weil die Rillen <b>zählbar</b> sind —
+      jeder Ring steht für ein Stück der Laufzeit, und was gespielt ist, leuchtet.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <img src="../../mckups_player/Bildschirmfoto%202026-08-13%20um%2010.52.28.png" alt="Vorlage">
+      <figcaption>Vorlage · 10.52.28</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Vollbild</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
+    <p class="etext">Ohne Randspalte, ohne Liniennetz, dafür mittig: das iPad als aufgestelltes Bild.
+    Die Diagonalen der Vorlage fallen hier weg — auf einem Gerät, das dauerhaft im Raum steht, sind sie
+    Muster ohne Aussage; übrig bleibt die Platte auf schwarzem Grund. Die Rillen sind das einzige
+    Bedienelement neben drei Knöpfen: <b>ein Spieler, den man aus zwei Metern sieht</b> und aus einem
+    bedient.
+    Oben rechts öffnet ein Knopf die <b>Bibliothek</b>: dieselbe Nachtseite, eine Suchzeile, zwei
+    Spalten Text — keine Kacheln, denn Cover kommen in diesem Entwurf nicht vor.
+    <span class="probier"><b>Ausprobieren:</b> am Ring ziehen; oben rechts die Bibliothek öffnen und
+    „part" oder „pärt" tippen.</span></p>
+    <div class="buehne">
+      <div class="rahmen ipad-quer">
+        <div class="schirm"><div class="sk" id="v2"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Ruhig, groß, aus der Ferne lesbar</dd></div>
+      <div><dt>Schwäche</dt><dd>Titelwechsel nur über die Knöpfe</dd></div>
+      <div><dt>Schrift</dt><dd>Gesperrte Versalien — <b>lange Titel brechen nicht</b>, sie werden gekürzt</dd></div>
+      <div><dt>Kein Netz</dt><dd>Nur Platte, Schrift, Knöpfe — <b>sonst nichts</b></dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Gesperrte Versalien vertragen keine langen Titel.</b> „Wohltemperiertes Klavier I"
+      ist mit <code>.28em</code> Sperrung dreimal so breit wie gesetzt. Deshalb eine Zeile,
+      <code>text-overflow:ellipsis</code>, und der volle Titel darunter in Normalschrift.</span></li>
+      <li><span><b>Ein Ring je Achtzehntel ist eine Wahl.</b> Bei 18 Ringen springt ein Klick um bis zu
+      3 % der Laufzeit — bei einem 11-Minuten-Stück sind das 20 Sekunden. Wer genauer will, nimmt
+      zusätzlich den Winkel des Klicks (also <code>atan2</code>) als Feinanteil.</span></li>
+      <li><span><b>Das Liniennetz der Vorlage ist gestrichen.</b> Es wäre ein
+      <code>&lt;svg&gt;</code> mit sechs <code>&lt;line&gt;</code> gewesen, kein Bild — technisch
+      nichts. Auf einem Gerät, das dauerhaft im Raum steht, ist es aber Muster ohne Aussage. Was bleibt,
+      ist die Platte auf schwarzem Grund.</span></li>
+      <li><span><b>Dunkel heißt <code>theme-color</code> setzen.</b> Sonst malt Safari auf dem iPad
+      einen hellen Streifen über das Nachtblau — dieselbe Falle, die <code>mobile.html</code> bereits
+      kennt.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für ipad.html</span><span>Blatt 07 · Sternkarte</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+const d2 = new Deck('kob', {qi:3, pos:150, speed:9});
+const RINGE = 18;
+
+const platteHTML = `
+  <div class="platte" data-platte>
+    <svg viewBox="0 0 100 100">
+      ${Array.from({length:RINGE}, (_,i) =>
+        `<circle class="rille" data-r="${i}" cx="50" cy="50" r="${(48 - i*2.5).toFixed(2)}"></circle>`).join('')}
+      <circle class="loch" cx="50" cy="50" r="1.6"></circle>
+    </svg>
+    <div class="arm" data-arm></div>
+  </div>
+  <div class="glanz"></div>`;
+
+const schriftHTML = `
+  <div class="schrift">
+    <h1 data-titel></h1>
+    <div class="zeilen">
+      <div class="z1" data-alb></div>
+      <div class="z2" data-ar></div>
+      <div class="z3" data-meta></div>
+    </div>
+  </div>
+  <div class="leiste">
+    <button data-prev>${I.prev(20)}</button>
+    <span class="uhr" data-jetzt></span>
+    <button class="pp" data-pp>${I.pause(20)}</button>
+    <span class="uhr" data-ende></span>
+    <button data-next>${I.next(20)}</button>
+  </div>`;
+
+const kzHTML = `
+  <div class="kz"><button>${I.back(20)}</button><span class="kap">Musiklib</span>
+    <button data-bib title="Bibliothek">${I.list(20)}</button></div>`;
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Bibliothek</h2>
+      <label class="suchfeld">${I.search(17)}
+        <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
+      <button class="zu" data-bib-zu>${I.x(19)}</button>
+    </div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
+document.getElementById('v2').innerHTML = kzHTML + platteHTML + schriftHTML + bibHTML;
+
+function verdrahte(wurzel, deck, stil){
+  const $  = s => wurzel.querySelector(s);
+  const $$ = s => [...wurzel.querySelectorAll(s)];
+  Object.entries(stil).forEach(([k,v]) => wurzel.style.setProperty(k, v));
+  const rillen = $$('.rille');
+
+  $('[data-pp]').onclick   = () => deck.toggle();
+  $('[data-next]').onclick = () => deck.next();
+  $('[data-prev]').onclick = () => deck.prev();
+
+  /* Klick in die Rillen: der Abstand zur Mitte bestimmt die Position.
+     Außen ist Anfang, innen ist Ende — wie bei einer echten Platte. */
+  const platte = $('[data-platte]');
+  const wert = ev => {
+    const r = platte.getBoundingClientRect();
+    const dx = ev.clientX - (r.left + r.width/2), dy = ev.clientY - (r.top + r.height/2);
+    const d = Math.hypot(dx, dy) / (r.width/2);            // 0 = Mitte, 1 = Rand
+    return clamp((0.96 - d) / (0.96 - 0.10), 0, 1);
+  };
+  let zieht = false;
+  platte.addEventListener('pointerdown', ev => {
+    zieht = true; platte.setPointerCapture(ev.pointerId); deck.seek(wert(ev)); ev.preventDefault(); });
+  platte.addEventListener('pointermove', ev => { if (zieht) deck.seek(wert(ev)); });
+  platte.addEventListener('pointerup',     () => zieht = false);
+  platte.addEventListener('pointercancel', () => zieht = false);
+
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="t">${esc(a.t)} — ${esc(a.ar)}</span>
+        <span class="n">${a.y} · ${fmtLang(albDur(a))}</span></div>`,
+    leer: '<div class="bz" style="border:none"><span class="t">Nichts gefunden.</span></div>',
+  });
+
+  const qKasten = $('[data-queue]');
+  let letztesAlbum = null, letzter = null;
+  deck.onRender = d => {
+    const t = d.track, a = d.album;
+    if (qKasten && letztesAlbum !== a.id){
+      letztesAlbum = a.id;
+      qKasten.innerHTML = d.queue.map((id,i) => `
+        <div class="rz" data-q="${i}"><span class="nr">${String(i+1).padStart(2,'0')}</span>
+          <span class="t">${esc(TRACKS[id].t)}</span><span>${fmt(TRACKS[id].d)}</span></div>`).join('');
+      [...qKasten.children].forEach(el => el.onclick = () => d.jump(+el.dataset.q));
+    }
+    if (qKasten) [...qKasten.children].forEach((el,i) => el.classList.toggle('an', i === d.qi));
+    if (letzter !== t.id){
+      letzter = t.id;
+      bib.markiere();
+      $('[data-titel]').textContent = t.t;
+      $('[data-alb]').textContent = a.t;
+      $('[data-ar]').textContent = a.ar;
+      $('[data-meta]').textContent = a.y + ' · Titel ' + (d.qi+1) + ' von ' + d.queue.length;
+    }
+    const f = d.frac;
+    rillen.forEach((c,i) => c.classList.toggle('war', i/RINGE <= f));
+    $('[data-jetzt]').textContent = fmt(d.pos);
+    $('[data-ende]').textContent  = '−' + fmt(d.rest);
+    $('[data-pp]').innerHTML = d.playing ? I.pause(20) : I.play(20);
+    $('[data-arm]').style.transform = `rotate(${(33 + 17*f).toFixed(1)}deg)`;
+  };
+  deck.render();
+}
+verdrahte(document.getElementById('v2'), d2,
+  {'--pd':'380px','--pl':'50%','--pt':'36%','--st':'62%','--tg':'34px','--ar':'182px','--lb':'44px'});
+})();
+</script>

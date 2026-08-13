@@ -1,0 +1,255 @@
+<title>05 · Kieselliste</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 05 — Vorlage: graue Kissenoberfläche, rundes Bild oben, darunter
+   eine Liste, in der die laufende Zeile herausgehoben ist und ihr Knopf von
+   „—" auf „Pause" springt.
+   Genommen: die Liste als Hauptsache. Der Spieler ist keine eigene Seite,
+   sondern die Zeile, die gerade läuft.
+   ══════════════════════════════════════════════════════════════════════════ */
+.kl{
+  --grund:#E3E3E3; --karte:#E9E9E9; --hell:rgba(255,255,255,.9); --dunkel:rgba(80,80,80,.22);
+  --tinte:#1C1C1C; --tinte-2:#6A6A6A; --tinte-3:#9A9A9A;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  background:var(--grund);color:var(--tinte);font-family:var(--sans);height:100%;overflow:hidden;
+  display:flex;flex-direction:column;position:relative}
+.kl *{font-family:inherit}
+.kl .heraus{background:var(--karte);box-shadow:-6px -6px 14px var(--hell),7px 7px 16px var(--dunkel)}
+.kl .hinein{background:var(--karte);box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
+
+.kl .kz{display:flex;align-items:center;justify-content:space-between;padding:14px var(--pad,26px) 8px;
+  flex:none}
+.kl .kz .mitte{font-size:13px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+.kl .rund{width:var(--rg,46px);height:var(--rg,46px);border-radius:50%;display:grid;place-items:center;
+  color:var(--tinte-2)}
+
+/* ── Kopf: rundes Bild zwischen zwei Knöpfen ── */
+.kl .buehne{display:flex;align-items:center;justify-content:center;gap:var(--bg,26px);
+  padding:var(--bo,18px) var(--pad,26px) var(--bu,24px);flex:none}
+.kl .scheibe{width:var(--sg,190px);height:var(--sg,190px);border-radius:50%;position:relative;
+  display:grid;place-items:center;padding:9px;
+  box-shadow:-8px -8px 18px var(--hell),9px 9px 22px var(--dunkel)}
+.kl .scheibe .bild{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-size:calc(var(--sg,190px) / 4);font-weight:800;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+
+.kl .titelzeile{text-align:center;padding:0 var(--pad,26px) var(--tzu,16px);flex:none}
+.kl .titelzeile h1{font-size:var(--tg,22px);font-weight:800;letter-spacing:-.01em;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.kl .titelzeile .ar{font-size:var(--arg,14px);color:var(--tinte-2);margin-top:3px}
+
+/* ── Positionslinie: die einzige Stelle mit Vertiefung ── */
+.kl .lauf{margin:0 var(--pad,26px) var(--lu,18px);flex:none}
+.kl .schiene{height:14px;border-radius:9px;position:relative;cursor:pointer;touch-action:none}
+.kl .schiene .voll{position:absolute;left:3px;top:3px;bottom:3px;border-radius:7px;background:var(--tinte-2);
+  min-width:8px}
+.kl .zeiten{display:flex;justify-content:space-between;font-size:11.5px;color:var(--tinte-3);
+  font-variant-numeric:tabular-nums;margin-top:7px}
+
+/* ── Liste ── */
+.kl .liste{flex:1;min-height:0;overflow:hidden;padding:0 var(--pad,26px) 10px}
+.kl .zeile{display:flex;align-items:center;gap:16px;padding:var(--zp,13px) 16px;border-radius:20px;
+  cursor:pointer;margin-bottom:var(--zm,8px)}
+.kl .zeile .m{flex:1;min-width:0}
+.kl .zeile .t{font-size:var(--ztg,16px);font-weight:700;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.kl .zeile .s{font-size:var(--zsg,13px);color:var(--tinte-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.kl .zeile .knopf{width:var(--kg,50px);height:var(--kg,50px);border-radius:50%;flex:none;display:grid;
+  place-items:center;color:var(--tinte-2);background:var(--karte);
+  box-shadow:-4px -4px 10px var(--hell),5px 5px 12px var(--dunkel)}
+.kl .zeile.an{background:var(--karte);box-shadow:-6px -6px 14px var(--hell),7px 7px 18px var(--dunkel)}
+.kl .zeile.an .knopf{color:var(--tinte);box-shadow:inset -3px -3px 8px var(--hell),inset 4px 4px 10px var(--dunkel)}
+.kl .strich{width:16px;height:3px;border-radius:2px;background:currentColor;display:block}
+.kl .fuss{text-align:center;font-size:11px;color:var(--tinte-3);padding:0 0 14px;flex:none}
+.kl .rund.an{box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel);
+  color:var(--tinte)}
+
+/* ── Bibliothek: dieselben Kiesel, eine Ebene darüber ── */
+.kl .bib{position:absolute;inset:0;z-index:60;background:var(--grund);padding:16px 26px 20px;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.kl .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.kl .bib .bkopf{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:8px 0 14px;flex:none}
+.kl .bib h2{font-size:13px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+.kl .bib .suchfeld{display:flex;align-items:center;gap:12px;height:50px;padding:0 20px;flex:none;
+  border-radius:25px;margin-bottom:14px;background:var(--karte);
+  box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
+.kl .bib .suchfeld svg{color:var(--tinte-3);flex:none}
+.kl .bib .suchfeld input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:var(--tinte);font-size:15.5px}
+.kl .bib .suchfeld input::placeholder{color:var(--tinte-3)}
+.kl .bib .bliste{flex:1;min-height:0;overflow:hidden}
+.kl .bib .bz{display:flex;align-items:center;gap:16px;padding:12px 16px;border-radius:20px;
+  cursor:pointer;margin-bottom:8px}
+.kl .bib .bz .m{flex:1;min-width:0}
+.kl .bib .bz .m>span{display:block}
+.kl .bib .bz .t{font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kl .bib .bz .s{font-size:13px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.kl .bib .bz .n{font-size:12px;color:var(--tinte-3);white-space:nowrap}
+.kl .bib .bz.an{background:var(--karte);
+  box-shadow:-6px -6px 14px var(--hell),7px 7px 18px var(--dunkel)}
+.kl .bib .bfuss{flex:none;text-align:center;font-size:11px;color:var(--tinte-3);padding-top:6px}
+@media (prefers-reduced-motion:reduce){.kl .bib{transition:none}}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 05</div>
+      <h1>Kieselliste</h1>
+      <p class="lede">Der Spieler ist keine eigene Seite. Er ist <b>die Zeile, die gerade läuft</b>:
+      herausgehoben aus der Liste, ihr Knopf zeigt Pause, alle anderen nur einen Strich. Wer den nächsten
+      Titel will, tippt ihn an — nicht „Weiter".</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <img src="../../mckups_player/Bildschirmfoto%202026-08-13%20um%2010.49.38.png" alt="Vorlage">
+      <figcaption>Vorlage · 10.49.38</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Kiesel</h2><span class="marke geraet">Handy · 390 × 844</span></div>
+    <p class="etext">Am Telefon steht der Kopf über der Liste, sonst ändert sich nichts. Die beiden
+    Knöpfe neben dem Cover sind gestrichen, und das Cover <b>dreht sich nicht</b>: In einem Entwurf,
+    dessen einzige Bewegung die laufende Zeile ist, wäre eine rotierende Scheibe die zweite — und
+    zwei Bewegungen streiten sich um denselben Blick.
+    Oben rechts sitzt der einzige verbliebene Knopf: dahinter liegen <b>Bibliothek und Suche</b>, in
+    denselben Kieseln wie die Warteschlange.
+    <span class="probier"><b>Ausprobieren:</b> an der Linie ziehen — sie ist die einzige Vertiefung im
+    Entwurf; oben rechts die Bibliothek öffnen und „jarrett" tippen.</span></p>
+    <div class="buehne">
+      <div class="rahmen telefon">
+        <div class="schirm"><div class="kerbe"></div><div class="kl" id="v2"></div><div class="griff"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Sehr große Ziele, nichts zu erklären</dd></div>
+      <div><dt>Schwäche</dt><dd>Fünf Zeilen sichtbar — <b>bei 18 Titeln wird gescrollt</b></dd></div>
+      <div><dt>Farbe</dt><dd>Keine. Bewusst: die Cover sind die Farbe</dd></div>
+      <div><dt>Ruhe</dt><dd>Nichts dreht sich — <b>bewegt ist nur die laufende Zeile</b></dd></div>
+      <div><dt>Verhältnis zu mobile.html</dt><dd>Gegenentwurf: Liste statt Achse</dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Der Knopf in der Zeile ist derselbe Knopf.</b> Er darf nur aus dem
+      <code>play</code>/<code>pause</code>-Ereignis gesetzt werden — nicht beim Klick. Sonst zeigt die
+      Zeile Pause, während der Sperrbildschirm längst gestoppt hat.</span></li>
+      <li><span><b>Eine Liste, zwei Bedeutungen.</b> Antippen der Zeile springt zum Titel, Antippen des
+      Knopfes hält an. Das sind zwei Ziele in einer Zeile — der Knopf braucht deshalb
+      <code>stopPropagation</code> und mindestens 44 px.</span></li>
+      <li><span><b>Rundes Cover heißt beschnittenes Cover.</b> Bei quadratischen Bildern fällt rund
+      21 % der Fläche weg, meist Schrift. Wer das nicht will, nimmt <code>border-radius:22px</code>
+      statt <code>50%</code> — die Vorlage verliert dabei wenig.</span></li>
+      <li><span><b>Grau in Grau braucht echte Tiefe.</b> Der einzige Unterschied zwischen „läuft" und
+      „läuft nicht" ist die Schattenrichtung. Auf einem Bildschirm mit niedrigem Kontrast (iPad in der
+      Sonne) ist das zu wenig — dort muss zusätzlich die Schriftstärke wechseln, wie hier.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für mobile.html</span><span>Blatt 05 · Kieselliste</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+const d2 = new Deck('blu', {qi:2, pos:61,  speed:7});
+
+const kopfHTML = `
+  <div class="kz">
+    <button class="rund heraus">${I.back(19)}</button>
+    <span class="mitte">Jetzt läuft</span>
+    <button class="rund heraus" data-bib title="Bibliothek">${I.grid(19)}</button>
+  </div>
+  <div class="buehne">
+    <div class="scheibe"><div class="bild" data-bild></div></div>
+  </div>
+  <div class="titelzeile"><h1 data-titel></h1><div class="ar" data-ar></div></div>
+  <div class="lauf">
+    <div class="schiene hinein" data-bahn><span class="voll" data-voll></span></div>
+    <div class="zeiten"><span data-jetzt></span><span data-ende></span></div>
+  </div>`;
+
+const listeHTML = `<div class="liste" data-liste></div>
+  <div class="fuss">Musiklib · <span data-alb></span></div>`;
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf"><h2>Bibliothek</h2>
+      <button class="rund heraus" data-bib-zu>${I.x(19)}</button></div>
+    <label class="suchfeld">${I.search(18)}
+      <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
+document.getElementById('v2').innerHTML =
+  `<div class="sbar" style="color:#1C1C1C"><span>9:41</span><div class="ic">${I.vol(15)}</div></div>` +
+  kopfHTML + listeHTML + bibHTML;
+
+function verdrahte(wurzel, deck, stil){
+  const $  = s => wurzel.querySelector(s);
+  Object.entries(stil).forEach(([k,v]) => wurzel.style.setProperty(k, v));
+  bindDrag($('[data-bahn]'), f => deck.seek(f));
+
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)} · ${a.tr.length} Titel</span></span>
+        <span class="n">${fmtLang(albDur(a))}</span></div>`,
+    leer: '<div class="bz"><span class="m"><span class="s">Nichts gefunden.</span></span></div>',
+  });
+
+  const liste = $('[data-liste]');
+  let letztesAlbum = null;
+  deck.onRender = d => {
+    const a = d.album;
+    if (letztesAlbum !== a.id){
+      letztesAlbum = a.id;
+      liste.innerHTML = d.queue.map((id,i) => {
+        const t = TRACKS[id];
+        return `<div class="zeile" data-q="${i}">
+          <div class="m"><div class="t">${esc(t.t)}</div><div class="s">${esc(a.ar)}</div></div>
+          <button class="knopf" data-k="${i}"><i class="strich"></i></button></div>`;
+      }).join('');
+      [...liste.children].forEach(el => {
+        el.onclick = () => d.jump(+el.dataset.q);
+        el.querySelector('[data-k]').onclick = ev => {
+          ev.stopPropagation();
+          if (+el.dataset.q === d.qi) d.toggle(); else d.jump(+el.dataset.q);
+        };
+      });
+      $('[data-bild]').style.background = grad(a);
+      $('[data-bild]').textContent = ini(a);
+      $('[data-alb]').textContent = a.t;
+      bib.markiere();
+    }
+    [...liste.children].forEach((el,i) => {
+      const an = i === d.qi;
+      el.classList.toggle('an', an);
+      el.querySelector('[data-k]').innerHTML =
+        an ? (d.playing ? I.pause(19) : I.play(19)) : '<i class="strich"></i>';
+    });
+    $('[data-titel]').textContent = d.track.t;
+    $('[data-ar]').textContent = a.ar + ' · ' + a.t;
+    $('[data-voll]').style.width = `calc(${(d.frac*100).toFixed(2)}% - 6px)`;
+    $('[data-jetzt]').textContent = fmt(d.pos);
+    $('[data-ende]').textContent  = '−' + fmt(d.rest);
+  };
+  deck.render();
+}
+verdrahte(document.getElementById('v2'), d2, {});
+})();
+</script>

@@ -1,0 +1,132 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   _seite.css — die Seite um die Entwürfe herum, nicht die Entwürfe selbst.
+
+   Kopf, Fließtext, Fußnoten, Geräterahmen. Jede Entwurfsdatei bringt ihr
+   eigenes <style> mit und färbt darin ausschließlich das, was im Rahmen
+   steht. Damit bleibt vergleichbar, was verglichen werden soll.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root{
+  --paper:#FBF9F5;
+  --stage:#EFEBE3;
+  --ink:#241E18;
+  --ink-2:#6B6155;
+  --ink-3:#A0968A;
+  --line:rgba(36,30,24,.10);
+  --line-2:rgba(36,30,24,.22);
+  --brass:#8A6534;
+  --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--stage);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;padding-bottom:100px}
+::selection{background:rgba(138,101,52,.2)}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+button,input{font:inherit;color:inherit;background:none;border:none}
+a{color:var(--brass)}
+img{display:block;max-width:100%}
+
+.seite{max-width:1320px;margin:0 auto;padding:0 34px}
+.caps{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3)}
+.regel{height:1px;background:var(--line-2)}
+
+/* ── Kopf ── */
+.kopf{padding:70px 0 40px;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:56px;align-items:end}
+@media (max-width:940px){.kopf{grid-template-columns:1fr;gap:34px}}
+.kopf .caps{margin-bottom:22px}
+.kopf .zurueck{font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+  border-bottom:1px solid var(--line-2);padding-bottom:2px}
+.kopf h1{font-family:var(--serif);font-weight:400;font-size:clamp(38px,5.4vw,60px);line-height:1.04;
+  letter-spacing:-.015em;text-wrap:balance}
+.kopf h1 em{font-style:italic;color:var(--brass)}
+.kopf .lede{margin-top:20px;color:var(--ink-2);font-size:16px;max-width:60ch}
+.kopf .lede b{color:var(--ink);font-weight:600}
+.vorlage{border:1px solid var(--line-2);background:var(--paper);padding:9px 9px 11px}
+.vorlage img{width:100%;height:auto;filter:saturate(.9)}
+.vorlage figcaption{margin-top:9px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
+
+/* ── ein Entwurf ── */
+.entwurf{padding:64px 0 0}
+.entwurf + .entwurf{padding-top:78px}
+.ekopf{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;margin-bottom:8px}
+.ekopf h2{font-family:var(--serif);font-size:30px;font-weight:400;letter-spacing:-.01em}
+.marke{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);
+  border:1px solid var(--line-2);border-radius:2px;padding:4px 9px}
+.marke.geraet{color:var(--ink-2)}
+.etext{max-width:64ch;color:var(--ink-2);font-size:14.5px;margin-bottom:30px}
+.etext b{color:var(--ink);font-weight:600}
+.probier{margin-top:14px;padding-left:14px;border-left:2px solid var(--brass);font-size:13.5px}
+.probier b{color:var(--ink)}
+
+.buehne{display:flex;justify-content:center;padding:8px 0 30px}
+.buehne.links{justify-content:flex-start}
+
+.zettel{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:0 40px;
+  border-top:1px solid var(--line-2);margin-top:6px}
+.zettel>div{display:grid;grid-template-columns:112px 1fr;gap:14px;padding:11px 0;
+  border-bottom:1px solid var(--line);font-size:13px}
+.zettel dt{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);padding-top:3px}
+.zettel dd{color:var(--ink-2)}
+.zettel dd b{color:var(--ink);font-weight:600}
+
+/* ── Schluss ── */
+.schluss{margin-top:80px;padding-top:34px;border-top:1px solid var(--line-2)}
+.schluss h2{font-family:var(--serif);font-size:26px;font-weight:400;margin-bottom:18px}
+.schluss ol{list-style:none;counter-reset:s;max-width:78ch}
+.schluss li{counter-increment:s;display:grid;grid-template-columns:32px 1fr;gap:14px;padding:11px 0;
+  border-bottom:1px solid var(--line);font-size:14px;color:var(--ink-2)}
+.schluss li::before{content:counter(s,decimal-leading-zero);font-size:10px;letter-spacing:.1em;
+  color:var(--brass);padding-top:5px}
+.schluss li b{color:var(--ink);font-weight:600}
+.schluss code{font-family:var(--mono);font-size:12.5px;background:rgba(36,30,24,.055);padding:1px 5px;
+  border-radius:2px;color:var(--ink)}
+footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);display:flex;
+  justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:12px;color:var(--ink-3)}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Geräterahmen. Der Entwurf zeichnet in .schirm mit echten Gerätemaßen; der
+   Rahmen skaliert das Ganze über --s auf die Seite herunter, damit ein
+   1280er Bildschirm neben Fließtext liegen kann, ohne dass die Schriftgrößen
+   im Entwurf gelogen sind.
+   ══════════════════════════════════════════════════════════════════════════ */
+.rahmen{position:relative;flex:none;width:calc(var(--w) * var(--s) * 1px);
+  height:calc(var(--h) * var(--s) * 1px)}
+.rahmen .schirm{width:calc(var(--w) * 1px);height:calc(var(--h) * 1px);overflow:hidden;position:relative;
+  transform:scale(var(--s));transform-origin:top left;touch-action:none}
+
+/* PC — Fenster auf dem Schreibtisch */
+.pc{--w:1440;--h:900;--s:.63}
+.pc .schirm{border-radius:10px;box-shadow:0 0 0 1px rgba(36,30,24,.16),0 30px 70px rgba(36,30,24,.22)}
+.pc .browser{height:38px;background:#E4E0D8;border-bottom:1px solid rgba(36,30,24,.13);display:flex;
+  align-items:center;gap:9px;padding:0 15px;position:relative;z-index:400;flex:none}
+.pc .browser i{width:11px;height:11px;border-radius:50%;background:rgba(36,30,24,.17);display:block}
+.pc .browser .url{margin-left:14px;flex:1;max-width:420px;height:22px;border-radius:11px;
+  background:rgba(255,255,255,.7);display:flex;align-items:center;padding:0 12px;
+  font-family:var(--mono);font-size:11px;color:#6B6155}
+.pc .flaeche{height:calc(var(--h) * 1px - 38px);overflow:hidden;position:relative;display:flex;
+  flex-direction:column}
+
+/* iPad quer und hoch — Rahmen, keine Knöpfe: das Gerät ist nicht der Entwurf */
+.ipad-quer{--w:1194;--h:834;--s:.72}
+.ipad-hoch{--w:834;--h:1194;--s:.56}
+.ipad-quer .schirm,.ipad-hoch .schirm{border-radius:18px;
+  box-shadow:0 0 0 12px #1E1A16,0 0 0 13px rgba(36,30,24,.4),0 34px 74px rgba(36,30,24,.26)}
+.ipad-quer .rahmen,.ipad-hoch .rahmen{margin:14px}
+.buehne .ipad-quer,.buehne .ipad-hoch,.buehne .telefon{margin:13px}
+
+/* Telefon */
+.telefon{--w:390;--h:844;--s:.92}
+.telefon .schirm{border-radius:44px;
+  box-shadow:0 0 0 9px #1E1A16,0 0 0 10px rgba(36,30,24,.4),0 34px 70px rgba(36,30,24,.24)}
+.telefon .kerbe{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:112px;height:31px;
+  border-radius:18px;background:#141110;z-index:900}
+.telefon .griff{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:126px;height:4px;
+  border-radius:3px;background:currentColor;opacity:.22;z-index:900}
+
+/* Statusleiste — Farbe erbt der Entwurf */
+.sbar{height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;
+  padding:0 30px 8px;font-size:13.5px;font-weight:600;position:relative;z-index:800}
+.sbar .ic{display:flex;gap:6px;align-items:center}
+
+.paar{display:flex;gap:28px;flex-wrap:wrap;justify-content:center}

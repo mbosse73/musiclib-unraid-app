@@ -1,0 +1,263 @@
+<title>02 · Milchglas</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 02 — Vorlage: weicher Weißentwurf, Plattenspieler von oben,
+   Knöpfe als gepolsterte Kissen (Neumorphismus).
+   Genommen: das durchgehende Weiß, die Doppelschatten, die runde Liste.
+   Weggelassen: die Prägeschrift auf den Knöpfen — Kontrast schlägt Effekt.
+   ══════════════════════════════════════════════════════════════════════════ */
+.mg{
+  --grund:#EDEDF4; --karte:#F2F2F8; --hell:rgba(255,255,255,.95); --dunkel:rgba(88,88,124,.16);
+  --tinte:#1B1B25; --tinte-2:#6E6E82; --tinte-3:#A6A6B8;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  background:var(--grund);color:var(--tinte);font-family:var(--sans);height:100%;overflow:hidden;
+  display:flex;flex-direction:column;position:relative}
+.mg *{font-family:inherit}
+.mg .kissen{background:var(--karte);border-radius:26px;
+  box-shadow:-9px -9px 20px var(--hell),10px 10px 26px var(--dunkel)}
+.mg .mulde{background:var(--karte);border-radius:26px;
+  box-shadow:inset -5px -5px 12px var(--hell),inset 6px 6px 14px var(--dunkel)}
+
+/* Kopfzeile */
+.mg .kopfz{display:flex;align-items:center;justify-content:space-between;padding:22px 30px 10px;flex:none}
+.mg .rund{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:var(--tinte-2);
+  background:var(--karte);box-shadow:-5px -5px 12px var(--hell),6px 6px 14px var(--dunkel)}
+.mg .rund:active{box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
+.mg .kopfz .mitte{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--tinte-3)}
+.mg .rund.an{color:var(--tinte);box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
+
+/* ── Bibliothek: dieselbe weiche Fläche, eine Ebene darüber ── */
+.mg .bib{position:absolute;inset:0;z-index:60;background:var(--grund);padding:22px 26px 26px;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.mg .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.mg .bib .bkopf{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:6px 0 16px;flex:none}
+.mg .bib h2{font-size:26px;font-weight:700;letter-spacing:-.02em}
+.mg .bib .suchfeld{display:flex;align-items:center;gap:12px;height:52px;padding:0 20px;
+  border-radius:26px;flex:none;margin-bottom:16px;background:var(--karte);
+  box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
+.mg .bib .suchfeld svg{color:var(--tinte-3);flex:none}
+.mg .bib .suchfeld input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:var(--tinte);font-size:16px}
+.mg .bib .suchfeld input::placeholder{color:var(--tinte-3)}
+.mg .bib .bliste{flex:1;min-height:0;overflow:hidden}
+.mg .bib .bz{display:flex;align-items:center;gap:16px;padding:10px;border-radius:34px;cursor:pointer;
+  margin-bottom:10px}
+.mg .bib .bz .pl{width:54px;height:54px;border-radius:50%;flex:none;display:grid;place-items:center;
+  color:#fff;font-size:19px;font-weight:700;box-shadow:0 5px 12px rgba(30,30,60,.2)}
+.mg .bib .bz .m{flex:1;min-width:0}
+.mg .bib .bz .m>span{display:block}
+.mg .bib .bz .t{font-size:15.5px;font-weight:700;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.mg .bib .bz .s{font-size:12.5px;color:var(--tinte-3);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.mg .bib .bz.an{background:var(--karte);
+  box-shadow:-6px -6px 14px var(--hell),7px 7px 18px var(--dunkel)}
+.mg .bib .bfuss{flex:none;padding-top:10px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--tinte-3);text-align:center}
+@media (prefers-reduced-motion:reduce){.mg .bib{transition:none}}
+
+/* ── Plattenspieler ── */
+.mg .deck{position:relative;width:var(--dk,470px);height:calc(var(--dk,470px) * .84);flex:none;
+  border-radius:30px;background:linear-gradient(150deg,#FAFAFF,#E6E6F0);
+  box-shadow:-12px -12px 26px var(--hell),14px 14px 34px var(--dunkel)}
+.mg .deck .teller{position:absolute;left:6%;top:8%;width:74%;aspect-ratio:1;border-radius:50%;
+  background:
+    repeating-radial-gradient(circle at 50% 50%,#0A0A0E 0 1.6px,#17171D 1.6px 3.2px),
+    radial-gradient(circle at 30% 24%,rgba(255,255,255,.22),transparent 44%);
+  box-shadow:0 10px 24px rgba(30,30,60,.28);animation:mgdreh 4.2s linear infinite}
+.mg .deck .teller.halt{animation-play-state:paused}
+@keyframes mgdreh{to{transform:rotate(360deg)}}
+.mg .deck .teller .label{position:absolute;inset:34%;border-radius:50%;background:#F7F7FC;
+  display:grid;place-items:center;font-size:14px;font-weight:700;color:var(--tinte-2);
+  box-shadow:0 0 0 1px rgba(0,0,0,.18)}
+.mg .deck .arm{position:absolute;right:9%;top:9%;width:26px;height:26px;border-radius:50%;
+  background:linear-gradient(150deg,#FDFDFF,#D8D8E4);box-shadow:0 2px 6px rgba(30,30,60,.24);
+  transform-origin:50% 50%;transition:transform .45s cubic-bezier(.4,0,.2,1)}
+.mg .deck .arm::before{content:'';position:absolute;left:50%;top:12px;width:4px;height:var(--al,150px);
+  margin-left:-2px;border-radius:3px;background:linear-gradient(180deg,#3C3C48,#15151C)}
+.mg .deck .arm::after{content:'';position:absolute;left:50%;top:calc(var(--al,150px) + 4px);width:16px;
+  height:22px;margin-left:-8px;border-radius:3px;background:linear-gradient(150deg,#FBFBFF,#C9C9D6);
+  box-shadow:0 2px 5px rgba(30,30,60,.3)}
+.mg .deck .stift{position:absolute;right:11%;top:5%;width:8px;height:8px;border-radius:50%;
+  background:#C9A96E;box-shadow:0 0 0 2px rgba(201,169,110,.25)}
+.mg .deck .stift.zwei{right:15%}
+
+/* ── Titel, Ausschlag, Transport ── */
+.mg .titel{text-align:center;margin-top:26px}
+.mg .titel h1{font-size:30px;font-weight:700;letter-spacing:-.02em}
+.mg .titel .ar{margin-top:6px;font-size:16px;color:var(--tinte-2)}
+.mg .balken{display:flex;align-items:center;justify-content:center;gap:5px;height:64px;cursor:pointer;
+  margin-top:22px}
+.mg .balken b{width:5px;border-radius:3px;background:var(--tinte-3);opacity:.5;transition:opacity .15s}
+.mg .balken b.war{opacity:1;background:var(--tinte-2)}
+.mg .uhr{text-align:center;margin-top:14px;font-size:15px;color:var(--tinte-2);
+  font-variant-numeric:tabular-nums;letter-spacing:.05em}
+.mg .transport{display:flex;align-items:center;justify-content:center;gap:26px;margin-top:26px}
+.mg .flach{width:104px;height:60px;border-radius:22px;display:grid;place-items:center;color:var(--tinte-2)}
+.mg .knauf{width:104px;height:104px;border-radius:50%;display:grid;place-items:center;color:var(--tinte);
+  position:relative}
+.mg .knauf::after{content:'';position:absolute;inset:14px;border-radius:50%;
+  box-shadow:inset -3px -3px 8px var(--hell),inset 4px 4px 9px var(--dunkel)}
+.mg .knauf svg{position:relative;z-index:2}
+
+.mg .spieler{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:0 30px 26px;overflow:hidden}</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 02</div>
+      <h1>Milchglas</h1>
+      <p class="lede">Alles aus einem Material: Der Bildschirm ist eine weiche weiße Fläche, aus der Knöpfe
+      heraustreten und Mulden hineingehen. Kein Rahmen, keine Trennlinie — <b>Tiefe statt Kontur</b>.
+      Der Preis steht in der Vorlage schon drin: Grau auf Weiß ist schön und schwer zu lesen.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <img src="../../mckups_player/Bildschirmfoto%202026-08-13%20um%2010.39.25.png" alt="Vorlage">
+      <figcaption>Vorlage · 10.39.25</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Kissen</h2><span class="marke geraet">Handy · 390 × 844</span></div>
+    <p class="etext">Der dritte Bildschirm der Vorlage, eins zu eins: Laufwerk, Titel, Ausschlag, drei
+    Knöpfe. Das Format passt hier ohne Anpassung — <b>die Vorlage ist ein Telefonentwurf</b>. Die Liste
+    zum Stöbern liegt eine Ebene tiefer; auf dem Bildschirm steht nur, was läuft. Die beiden Knöpfe, die
+    in der Vorlage unten am Laufwerk sitzen, sind gestrichen — <b>Lautstärke regelt am Telefon die
+    Gerätetaste</b>. Das Laufwerk ist damit reines Bild; der Weg zur Sammlung liegt oben rechts in der
+    Kopfzeile, wo er auch hingehört: ein Knopf, dahinter <b>Bibliothek und Suche</b> in derselben
+    weichen Fläche.
+    <span class="probier"><b>Ausprobieren:</b> die Balken antippen; der Tonarm wandert mit der
+    Position nach innen.</span></p>
+    <div class="buehne">
+      <div class="rahmen telefon">
+        <div class="schirm"><div class="kerbe"></div><div class="mg" id="v2"></div><div class="griff"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Große Ziele, alles im Daumenbereich</dd></div>
+      <div><dt>Schwäche</dt><dd>Ein Bildschirm, ein Titel — die Liste liegt eine Ebene tiefer</dd></div>
+      <div><dt>Verhältnis zu mobile.html</dt><dd>Alternative, kein Ersatz: dort ist die Achse die Warteschlange</dd></div>
+      <div><dt>Aufwand</dt><dd>gering — ein Bildschirm, keine zweite Ebene</dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Neumorphismus ist Kontrast auf Kredit.</b> Alles lebt von zwei Schatten je Element;
+      Text darauf hat notgedrungen wenig Kontrast. Für die Nebenzeilen deshalb <code>--tinte-2</code>
+      statt <code>--tinte-3</code> — sonst reicht es in der Sonne nicht.</span></li>
+      <li><span><b>Große weiche Schatten kosten Fläche.</b> Ein Dutzend Elemente mit 26 px Unschärfe
+      lässt selbst ein iPad beim Scrollen stocken. Deshalb: Schatten nur auf Elementen, die
+      <em>stehen</em> — die Liste bekommt ihn erst in der aktiven Zeile.</span></li>
+      <li><span><b>Die gestaffelte Liste ist reine CSS-Regel</b> (<code>:nth-child</code> mit
+      <code>opacity</code> und <code>translateX</code>). Sobald sie scrollt, muss die Staffelung an die
+      Position im Ausschnitt gebunden werden — das ist dann Rechnerei bei jedem Scrollereignis, kein
+      Selektor mehr.</span></li>
+      <li><span><b>Ein heller Entwurf ohne dunkles Gegenstück.</b> <code>index.html</code> ist dunkel,
+      <code>mobile.html</code> hell — dieser hier hat kein Dunkel, das noch nach ihm aussieht.
+      Das ist eine Entscheidung, keine Lücke.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für mobile.html</span><span>Blatt 02 · Milchglas</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+const d2 = new Deck('ryu', {qi:0, pos:32, speed:6});
+
+const deckHTML = w => `
+  <div class="deck" style="--dk:${w}px">
+    <span class="stift"></span><span class="stift zwei"></span>
+    <div class="teller" data-teller><div class="label" data-label></div></div>
+    <div class="arm" data-arm></div>
+  </div>`;
+
+const spielerHTML = (dw, al) => `
+  <div class="kopfz">
+    <button class="rund">${I.back(20)}</button>
+    <span class="mitte">Jetzt läuft</span>
+    <button class="rund" data-bib title="Bibliothek">${I.grid(20)}</button>
+  </div>
+  <div class="spieler">
+    ${deckHTML(dw)}
+    <div class="titel"><h1 data-titel></h1><div class="ar" data-ar></div></div>
+    <div class="balken" data-balken>${'<b></b>'.repeat(19)}</div>
+    <div class="uhr"><span data-jetzt></span> / <span data-ende></span></div>
+    <div class="transport">
+      <button class="flach kissen" data-prev>${I.prev(22)}</button>
+      <button class="knauf kissen" data-pp>${I.pause(30)}</button>
+      <button class="flach kissen" data-next>${I.next(22)}</button>
+    </div>
+  </div>`;
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf"><h2>Bibliothek</h2>
+      <button class="rund" data-bib-zu>${I.x(19)}</button></div>
+    <label class="suchfeld">${I.search(18)}
+      <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
+document.getElementById('v2').innerHTML = `<div class="sbar" style="color:#1B1B25">
+    <span>9:41</span><div class="ic">${I.vol(15)}</div></div>` + spielerHTML(312, 104) + bibHTML;
+
+function verdrahte(wurzel, deck, armLang){
+  const $  = s => wurzel.querySelector(s);
+  const $$ = s => [...wurzel.querySelectorAll(s)];
+  const balken = $$('[data-balken] b');
+  const arm = $('[data-arm]');
+  arm.style.setProperty('--al', armLang + 'px');
+
+  $('[data-pp]').onclick   = () => deck.toggle();
+  $('[data-next]').onclick = () => deck.next();
+  $('[data-prev]').onclick = () => deck.prev();
+  bindDrag($('[data-balken]'), f => deck.seek(f));
+
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="pl" style="background:${grad(a)}">${ini(a)}</span>
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)} · ${a.tr.length} Titel</span></span></div>`,
+    leer: '<div class="bz"><span class="m"><span class="s">Nichts gefunden.</span></span></div>',
+  });
+
+  let letzter = null;
+  deck.onRender = d => {
+    const t = d.track, a = d.album;
+    if (letzter !== t.id){
+      letzter = t.id;
+      $('[data-titel]').textContent = t.t;
+      $('[data-ar]').textContent = a.ar;
+      $('[data-label]').textContent = ini(a);
+      bib.markiere();
+      const w = wave(t.id, balken.length);
+      balken.forEach((b,i) => b.style.height = Math.round(28 + w[i]*72) + '%');
+    }
+    const f = d.frac;
+    balken.forEach((b,i) => b.classList.toggle('war', i/balken.length <= f));
+    $('[data-jetzt]').textContent = fmt2(d.pos);
+    $('[data-ende]').textContent  = fmt2(d.dur);
+    $('[data-pp]').innerHTML = d.playing ? I.pause(30) : I.play(30);
+    $('[data-teller]').classList.toggle('halt', !d.playing);
+    arm.style.transform = `rotate(${(14 + 16*f).toFixed(2)}deg)`;
+  };
+  deck.render();
+}
+verdrahte(document.getElementById('v2'), d2, 104);
+})();
+</script>

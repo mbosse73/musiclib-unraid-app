@@ -1,0 +1,380 @@
+<title>12 · Studiogerät</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 12 — Vorlage: ein Effektgerät im Fenster einer Musiksoftware.
+   Salbeigrün, riesige blasse Buchstaben im Hintergrund, links Schieber und
+   Drehknöpfe, rechts eine Platte mit terracottafarbenem Aufkleber.
+   Genommen: die Zweiteilung Werkzeug ↔ Klangquelle, die Beschriftung in
+   gesperrten Versalien und der Mut, Regler groß zu machen.
+   ══════════════════════════════════════════════════════════════════════════ */
+.sg{
+  --grund:#E4E4D5; --grund-2:#DBDBC9; --tinte:#22221C; --tinte-2:#63635A; --tinte-3:#9A9A8E;
+  --terra:#D4784E; --dunkel:#1D1D19;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
+  background:var(--grund);color:var(--tinte);font-family:var(--sans);height:100%;overflow:hidden;
+  position:relative;display:flex}
+.sg *{font-family:inherit}
+.sg .kap{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--tinte-2)}
+
+/* ── linke Werkzeugseite ── */
+.sg .werkzeug{width:var(--ww,470px);flex:none;padding:var(--wp,40px);position:relative;z-index:2;
+  display:flex;flex-direction:column;justify-content:center;gap:var(--wg,34px)}
+.sg .schieberfeld{display:flex;flex-direction:column;align-items:center;gap:12px}
+.sg .schieber{width:34px;height:190px;position:relative;cursor:pointer;touch-action:none}
+.sg .schieber .stange{position:absolute;left:50%;top:0;bottom:0;width:2px;margin-left:-1px;
+  background:var(--tinte)}
+.sg .schieber .griff{position:absolute;left:0;right:0;height:26px;border-radius:4px;margin-top:-13px;
+  background:linear-gradient(180deg,#F2F2EC,#B9B9AE);box-shadow:0 3px 7px rgba(34,34,28,.32),
+    inset 0 1px 0 rgba(255,255,255,.9);transition:top .12s}
+.sg .schieber .griff::after{content:'';position:absolute;left:4px;right:4px;top:50%;height:1px;
+  background:rgba(34,34,28,.35)}
+.sg .fenster{border-radius:5px;padding:10px 14px;width:96px;
+  background:linear-gradient(180deg,rgba(255,255,255,.42),rgba(255,255,255,.16));
+  box-shadow:inset 0 0 0 1px rgba(34,34,28,.16),inset 0 1px 0 rgba(255,255,255,.5)}
+.sg .fenster .z{font-family:var(--mono);font-size:15px;color:var(--tinte-3);text-align:center;
+  line-height:1.7;font-variant-numeric:tabular-nums;cursor:pointer}
+.sg .fenster .z.an{color:var(--terra);font-weight:700}
+/* die Zeilen trennen Haarlinien, nicht Farbe — die Anzeige soll Teil der
+   Frontplatte bleiben und nicht wie ein aufgeklebtes Display wirken */
+.sg .fenster.breit .z + .z{border-top:1px solid rgba(34,34,28,.10)}
+
+/* ── Werkzeugseite: eine senkrechte Achse, daneben die Anzeige ──
+   Auf der Achse steht der Lautstärkeregler über die volle Höhe und darunter,
+   in derselben Flucht, der Schalter zur Bibliothek. Die Titelanzeige daneben
+   ist so hoch wie ihr Inhalt — ein Fenster, das mitwächst, kein Schacht. */
+.sg .w1{flex-direction:row;align-items:stretch;gap:var(--w1g,46px)}
+.sg .langfeld{display:flex;flex-direction:column;align-items:center;gap:12px;flex:none;width:96px}
+.sg .schieber.lang{height:auto;flex:1;width:40px}
+.sg .langfeld .schalter{margin-top:10px}
+.sg .anzeigefeld{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:12px}
+.sg .fenster.breit{width:100%;flex:none;padding:14px 16px;display:flex;flex-direction:column;gap:2px}
+.sg .fenster.breit .z{display:flex;align-items:baseline;gap:12px;text-align:left;padding:4px 6px;
+  border-radius:3px;white-space:nowrap;overflow:hidden}
+.sg .fenster.breit .z b{font-weight:400;color:var(--tinte-3);font-variant-numeric:tabular-nums}
+.sg .fenster.breit .z span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:13.5px}
+.sg .fenster.breit .z .d{flex:none;font-size:11.5px;color:var(--tinte-3);font-variant-numeric:tabular-nums}
+.sg .fenster.breit .z.an{background:rgba(212,120,78,.14);box-shadow:inset 2px 0 0 var(--terra)}
+.sg .fenster.breit .z.an b,.sg .fenster.breit .z.an span{color:var(--terra)}
+.sg .schalter{width:var(--sd,84px);height:var(--sd,84px);border-radius:50%;flex:none;cursor:pointer;
+  background:#F6F6F0;border:1.5px solid var(--tinte);display:grid;place-items:center;
+  box-shadow:0 4px 10px rgba(34,34,28,.18)}
+.sg .schalter i{width:24px;height:24px;border-radius:50%;background:rgba(34,34,28,.16);display:block;
+  transition:background .18s,box-shadow .18s}
+.sg .schalter.an i{background:var(--terra);box-shadow:0 0 14px rgba(212,120,78,.75)}
+
+/* Bibliothek als Blende über dem ganzen Gerät — Liste statt Plattenteller:
+   ein Album ist eine Zeile, das Bild schrumpft auf den Aufkleber. So passen
+   zwölf Alben auf die Fläche, auf der vorher acht Scheiben lagen. */
+.sg .bib{position:absolute;inset:0;z-index:50;background:rgba(228,228,213,.97);padding:34px 44px;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.sg .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.sg .bib .bkopf{display:flex;align-items:center;gap:26px;
+  border-bottom:1.5px solid var(--tinte);padding-bottom:16px;margin-bottom:16px}
+.sg .bib h2{font-size:26px;font-weight:800;letter-spacing:-.02em;flex:none}
+.sg .bib .suchfeld{flex:1;min-width:0;display:flex;align-items:center;gap:12px;background:#F6F6F0;
+  border-radius:4px;padding:0 16px;height:48px;box-shadow:inset 0 0 0 1px rgba(34,34,28,.22)}
+.sg .bib .suchfeld svg{color:var(--tinte-3);flex:none}
+.sg .bib .suchfeld input{flex:1;min-width:0;height:100%;font-size:16px;color:var(--tinte);
+  background:none;border:none;outline:none}
+.sg .bib .suchfeld input::placeholder{color:var(--tinte-3)}
+.sg .bib .bliste{flex:1;min-height:0;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;
+  gap:2px 30px;align-content:start}
+.sg .bib .bz{display:flex;align-items:center;gap:14px;padding:9px 8px;border-radius:4px;cursor:pointer;
+  border-bottom:1px solid rgba(34,34,28,.10)}
+.sg .bib .bz:hover{background:rgba(34,34,28,.05)}
+.sg .bib .bz .pl{width:34px;height:34px;border-radius:50%;flex:none;display:grid;place-items:center;
+  background:repeating-radial-gradient(circle at 50% 50%,#161612 0 1.2px,#22221D 1.2px 2.4px)}
+.sg .bib .bz .pl i{width:46%;height:46%;border-radius:50%;background:var(--terra);display:grid;
+  place-items:center;color:#2A1409;font-size:9px;font-weight:800}
+.sg .bib .bz .m{flex:1;min-width:0}
+.sg .bib .bz .m>span{display:block}
+.sg .bib .bz .t{font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.sg .bib .bz .s{font-size:12px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.sg .bib .bz .n{font-size:11.5px;color:var(--tinte-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.sg .bib .bz.an .t{color:var(--terra)}
+.sg .bib .bfuss{flex:none;padding-top:14px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--tinte-3)}
+@media (prefers-reduced-motion:reduce){.sg .bib{transition:none}}
+
+/* ── rechte Seite: Platte ── */
+.sg .quelle{flex:1;min-width:0;position:relative;z-index:2;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:24px 30px}
+.sg .teller{position:relative;width:var(--td,470px);height:var(--td,470px);border-radius:50%;
+  background:
+    repeating-radial-gradient(circle at 50% 50%,#161612 0 1.5px,#22221D 1.5px 3px),
+    radial-gradient(circle at 30% 24%,rgba(255,255,255,.10),transparent 46%);
+  box-shadow:0 20px 44px rgba(34,34,28,.30);cursor:pointer;touch-action:none;
+  animation:sgdreh 4.8s linear infinite}
+.sg .teller.halt{animation-play-state:paused}
+@keyframes sgdreh{to{transform:rotate(360deg)}}
+.sg .teller .label{position:absolute;inset:31%;border-radius:50%;background:var(--terra);
+  display:grid;place-items:center;text-align:center;padding:12%;color:#2A1409;
+  box-shadow:0 0 0 1px rgba(0,0,0,.25)}
+.sg .teller .label b{font-size:calc(var(--td,470px) / 22);font-weight:700;letter-spacing:-.01em;
+  display:block;transform:rotate(-24deg)}
+.sg .teller .label span{font-family:var(--mono);font-size:9px;letter-spacing:.08em;opacity:.75;
+  display:block;margin-top:6px;transform:rotate(-24deg)}
+.sg .teller .dorn{position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;
+  border-radius:50%;background:#C9C9BC;box-shadow:0 0 0 1px rgba(0,0,0,.4);z-index:3}
+.sg .arm{position:absolute;right:var(--arx,-4%);top:var(--ary,-6%);width:24px;height:var(--al,330px);
+  transform-origin:50% 26px;transition:transform .5s cubic-bezier(.4,0,.2,1);pointer-events:none}
+.sg .arm .rohr{position:absolute;left:7px;right:7px;top:26px;bottom:40px;border-radius:6px;
+  background:linear-gradient(90deg,#D8D8D0,#FBFBF6 45%,#CFCFC6);
+  box-shadow:0 3px 8px rgba(34,34,28,.3)}
+.sg .arm .lager{position:absolute;left:50%;top:0;width:52px;height:52px;margin-left:-26px;
+  border-radius:50%;background:radial-gradient(circle at 34% 28%,#FFF,#DCDCD4 60%,#B4B4AA);
+  box-shadow:0 4px 12px rgba(34,34,28,.28)}
+.sg .arm .kopf{position:absolute;left:50%;bottom:0;width:30px;height:46px;margin-left:-15px;
+  border-radius:5px;background:linear-gradient(150deg,#FBFBF6,#C6C6BC);
+  box-shadow:0 3px 8px rgba(34,34,28,.3);transform:rotate(-18deg)}
+.sg .plattenfeld{position:relative;flex:none}
+
+.sg .textzeile{margin-top:var(--tz,26px);text-align:center;max-width:520px}
+.sg .textzeile h1{font-size:var(--tg,24px);font-weight:700;letter-spacing:-.01em;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.sg .textzeile .ar{margin-top:5px;font-size:14px;color:var(--tinte-2)}
+.sg .transport{display:flex;gap:20px;align-items:center;justify-content:center;margin-top:20px}
+.sg .transport button{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--tinte);
+  display:grid;place-items:center;color:var(--tinte)}
+.sg .transport button.pp{background:var(--tinte);color:var(--grund);width:56px;height:56px}
+.sg .band{margin-top:20px;width:var(--bw,420px);height:22px;position:relative;display:flex;
+  align-items:center;cursor:pointer;touch-action:none}
+.sg .band .schiene{position:absolute;left:0;right:0;height:2px;background:rgba(34,34,28,.22)}
+.sg .band .voll{position:absolute;left:0;height:2px;background:var(--terra)}
+.sg .band .griff{position:absolute;width:12px;height:12px;border-radius:50%;background:var(--terra);
+  margin-left:-6px;transition:left .18s linear}
+.sg .zeiten{display:flex;justify-content:space-between;width:var(--bw,420px);font-family:var(--mono);
+  font-size:11px;color:var(--tinte-3);font-variant-numeric:tabular-nums;margin-top:2px}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 12</div>
+      <h1>Studiogerät</h1>
+      <p class="lede">Links das Werkzeug, rechts der Klang: Schieber und Drehknöpfe auf Salbeigrün,
+      daneben die Platte mit terracottafarbenem Aufkleber. Der Reiz liegt darin, dass <b>Regler hier groß
+      sein dürfen</b> — sie sind das Motiv, nicht das notwendige Übel am Rand.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <img src="../../mckups_player/Bildschirmfoto%202026-08-13%20um%2011.25.10.png" alt="Vorlage">
+      <figcaption>Vorlage · 11.25.10</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Pult</h2><span class="marke geraet">PC · 1440 × 900</span></div>
+    <p class="etext">Die Aufteilung der Vorlage, aber nur mit dem, was die App wirklich kann: Tiefen,
+    Höhen und Balance sind weg — sie wären Attrappen (siehe unten). Übrig bleiben zwei Dinge, und die
+    dürfen dafür groß sein. Links <b>eine einzige senkrechte Achse</b>: der Lautstärkeregler über die
+    volle Höhe, darunter in derselben Flucht der Schalter zur Bibliothek. Rechts daneben die
+    <b>Titelanzeige, die mit der Titelzahl wächst</b> — vier Titel sind ein kleines Fenster, zwölf ein
+    großes, statt eines halbleeren Schachts. Auch die blasse Hintergrundschrift ist gestrichen: auf
+    einer Frontplatte steht kein Wasserzeichen.
+    <span class="probier"><b>Ausprobieren:</b> den langen Schieber ziehen, in der Anzeige einen Titel
+    wählen, den Schalter drücken — die Lampe geht an, die Bibliothek legt sich darüber, das Suchfeld
+    hat den Fokus. „fuge" tippen findet Bach über einen Titelnamen.</span></p>
+    <div class="buehne">
+      <div class="rahmen pc">
+        <div class="schirm">
+          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
+          <div class="flaeche"><div class="sg" id="v1"></div></div>
+        </div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Ein Regler über die volle Höhe — <b>trifft man ohne zu zielen</b></dd></div>
+      <div><dt>Ehrlichkeit</dt><dd>Kein Regler, der nichts regelt</dd></div>
+      <div><dt>Sammlung</dt><dd>Hinter dem Schalter, als Blende über dem Gerät</dd></div>
+      <div><dt>Anzeige</dt><dd>Nummer und Name; <b>Höhe = Titelzahl</b></dd></div>
+    </dl>
+  </section>
+
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Tiefen und Höhen wären echte Arbeit</b> — deshalb stehen sie nicht mehr da. Dafür bräuchte es die Web Audio API: <code>MediaElementSource</code> plus zwei
+      <code>BiquadFilter</code>. Das ist machbar, verändert aber die Wiedergabe von Grund auf — und iOS
+      spielt dann nur noch nach einer Nutzergeste. Solange die App das nicht tut, hat die Frontplatte
+      keine Knöpfe dafür.</span></li>
+      <li><span><b>Balance wäre billig</b> (ein <code>StereoPannerNode</code>) und ist trotzdem
+      gestrichen: Wer verstellt am Musikschrank die Balance? Ein Regler, den niemand anfasst, kostet
+      trotzdem Platz und Aufmerksamkeit.</span></li>
+      <li><span><b>Die Titelanzeige wächst mit dem Album.</b> Kein <code>flex:1</code>, keine feste
+      Höhe: Das Fenster ist so hoch wie seine Zeilen und steht mittig auf der Achse. Ab etwa fünfzehn
+      Titeln stößt es an den Rand — dann muss es scrollen <em>und</em> die laufende Zeile in der Mitte
+      halten, sonst verliert man den Bezug.</span></li>
+      <li><span><b>Die Bibliothek ist eine Liste, kein Plattenregal.</b> Acht Cover als Scheiben füllten
+      die Fläche und zeigten acht Alben; als Zeile mit Aufkleber passen zwei Spalten und dreimal so
+      viele. Die Suche filtert über denselben Blob wie <code>index.html</code> — Album, Interpret
+      <em>und</em> Titelnamen, ein <code>includes()</code> je Album.</span></li>
+      <li><span><b>Die blasse Hintergrundschrift der Vorlage ist gestrichen.</b> Sie wäre Text, kein
+      Bild — ein <code>&lt;div&gt;</code> mit 4,5 % Deckkraft und <code>pointer-events:none</code>,
+      sonst fängt sie Klicks ab, die den Reglern gelten. Eine Frontplatte trägt Beschriftung, kein
+      Wasserzeichen.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für pc.html</span><span>Blatt 12 · Studiogerät</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+const d1 = new Deck('sat', {qi:3, pos:110, speed:7});
+
+/* Lautstärke über die volle Höhe, darunter in derselben Flucht der
+   Schalter zur Bibliothek; daneben die Titelanzeige. Keine Klangregler,
+   keine Balance — beides regelt die App nicht. */
+const werkzeug1HTML = `
+  <div class="werkzeug w1">
+    <div class="langfeld">
+      <div class="schieber lang" data-vol><span class="stange"></span>
+        <span class="griff" data-volgriff></span></div>
+      <span class="kap">Lautstärke</span>
+      <button class="schalter" data-bib><i></i></button>
+      <span class="kap">Bibliothek</span>
+    </div>
+    <div class="anzeigefeld">
+      <div class="fenster breit" data-fenster></div>
+      <span class="kap">Titel</span>
+    </div>
+  </div>`;
+
+const quelleHTML = `
+  <div class="quelle">
+    <div class="plattenfeld">
+      <div class="teller" data-teller>
+        <div class="label"><div><b data-lab></b><span data-lab2></span></div></div>
+        <span class="dorn"></span>
+      </div>
+      <div class="arm" data-arm><span class="lager"></span><span class="rohr"></span><span class="kopf"></span></div>
+    </div>
+    <div class="textzeile"><h1 data-titel></h1><div class="ar" data-ar></div></div>
+    <div class="band" data-band>
+      <span class="schiene"></span><span class="voll" data-voll></span><span class="griff" data-griff></span>
+    </div>
+    <div class="zeiten"><span data-jetzt></span><span data-ende></span></div>
+    <div class="transport">
+      <button data-prev>${I.prev(18)}</button>
+      <button class="pp" data-pp>${I.pause(20)}</button>
+      <button data-next>${I.next(18)}</button>
+    </div>
+  </div>`;
+
+document.getElementById('v1').innerHTML =
+  werkzeug1HTML + quelleHTML +
+  `<div class="bib" data-bib-blende>
+     <div class="bkopf">
+       <h2>Bibliothek</h2>
+       <label class="suchfeld">${I.search(19)}
+         <input type="search" placeholder="Album, Interpret oder Titel suchen …" data-suche>
+       </label>
+       <button class="schalter" data-bib-zu style="--sd:56px"><i></i></button>
+     </div>
+     <div class="bliste" data-bibliothek></div>
+     <div class="bfuss" data-btreffer></div>
+   </div>`;
+
+function verdrahte(wurzel, deck, stil){
+  const $  = s => wurzel.querySelector(s);
+  const $$ = s => [...wurzel.querySelectorAll(s)];
+  Object.entries(stil).forEach(([k,v]) => wurzel.style.setProperty(k, v));
+
+  $('[data-pp]').onclick   = () => deck.toggle();
+  $('[data-next]').onclick = () => deck.next();
+  $('[data-prev]').onclick = () => deck.prev();
+  bindDrag($('[data-band]'), f => deck.seek(f));
+
+  /* Schieber: oben ist laut */
+  const setzeSchieber = (griff, w) => griff.style.top = ((1-w)*100).toFixed(1) + '%';
+  bindDrag($('[data-vol]'), f => deck.setVol(1-f), {achse:'y'});
+
+  /* Schalter: die Bibliothek legt sich über das Gerät */
+  const blende = $('[data-bib-blende]');
+  if (blende){
+    const schalter = $('[data-bib]');
+    const zeige = auf => { blende.classList.toggle('auf', auf); schalter.classList.toggle('an', auf); };
+    schalter.onclick        = () => zeige(!blende.classList.contains('auf'));
+    $('[data-bib-zu]').onclick = () => zeige(false);
+    const liste = $('[data-bibliothek]'), feld = $('[data-suche]');
+    const zeichneListe = () => {
+      const treffer = suche(feld.value);
+      liste.innerHTML = treffer.map(a => `
+        <div class="bz" data-alb="${a.id}">
+          <span class="pl"><i>${ini(a)}</i></span>
+          <span class="m"><span class="t">${esc(a.t)}</span>
+            <span class="s">${esc(a.ar)} · ${a.y}</span></span>
+          <span class="n">${a.tr.length} · ${fmtLang(albDur(a))}</span>
+        </div>`).join('') ||
+        '<div class="bz" style="border:none;cursor:default"><span class="s">Nichts gefunden.</span></div>';
+      $('[data-btreffer]').textContent = feld.value.trim()
+        ? `${treffer.length} von ${ALBUMS.length} Alben` : `${ALBUMS.length} Alben`;
+      [...liste.children].forEach(el => el.dataset.alb && (el.onclick = () => {
+        const a = ALBUMS.find(x => x.id === el.dataset.alb);
+        deck.queue = a.tr.map((_,i) => `${a.id}-${i}`);
+        deck.qi = 0; deck.pos = 0; deck.playing = true; deck.render();
+        zeige(false);
+      }));
+      markiereBib();
+    };
+    feld.oninput = zeichneListe;
+    schalter.addEventListener('click', () => {
+      if (blende.classList.contains('auf')) setTimeout(() => feld.focus(), 60);
+    });
+    zeichneListe();
+  }
+
+  const fenster = $('[data-fenster]');
+  function markiereBib(){
+    if (!blende) return;
+    [...$('[data-bibliothek]').children]
+      .forEach(el => el.classList.toggle('an', el.dataset.alb === deck.album.id));
+  }
+  let letztesAlbum = null, letzter = null;
+  deck.onRender = d => {
+    const t = d.track, a = d.album;
+    if (letztesAlbum !== a.id){
+      letztesAlbum = a.id;
+      fenster.innerHTML = d.queue.map((id,i) =>
+        `<div class="z" data-q="${i}"><b>${String(i+1).padStart(2,'0')}</b>
+           <span>${esc(TRACKS[id].t)}</span>
+           <span class="d">${fmt(TRACKS[id].d)}</span></div>`).join('');
+      [...fenster.children].forEach(el => el.onclick = () => d.jump(+el.dataset.q));
+      $('[data-lab]').textContent  = a.t;
+      $('[data-lab2]').textContent = a.ar + ' · ' + a.y;
+      markiereBib();
+
+    }
+    [...fenster.children].forEach((el,i) => el.classList.toggle('an', i === d.qi));
+    if (letzter !== t.id){
+      letzter = t.id;
+      $('[data-titel]').textContent = t.t;
+      $('[data-ar]').textContent = a.ar + ' — ' + a.t;
+    }
+    const f = d.frac;
+    $('[data-voll]').style.width = (f*100).toFixed(2) + '%';
+    $('[data-griff]').style.left = (f*100).toFixed(2) + '%';
+    $('[data-jetzt]').textContent = fmt(d.pos);
+    $('[data-ende]').textContent  = fmt(d.dur);
+    $('[data-pp]').innerHTML = d.playing ? I.pause(20) : I.play(20);
+    $('[data-teller]').classList.toggle('halt', !d.playing);
+    $('[data-arm]').style.transform = `rotate(${(28 + 16*f).toFixed(1)}deg)`;
+    setzeSchieber($('[data-volgriff]'), d.vol);
+  };
+  deck.render();
+}
+verdrahte(document.getElementById('v1'), d1,
+  {'--td':'400px','--al':'300px','--bw':'400px','--ww':'620px','--w1g':'40px','--wp':'44px 46px'});
+})();
+</script>

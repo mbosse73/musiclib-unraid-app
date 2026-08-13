@@ -1,0 +1,374 @@
+<title>11 · Rack</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 11 — Vorlage: ein Gerät aus gebürstetem Metall im Dunkeln. Oben
+   leuchtende Bildflächen mit Covern, unten ein Bedienteil mit großem
+   Metallring und orangen Hebeln.
+   Genommen: der Ring als Rad — drehen heißt spulen — und die Cover als
+   Leuchtflächen statt als Kacheln. Orange ist die einzige Farbe und markiert
+   nur, was man anfassen kann.
+   ══════════════════════════════════════════════════════════════════════════ */
+.rk{
+  --nacht:#0C0C0E; --nacht-2:#141417; --metall:#8E9095;
+  --hell:#F0F1F3; --hell-2:#9DA0A8; --hell-3:#61646C;
+  --orange:#E8722C; --kante:rgba(255,255,255,.16);
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
+  background:radial-gradient(80% 60% at 50% 0%,#1B1B1F,var(--nacht) 70%);
+  color:var(--hell);font-family:var(--sans);height:100%;overflow:hidden;
+  display:flex;flex-direction:column;padding:var(--pad,34px);gap:var(--gap,30px);position:relative}
+.rk *{font-family:inherit}
+.rk .kap{font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--hell-3)}
+.rk .metallflaeche{
+  background:
+    repeating-linear-gradient(92deg,rgba(255,255,255,.05) 0 1px,rgba(0,0,0,.05) 1px 3px),
+    linear-gradient(160deg,#3A3B40,#232428 42%,#42434A 62%,#1D1E22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(0,0,0,.6),
+    0 18px 40px rgba(0,0,0,.55)}
+
+/* ── obere Reihe: Cover als Leuchtflächen ── */
+.rk .reihe{flex:none;height:var(--rh,300px);border-radius:8px;padding:12px;display:flex;gap:12px}
+.rk .schirmchen{flex:1;min-width:0;border-radius:4px;position:relative;overflow:hidden;cursor:pointer;
+  background:#0A0A0C;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)}
+.rk .schirmchen .bild{position:absolute;inset:0;display:grid;place-items:center;color:#fff;
+  font-size:56px;font-weight:600;filter:saturate(.85) brightness(.9)}
+.rk .schirmchen .glas{position:absolute;inset:0;
+  background:linear-gradient(118deg,rgba(255,255,255,.18) 0 22%,transparent 46%)}
+.rk .schirmchen .unter{position:absolute;left:0;right:0;bottom:0;padding:14px 16px;
+  background:linear-gradient(180deg,transparent,rgba(0,0,0,.82));display:flex;
+  justify-content:space-between;align-items:flex-end;gap:12px}
+.rk .schirmchen .t{font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.rk .schirmchen .s{font-size:11.5px;color:var(--hell-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.rk .schirmchen.an{box-shadow:inset 0 0 0 2px var(--orange)}
+.rk .schirmchen.an .bild{filter:none}
+.rk .schirmchen .laeuft{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--orange);
+  white-space:nowrap;opacity:0}
+.rk .schirmchen.an .laeuft{opacity:1}
+
+/* ── Bedienteil ── */
+.rk .pult{flex:1;min-height:0;border-radius:8px;display:flex;align-items:center;gap:var(--pg,40px);
+  padding:0 var(--pp,40px)}
+.rk .anzeige{flex:1;min-width:0}
+.rk .anzeige .titel{font-size:var(--tg,26px);font-weight:600;letter-spacing:-.01em;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.rk .anzeige .unter2{margin-top:6px;font-size:13.5px;color:var(--hell-2);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.rk .anzeige .uhr{margin-top:16px;font-family:var(--mono);font-size:12px;letter-spacing:.12em;
+  color:var(--orange);font-variant-numeric:tabular-nums}
+.rk .anzeige .balken{margin-top:8px;height:4px;border-radius:2px;background:rgba(255,255,255,.12);
+  position:relative;overflow:hidden}
+.rk .anzeige .balken i{position:absolute;left:0;top:0;bottom:0;background:var(--orange);border-radius:2px}
+
+/* Rad */
+.rk .rad{width:var(--rd,190px);height:var(--rd,190px);flex:none;border-radius:50%;position:relative;
+  cursor:grab;touch-action:none;
+  background:
+    conic-gradient(from 0deg,#5A5C63,#2A2B30 12%,#6E7076 26%,#26272B 42%,#5A5C63 58%,#232428 74%,
+      #63656B 88%,#5A5C63),
+    #3A3B40;
+  box-shadow:0 0 0 1px rgba(255,255,255,.14),0 14px 30px rgba(0,0,0,.6)}
+.rk .rad:active{cursor:grabbing}
+.rk .rad::after{content:'';position:absolute;inset:24%;border-radius:50%;background:var(--nacht);
+  box-shadow:inset 0 2px 10px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.10)}
+.rk .rad .kerbe{position:absolute;left:50%;top:6px;width:4px;height:16px;margin-left:-2px;border-radius:2px;
+  background:var(--hell);transform-origin:50% calc(var(--rd,190px) / 2 - 6px)}
+.rk .rad .mitte{position:absolute;inset:0;display:grid;place-items:center;z-index:2;color:var(--hell-2);
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;pointer-events:none}
+.rk .radbeschriftung{display:flex;flex-direction:column;align-items:center;gap:10px;flex:none}
+.rk .radbeschriftung .pfeile{display:flex;gap:16px;color:var(--hell-2)}
+
+/* Hebel */
+.rk .hebel{flex:none;display:flex;flex-direction:column;gap:14px}
+.rk .hebelbahn{display:flex;align-items:center;gap:12px}
+.rk .hebelbahn .kap{width:34px;text-align:right}
+.rk .schiene{width:var(--hw,150px);height:26px;border-radius:4px;position:relative;cursor:pointer;
+  touch-action:none;background:linear-gradient(180deg,#141416,#1E1F22);
+  box-shadow:inset 0 1px 4px rgba(0,0,0,.8),inset 0 0 0 1px rgba(255,255,255,.07)}
+.rk .schieber{position:absolute;top:-4px;width:22px;height:34px;border-radius:3px;margin-left:-11px;
+  background:linear-gradient(180deg,#F09053,var(--orange));box-shadow:0 3px 8px rgba(0,0,0,.6),
+    inset 0 1px 0 rgba(255,255,255,.4);transition:left .12s}
+.rk .quellen{display:flex;flex-direction:column;gap:9px}
+.rk .quelle{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:10px;
+  letter-spacing:.14em;color:var(--hell-3);cursor:pointer}
+.rk .quelle i{width:16px;height:2px;background:var(--hell-3);border-radius:1px}
+.rk .quelle.an{color:var(--orange)}
+.rk .quelle.an i{background:var(--orange);width:26px}
+
+/* Transport */
+.rk .transport{display:flex;gap:12px;align-items:center;flex:none}
+.rk .transport button{width:var(--tb,50px);height:var(--tb,50px);border-radius:4px;color:var(--hell-2);
+  display:grid;place-items:center;background:linear-gradient(180deg,#333438,#212226);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 4px 10px rgba(0,0,0,.5)}
+.rk .transport button.pp{color:var(--orange)}
+.rk .transport button.an{color:var(--orange);background:linear-gradient(180deg,#212226,#333438)}
+
+/* ── Bibliothek: die Klappe im Gerät ── */
+.rk .bib{position:absolute;inset:0;z-index:60;padding:34px 40px;display:flex;flex-direction:column;
+  background:rgba(10,10,13,.94);backdrop-filter:blur(4px);
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.rk .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.rk .bib .bkopf{display:flex;align-items:center;gap:24px;margin-bottom:20px}
+.rk .bib h2{font-size:22px;font-weight:600;letter-spacing:-.01em;flex:none}
+.rk .bib .suchfeld{flex:1;min-width:0;display:flex;align-items:center;gap:10px;height:46px;padding:0 16px;
+  border-radius:4px;background:linear-gradient(180deg,#141416,#1E1F22);
+  box-shadow:inset 0 1px 4px rgba(0,0,0,.8),inset 0 0 0 1px rgba(255,255,255,.08)}
+.rk .bib .suchfeld svg{color:var(--hell-3);flex:none}
+.rk .bib .suchfeld input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:var(--hell);font-size:15px}
+.rk .bib .suchfeld input::placeholder{color:var(--hell-3)}
+.rk .bib .zu{width:46px;height:46px;border-radius:4px;flex:none;display:grid;place-items:center;
+  color:var(--hell-2);background:linear-gradient(180deg,#333438,#212226);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 4px 10px rgba(0,0,0,.5)}
+.rk .bib .bliste{flex:1;min-height:0;overflow:hidden;display:grid;
+  grid-template-columns:repeat(var(--bsp,3),1fr);gap:10px 14px;align-content:start}
+.rk .bib .bz{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:4px;cursor:pointer;
+  background:linear-gradient(160deg,#26272B,#1A1B1E);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 4px 10px rgba(0,0,0,.4)}
+.rk .bib .bz:hover{background:linear-gradient(160deg,#2E2F34,#202126)}
+.rk .bib .bz .pl{width:44px;height:44px;border-radius:3px;flex:none;display:grid;place-items:center;
+  color:#fff;font-size:16px;font-weight:600}
+.rk .bib .bz .m{flex:1;min-width:0}
+.rk .bib .bz .m>span{display:block}
+.rk .bib .bz .t{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk .bib .bz .s{font-size:11.5px;color:var(--hell-3);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.rk .bib .bz.an{box-shadow:inset 0 0 0 1.5px var(--orange)}
+.rk .bib .bz.an .t{color:var(--orange)}
+.rk .bib .bfuss{flex:none;padding-top:14px;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--hell-3)}
+@media (prefers-reduced-motion:reduce){.rk .bib{transition:none}}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 11</div>
+      <h1>Rack</h1>
+      <p class="lede">Ein Gerät, kein Fenster: gebürstetes Metall, ein Rad zum Spulen, ein oranger Hebel
+      für die Lautstärke. Die Cover sind keine Kacheln, sondern <b>Leuchtflächen im Rahmen</b> — nur das
+      laufende Album ist hell, die Nachbarn liegen im Halbdunkel.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <img src="../../mckups_player/Bildschirmfoto%202026-08-13%20um%2011.22.42.png" alt="Vorlage">
+      <figcaption>Vorlage · 11.22.42</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Bedienteil</h2><span class="marke geraet">PC · 1440 × 900</span></div>
+    <p class="etext">Oben drei Alben, unten das Pult. Das Rad ist der Griff, um den es geht: <b>drehen
+    spult</b>, eine Umdrehung ist ungefähr eine Minute — grob mit Schwung, fein mit kleinen Bewegungen,
+    genau wie an einem echten Laufwerk.
+    <span class="probier"><b>Ausprobieren:</b> das Rad im Kreis ziehen, den orangen Schieber
+    verschieben, oben ein Album anklicken.</span></p>
+    <div class="buehne">
+      <div class="rahmen pc">
+        <div class="schirm">
+          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
+          <div class="flaeche"><div class="rk" id="v1"></div></div>
+        </div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Spulen mit <b>Gefühl</b> statt mit Zielen</dd></div>
+      <div><dt>Schwäche</dt><dd>Drei Alben sichtbar — die Sammlung braucht eine zweite Ebene</dd></div>
+      <div><dt>Farbe</dt><dd>Orange nur an Bedienteilen, nie an Anzeigen</dd></div>
+      <div><dt>Aufwand</dt><dd>hoch — Metall ist viel CSS, das Rad ist Winkelrechnung</dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Konsole</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
+    <p class="etext">Auf dem iPad wird das Rad größer als am PC — es ist der einzige Griff, der eine
+    ganze Hand braucht. Dafür weicht die obere Reihe auf zwei Flächen: <b>was läuft und was als Nächstes
+    kommt</b>. Das ist ehrlicher als drei, denn mehr passt bei dieser Höhe nicht ohne Gedränge.
+    <span class="probier"><b>Ausprobieren:</b> am Rad drehen; die Kerbe zeigt, wie weit man gekommen
+    ist.</span></p>
+    <div class="buehne">
+      <div class="rahmen ipad-quer">
+        <div class="schirm"><div class="rk" id="v2"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Ein Griff für die ganze Hand, <b>ohne hinzusehen</b></dd></div>
+      <div><dt>Schwäche</dt><dd>Dunkel und metallisch — auf dem iPad ein Fingerabdruckfänger</dd></div>
+      <div><dt>Hochkant</dt><dd>Trägt nicht: das Gerät ist breit</dd></div>
+      <div><dt>Nähe zu index.html</dt><dd>gering — eigene Welt</dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Das Rad rechnet Winkeldifferenzen, keine Winkel.</b> Zwischen zwei Zeigerbewegungen
+      wird der Unterschied genommen und auf Sekunden umgerechnet; der Sprung von 359° auf 1° muss dabei
+      abgefangen werden, sonst spult es einmal quer durchs Stück.</span></li>
+      <li><span><b>Sechzig Sekunden je Umdrehung ist eine Wahl.</b> Bei einem 11-Minuten-Stück sind das
+      elf Umdrehungen — zu viel. Sinnvoll wäre eine Umdrehung = 5 % der Laufzeit, dann ist die Geste
+      unabhängig von der Länge.</span></li>
+      <li><span><b>Gebürstetes Metall kostet nichts</b> — zwei Verläufe übereinander, einer davon
+      <code>repeating-linear-gradient</code>. Ein Bild wäre größer als der gesamte Rest der
+      Seite.</span></li>
+      <li><span><b>Nur drei Cover heißt: <code>/api/cover</code> wird dreimal aufgerufen.</b> Das ist der
+      leichteste Entwurf hier, was Netzlast angeht — die Sammlung selbst liegt hinter einem eigenen
+      Bildschirm.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für pc.html / ipad.html</span><span>Blatt 11 · Rack</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+const d1 = new Deck('kob', {qi:2, pos:120, speed:8});
+const d2 = new Deck('koe', {qi:0, pos:200, speed:8});
+
+/* Auswurf öffnet die Bibliothek — dieselbe Taste wie der Transport daneben */
+const AUSWURF = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M12 5.4l7.4 9.2H4.6z"/><rect x="4.6" y="16.4" width="14.8" height="2.6" rx="1.1"/></svg>`;
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Bibliothek</h2>
+      <label class="suchfeld">${I.search(18)}
+        <input type="search" placeholder="Album, Interpret oder Titel suchen …" data-suche></label>
+      <button class="zu" data-bib-zu>${I.x(18)}</button>
+    </div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
+const reiheHTML = n => `
+  <div class="reihe metallflaeche" data-reihe style="--n:${n}"></div>`;
+
+const pultHTML = `
+  <div class="pult metallflaeche">
+    <div class="anzeige">
+      <div class="kap">Läuft</div>
+      <div class="titel" data-titel></div>
+      <div class="unter2" data-unter></div>
+      <div class="uhr"><span data-jetzt></span> · <span data-ende></span></div>
+      <div class="balken"><i data-balken></i></div>
+    </div>
+    <div class="radbeschriftung">
+      <div class="rad" data-rad>
+        <span class="kerbe" data-kerbe></span>
+        <span class="mitte">Spulen</span>
+      </div>
+      <div class="pfeile">${I.prev(16)} ${I.next(16)}</div>
+    </div>
+    <div class="hebel">
+      <div class="hebelbahn"><span class="kap">Vol</span>
+        <div class="schiene" data-vol><span class="schieber" data-volgriff></span></div></div>
+      <div class="quellen">
+        <div class="quelle an"><i></i> Album</div>
+        <div class="quelle"><i></i> Interpret</div>
+        <div class="quelle"><i></i> Zufall</div>
+      </div>
+    </div>
+    <div class="transport">
+      <button data-prev>${I.prev(18)}</button>
+      <button class="pp" data-pp>${I.pause(20)}</button>
+      <button data-next>${I.next(18)}</button>
+      <button data-bib title="Bibliothek">${AUSWURF}</button>
+    </div>
+  </div>`;
+
+document.getElementById('v1').innerHTML = reiheHTML(3) + pultHTML + bibHTML;
+document.getElementById('v2').innerHTML = reiheHTML(2) + pultHTML + bibHTML;
+
+function verdrahte(wurzel, deck, stil, anzahl){
+  const $  = s => wurzel.querySelector(s);
+  const $$ = s => [...wurzel.querySelectorAll(s)];
+  Object.entries(stil).forEach(([k,v]) => wurzel.style.setProperty(k, v));
+
+  $('[data-pp]').onclick = () => deck.toggle();
+  $$('[data-next]').forEach(b => b.onclick = () => deck.next());
+  $$('[data-prev]').forEach(b => b.onclick = () => deck.prev());
+  bindDrag($('[data-vol]'), f => deck.setVol(f));
+  $$('.quelle').forEach(q => q.onclick = () => {
+    $$('.quelle').forEach(x => x.classList.remove('an')); q.classList.add('an'); });
+
+  /* Rad: Winkeldifferenz zwischen zwei Zeigerpunkten, 60 s je Umdrehung */
+  const rad = $('[data-rad]');
+  let letzterWinkel = null;
+  const winkel = ev => {
+    const r = rad.getBoundingClientRect();
+    return Math.atan2(ev.clientY - (r.top + r.height/2), ev.clientX - (r.left + r.width/2)) * 180/Math.PI;
+  };
+  rad.addEventListener('pointerdown', ev => {
+    letzterWinkel = winkel(ev); rad.setPointerCapture(ev.pointerId); ev.preventDefault(); });
+  rad.addEventListener('pointermove', ev => {
+    if (letzterWinkel === null) return;
+    const w = winkel(ev);
+    let d = w - letzterWinkel;
+    if (d > 180) d -= 360; if (d < -180) d += 360;   // Sprung bei 360° abfangen
+    letzterWinkel = w;
+    deck.seekGlobal(deck.gpos + d/360 * 60);
+  });
+  const los = () => letzterWinkel = null;
+  rad.addEventListener('pointerup', los);
+  rad.addEventListener('pointercancel', los);
+
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="pl" style="background:${grad(a)}">${ini(a)}</span>
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)} · ${a.y} · ${fmtLang(albDur(a))}</span></span></div>`,
+    leer: '<div class="bz" style="box-shadow:none;background:none"><span class="s">Nichts gefunden.</span></div>',
+  });
+
+  function zeigeReihe(d){
+    const start = ALBUMS.findIndex(a => a.id === d.album.id);
+    const um = Array.from({length:anzahl}, (_,k) => ALBUMS[(start + k) % ALBUMS.length]);
+    $('[data-reihe]').innerHTML = um.map((a,k) => `
+      <div class="schirmchen${k===0?' an':''}" data-alb="${a.id}">
+        <div class="bild" style="background:${grad(a)}">${ini(a)}</div>
+        <div class="glas"></div>
+        <div class="unter"><div style="min-width:0">
+          <div class="t">${esc(a.t)}</div><div class="s">${esc(a.ar)} · ${a.y}</div></div>
+          <span class="laeuft">▶ läuft</span></div>
+      </div>`).join('');
+    $$('[data-alb]').forEach(el => el.onclick = () => {
+      const a = ALBUMS.find(x => x.id === el.dataset.alb);
+      d.queue = a.tr.map((_,i) => `${a.id}-${i}`);
+      d.qi = 0; d.pos = 0; d.playing = true; d.render();
+    });
+  }
+
+  let letztesAlbum = null, letzter = null;
+  deck.onRender = d => {
+    const t = d.track, a = d.album;
+    if (letztesAlbum !== a.id){ letztesAlbum = a.id; zeigeReihe(d); bib.markiere(); }
+    if (letzter !== t.id){
+      letzter = t.id;
+      $('[data-titel]').textContent = t.t;
+      $('[data-unter]').textContent =
+        `${a.ar} — ${a.t} · Titel ${d.qi+1}/${d.queue.length}`;
+    }
+    $('[data-jetzt]').textContent = fmt(d.pos);
+    $('[data-ende]').textContent  = '−' + fmt(d.rest);
+    $('[data-balken]').style.width = (d.frac*100).toFixed(2) + '%';
+    $('[data-pp]').innerHTML = d.playing ? I.pause(20) : I.play(20);
+    $('[data-volgriff]').style.left = (8 + d.vol*84) + '%';
+    $('[data-kerbe]').style.transform = `rotate(${(d.gpos/60*360 % 360).toFixed(1)}deg)`;
+  };
+  deck.render();
+}
+verdrahte(document.getElementById('v1'), d1,
+  {'--rh':'430px','--rd':'180px','--tg':'26px','--hw':'160px','--bsp':'3'}, 3);
+verdrahte(document.getElementById('v2'), d2,
+  {'--rh':'380px','--rd':'220px','--tg':'28px','--hw':'150px','--pad':'30px','--pg':'34px','--pp':'34px',
+   '--tb':'56px','--bsp':'2'}, 2);
+})();
+</script>

@@ -301,6 +301,19 @@ def test_mobile_page_is_served(client):
     assert 'name="apple-mobile-web-app-capable"' in r.text
 
 
+def test_player_page_is_served_at_both_addresses(client):
+    """Eine Datei, zwei Adressen — /ipad und /pc liefern dieselbe Seite."""
+    c, app, data = client
+    seiten = []
+    for pfad in ("/ipad", "/pc"):
+        r = c.get(pfad)
+        assert r.status_code == 200
+        assert "text/html" in r.headers["content-type"]
+        seiten.append(r.text)
+    assert seiten[0] == seiten[1]
+    assert "<title>Musiklib · Spieler</title>" in seiten[0]
+
+
 def test_stream_supports_range_requests(client):
     c, app, data = client
     track_id = next(iter(json.loads((data / "tracks.json").read_text())))

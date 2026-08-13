@@ -1,0 +1,401 @@
+<title>13 · Nussbaum &amp; Champagner</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 13 — Vorlage: Verstärker und Vorstufe in Nussbaumzargen,
+   champagnerfarbene Frontplatten, zwei beleuchtete Zeigerinstrumente,
+   gravierte Beschriftung.
+   Genommen: die Zeiger. Sie zeigen, dass Ton fließt — das ist die eine
+   Anzeige, die ein Spieler ohne Ton nicht fälschen darf und die mit Ton
+   nichts kostet.
+   ══════════════════════════════════════════════════════════════════════════ */
+.nc{
+  --holz-1:#5A2E1C; --holz-2:#3A1B0F; --front:#E6E0CE; --front-2:#D3CCB6;
+  --tinte:#2A241A; --tinte-2:#6B6250; --tinte-3:#9C947F;
+  --gravur:rgba(42,36,26,.55); --glas:#F0E4B8; --zeiger:#7A1E12; --gold:#8A6534;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+  --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
+  background:radial-gradient(80% 70% at 50% 20%,#241812,#150D09 75%);
+  color:var(--tinte);font-family:var(--sans);height:100%;overflow:hidden;position:relative;
+  display:flex;flex-direction:column;gap:var(--gap,26px);padding:var(--pad,30px);justify-content:center}
+.nc *{font-family:inherit}
+.nc .kap{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--tinte-2)}
+
+/* ── Gerät: Zarge + Frontplatte ── */
+.nc .geraet{border-radius:6px;padding:var(--zarge,14px);flex:none;
+  background:linear-gradient(150deg,var(--holz-1),var(--holz-2) 60%,#2A130A);
+  box-shadow:0 24px 50px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.14)}
+.nc .front{border-radius:3px;padding:var(--fp,22px) var(--fpx,30px);position:relative;
+  background:
+    repeating-linear-gradient(93deg,rgba(255,255,255,.35) 0 1px,rgba(140,130,105,.10) 1px 3px),
+    linear-gradient(178deg,#F0EBDB,var(--front) 40%,var(--front-2));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.5),inset 0 0 0 2px rgba(42,36,26,.18),
+    0 2px 6px rgba(0,0,0,.4)}
+.nc .marke{position:absolute;left:var(--fpx,30px);bottom:10px;font-family:var(--serif);font-size:15px;
+  letter-spacing:.06em;color:var(--gravur);text-shadow:0 1px 0 rgba(255,255,255,.6)}
+.nc .marke em{font-style:italic;font-size:19px;color:var(--gold)}
+.nc .typ{position:absolute;right:var(--fpx,30px);bottom:12px;font-family:var(--mono);font-size:9px;
+  letter-spacing:.14em;color:var(--tinte-3)}
+
+/* ── Zeigerinstrumente ── */
+.nc .messwerk{display:flex;gap:var(--mg,14px);justify-content:center;align-items:stretch}
+.nc .instrument{flex:1;max-width:var(--imax,320px);border-radius:3px;padding:10px 12px 6px;
+  background:linear-gradient(180deg,#F6EDC4,var(--glas) 60%,#E2D3A0);
+  box-shadow:inset 0 0 0 1px rgba(42,36,26,.4),inset 0 6px 14px rgba(180,150,70,.35),
+    0 2px 4px rgba(0,0,0,.3);position:relative}
+.nc .instrument svg{width:100%;height:var(--ih,92px);display:block}
+.nc .instrument .skalatext{position:absolute;left:0;right:0;bottom:6px;text-align:center;font-size:8px;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gravur)}
+.nc .instrument .kanal{position:absolute;left:10px;top:8px;font-family:var(--mono);font-size:8px;
+  letter-spacing:.1em;color:var(--gravur)}
+.nc .zwischen{width:34px;flex:none;border-radius:3px;background:linear-gradient(180deg,#241C12,#0E0A06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+
+/* ── Anzeigezeile ── */
+.nc .display{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:16px;
+  padding-top:14px;border-top:1px solid rgba(42,36,26,.18)}
+.nc .display .titel{font-size:var(--tg,19px);font-weight:600;letter-spacing:-.01em;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.nc .display .unter{font-size:12.5px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;margin-top:3px}
+.nc .display .uhr{font-family:var(--mono);font-size:12px;color:var(--tinte-2);white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+
+/* ── Bedienplatte ── */
+.nc .platte{display:flex;align-items:center;gap:var(--bg,32px)}
+.nc .drehknopf{width:var(--dk,96px);height:var(--dk,96px);border-radius:50%;position:relative;flex:none;
+  cursor:pointer;touch-action:none;
+  background:
+    conic-gradient(from 0deg,#EDE7D6,#C4BCA4 8%,#F2ECDC 16%,#C8C0A8 24%,#EDE7D6 32%,#C4BCA4 40%,
+      #F2ECDC 48%,#C8C0A8 56%,#EDE7D6 64%,#C4BCA4 72%,#F2ECDC 80%,#C8C0A8 88%,#EDE7D6),
+    #DDD6C2;
+  box-shadow:0 4px 10px rgba(0,0,0,.4),inset 0 0 0 1px rgba(255,255,255,.5)}
+.nc .drehknopf::after{content:'';position:absolute;inset:22%;border-radius:50%;
+  background:radial-gradient(circle at 36% 30%,#F6F2E6,#CFC7B0);
+  box-shadow:inset 0 0 0 1px rgba(42,36,26,.18)}
+.nc .drehknopf i{position:absolute;left:50%;top:9%;width:3px;height:26%;margin-left:-1.5px;
+  background:var(--tinte);border-radius:2px;transform-origin:50% calc(var(--dk,96px) * .41);z-index:2}
+.nc .knopffeld{display:flex;flex-direction:column;align-items:center;gap:8px}
+.nc .kippschalter{width:26px;height:52px;border-radius:3px;position:relative;flex:none;cursor:pointer;
+  background:linear-gradient(180deg,#CFC7B0,#B0A78E);box-shadow:inset 0 0 0 1px rgba(42,36,26,.3)}
+.nc .kippschalter i{position:absolute;left:50%;width:8px;height:22px;margin-left:-4px;border-radius:3px;
+  background:linear-gradient(180deg,#3A3227,#191510);transition:top .12s;top:4px}
+.nc .kippschalter.an i{top:26px}
+.nc .waehler{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.nc .wz{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--tinte-2);cursor:pointer;
+  padding:4px 8px;border-radius:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nc .wz i{width:8px;height:8px;border-radius:50%;flex:none;background:rgba(42,36,26,.22)}
+.nc .wz.an{color:var(--tinte);font-weight:600;background:rgba(42,36,26,.06)}
+.nc .wz.an i{background:var(--zeiger);box-shadow:0 0 6px rgba(122,30,18,.6)}
+.nc .tasten{display:flex;gap:10px;flex:none}
+.nc .tasten button{width:var(--tb,52px);height:var(--tb,52px);border-radius:3px;color:var(--tinte);
+  display:grid;place-items:center;background:linear-gradient(180deg,#EDE7D6,#C8C0A8);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 2px 4px rgba(0,0,0,.35)}
+.nc .tasten button:active{background:linear-gradient(180deg,#C8C0A8,#EDE7D6)}
+.nc .band{flex:1;min-width:120px;height:22px;position:relative;display:flex;align-items:center;
+  cursor:pointer;touch-action:none}
+.nc .band .schiene{position:absolute;left:0;right:0;height:4px;border-radius:2px;
+  background:rgba(42,36,26,.22);box-shadow:inset 0 1px 2px rgba(0,0,0,.3)}
+.nc .band .voll{position:absolute;left:0;height:4px;border-radius:2px;background:var(--zeiger)}
+.nc .band .griff{position:absolute;width:14px;height:20px;border-radius:2px;margin-left:-7px;
+  background:linear-gradient(180deg,#F2ECDC,#B0A78E);box-shadow:0 2px 4px rgba(0,0,0,.4);
+  transition:left .18s linear}
+.nc .tasten button.an{background:linear-gradient(180deg,#C8C0A8,#EDE7D6);color:var(--zeiger)}
+
+/* ── Bibliothek: eine Schublade in der Frontplatte ── */
+.nc .bib{position:absolute;inset:0;z-index:60;padding:30px 38px;display:flex;flex-direction:column;
+  background:linear-gradient(178deg,#F0EBDB,var(--front) 40%,var(--front-2));
+  box-shadow:inset 0 0 0 2px rgba(42,36,26,.18);
+  opacity:0;pointer-events:none;transform:translateY(12px);transition:opacity .22s,transform .22s}
+.nc .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.nc .bib .bkopf{display:flex;align-items:center;gap:24px;border-bottom:1px solid rgba(42,36,26,.28);
+  padding-bottom:14px;margin-bottom:14px}
+.nc .bib h2{font-family:var(--serif);font-size:24px;font-weight:400;letter-spacing:.02em;flex:none;
+  color:var(--gravur);text-shadow:0 1px 0 rgba(255,255,255,.6)}
+.nc .bib .suchfeld{flex:1;min-width:0;display:flex;align-items:center;gap:10px;height:44px;padding:0 14px;
+  border-radius:3px;background:rgba(42,36,26,.06);box-shadow:inset 0 1px 3px rgba(42,36,26,.25)}
+.nc .bib .suchfeld svg{color:var(--tinte-3);flex:none}
+.nc .bib .suchfeld input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:var(--tinte);font-size:15px}
+.nc .bib .suchfeld input::placeholder{color:var(--tinte-3)}
+.nc .bib .bliste{flex:1;min-height:0;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;
+  gap:0 28px;align-content:start}
+.nc .bib .bz{display:flex;align-items:center;gap:14px;padding:9px 6px;cursor:pointer;
+  border-bottom:1px solid rgba(42,36,26,.14)}
+.nc .bib .bz:hover{background:rgba(42,36,26,.05)}
+.nc .bib .bz .pl{width:12px;height:12px;border-radius:50%;flex:none;
+  box-shadow:inset 0 0 0 1px rgba(42,36,26,.35)}
+.nc .bib .bz .m{flex:1;min-width:0}
+.nc .bib .bz .m>span{display:block}
+.nc .bib .bz .t{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nc .bib .bz .s{font-size:11.5px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.nc .bib .bz .n{font-size:11px;color:var(--tinte-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.nc .bib .bz.an .t{color:var(--zeiger)}
+.nc .bib .bfuss{flex:none;padding-top:12px;font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--tinte-3)}
+@media (prefers-reduced-motion:reduce){.nc .bib{transition:none}}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 13</div>
+      <h1>Nussbaum <em>&amp;</em> Champagner</h1>
+      <p class="lede">Die einzige Vorlage, die kein Bildschirmentwurf ist, sondern ein Möbel: Holzzargen,
+      champagnerfarbene Frontplatten, beleuchtete Zeigerinstrumente. Übernommen sind <b>die Zeiger</b> —
+      die eine Anzeige, die zeigt, dass wirklich Ton fließt, und nicht nur, dass ein Knopf gedrückt
+      wurde.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <img src="../../mckups_player/Bildschirmfoto%202026-08-13%20um%2011.32.25.png" alt="Vorlage">
+      <figcaption>Vorlage · 11.32.25</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Turm</h2><span class="marke geraet">PC · 1440 × 900</span></div>
+    <p class="etext">Zwei Geräte übereinander wie im Regal: oben das Messwerk mit der Anzeigezeile, unten
+    die Bedienplatte mit Lautstärkeknopf, Kippschaltern und der Titelwahl. <b>Nichts überlappt, nichts
+    klappt auf</b> — ein Gerät ändert seine Form nicht, während man es bedient.
+    <span class="probier"><b>Ausprobieren:</b> am großen Knopf drehen, Kippschalter umlegen, rechts
+    einen Titel wählen. Die Zeiger schlagen nur aus, solange etwas läuft.</span></p>
+    <div class="buehne">
+      <div class="rahmen pc">
+        <div class="schirm">
+          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
+          <div class="flaeche"><div class="nc" id="v1"></div></div>
+        </div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Zeiger zeigen <b>Ton, nicht Zustand</b></dd></div>
+      <div><dt>Schwäche</dt><dd>Warm und schwer — passt nicht zu jeder Sammlung</dd></div>
+      <div><dt>Ehrlichkeit</dt><dd>Ohne echte Pegel wären die Zeiger eine Lüge — siehe unten</dd></div>
+      <div><dt>Aufwand</dt><dd>hoch — Holz, Glas, Zeiger, Gravur</dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Vollverstärker</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
+    <p class="etext">Ein Gerät statt zwei: Messwerk, Anzeige und Bedienung auf einer Frontplatte, dafür
+    größer. So sieht das iPad aus, wenn es auf dem Sideboard neben der Anlage steht —
+    <b>ein Gerät unter Geräten</b>.
+    <span class="probier"><b>Ausprobieren:</b> Pause drücken; die Zeiger fallen auf null zurück,
+    nicht sofort, sondern mit Nachlauf.</span></p>
+    <div class="buehne">
+      <div class="rahmen ipad-quer">
+        <div class="schirm"><div class="nc" id="v2"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Alles auf einer Platte, <b>nichts zu suchen</b></dd></div>
+      <div><dt>Schwäche</dt><dd>Titelwahl bleibt eine schmale Spalte</dd></div>
+      <div><dt>Hochkant</dt><dd>Trägt: Messwerk oben, Bedienung unten</dd></div>
+      <div><dt>Farbe</dt><dd>Champagner und ein Rot — <b>das Rot nur im Zeiger</b></dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Echte Zeiger brauchen die Web Audio API.</b> Ein <code>AnalyserNode</code> am
+      <code>&lt;audio&gt;</code>-Element liefert alle 100 ms einen Pegel; daraus wird der Winkel. Der
+      Preis: Der Ton läuft dann durch den Audio-Graphen — auf iOS erst nach einer Berührung, und
+      <code>crossOrigin</code> muss stimmen, sonst bleibt der Analyser stumm.</span></li>
+      <li><span><b>Ohne Analyser bleibt nur Zufall — und der ist ehrlicher als er aussieht.</b> Hier
+      läuft ein gedämpfter Zufallsgang, der bei Pause auf null zurückfällt. Er zeigt korrekt <em>ob</em>
+      etwas läuft, nur nicht <em>wie laut</em>. Wer das nicht will, lässt die Zeiger weg — eine
+      Anzeige, die nichts misst, ist schlimmer als keine.</span></li>
+      <li><span><b>Nachlauf ist Physik, nicht Effekt.</b> Ein echtes Zeigerinstrument schwingt; deshalb
+      folgt der Zeiger dem Zielwert mit etwa 25 % je Bild statt sofort. Ohne diese Trägheit zappelt
+      er und sieht digital aus.</span></li>
+      <li><span><b>Gravur ist zwei Schatten.</b> Dunkle Schrift plus ein heller Schatten nach unten
+      (<code>text-shadow:0 1px 0 rgba(255,255,255,.6)</code>) — das ist der ganze Trick, und er
+      funktioniert nur auf einer Fläche mit sichtbarer Struktur.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für pc.html / ipad.html</span><span>Blatt 13 · Nussbaum &amp; Champagner</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+const d1 = new Deck('koe', {qi:2, pos:180, speed:8});
+const d2 = new Deck('ohi', {qi:1, pos:60,  speed:8});
+
+/* Auswurf — dasselbe Zeichen wie am Kassettendeck, dieselbe Taste wie die
+   drei daneben: sie öffnet die Bibliothek in der Frontplatte. */
+const AUSWURF = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M12 5.4l7.4 9.2H4.6z"/><rect x="4.6" y="16.4" width="14.8" height="2.6" rx="1.1"/></svg>`;
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Bibliothek</h2>
+      <label class="suchfeld">${I.search(17)}
+        <input type="search" placeholder="Album, Interpret oder Titel suchen …" data-suche></label>
+      <button class="zu" data-bib-zu style="width:44px;height:44px;border-radius:3px;
+        background:linear-gradient(180deg,#EDE7D6,#C8C0A8);box-shadow:inset 0 1px 0 rgba(255,255,255,.8),
+        0 2px 4px rgba(0,0,0,.3);display:grid;place-items:center">${I.x(18)}</button>
+    </div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
+/* Zeigerinstrument: Skala als Bogen, Zeiger als Linie */
+const instrumentHTML = (kanal) => `
+  <div class="instrument">
+    <span class="kanal">${kanal}</span>
+    <svg viewBox="0 0 200 100">
+      <path d="M 24 88 A 88 88 0 0 1 176 88" fill="none" stroke="rgba(42,36,26,.45)" stroke-width="1.2"/>
+      <path d="M 130 33 A 88 88 0 0 1 176 88" fill="none" stroke="#7A1E12" stroke-width="2.4"/>
+      ${Array.from({length:11}, (_,i) => {
+        const w = Math.PI * (1 - i/10);
+        const x1 = 100 + Math.cos(w)*80,  y1 = 88 - Math.sin(w)*80;
+        const x2 = 100 + Math.cos(w)*88,  y2 = 88 - Math.sin(w)*88;
+        return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"
+          stroke="rgba(42,36,26,.5)" stroke-width="${i%5===0?1.6:.9}"/>`;
+      }).join('')}
+      <text x="34" y="80" font-size="8" fill="rgba(42,36,26,.6)">−20</text>
+      <text x="96" y="18" font-size="8" fill="rgba(42,36,26,.6)">0</text>
+      <text x="160" y="80" font-size="8" fill="rgba(42,36,26,.6)">+3</text>
+      <line class="nadel" x1="100" y1="88" x2="100" y2="14" stroke="#7A1E12" stroke-width="1.6"
+        stroke-linecap="round"/>
+      <circle cx="100" cy="88" r="5" fill="#2A241A"/>
+    </svg>
+    <span class="skalatext">VU · dB</span>
+  </div>`;
+
+const messwerkHTML = `
+  <div class="messwerk">
+    ${instrumentHTML('L')}<span class="zwischen"></span>${instrumentHTML('R')}
+  </div>
+  <div class="display">
+    <div style="min-width:0">
+      <div class="titel" data-titel></div>
+      <div class="unter" data-unter></div>
+    </div>
+    <div class="uhr"><span data-jetzt></span> / <span data-ende></span></div>
+  </div>`;
+
+const platteHTML = `
+  <div class="platte">
+    <div class="knopffeld">
+      <div class="drehknopf" data-vol><i data-volz></i></div>
+      <span class="kap">Lautstärke</span>
+    </div>
+    <div class="knopffeld">
+      <div class="kippschalter" data-shuffle><i></i></div><span class="kap">Zufall</span>
+    </div>
+    <div class="knopffeld">
+      <div class="kippschalter" data-repeat><i></i></div><span class="kap">Wiederholen</span>
+    </div>
+    <div style="flex:1;min-width:0">
+      <span class="kap">Titelwahl</span>
+      <div class="waehler" data-waehler style="margin-top:8px"></div>
+    </div>
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div class="band" data-band>
+        <span class="schiene"></span><span class="voll" data-voll></span><span class="griff" data-griff></span>
+      </div>
+      <div class="tasten">
+        <button data-prev>${I.prev(18)}</button>
+        <button data-pp>${I.pause(18)}</button>
+        <button data-next>${I.next(18)}</button>
+        <button data-bib title="Bibliothek">${AUSWURF}</button>
+      </div>
+    </div>
+  </div>`;
+
+document.getElementById('v1').innerHTML = bibHTML + `
+  <div class="geraet"><div class="front">${messwerkHTML}
+    <div class="marke">Musiklib <em>M-13</em></div><div class="typ">STEREO · 2 × 40 W</div>
+    <div style="height:22px"></div></div></div>
+  <div class="geraet"><div class="front">${platteHTML}
+    <div class="marke">Musiklib <em>V-13</em></div><div class="typ">VORSTUFE</div>
+    <div style="height:22px"></div></div></div>`;
+
+document.getElementById('v2').innerHTML = bibHTML + `
+  <div class="geraet"><div class="front">${messwerkHTML}
+    <div style="height:20px"></div>${platteHTML}
+    <div class="marke">Musiklib <em>M-13</em></div><div class="typ">VOLLVERSTÄRKER</div>
+    <div style="height:22px"></div></div></div>`;
+
+function verdrahte(wurzel, deck, stil){
+  const $  = s => wurzel.querySelector(s);
+  const $$ = s => [...wurzel.querySelectorAll(s)];
+  Object.entries(stil).forEach(([k,v]) => wurzel.style.setProperty(k, v));
+
+  $('[data-pp]').onclick   = () => deck.toggle();
+  $('[data-next]').onclick = () => deck.next();
+  $('[data-prev]').onclick = () => deck.prev();
+  $$('[data-shuffle],[data-repeat]').forEach(s => s.onclick = () => s.classList.toggle('an'));
+  bindDrag($('[data-band]'), f => deck.seek(f));
+  bindDrag($('[data-vol]'), f => deck.setVol(1-f), {achse:'y'});
+
+  /* Zeiger: gedämpfter Zufallsgang, fällt bei Pause zurück.
+     Mit echtem AnalyserNode käme hier der gemessene Pegel her. */
+  const nadeln = $$('.nadel');
+  const stand = nadeln.map(() => 0);
+  let ziel = nadeln.map(() => 0);
+  setInterval(() => {
+    nadeln.forEach((n,i) => {
+      if (deck.playing){
+        if (Math.random() < .4) ziel[i] = .32 + Math.random() * .58 * deck.vol + .1;
+      } else ziel[i] = 0;
+      stand[i] += (ziel[i] - stand[i]) * .25;                 // Trägheit
+      const w = -52 + clamp(stand[i],0,1) * 104;              // −52° … +52°
+      n.setAttribute('transform', `rotate(${w.toFixed(1)} 100 88)`);
+    });
+  }, 90);
+
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="pl" style="background:${grad(a)}"></span>
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)} · ${a.y}</span></span>
+        <span class="n">${a.tr.length} · ${fmtLang(albDur(a))}</span></div>`,
+    leer: '<div class="bz" style="border:none;cursor:default"><span class="s">Nichts gefunden.</span></div>',
+  });
+
+  const waehler = $('[data-waehler]');
+  let letztesAlbum = null, letzter = null;
+  deck.onRender = d => {
+    const t = d.track, a = d.album;
+    if (letztesAlbum !== a.id){
+      letztesAlbum = a.id;
+      waehler.innerHTML = d.queue.slice(0,4).map((id,i) =>
+        `<div class="wz" data-q="${i}"><i></i>${String(i+1).padStart(2,'0')} · ${esc(TRACKS[id].t)}</div>`).join('');
+      [...waehler.children].forEach(el => el.onclick = () => d.jump(+el.dataset.q));
+    }
+    [...waehler.children].forEach((el,i) => el.classList.toggle('an', i === d.qi));
+    if (letzter !== t.id){
+      letzter = t.id;
+      $('[data-titel]').textContent = t.t;
+      $('[data-unter]').textContent = a.ar + ' — ' + a.t + ' · ' + a.y;
+      bib.markiere();
+    }
+    $('[data-voll]').style.width  = (d.frac*100).toFixed(2) + '%';
+    $('[data-griff]').style.left  = (d.frac*100).toFixed(2) + '%';
+    $('[data-jetzt]').textContent = fmt(d.pos);
+    $('[data-ende]').textContent  = fmt(d.dur);
+    $('[data-pp]').innerHTML = d.playing ? I.pause(18) : I.play(18);
+    $('[data-volz]').style.transform = `rotate(${(-140 + d.vol*280).toFixed(1)}deg)`;
+  };
+  deck.render();
+}
+verdrahte(document.getElementById('v1'), d1,
+  {'--imax':'360px','--ih':'120px','--dk':'104px','--tg':'20px','--fp':'24px'});
+verdrahte(document.getElementById('v2'), d2,
+  {'--imax':'420px','--ih':'150px','--dk':'112px','--tg':'22px','--fp':'26px','--fpx':'34px',
+   '--zarge':'16px','--pad':'26px','--tb':'56px'});
+})();
+</script>
