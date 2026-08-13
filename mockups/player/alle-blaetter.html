@@ -484,6 +484,18 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 .dp .lz.an .t{color:var(--tinte);font-weight:600}
 .dp .lz.an .nr{color:var(--tinte)}
 .dp.quer{flex-direction:row}
+
+/* ── Variante 1: Gerät links, Schrift rechts (statt untereinander) ──
+   Der ganze Bildschirm ist die Frontplatte; die Schrift steht darauf,
+   nicht daneben — deshalb trägt hier die Wurzel den Plattenton und die
+   Platte selbst weder Rand noch Schatten. */
+.dp.zwei{flex-direction:row;background:var(--slab)}
+.dp.zwei .slab{flex:1;min-width:0;height:auto;background:transparent;box-shadow:none}
+.dp.zwei .seitentext{width:var(--stw,300px);flex:none;display:flex;flex-direction:column;
+  justify-content:center;padding:0 var(--stp,30px)}
+.dp.zwei .text{flex-direction:column;align-items:flex-start;gap:16px;padding:0}
+.dp.zwei .text .zeit{text-align:left}
+.dp.zwei .transport{justify-content:flex-start;padding-top:30px;gap:22px}
 /* ── Blatt 07 ── */
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -1381,14 +1393,16 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 
   <section class="entwurf">
     <div class="ekopf"><h2>Variante 1 · Gerät</h2><span class="marke geraet">iPad hoch · 834 × 1194</span></div>
-    <p class="etext">Das iPad wird zum Gegenstand: Die Platte füllt den Bildschirm bis auf eine schmale
-    Schriftzeile. Wer mehr will als abspielen, muss dafür wischen — <b>hier gibt es nichts als das Stück,
-    das läuft</b>. Aufgestellt neben der Anlage ist das keine Einschränkung, sondern der Zweck.
+    <p class="etext">Das iPad wird zum Gegenstand: links das Laufwerk über die ganze Höhe, rechts eine
+    schmale Spalte mit Titel, Zeit und Transport. <b>Nebeneinander statt übereinander</b> — so bleibt das
+    Gerät ein Gerät und die Schrift steht daneben wie eine Gravur auf der Frontplatte, nicht wie eine
+    Bildunterschrift. Wer mehr will als abspielen, muss wischen: <b>hier gibt es nichts als das Stück,
+    das läuft</b>.
     <span class="probier"><b>Ausprobieren:</b> die schwarze Nadel am rechten Balken nach oben oder unten
     ziehen. Die kleinen Skalen daneben sind Lautstärke und Balance.</span></p>
     <div class="buehne">
       <div class="rahmen ipad-hoch">
-        <div class="schirm"><div class="dp" id="b06v1"></div></div>
+        <div class="schirm"><div class="dp zwei" id="b06v1"></div></div>
       </div>
     </div>
     <dl class="zettel">
@@ -2384,8 +2398,8 @@ verdrahte(document.getElementById('b05v2'), d2, {});
 const d1 = new Deck('ryu', {qi:1, pos:96,  speed:6});
 const d2 = new Deck('sat', {qi:0, pos:52,  speed:6});
 
-const slabHTML = (h) => `
-  <div class="slab" style="height:${h}px">
+const slabHTML = h => `
+  <div class="slab"${h ? ` style="height:${h}px"` : ''}>
     <div class="marke">Musiklib</div>
     <div class="seit">Seite A</div>
     <div class="teller" data-teller>
@@ -2413,7 +2427,8 @@ const textHTML = `
     <button data-next>${I.next(22)}</button>
   </div>`;
 
-document.getElementById('b06v1').innerHTML = slabHTML(800) + textHTML;
+document.getElementById('b06v1').innerHTML =
+  slabHTML(0) + `<div class="seitentext">${textHTML}</div>`;
 
 document.getElementById('b06v2').innerHTML =
   `<div style="width:720px;flex:none;display:flex;flex-direction:column">${slabHTML(664)}${textHTML}</div>
@@ -2477,7 +2492,7 @@ function verdrahte(wurzel, deck, stil){
   deck.render();
 }
 verdrahte(document.getElementById('b06v1'), d1,
-  {'--td':'470px','--tx':'42%','--ty':'50%','--ax':'76%','--sx':'92%','--tp':'34px','--tg':'26px'});
+  {'--td':'380px','--tx':'41%','--ty':'50%','--ax':'83%','--sx':'94%','--tg':'25px','--stw':'300px'});
 verdrahte(document.getElementById('b06v2'), d2,
   {'--td':'400px','--tx':'41%','--ty':'50%','--ax':'74%','--sx':'90%','--tp':'26px','--tg':'22px',
    '--trp':'18px'});
