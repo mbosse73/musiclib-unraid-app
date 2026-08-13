@@ -676,6 +676,14 @@ main { padding: 0 48px 48px; }
   transition: background 120ms;
 }
 .player button.play:hover { background: var(--gold); }
+/* Was am Ende der Warteschlange geschieht — ein Knopf, der seinen Zustand
+   ausschreibt statt ihn in ein Zeichen zu verstecken: drei Zustaende sind
+   ein Zeichen zu viel. */
+.player button.ctrl.ende {
+  width: auto; padding: 0 10px; font-size: 10px; letter-spacing: 0.12em;
+  text-transform: uppercase; border-radius: 12px; opacity: 0.6;
+}
+.player button.ctrl.ende.on { opacity: 1; color: var(--gold); }
 .player button.ctrl[aria-pressed="true"] {
   color: var(--gold);
   opacity: 1;
@@ -894,6 +902,8 @@ main { padding: 0 48px 48px; }
     <button class="ctrl" id="prev-btn" title="Vorheriger Titel" aria-label="Vorheriger Titel">↞</button>
     <button class="play" id="play-btn" title="Abspielen" aria-label="Abspielen">▶</button>
     <button class="ctrl" id="next-btn" title="Nächster Titel" aria-label="Nächster Titel">↠</button>
+    <button class="ctrl ende" id="end-btn" title="Am Ende: nächstes Album der Sammlung"
+      aria-label="Am Ende der Warteschlange">Weiter</button>
   </div>
   <div class="scrubber">
     <span class="time" id="time-current">0:00</span>
@@ -1253,8 +1263,16 @@ function setPlayButton(playing) {
 function playCurrent(autoplay = true) {
   if (qIndex < 0 || qIndex >= queue.length) return;
   const { track, album } = queue[qIndex];
+  heilungAbsagen();
   audio.src = `/api/stream/${encodeURIComponent(track.id)}`;
-  if (autoplay) audio.play().catch(() => {});  // blockiertes Autoplay: Button bleibt korrekt
+  if (autoplay) {
+    // blockiertes Autoplay: der Button bleibt korrekt, und nachdruck() fragt
+    // nach — im Hintergrund weist der Browser den ersten Versuch oft ab.
+    tonGewuenscht = true;
+    nachVersuche = 0;
+    audio.play().catch(() => {});
+    nachdruck();
+  }
 
   $('now-title').textContent = track.title;
   $('now-artist').textContent = `${album.artist} — ${album.title}`;
@@ -1274,6 +1292,120 @@ function playCurrent(autoplay = true) {
   }
 }
 
+// ---------- Am Ende der Warteschlange ----------
+// Eine Warteschlange ist ein Album. Was danach geschieht, steht in
+// `musiklib:fortsetzung` — demselben Schluessel, den mobile.html und
+// player.html lesen, mit denselben drei Werten. Voreinstellung ist „weiter":
+// ein Player, der nach vierzig Minuten von selbst verstummt, wird als Fehler
+// erlebt, nicht als Absicht.
+const FORTSETZUNGEN = [
+  { id: 'weiter',      name: 'Weiter', title: 'Am Ende: nächstes Album der Sammlung' },
+  { id: 'wiederholen', name: 'Wdh.',   title: 'Am Ende: dieselbe Warteschlange von vorn' },
+  { id: 'halt',        name: 'Halt',   title: 'Am Ende: anhalten' },
+];
+let fortsetzung = FORTSETZUNGEN.some(f => f.id === restore('fortsetzung', null))
+  ? restore('fortsetzung', null) : 'weiter';
+
+function naechstesAlbum() {
+  const letzte = queue[queue.length - 1];
+  if (!letzte || !library.albums.length) return null;
+  const i = library.albums.findIndex(a => a.id === letzte.album.id);
+  return library.albums[(i + 1) % library.albums.length] || null;
+}
+function amEnde() {
+  if (fortsetzung === 'wiederholen' && queue.length) { qIndex = 0; playCurrent(); return; }
+  if (fortsetzung === 'weiter') {
+    const a = naechstesAlbum();
+    if (a) { loadQueue(a.tracks.map(t => ({ track: t, album: a })), 0); playCurrent(); return; }
+  }
+  tonGewuenscht = false;
+  setPlayButton(false);
+}
+function setFortsetzung(v) {
+  fortsetzung = v;
+  store('fortsetzung', v);
+  const f = FORTSETZUNGEN.find(x => x.id === v);
+  const btn = $('end-btn');
+  btn.textContent = f.name;
+  btn.title = f.title;
+  btn.classList.toggle('on', v !== 'halt');
+}
+
+// ---------- Nachdruck beim Titelwechsel ----------
+// Am Ende eines Titels bekommt das Element eine neue Quelle — und im
+// Hintergrund weist der Browser play() gern ab, weil das als neuer Start
+// gilt und nicht als Fortsetzung (auf dem iPhone die haeufigste Ursache
+// dafuer, dass die Musik „von allein" aufhoert). Die Zurueckweisung kam
+// bisher als still abgefangener Fehler zurueck.
+//
+// Also nachfragen, solange Ton gewuenscht ist und keiner laeuft.
+// `tonGewuenscht` unterscheidet das von einer Pause, die jemand wollte.
+let tonGewuenscht = false;
+let NACH_VERZUG = 1200;         // veraenderlich, damit der Test nicht wartet
+const NACH_MAX = 8;
+let nachTimer = 0, nachVersuche = 0;
+
+function nachdruck() {
+  clearTimeout(nachTimer);
+  if (!tonGewuenscht) return;
+  nachTimer = setTimeout(() => {
+    nachTimer = 0;
+    if (!tonGewuenscht || !audio.src || !audio.paused) return;
+    if (++nachVersuche > NACH_MAX) return;
+    audio.play().catch(() => {});
+    nachdruck();
+  }, NACH_VERZUG);
+}
+
+// ---------- Wiederanlauf ----------
+// Ein Stream ueber WLAN reisst irgendwann ab: das Telefon drosselt bei
+// dunklem Bildschirm den Funk, die Platte im NAS schlaeft ein. Das Element
+// meldet dann „waiting" oder „stalled" und bleibt stehen — ohne diesen
+// Abschnitt fuer immer. Jeder Fortschritt sagt den Zeitgeber wieder ab.
+let HEIL_VERZUG = 6000;
+const HEIL_MAX = 5;
+let heilTimer = 0, heilVersuche = 0;
+
+function heilungPlanen(ms) {
+  clearTimeout(heilTimer);
+  heilTimer = setTimeout(versucheWeiter, ms || HEIL_VERZUG);
+}
+function heilungAbsagen() {
+  clearTimeout(heilTimer); heilTimer = 0; heilVersuche = 0;
+}
+function versucheWeiter() {
+  heilTimer = 0;
+  if (!audio.src || qIndex < 0) return;
+  if (heilVersuche >= HEIL_MAX) {
+    $('now-artist').textContent = 'Verbindung abgerissen — bitte neu laden';
+    return;
+  }
+  heilVersuche++;
+  pendingSeek = audio.currentTime || 0;   // an derselben Stelle weiter
+  audio.load();                           // dieselbe Quelle, neue Verbindung
+  audio.play().catch(() => {});
+  heilungPlanen();
+}
+
+// ---------- Vorladen ----------
+// Kurz vor dem Ende den Anfang des naechsten Titels holen: das weckt die
+// Platte im NAS und haelt die Verbindung warm, damit der Wechsel keine
+// Luecke bekommt. Der Koerper wird nicht gebraucht.
+const VORLAUF = 25;             // Sekunden vor dem Ende
+let vorgeladen = null;
+function ladeVor() {
+  let naechst = queue[qIndex + 1] && queue[qIndex + 1].track;
+  if (!naechst && fortsetzung === 'weiter') {
+    const a = naechstesAlbum(); naechst = a && a.tracks[0];
+  } else if (!naechst && fortsetzung === 'wiederholen') {
+    naechst = queue[0] && queue[0].track;
+  }
+  if (!naechst || vorgeladen === naechst.id) return;
+  vorgeladen = naechst.id;
+  fetch(`/api/stream/${encodeURIComponent(naechst.id)}`, { headers: { Range: 'bytes=0-262143' } })
+    .then(r => r.arrayBuffer()).catch(() => {});
+}
+
 function hasNext() { return qIndex >= 0 && qIndex < queue.length - 1; }
 
 function playNext() {
@@ -1287,17 +1419,43 @@ function playPrev() {
 
 function togglePlay() {
   if (!audio.src) return;
-  if (audio.paused) audio.play().catch(() => {});
-  else audio.pause();
+  if (audio.paused) {
+    tonGewuenscht = true; nachVersuche = 0;
+    audio.play().catch(() => {});
+    nachdruck();
+  } else {
+    tonGewuenscht = false;        // eine gewollte Pause ist kein Fehler
+    clearTimeout(nachTimer);
+    heilungAbsagen();
+    audio.pause();
+  }
 }
 
 $('play-btn').addEventListener('click', togglePlay);
 $('next-btn').addEventListener('click', playNext);
 $('prev-btn').addEventListener('click', playPrev);
 $('shuffle-btn').addEventListener('click', toggleShuffle);
+$('end-btn').addEventListener('click', () => {
+  const i = FORTSETZUNGEN.findIndex(f => f.id === fortsetzung);
+  setFortsetzung(FORTSETZUNGEN[(i + 1) % FORTSETZUNGEN.length].id);
+});
 
-audio.addEventListener('play', () => setPlayButton(true));
-audio.addEventListener('pause', () => { setPlayButton(false); saveSession(); });
+audio.addEventListener('play', () => {
+  setPlayButton(true);
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+});
+audio.addEventListener('pause', () => {
+  setPlayButton(false); saveSession();
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+});
+audio.addEventListener('playing', () => { heilungAbsagen(); nachVersuche = 0; });
+audio.addEventListener('waiting', () => heilungPlanen());
+audio.addEventListener('stalled', () => heilungPlanen());
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') return;
+  nachVersuche = 0;      // ein im Hintergrund abgewiesener Wechsel bekommt
+  nachdruck();           // jetzt seine Gelegenheit
+});
 
 // Position aus der letzten Sitzung anwenden, sobald die Dauer bekannt ist
 audio.addEventListener('loadedmetadata', () => {
@@ -1309,13 +1467,16 @@ audio.addEventListener('loadedmetadata', () => {
 
 audio.addEventListener('ended', () => {
   if (hasNext()) playNext();
-  else setPlayButton(false);
+  else amEnde();
 });
 
-// Ein Titel, dessen Datei seit dem letzten Scan verschoben wurde, liefert 404.
-// Ohne diesen Handler bliebe der Player wortlos stehen.
+// Ein Titel, dessen Datei seit dem letzten Scan verschoben wurde, liefert 404 —
+// dann hilft kein neuer Versuch. Ein Netzfehler dagegen schon.
 audio.addEventListener('error', () => {
   if (!audio.src) return;
+  const code = audio.error && audio.error.code;
+  if (code === 2 || code === 3) { heilungPlanen(1500); return; }
+  heilungAbsagen();
   setPlayButton(false);
   $('now-artist').textContent = 'Titel nicht abspielbar — bitte neu scannen';
 });
@@ -1324,8 +1485,9 @@ audio.addEventListener('error', () => {
 // wie die Knoepfe im Player.
 if ('mediaSession' in navigator) {
   const handlers = {
-    play: () => audio.play().catch(() => {}),
-    pause: () => audio.pause(),
+    play: () => { tonGewuenscht = true; nachVersuche = 0;
+                  audio.play().catch(() => {}); nachdruck(); },
+    pause: () => { tonGewuenscht = false; clearTimeout(nachTimer); audio.pause(); },
     previoustrack: playPrev,
     nexttrack: playNext,
   };
@@ -1335,6 +1497,8 @@ if ('mediaSession' in navigator) {
 }
 
 audio.addEventListener('timeupdate', () => {
+  heilungAbsagen();                       // Fortschritt heisst: alles in Ordnung
+  if (audio.duration && audio.duration - audio.currentTime < VORLAUF) ladeVor();
   const c = audio.currentTime;
   const d = audio.duration || 0;
   $('time-current').textContent = fmtTime(c);
@@ -1374,6 +1538,7 @@ updateVolumeUI();
 
 shuffle = restore('shuffle', false);
 $('shuffle-btn').setAttribute('aria-pressed', String(shuffle));
+setFortsetzung(fortsetzung);
 
 // ---------- Tastatur ----------
 document.addEventListener('keydown', (e) => {

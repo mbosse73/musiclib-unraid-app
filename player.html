@@ -83,6 +83,9 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
 .wk .g{display:block;margin-top:3px;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
   color:#8A6534}
 .wk .b{display:block;margin-top:7px;font-size:12.5px;color:#6B6155;line-height:1.5}
+.wahlende{margin-top:24px;padding-top:18px;border-top:1px solid rgba(36,30,24,.12)}
+.wahlkap{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#8A6534}
+.wahlreihe{margin-top:10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
 .wahlfuss{margin-top:22px;padding-top:16px;border-top:1px solid rgba(36,30,24,.12);
   display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
   font-size:12px;color:#6B6155}
@@ -1012,6 +1015,14 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
     <p>Zwölf Oberflächen für dieselbe Sammlung. Was gespielt wird, läuft beim Wechsel weiter —
     nur das Gerät drumherum ist ein anderes.</p>
     <div class="wahlgitter" id="wahlgitter"></div>
+    <div class="wahlende">
+      <span class="wahlkap">Am Ende der Warteschlange</span>
+      <div class="wahlreihe" id="wahlende"></div>
+    </div>
+    <div class="wahlende">
+      <span class="wahlkap">Bildschirm</span>
+      <div class="wahlreihe" id="wahlwach"></div>
+    </div>
     <div class="wahlfuss">
       <span>Taste <b>L</b> öffnet diese Liste · <a href="/">Schreibtisch</a> · <a href="/mobil">Handy</a></span>
       <button type="button" id="wahlzu">Schließen</button>
@@ -1160,7 +1171,6 @@ class Deck {
     this.queue = [];          // Titelkennungen
     this.qi = -1;
     this.shuffle = restore('shuffle', false);
-    this.repeat = restore('repeat', false);
     this.onRender = () => {};
     this._ziel = null;        // Ziel eines laufenden Zugs am Spulgriff
     this._zielFrist = 0;
@@ -1199,7 +1209,14 @@ class Deck {
     this._ziel = null;
     this._pending = ab || 0;
     this.audio.src = `/api/stream/${encodeURIComponent(t.id)}`;
-    if (autoplay) this.audio.play().catch(() => {});
+    heilungAbsagen();
+    if (autoplay){
+      /* blockiertes Autoplay: der Knopf bleibt korrekt, und nachdruck()
+         fragt nach — im Hintergrund weist iOS den ersten Versuch oft ab. */
+      tonGewuenscht = true; nachVersuche = 0;
+      this.audio.play().catch(() => {});
+      nachdruck();
+    }
     if ('mediaSession' in navigator){
       try{
         navigator.mediaSession.metadata = new MediaMetadata({
@@ -1225,9 +1242,15 @@ class Deck {
   }
   toggle(){
     if (!this.audio.src){ if (this.track) this.spiele(true); return; }
-    if (this.audio.paused) this.audio.play().catch(() => {}); else this.audio.pause();
+    if (this.audio.paused) this.play();
+    else { nachdruckEnde(); heilungAbsagen(); this.audio.pause(); }
   }
-  play(){ if (!this.audio.src){ this.spiele(true); return; } this.audio.play().catch(() => {}); }
+  play(){
+    if (!this.audio.src){ this.spiele(true); return; }
+    tonGewuenscht = true; nachVersuche = 0;
+    this.audio.play().catch(() => {});
+    nachdruck();
+  }
   step(n){
     if (!this.queue.length) return;
     this.qi = (this.qi + n + this.queue.length) % this.queue.length;
@@ -1267,10 +1290,6 @@ class Deck {
     this.render();
   }
   toggleShuffle(){ this.shuffle = !this.shuffle; store('shuffle', this.shuffle); this.render(); }
-  /* „repeat" ist der einzige Schluessel, den die anderen beiden Oberflaechen
-     nicht kennen — sie ignorieren ihn, und diese hier faellt ohne ihn auf
-     „aus" zurueck. */
-  toggleRepeat(){ this.repeat = !this.repeat; store('repeat', this.repeat); this.render(); }
 }
 
 const ton = document.getElementById('ton');
@@ -1279,8 +1298,14 @@ const deck = new Deck(ton);
 ton.volume = clamp(restore('volume', 1), 0, 1);
 ton.muted = restore('muted', false);
 
-ton.addEventListener('play',  () => deck.render());
-ton.addEventListener('pause', () => { deck.render(); sitzungSichern(); });
+ton.addEventListener('play',  () => {
+  deck.render(); wachHalten();
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+});
+ton.addEventListener('pause', () => {
+  deck.render(); sitzungSichern(); wachHalten();
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+});
 ton.addEventListener('seeked', () => { deck._ziel = null; deck.render(); });
 ton.addEventListener('loadedmetadata', () => {
   if (deck._pending > 0 && isFinite(ton.duration)){
@@ -1291,24 +1316,181 @@ ton.addEventListener('loadedmetadata', () => {
 });
 ton.addEventListener('ended', () => {
   if (deck.qi < deck.queue.length - 1){ deck.qi++; deck.spiele(true); }
-  else if (deck.repeat && deck.queue.length){ deck.qi = 0; deck.spiele(true); }
-  else deck.render();
+  else amEnde();
 });
+
+/* ══ Am Ende der Warteschlange ═════════════════════════════════════════════
+   Eine Warteschlange ist ein Album. Was danach geschieht, steht in
+   `musiklib:fortsetzung` — demselben Schluessel, den index.html und
+   mobile.html lesen, mit denselben drei Werten. Voreinstellung ist
+   „weiter": ein Spieler, der am Kuechentisch nach vierzig Minuten von
+   selbst verstummt, wird als Fehler erlebt, nicht als Absicht.          */
+const FORTSETZUNGEN = [
+  {id:'weiter',      name:'Nächstes Album', text:'Am Ende der Warteschlange läuft das nächste Album der Sammlung.'},
+  {id:'wiederholen', name:'Wiederholen',    text:'Dieselbe Warteschlange beginnt von vorn.'},
+  {id:'halt',        name:'Anhalten',       text:'Nach dem letzten Titel ist Schluss.'},
+];
+let fortsetzung = FORTSETZUNGEN.some(f => f.id === restore('fortsetzung', null))
+  ? restore('fortsetzung', null) : 'weiter';
+function setzeFortsetzung(v){
+  fortsetzung = v; store('fortsetzung', v);
+  deck.render(); zeichneWahl();
+}
+function naechstesAlbum(){
+  const a = deck.album;
+  if (!a || !ALBUMS.length) return null;
+  const i = ALBUMS.findIndex(x => x.id === a.id);
+  return ALBUMS[(i + 1) % ALBUMS.length] || null;
+}
+function amEnde(){
+  if (fortsetzung === 'wiederholen' && deck.queue.length){ deck.qi = 0; deck.spiele(true); return; }
+  if (fortsetzung === 'weiter'){
+    const a = naechstesAlbum();
+    if (a){ deck.ladeAlbum(a, 0); return; }
+  }
+  nachdruckEnde();
+  deck.render();
+}
+
+/* ══ Nachdruck beim Titelwechsel ═══════════════════════════════════════════
+   Der wichtigste Fall auf einem Telefon oder iPad: Am Ende eines Titels
+   bekommt das Element eine neue Quelle — und iOS weist play() im Hintergrund
+   ab, weil das als neuer Start gilt und nicht als Fortsetzung. Die
+   Zurueckweisung kam bisher als still abgefangener Fehler zurueck, und die
+   Musik war aus.
+
+   Also nachfragen, solange Ton gewuenscht ist und keiner laeuft — und beim
+   Zurueckkommen in den Vordergrund noch einmal von vorn. `tonGewuenscht`
+   unterscheidet die abgewiesene Wiedergabe von einer gewollten Pause.     */
+let tonGewuenscht = false;
+let NACH_VERZUG = 1200;        // veraenderlich, damit der Test nicht wartet
+const NACH_MAX = 8;
+let nachTimer = 0, nachVersuche = 0;
+
+function nachdruck(){
+  clearTimeout(nachTimer);
+  if (!tonGewuenscht) return;
+  nachTimer = setTimeout(() => {
+    nachTimer = 0;
+    if (!tonGewuenscht || !ton.src || !ton.paused) return;
+    if (++nachVersuche > NACH_MAX) return;
+    ton.play().catch(() => {});
+    nachdruck();
+  }, NACH_VERZUG);
+}
+function nachdruckEnde(){ tonGewuenscht = false; clearTimeout(nachTimer); nachTimer = 0; }
+
+/* ══ Bildschirm anlassen ═══════════════════════════════════════════════════
+   Solange Ton laeuft und die Einstellung es erlaubt, bleibt der Bildschirm
+   an — damit iOS bei dunklem Schirm nicht das WLAN drosselt. Die Sperre wird
+   beim Ausblenden von selbst frei und beim Zurueckkommen neu angefordert. */
+let wachSchloss = null;
+let wach = restore('wach', false) === true;
+function wachGewuenscht(){ return wach && !ton.paused && !!ton.src; }
+async function wachHalten(){
+  try{
+    if (wachGewuenscht()){
+      if (!wachSchloss && 'wakeLock' in navigator && document.visibilityState === 'visible'){
+        wachSchloss = await navigator.wakeLock.request('screen');
+        wachSchloss.addEventListener('release', () => { wachSchloss = null; });
+      }
+    } else if (wachSchloss){
+      const s = wachSchloss; wachSchloss = null; await s.release();
+    }
+  }catch{ wachSchloss = null; }
+}
+function setzeWach(v){ wach = !!v; store('wach', wach); wachHalten(); zeichneWahl(); }
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') return;
+  wachHalten();
+  nachVersuche = 0;            // ein im Hintergrund abgewiesener Wechsel
+  nachdruck();                 // bekommt jetzt seine Gelegenheit
+});
+
+/* ══ Wiederanlauf ══════════════════════════════════════════════════════════
+   Ein Stream ueber WLAN reisst irgendwann ab: das Telefon drosselt bei
+   dunklem Bildschirm den Funk, die Platte im NAS schlaeft ein, das Netz
+   hustet. Das Element meldet dann „waiting" oder „stalled" und bleibt
+   stehen — ohne diesen Abschnitt fuer immer.
+
+   Angefasst wird nur, was wirklich haengt: der Zeitgeber wird von jedem
+   Fortschritt wieder abgesagt. Ein Titel, dessen Datei verschwunden ist,
+   ist kein Netzproblem und wird gemeldet statt endlos neu geladen.      */
+let HEIL_VERZUG = 6000;        // veraenderlich, damit der Test nicht wartet
+const HEIL_MAX = 5;
+let heilTimer = 0, heilVersuche = 0;
+
+function heilungPlanen(ms){
+  clearTimeout(heilTimer);
+  heilTimer = setTimeout(versucheWeiter, ms || HEIL_VERZUG);
+}
+function heilungAbsagen(){
+  clearTimeout(heilTimer); heilTimer = 0; heilVersuche = 0;
+}
+function versucheWeiter(){
+  heilTimer = 0;
+  if (!ton.src || !deck.track) return;
+  if (heilVersuche >= HEIL_MAX){
+    deck.fehler = 'Verbindung zum Server abgerissen — neu laden';
+    deck.render();
+    return;
+  }
+  heilVersuche++;
+  deck._pending = ton.currentTime || 0;   // an derselben Stelle weiter
+  deck._ziel = null;
+  try{ ton.load(); }catch{}
+  ton.play().catch(() => {});
+  heilungPlanen();                        // haengt es wieder, kommt der naechste Versuch
+}
+ton.addEventListener('waiting', () => heilungPlanen());
+ton.addEventListener('stalled', () => heilungPlanen());
+ton.addEventListener('playing', () => { heilungAbsagen(); nachVersuche = 0; });
 /* Ein Titel, dessen Datei seit dem letzten Scan verschoben wurde, liefert
-   404. Ohne diesen Zweig bliebe der Spieler wortlos stehen. */
+   404 — dann hilft kein neuer Versuch. Ein Netzfehler dagegen schon. */
 ton.addEventListener('error', () => {
   if (!ton.src) return;
+  const code = ton.error && ton.error.code;
+  if (code === 2 || code === 3){ heilungPlanen(1500); return; }
+  heilungAbsagen();
   deck.fehler = 'Titel nicht abspielbar — bitte am Schreibtisch neu scannen';
   deck.render();
 });
-ton.addEventListener('timeupdate', () => deck.render());
+
+/* ══ Vorladen ══════════════════════════════════════════════════════════════
+   Kurz vor dem Ende eines Titels den Anfang des naechsten holen: das weckt
+   die Platte im NAS und haelt die Verbindung warm. Der Koerper wird nicht
+   gebraucht — es geht nur darum, dass die ersten Sekunden schon da sind,
+   wenn der Wechsel kommt. (preload am Element hilft nicht: iOS ignoriert
+   es.) */
+const VORLAUF = 25;            // Sekunden vor dem Ende
+let vorgeladen = null;
+function ladeVor(){
+  let naechst = deck.queue[deck.qi + 1];
+  if (!naechst && fortsetzung === 'weiter'){
+    const a = naechstesAlbum();            // der Wechsel auf das naechste Album
+    naechst = a && a.ids[0];               // ist die laengste Pause von allen
+  }
+  if (!naechst && fortsetzung === 'wiederholen') naechst = deck.queue[0];
+  if (!naechst || vorgeladen === naechst) return;
+  vorgeladen = naechst;
+  fetch(`/api/stream/${encodeURIComponent(naechst)}`, {headers:{Range:'bytes=0-262143'}})
+    .then(r => r.arrayBuffer()).catch(() => {});
+}
+
+ton.addEventListener('timeupdate', () => {
+  heilungAbsagen();                        // Fortschritt heisst: alles in Ordnung
+  const d = deck.dur;
+  if (d && d - deck.pos < VORLAUF) ladeVor();
+  deck.render();
+});
 setInterval(() => { if (deck.playing) deck.render(); }, 250);
 setInterval(sitzungSichern, 5000);
 addEventListener('pagehide', sitzungSichern);
 
 if ('mediaSession' in navigator){
   const griffe = {
-    play: () => deck.play(), pause: () => ton.pause(),
+    play: () => deck.play(), pause: () => { nachdruckEnde(); ton.pause(); },
     previoustrack: () => deck.prev(), nexttrack: () => deck.next(),
   };
   for (const [was, fn] of Object.entries(griffe)){
@@ -2342,7 +2524,10 @@ function verdrahte(w, deck){
   q('[data-next]').onclick = () => deck.next();
   q('[data-prev]').onclick = () => deck.prev();
   q('[data-shuffle]').onclick = () => deck.toggleShuffle();
-  q('[data-repeat]').onclick  = () => deck.toggleRepeat();
+  /* Der Kippschalter am Geraet ist derselbe Schalter wie im Ansichtsblatt:
+     er steht zwischen „Wiederholen" und dem, was sonst gilt. */
+  q('[data-repeat]').onclick  = () =>
+    setzeFortsetzung(fortsetzung === 'wiederholen' ? 'weiter' : 'wiederholen');
   bindDrag(q('[data-band]'), f => deck.seek(f));
   bindDrag(q('[data-vol]'), f => deck.setVol(1-f), {achse:'y'});
 
@@ -2406,7 +2591,7 @@ function verdrahte(w, deck){
     q('[data-pp]').innerHTML = d.playing ? I.pause(18) : I.play(18);
     q('[data-volz]').style.transform = `rotate(${(-140 + d.vol*280).toFixed(1)}deg)`;
     q('[data-shuffle]').classList.toggle('an', !!d.shuffle);
-    q('[data-repeat]').classList.toggle('an', !!d.repeat);
+    q('[data-repeat]').classList.toggle('an', fortsetzung === 'wiederholen');
   };
 }
 
@@ -2478,6 +2663,26 @@ function zeichneWahl(){
     zeigeWahl(false);
     zeigeLayout(el.dataset.l);
   });
+  document.getElementById('wahlende').innerHTML = FORTSETZUNGEN.map(f => `
+    <button class="wk${f.id === fortsetzung ? ' an' : ''}" type="button" data-f="${f.id}">
+      <span class="n">${esc(f.name)}</span>
+      <span class="b">${esc(f.text)}</span>
+    </button>`).join('');
+  $$('#wahlende [data-f]').forEach(el => el.onclick = () => setzeFortsetzung(el.dataset.f));
+
+  const kann = 'wakeLock' in navigator;
+  document.getElementById('wahlwach').innerHTML = [
+    {an:false, name:'Geht aus', text:'Der Bildschirm verhält sich wie gewohnt.'},
+    {an:true,  name:'Bleibt an', text:kann
+      ? 'Solange Musik läuft. Am iPad und iPhone hält das auch das WLAN wach — der häufigste Grund, warum der Ton abreißt. Kostet Akku.'
+      : 'Dieser Browser kennt die Bildschirmsperre nicht (am iPhone ab iOS 16.4); die Wahl bliebe ohne Wirkung.'},
+  ].map(o => `
+    <button class="wk${o.an === wach ? ' an' : ''}" type="button" data-w="${o.an}"
+      ${o.an && !kann ? 'disabled style="opacity:.5"' : ''}>
+      <span class="n">${o.name}</span>
+      <span class="b">${esc(o.text)}</span>
+    </button>`).join('');
+  $$('#wahlwach [data-w]').forEach(el => el.onclick = () => setzeWach(el.dataset.w === 'true'));
 }
 function zeigeWahl(auf){
   wahl.hidden = !auf;
