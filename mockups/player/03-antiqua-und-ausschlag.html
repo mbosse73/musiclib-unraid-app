@@ -79,12 +79,12 @@
 .aa.tab .unten{flex-direction:row;padding:26px 26px 0;gap:20px}
 .aa.tab .tafel{flex:1}
 .aa.tab .raster{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
-.aa.tab .rk{cursor:pointer}
-.aa.tab .rk .cv{aspect-ratio:1;border-radius:14px;display:grid;place-items:center;color:#fff;
+.aa.tab .rasterk{cursor:pointer}
+.aa.tab .rasterk .cv{aspect-ratio:1;border-radius:14px;display:grid;place-items:center;color:#fff;
   font-family:var(--serif);font-size:28px}
-.aa.tab .rk .t{margin-top:8px;font-size:13px;color:var(--hell);white-space:nowrap;overflow:hidden;
+.aa.tab .rasterk .t{margin-top:8px;font-size:13px;color:var(--hell);white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis}
-.aa.tab .rk .s{font-size:11.5px;color:var(--hell-2);white-space:nowrap;overflow:hidden;
+.aa.tab .rasterk .s{font-size:11.5px;color:var(--hell-2);white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis}
 </style>
 
@@ -237,7 +237,7 @@ function verdrahte(wurzel, deck, opts){
   const raster = $('[data-raster]');
   if (raster){
     raster.innerHTML = ALBUMS.slice(0,4).map(a => `
-      <div class="rk" data-alb="${a.id}">
+      <div class="rasterk" data-alb="${a.id}">
         <div class="cv" style="background:${grad(a)}">${ini(a)}</div>
         <div class="t">${esc(a.t)}</div><div class="s">${esc(a.ar)}</div></div>`).join('');
     $$('[data-alb]').forEach(el => el.onclick = () => spielAlbum(el.dataset.alb));

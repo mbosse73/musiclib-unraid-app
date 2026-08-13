@@ -81,8 +81,8 @@
 /* ── Karte „Alben" ── */
 .kk .reihe{display:flex;align-items:center;gap:26px;justify-content:center;margin:14px 0 12px;
   min-height:0}
-.kk .rk{cursor:pointer;transition:transform .2s;flex:none}
-.kk .rk.mitte{transform:scale(1.12)}
+.kk .regalk{cursor:pointer;transition:transform .2s;flex:none}
+.kk .regalk.mitte{transform:scale(1.12)}
 .kk .pfeile{display:flex;align-items:center;justify-content:center;gap:26px}
 .kk .pfeile .name{text-align:center;min-width:190px}
 .kk .pfeile .name b{font-size:15px;font-style:italic}
@@ -249,7 +249,7 @@ function verdrahte(wurzel, deck, stil){
   function zeigeRegal(){
     const um = [-1,0,1].map(k => ALBUMS[(mitte + k + ALBUMS.length) % ALBUMS.length]);
     $('[data-reihe]').innerHTML = um.map((a,k) => `
-      <div class="rk${k===1?' mitte':''}" data-rk="${a.id}">
+      <div class="regalk${k===1?' mitte':''}" data-rk="${a.id}">
         <div class="huelle" style="--hg:${k===1?116:96}px">
           <div class="scheibe" style="animation:none"></div>
           <div class="cov" style="background:${grad(a)}">${ini(a)}</div></div>
