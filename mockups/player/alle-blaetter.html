@@ -222,10 +222,6 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 .mg .deck .stift{position:absolute;right:11%;top:5%;width:8px;height:8px;border-radius:50%;
   background:#C9A96E;box-shadow:0 0 0 2px rgba(201,169,110,.25)}
 .mg .deck .stift.zwei{right:15%}
-.mg .deck .knopf{position:absolute;width:56px;height:56px;border-radius:50%;background:var(--karte);
-  box-shadow:-4px -4px 10px var(--hell),5px 5px 12px var(--dunkel);display:grid;place-items:center;
-  color:var(--tinte-3)}
-.mg .deck .knopf.l{left:6%;bottom:7%}
 
 /* ── Titel, Ausschlag, Transport ── */
 .mg .titel{text-align:center;margin-top:26px}
@@ -1273,9 +1269,10 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
     <div class="ekopf"><h2>Variante 2 · Kissen</h2><span class="marke geraet">Handy · 390 × 844</span></div>
     <p class="etext">Der dritte Bildschirm der Vorlage, eins zu eins: Laufwerk, Titel, Ausschlag, drei
     Knöpfe. Das Format passt hier ohne Anpassung — <b>die Vorlage ist ein Telefonentwurf</b>. Die Liste
-    zum Stöbern liegt eine Ebene tiefer; auf dem Bildschirm steht nur, was läuft. Der Lautstärkeknopf
-    am Laufwerk ist gestrichen: <b>am Telefon regelt das die Gerätetaste</b>. Der verbliebene Knopf
-    links unten öffnet das laufende Album.
+    zum Stöbern liegt eine Ebene tiefer; auf dem Bildschirm steht nur, was läuft. Die beiden Knöpfe, die
+    in der Vorlage unten am Laufwerk sitzen, sind gestrichen — <b>Lautstärke regelt am Telefon die
+    Gerätetaste</b>, und einen zweiten Weg zur Sammlung braucht dieser Entwurf nicht. Das Laufwerk ist
+    damit reines Bild.
     <span class="probier"><b>Ausprobieren:</b> die Balken antippen; der Tonarm wandert mit der
     Position nach innen.</span></p>
     <div class="buehne">
@@ -1285,7 +1282,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
     </div>
     <dl class="zettel">
       <div><dt>Stärke</dt><dd>Große Ziele, alles im Daumenbereich</dd></div>
-      <div><dt>Schwäche</dt><dd>Ein Bildschirm, ein Titel — <b>Stöbern liegt dahinter</b></dd></div>
+      <div><dt>Schwäche</dt><dd>Ein Bildschirm, ein Titel — <b>Album- und Titelwahl liegen außerhalb</b></dd></div>
       <div><dt>Verhältnis zu mobile.html</dt><dd>Alternative, kein Ersatz: dort ist die Achse die Warteschlange</dd></div>
       <div><dt>Aufwand</dt><dd>gering — ein Bildschirm, keine zweite Ebene</dd></div>
     </dl>
@@ -2230,7 +2227,6 @@ const deckHTML = w => `
     <span class="stift"></span><span class="stift zwei"></span>
     <div class="teller" data-teller><div class="label" data-label></div></div>
     <div class="arm" data-arm></div>
-    <div class="knopf l">${I.disc(20)}</div>
   </div>`;
 
 const spielerHTML = (dw, al) => `
