@@ -525,13 +525,20 @@ def test_mobile_accent_changes_and_survives_reload(phone, server, akzent, farbe)
     assert phone.evaluate("document.documentElement.dataset.akzent") == akzent
 
 
-def waehle_leiste(phone, wert):
+def waehle_einstellung(phone, gruppe, wert):
+    # Der Knopf zu den Einstellungen steht im Kopf der Sammlung.
+    phone.evaluate("setView('lib')")
+    phone.wait_for_timeout(150)
     phone.click("#settings-btn")
     phone.wait_for_timeout(200)
-    phone.click(f"#leiste button[data-wert='{wert}']")
+    phone.click(f"#{gruppe} button[data-wert='{wert}']")
     phone.wait_for_timeout(200)
     phone.click("#settings-back")
     phone.wait_for_timeout(400)
+
+
+def waehle_leiste(phone, wert):
+    waehle_einstellung(phone, "leiste", wert)
 
 
 def test_mobile_bar_stays_put_by_default(phone):
@@ -583,7 +590,13 @@ def test_mobile_settings_are_one_object_in_storage(phone):
     phone.wait_for_timeout(200)
 
     gespeichert = json.loads(phone.evaluate("localStorage.getItem('musiklib:einstellungen')"))
-    assert gespeichert == {"thema": "papier", "akzent": "petrol", "leiste": "bedarf"}
+    assert gespeichert == {"thema": "papier", "akzent": "petrol", "leiste": "bedarf",
+                           "fortsetzung": "weiter", "wach": "aus"}
+    # Genau das war der Sinn des einen Objekts: „fortsetzung" und „wach" sind
+    # spaeter dazugekommen und haben keinen eigenen Schluessel gebraucht.
+    schluessel = phone.evaluate(
+        "Object.keys(localStorage).filter(k => k.startsWith('musiklib:')).sort()")
+    assert "musiklib:leiste" not in schluessel and "musiklib:wach" not in schluessel
 
 
 # --------------------------------------------------------------------------
@@ -902,3 +915,139 @@ def test_player_reports_a_moved_file_instead_of_stopping_silently(player):
     player.wait_for_function(
         "document.querySelector('#buehne [data-alb]').textContent.includes('nicht abspielbar')",
         timeout=5000)
+
+
+# --------------------------------------------------------------------------
+# Dass die Wiedergabe nicht von allein aufhoert
+# --------------------------------------------------------------------------
+
+def test_mobile_continues_with_the_next_album_at_the_end(phone):
+    """Eine Warteschlange ist ein Album — danach geht es weiter."""
+    phone.locator(".card", has_text="Die Mensch-Maschine").first.click()
+    phone.locator(".trk").first.click()
+    phone.wait_for_function("!document.getElementById('audio').paused")
+
+    # ans Ende des letzten Titels stellen und den Wechsel ausloesen
+    phone.evaluate("""() => {
+      qIndex = queue.length - 1;
+      audio.dispatchEvent(new Event('ended'));
+    }""")
+    phone.wait_for_function(
+        "queue.length && queue[0].album.title !== 'Die Mensch-Maschine'", timeout=5000)
+    assert phone.evaluate("qIndex") == 0
+
+
+def test_mobile_repeats_the_queue_when_asked(phone):
+    waehle_einstellung(phone, "fortsetzung", "wiederholen")
+    phone.locator(".card", has_text="Autobahn").first.click()
+    phone.locator(".trk").first.click()
+    phone.wait_for_function("!document.getElementById('audio').paused")
+    titel = phone.evaluate("queue[0].album.title")
+
+    phone.evaluate("""() => {
+      qIndex = queue.length - 1;
+      audio.dispatchEvent(new Event('ended'));
+    }""")
+    phone.wait_for_function("qIndex === 0", timeout=5000)
+    assert phone.evaluate("queue[0].album.title") == titel
+
+
+def test_mobile_stops_at_the_end_when_asked(phone):
+    waehle_einstellung(phone, "fortsetzung", "halt")
+    phone.locator(".card", has_text="Autobahn").first.click()
+    phone.locator(".trk").first.click()
+    phone.wait_for_function("!document.getElementById('audio').paused")
+
+    phone.evaluate("""() => {
+      qIndex = queue.length - 1;
+      audio.dispatchEvent(new Event('ended'));
+    }""")
+    phone.wait_for_timeout(400)
+    assert phone.evaluate("queue[0].album.title") == "Autobahn"
+    assert phone.evaluate("tonGewuenscht") is False
+
+
+def test_mobile_insists_when_a_track_change_is_refused(phone):
+    """Der Fall vom iPhone: play() wird im Hintergrund abgewiesen.
+
+    Hier nachgestellt, indem das Element angehalten wird, waehrend Ton
+    gewuenscht ist — nachdruck() muss von selbst wieder anfahren.
+    """
+    phone.evaluate("NACH_VERZUG = 150")
+    phone.locator(".card", has_text="Autobahn").first.click()
+    phone.locator(".trk").first.click()
+    phone.wait_for_function("!document.getElementById('audio').paused")
+
+    phone.evaluate("""() => {
+      audio.pause();          // wie eine abgewiesene Wiedergabe
+      nachVersuche = 0;
+      nachdruck();
+    }""")
+    phone.wait_for_function("!document.getElementById('audio').paused", timeout=5000)
+
+
+def test_mobile_does_not_fight_a_deliberate_pause(phone):
+    """Eine gewollte Pause bleibt eine Pause — sonst waere der Knopf kaputt."""
+    phone.evaluate("NACH_VERZUG = 150")
+    phone.locator(".card", has_text="Autobahn").first.click()
+    phone.locator(".trk").first.click()
+    phone.wait_for_function("!document.getElementById('audio').paused")
+
+    phone.click("#play-btn")                       # Pause von Hand
+    phone.wait_for_timeout(900)
+    assert phone.evaluate("document.getElementById('audio').paused") is True
+
+
+def test_mobile_recovers_from_a_stalled_stream(phone):
+    """Bleibt der Stream stehen, laedt die Seite ihn an derselben Stelle neu."""
+    phone.evaluate("HEIL_VERZUG = 200")
+    phone.locator(".card", has_text="Autobahn").first.click()
+    phone.locator(".trk").first.click()
+    phone.wait_for_function("document.getElementById('audio').currentTime > 1")
+    stelle = phone.evaluate("document.getElementById('audio').currentTime")
+
+    phone.evaluate("versucheWeiter()")
+    phone.wait_for_function("!document.getElementById('audio').paused", timeout=5000)
+    phone.wait_for_function(f"document.getElementById('audio').currentTime > {stelle - 0.5}",
+                            timeout=5000)
+
+
+def test_mobile_prefetches_the_next_track(phone, server):
+    """Vor dem Wechsel wird der Anfang des naechsten Titels schon geholt."""
+    phone.locator(".card", has_text="Autobahn").first.click()
+    phone.locator(".trk").first.click()
+    phone.wait_for_function("!document.getElementById('audio').paused")
+    naechste = phone.evaluate("queue[1].track.id")
+
+    with phone.expect_request(f"**/api/stream/{naechste}", timeout=5000):
+        phone.evaluate("ladeVor()")
+
+
+def test_player_continues_with_the_next_album_at_the_end(player):
+    player.evaluate("""() => {
+      const a = ALBUMS.find(x => x.t === 'Die Mensch-Maschine');
+      deck.ladeAlbum(a, 0);
+    }""")
+    player.wait_for_function("!ton.paused", timeout=5000)
+    player.evaluate("""() => {
+      deck.qi = deck.queue.length - 1;
+      ton.dispatchEvent(new Event('ended'));
+    }""")
+    player.wait_for_function("deck.album && deck.album.t !== 'Die Mensch-Maschine'", timeout=5000)
+    player.evaluate("ton.pause()")
+
+
+def test_player_end_of_queue_setting_is_shared_with_the_phone(player):
+    """Ein Schluessel, drei Oberflaechen — dieselben drei Werte."""
+    player.evaluate("setzeFortsetzung('wiederholen')")
+    assert player.evaluate("localStorage.getItem('musiklib:fortsetzung')") == '"wiederholen"'
+    player.evaluate("setzeFortsetzung('weiter')")
+
+
+def test_player_insists_when_a_track_change_is_refused(player):
+    player.evaluate("NACH_VERZUG = 150")
+    player.evaluate("deck.ladeAlbum(ALBUMS[0], 0)")
+    player.wait_for_function("!ton.paused", timeout=5000)
+    player.evaluate("""() => { ton.pause(); nachVersuche = 0; nachdruck(); }""")
+    player.wait_for_function("!ton.paused", timeout=5000)
+    player.evaluate("nachdruckEnde(); ton.pause()")

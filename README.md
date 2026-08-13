@@ -156,6 +156,16 @@ ein **reiner Spieler**: hören und finden, sonst nichts. Gescannt wird weiterhin
 - **Tastatur:** **Leertaste** Wiedergabe/Pause, **←/→** 5 Sekunden, **↑/↓** Lautstärke, **n**/**p** Titelwechsel, **L** Ansicht wechseln, **Esc** schließt Bibliothek und Liste.
 - Sperrbildschirm und Medientasten bedienen dieselbe Warteschlange. Die Sitzung wird mit den beiden anderen Oberflächen geteilt: auf demselben Gerät läuft sie zwischen Schreibtisch, Handy und Spieler weiter.
 
+## Wenn die Wiedergabe von allein aufhört
+
+Ein Browser, der Musik von einem NAS streamt, hat drei Stellen, an denen es abreißen kann. Alle drei sind behandelt — was übrig bleibt, sind zwei Schalter.
+
+- **Am Titelwechsel** (der häufigste Fall am iPhone). Am Ende eines Titels bekommt das Audio-Element eine neue Quelle, und iOS wertet das im Hintergrund als *neuen* Start, nicht als Fortsetzung — und weist ihn ab. Die Seiten fragen jetzt nach: solange Ton gewünscht ist und keiner läuft, alle 1,2 Sekunden erneut, und noch einmal, sobald die Seite wieder im Vordergrund ist. Eine Pause, die du selbst gedrückt hast, bleibt davon unberührt.
+- **Mitten im Titel**, wenn der Stream hängt (WLAN gedrosselt, Platte im NAS eingeschlafen). Bleibt das Element stehen, wird die Quelle nach ein paar Sekunden an derselben Stelle neu geladen — bis zu fünfmal. Zusätzlich wird 25 Sekunden vor dem Ende der Anfang des nächsten Titels schon geholt: das weckt die Platte und hält die Verbindung warm.
+- **Am Ende des Albums.** Eine Warteschlange ist ein Album; bisher war danach Schluss. Jetzt läuft standardmäßig das **nächste Album der Sammlung** weiter. Einstellbar in drei Stufen — am Handy unter *Einstellungen → Am Ende der Warteschlange*, im Spieler im Ansichtsblatt, am Schreibtisch über den Knopf rechts neben ▶ (Weiter · Wdh. · Halt). Die Wahl gilt für alle drei Oberflächen.
+
+Bleibt es trotzdem stehen, hilft **Bildschirm anlassen** (am Handy in den Einstellungen, im Spieler im Ansichtsblatt): Solange Musik läuft, bleibt der Bildschirm an — und damit auch das WLAN auf voller Leistung. Das kostet Akku und wirkt nur, solange die Seite sichtbar ist; iOS gibt die Sperre frei, sobald du die App verlässt. Braucht iOS 16.4 oder neuer.
+
 ## Bedienung
 
 - Die **Suche** filtert Alben, Interpreten und Titel gleichzeitig in Echtzeit. Wird ein Album wegen eines Titels gefunden, ist dieser Titel beim Öffnen des Albums golden markiert.

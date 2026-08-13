@@ -935,6 +935,19 @@ button{cursor:pointer}
       <div class="choice" id="leiste"></div>
     </div>
 
+    <div class="group">
+      <h2>Am Ende der Warteschlange</h2>
+      <div class="hint">Eine Warteschlange ist ein Album. Danach geht es weiter — oder eben nicht.</div>
+      <div class="choice" id="fortsetzung"></div>
+    </div>
+
+    <div class="group">
+      <h2>Bildschirm anlassen</h2>
+      <div class="hint">Beim iPhone drosselt ein dunkler Bildschirm das WLAN, und der Ton kann
+      abreißen. Bleibt der Bildschirm an, passiert das nicht. Er bleibt nur an, solange Musik läuft.</div>
+      <div class="choice" id="wach"></div>
+    </div>
+
     <p class="soon">Weitere Einstellungen kommen hierher — die Gruppen darüber sind so gebaut,
       dass eine neue nur ein weiterer Block ist.</p>
   </div>
@@ -952,6 +965,7 @@ let library = { albums: [], album_count: 0, track_count: 0 };
 let queue = [];          // [{track, album}]
 let qIndex = -1;
 let pendingSeek = 0;     // Position, die nach loadedmetadata gesetzt wird
+let fehlerText = '';     // steht statt der Interpretenzeile, wenn etwas klemmt
 let shuffle = false;
 let view = 'lib';
 let openQueue = false;   // Warteschlange im „Jetzt läuft" aufgeklappt
@@ -1026,7 +1040,23 @@ const LEISTEN = [
   { id: 'dauerhaft', name: 'Dauerhaft', cap: 'Steht immer unten.' },
   { id: 'bedarf',    name: 'Bei Bedarf', cap: 'Liegt unter dem Rand. Der Griff holt sie hervor.' },
 ];
-const EINSTELLUNGEN_STANDARD = { thema: 'papier', akzent: 'messing', leiste: 'dauerhaft' };
+// Eine Warteschlange ist ein Album. Was danach geschieht, teilen sich alle
+// drei Oberflaechen ueber `musiklib:fortsetzung`.
+const FORTSETZUNGEN = [
+  { id: 'weiter',      name: 'Nächstes Album', cap: 'Danach läuft das nächste Album der Sammlung.' },
+  { id: 'wiederholen', name: 'Wiederholen',    cap: 'Dieselbe Warteschlange beginnt von vorn.' },
+  { id: 'halt',        name: 'Anhalten',       cap: 'Nach dem letzten Titel ist Schluss.' },
+];
+// Der Bildschirm bleibt an, solange Ton laeuft — gegen die WLAN-Drosselung
+// bei dunklem Bildschirm. Kostet Akku, deshalb aus als Vorgabe.
+const WACH = [
+  { id: 'aus', name: 'Aus', cap: 'Der Bildschirm geht wie gewohnt aus.' },
+  { id: 'an',  name: 'An',  cap: 'Bleibt an, solange Musik läuft. Hält das WLAN wach, kostet Akku.' },
+];
+const EINSTELLUNGEN_STANDARD = {
+  thema: 'papier', akzent: 'messing', leiste: 'dauerhaft',
+  fortsetzung: 'weiter', wach: 'aus',
+};
 let settings = { ...EINSTELLUNGEN_STANDARD, ...(restore('einstellungen', null) || {}) };
 
 function gewaehlt(liste, wert, ersatz) {
@@ -1067,6 +1097,15 @@ function applySettings() {
   document.querySelectorAll('#leiste button').forEach(b => {
     b.setAttribute('aria-pressed', String(b.dataset.wert === leiste));
   });
+  const fortsetzung = gewaehlt(FORTSETZUNGEN, settings.fortsetzung, 'weiter');
+  const wach = gewaehlt(WACH, settings.wach, 'aus');
+  document.querySelectorAll('#fortsetzung button').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.wert === fortsetzung));
+  });
+  document.querySelectorAll('#wach button').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.wert === wach));
+  });
+  wachHalten();
   // „Dauerhaft" laesst keinen eingeblendeten Zustand uebrig, den man
   // spaeter nicht mehr los wird.
   zeigeLeiste(leiste === 'dauerhaft');
@@ -1130,6 +1169,31 @@ function buildSettings() {
     const b = e.target.closest('[data-wert]');
     if (b) setSetting('leiste', b.dataset.wert);
   });
+
+  // Zwei weitere Gruppen nach demselben Muster — genau das war der Sinn des
+  // einen Einstellungsobjekts.
+  const knoepfe = liste => liste.map(x => `
+    <button data-wert="${x.id}" aria-pressed="false">
+      <span class="lbl">${x.name}</span>
+      <span class="cap">${x.cap}</span>
+    </button>`).join('');
+  $('fortsetzung').innerHTML = knoepfe(FORTSETZUNGEN);
+  $('fortsetzung').addEventListener('click', e => {
+    const b = e.target.closest('[data-wert]');
+    if (b) setSetting('fortsetzung', b.dataset.wert);
+  });
+  $('wach').innerHTML = knoepfe(WACH);
+  $('wach').addEventListener('click', e => {
+    const b = e.target.closest('[data-wert]');
+    if (b) setSetting('wach', b.dataset.wert);
+  });
+  // Kann das Geraet den Bildschirm gar nicht wachhalten, waere die Wahl eine
+  // Luege — dann steht dort, warum sie nichts tut.
+  if (!('wakeLock' in navigator)) {
+    $('wach').insertAdjacentHTML('afterend',
+      '<div class="hint" style="margin-top:10px">Dieser Browser kennt die Bildschirmsperre nicht ' +
+      '(am iPhone ab iOS 16.4). Die Wahl bleibt ohne Wirkung.</div>');
+  }
 }
 
 // ---------- Die Leiste bei Bedarf ----------
@@ -1367,8 +1431,17 @@ function playCurrent(autoplay = true) {
   if (qIndex < 0 || qIndex >= queue.length) return;
   const { track, album } = queue[qIndex];
   $('np-error').hidden = true;
+  fehlerText = '';
+  heilungAbsagen();
   audio.src = `/api/stream/${encodeURIComponent(track.id)}`;
-  if (autoplay) audio.play().catch(() => {});   // blockiertes Autoplay: Knopf bleibt korrekt
+  if (autoplay) {
+    // blockiertes Autoplay: der Knopf bleibt korrekt, und nachdruck() fragt
+    // nach — im Hintergrund weist iOS den ersten Versuch oft ab.
+    tonGewuenscht = true;
+    nachVersuche = 0;
+    audio.play().catch(() => {});
+    nachdruck();
+  }
 
   $('np-title').textContent = track.title;
   $('np-artist').textContent = album.artist;
@@ -1399,8 +1472,16 @@ function playPrev() {
 }
 function togglePlay() {
   if (!audio.src) return;
-  if (audio.paused) audio.play().catch(() => {});
-  else audio.pause();
+  if (audio.paused) {
+    tonGewuenscht = true; nachVersuche = 0;
+    audio.play().catch(() => {});
+    nachdruck();
+  } else {
+    tonGewuenscht = false;      // eine gewollte Pause ist kein Fehler
+    clearTimeout(nachTimer);
+    heilungAbsagen();
+    audio.pause();
+  }
 }
 
 function markPlayingInLists() {
@@ -1915,6 +1996,12 @@ function baueSpieler(id) {
 function zeichneSpieler(z) {
   if (!spielerAktiv) return;
   SPIELER[spielerAktiv].zeichne($('fremd'), z);
+  // Die eigenen Spieler haben keine eigene Fehlerzeile — die Meldung tritt
+  // an die Stelle des Interpreten, wo sie niemand uebersieht.
+  if (fehlerText) {
+    const ar = $('fremd').querySelector('[data-ar]');
+    if (ar) ar.textContent = fehlerText;
+  }
 }
 
 function springeZu(sekunden) {
@@ -1946,24 +2033,168 @@ function setQueueOpen(v) {
   if (v) requestAnimationFrame(layoutQueueList);
 }
 
+// ---------- Am Ende der Warteschlange ----------
+// Eine Warteschlange ist ein Album. Was danach geschieht, steht in
+// `musiklib:fortsetzung` — demselben Schluessel, den index.html und
+// player.html lesen, mit denselben drei Werten.
+function naechstesAlbum() {
+  const letzte = queue[queue.length - 1];
+  if (!letzte || !library.albums.length) return null;
+  const i = library.albums.findIndex(a => a.id === letzte.album.id);
+  return library.albums[(i + 1) % library.albums.length] || null;
+}
+function amEnde() {
+  const wie = gewaehlt(FORTSETZUNGEN, settings.fortsetzung, 'weiter');
+  if (wie === 'wiederholen' && queue.length) { qIndex = 0; playCurrent(); return; }
+  if (wie === 'weiter') {
+    const a = naechstesAlbum();
+    if (a) { loadQueue(a.tracks.map(t => ({ track: t, album: a })), 0); return; }
+  }
+  tonGewuenscht = false;
+  setPlayButton(false);
+}
+
+// ---------- Nachdruck beim Titelwechsel ----------
+// Der wichtigste Fall auf dem iPhone: Am Ende eines Titels bekommt das
+// Element eine neue Quelle — und iOS weist play() im Hintergrund ab, weil es
+// als neuer Start gilt und nicht als Fortsetzung. Die Zurueckweisung kam
+// bisher als stiller abgefangener Fehler zurueck, und die Musik war aus.
+//
+// Also nachfragen: solange Ton gewuenscht ist und keiner laeuft, alle
+// NACH_VERZUG Millisekunden erneut play() rufen — und beim Zurueckkommen in
+// den Vordergrund noch einmal von vorn. `tonGewuenscht` unterscheidet dabei
+// die abgewiesene Wiedergabe von einer Pause, die jemand wollte.
+let tonGewuenscht = false;
+let NACH_VERZUG = 1200;        // veraenderlich fuer den Test
+const NACH_MAX = 8;
+let nachTimer = 0, nachVersuche = 0;
+
+function nachdruck() {
+  clearTimeout(nachTimer);
+  if (!tonGewuenscht) return;
+  nachTimer = setTimeout(() => {
+    nachTimer = 0;
+    if (!tonGewuenscht || !audio.src || !audio.paused) return;
+    if (++nachVersuche > NACH_MAX) return;
+    audio.play().catch(() => {});
+    nachdruck();
+  }, NACH_VERZUG);
+}
+
+// ---------- Wiederanlauf ----------
+// Ein Stream ueber WLAN reisst irgendwann ab: das Telefon drosselt bei
+// dunklem Bildschirm den Funk, die Platte im NAS schlaeft ein. Das Element
+// meldet dann „waiting" oder „stalled" und bleibt stehen — ohne diesen
+// Abschnitt fuer immer. Jeder Fortschritt sagt den Zeitgeber wieder ab; ein
+// Titel, dessen Datei fehlt, wird gemeldet statt endlos neu geladen.
+let HEIL_VERZUG = 6000;        // veraenderlich, damit der Test nicht wartet
+const HEIL_MAX = 5;
+let heilTimer = 0, heilVersuche = 0;
+
+function heilungPlanen(ms) {
+  clearTimeout(heilTimer);
+  heilTimer = setTimeout(versucheWeiter, ms || HEIL_VERZUG);
+}
+function heilungAbsagen() {
+  clearTimeout(heilTimer); heilTimer = 0; heilVersuche = 0;
+}
+function versucheWeiter() {
+  heilTimer = 0;
+  if (!audio.src || qIndex < 0) return;
+  if (heilVersuche >= HEIL_MAX) {
+    $('np-error').hidden = false;
+    fehlerText = 'Verbindung abgerissen — bitte neu laden';
+    renderProgress();
+    return;
+  }
+  heilVersuche++;
+  pendingSeek = audio.currentTime || 0;    // an derselben Stelle weiter
+  audio.load();                            // dieselbe Quelle, neue Verbindung
+  audio.play().catch(() => {});
+  heilungPlanen();
+}
+
+// ---------- Vorladen ----------
+// Kurz vor dem Ende den Anfang des naechsten Titels holen: das weckt die
+// Platte im NAS und haelt die Verbindung warm. Der Koerper wird nicht
+// gebraucht. (preload am Element hilft nicht — iOS ignoriert es.)
+const VORLAUF = 25;            // Sekunden vor dem Ende
+let vorgeladen = null;
+function ladeVor() {
+  let naechst = queue[qIndex + 1] && queue[qIndex + 1].track;
+  if (!naechst) {
+    const wie = gewaehlt(FORTSETZUNGEN, settings.fortsetzung, 'weiter');
+    if (wie === 'weiter') { const a = naechstesAlbum(); naechst = a && a.tracks[0]; }
+    else if (wie === 'wiederholen') naechst = queue[0] && queue[0].track;
+  }
+  if (!naechst || vorgeladen === naechst.id) return;
+  vorgeladen = naechst.id;
+  fetch(`/api/stream/${encodeURIComponent(naechst.id)}`, { headers: { Range: 'bytes=0-262143' } })
+    .then(r => r.arrayBuffer()).catch(() => {});
+}
+
+// ---------- Bildschirm anlassen ----------
+// Solange Ton laeuft und die Einstellung es erlaubt: der Bildschirm bleibt
+// an, damit iOS das WLAN nicht drosselt. iOS gibt die Sperre beim Ausblenden
+// von selbst frei, deshalb wird sie beim Zurueckkommen neu angefordert.
+let wachSchloss = null;
+function wachGewuenscht() {
+  return gewaehlt(WACH, settings.wach, 'aus') === 'an' && !audio.paused && !!audio.src;
+}
+async function wachHalten() {
+  try {
+    if (wachGewuenscht()) {
+      if (!wachSchloss && 'wakeLock' in navigator && document.visibilityState === 'visible') {
+        wachSchloss = await navigator.wakeLock.request('screen');
+        wachSchloss.addEventListener('release', () => { wachSchloss = null; });
+      }
+    } else if (wachSchloss) {
+      const s = wachSchloss; wachSchloss = null; await s.release();
+    }
+  } catch { wachSchloss = null; }
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') return;
+  wachHalten();
+  // Wurde im Hintergrund ein Titelwechsel abgewiesen, ist jetzt der Moment.
+  nachVersuche = 0;
+  nachdruck();
+});
+
 // ---------- Ereignisse des Audio-Elements ----------
-audio.addEventListener('play', () => setPlayButton(true));
-audio.addEventListener('pause', () => { setPlayButton(false); saveSession(); });
-audio.addEventListener('ended', () => { if (hasNext()) playNext(); else setPlayButton(false); });
+audio.addEventListener('play', () => {
+  setPlayButton(true); wachHalten();
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+});
+audio.addEventListener('pause', () => {
+  setPlayButton(false); saveSession(); wachHalten();
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+});
+audio.addEventListener('playing', () => { heilungAbsagen(); nachVersuche = 0; });
+audio.addEventListener('waiting', () => heilungPlanen());
+audio.addEventListener('stalled', () => heilungPlanen());
+audio.addEventListener('ended', () => { if (hasNext()) playNext(); else amEnde(); });
 audio.addEventListener('loadedmetadata', () => {
   if (pendingSeek > 0 && isFinite(audio.duration)) {
     audio.currentTime = Math.min(pendingSeek, audio.duration - 0.3);
   }
   pendingSeek = 0;
 });
-// Ein Titel, dessen Datei seit dem letzten Scan verschoben wurde, liefert 404.
-// Ohne diesen Handler bliebe der Player wortlos stehen.
+// Ein Titel, dessen Datei seit dem letzten Scan verschoben wurde, liefert 404 —
+// dann hilft kein neuer Versuch. Ein Netzfehler dagegen schon.
 audio.addEventListener('error', () => {
   if (!audio.src) return;
+  const code = audio.error && audio.error.code;
+  if (code === 2 || code === 3) { heilungPlanen(1500); return; }
+  heilungAbsagen();
   setPlayButton(false);
+  fehlerText = 'Titel nicht abspielbar — bitte neu scannen';
   $('np-error').hidden = false;
+  renderProgress();
 });
 audio.addEventListener('timeupdate', () => {
+  heilungAbsagen();                        // Fortschritt heisst: alles in Ordnung
+  if (audio.duration && audio.duration - audio.currentTime < VORLAUF) ladeVor();
   if (!railDrag) renderProgress();
   const now = Date.now();
   if (now - lastSaved > 5000) { lastSaved = now; saveSession(); }
@@ -1971,8 +2202,9 @@ audio.addEventListener('timeupdate', () => {
 
 if ('mediaSession' in navigator) {
   const handlers = {
-    play: () => audio.play().catch(() => {}),
-    pause: () => audio.pause(),
+    play: () => { tonGewuenscht = true; nachVersuche = 0;
+                  audio.play().catch(() => {}); nachdruck(); },
+    pause: () => { tonGewuenscht = false; clearTimeout(nachTimer); audio.pause(); },
     previoustrack: playPrev,
     nexttrack: playNext,
   };
