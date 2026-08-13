@@ -543,6 +543,19 @@ def mobile():
     return FileResponse(APP_DIR / "mobile.html", media_type="text/html")
 
 
+@app.get("/ipad")
+@app.get("/pc")
+def player():
+    """Spieler fuer iPad und Schreibtisch — eine Datei, zwoelf Ansichten.
+
+    Zwei Adressen auf dieselbe Datei: welche Ansicht passt, entscheidet nicht
+    das Geraet, sondern der Benutzer (auch hier meldet sich iPad-Safari als
+    Schreibtisch). Die Wahl liegt im localStorage, die Adresse ist nur der
+    Weg dorthin.
+    """
+    return FileResponse(APP_DIR / "player.html", media_type="text/html")
+
+
 @app.get("/api/library")
 def get_library():
     if not LIBRARY_FILE.exists():

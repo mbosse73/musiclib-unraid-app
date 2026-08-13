@@ -98,6 +98,89 @@
 /* Die Form des Themas — Passepartout, Skala, Mittelachse — steht weiter
    unten bei „Jetzt laeuft": sie muss den Rand ueberschreiben koennen. */
 
+/* ── Drei Themen mit eigenem Spieler ─────────────────────────────────
+   „Papier" und „Desert Rose" teilen sich denselben Spieler und
+   unterscheiden sich in der Achse. Die naechsten drei bringen jeweils
+   eine eigene Oberflaeche fuer „Jetzt laeuft" mit — aus den Blaettern
+   02 (Kissen), 03 Antiqua & Ausschlag (Karte) und 05 Kieselliste
+   (Kiesel). Palette und Spieler gehoeren zusammen: ein Thema ist die
+   ganze Erscheinung, nicht nur ein Anstrich fuer eine Seite.
+   Sammlung, Suche, Album und Reiterleiste bleiben dieselben — sie
+   nehmen nur die Farben des Themas an. */
+
+/* „Kissen": alles aus einem Material, Tiefe statt Kontur. */
+[data-thema="kissen"]{
+  --paper:#EDEDF4;
+  --tint:#F2F2F8;
+  --ink:#1B1B25;
+  --ink-2:#4E4E63;
+  --ink-3:#6E6E82;
+  --ink-4:#A6A6B8;
+  --ink-5:rgba(27,27,37,.26);
+  --line:rgba(27,27,37,.08);
+  --line-2:rgba(27,27,37,.16);
+  --schatten:88,88,124;
+  --veil:rgba(237,237,244,.94);
+  --warn:#A33B3B;
+  /* die beiden Toene der weichen Flaeche — ein Kissen braucht Licht und
+     Schatten aus derselben Palette, sonst wirkt es aufgeklebt */
+  --neu-hell:rgba(255,255,255,.95);
+  --neu-dunkel:rgba(88,88,124,.16);
+  --accent:#55556E; --accent-ink:#3E3E55;
+  --accent-soft:rgba(85,85,110,.10); --accent-mid:rgba(85,85,110,.42);
+}
+[data-thema="kissen"][data-akzent="flieder"]{
+  --accent:#6E5AA8; --accent-ink:#544189;
+  --accent-soft:rgba(110,90,168,.12); --accent-mid:rgba(110,90,168,.46);
+}
+
+/* „Karte": weisse Karte ueber schwarzem Grund. Genau eine Farbe ist
+   erlaubt, und die traegt ausschliesslich die Abspielposition — deshalb
+   hat dieses Thema auch nur einen Akzent. */
+[data-thema="karte"]{
+  --paper:#1A1A1C;
+  --tint:#242427;
+  --ink:#F2EFEA;
+  --ink-2:#C4BFB8;
+  --ink-3:#8E8983;
+  --ink-4:#6A6660;
+  --ink-5:rgba(242,239,234,.28);
+  --line:rgba(255,255,255,.09);
+  --line-2:rgba(255,255,255,.20);
+  --schatten:0,0,0;
+  --veil:rgba(26,26,28,.94);
+  --warn:#E0785E;
+  --karte-papier:#FBFAF8;
+  --karte-tinte:#14100E;
+  --accent:#D8452B; --accent-ink:#E7644C;
+  --accent-soft:rgba(216,69,43,.16); --accent-mid:rgba(216,69,43,.55);
+}
+
+/* „Kiesel": derselbe weiche Grund wie „Kissen", nur grauer und
+   nuechterner — hier ist der Spieler die Zeile, die laeuft. */
+[data-thema="kiesel"]{
+  --paper:#E3E3E3;
+  --tint:#E9E9E9;
+  --ink:#1C1C1C;
+  --ink-2:#4A4A4A;
+  --ink-3:#6A6A6A;
+  --ink-4:#9A9A9A;
+  --ink-5:rgba(28,28,28,.26);
+  --line:rgba(28,28,28,.08);
+  --line-2:rgba(28,28,28,.16);
+  --schatten:80,80,80;
+  --veil:rgba(227,227,227,.94);
+  --warn:#9C3B2E;
+  --neu-hell:rgba(255,255,255,.9);
+  --neu-dunkel:rgba(80,80,80,.22);
+  --accent:#4A4A4A; --accent-ink:#333333;
+  --accent-soft:rgba(74,74,74,.09); --accent-mid:rgba(74,74,74,.40);
+}
+[data-thema="kiesel"][data-akzent="stahl"]{
+  --accent:#3F5A70; --accent-ink:#2E4354;
+  --accent-soft:rgba(63,90,112,.11); --accent-mid:rgba(63,90,112,.45);
+}
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:var(--paper);color:var(--ink)}
 body{
@@ -394,6 +477,184 @@ button{cursor:pointer}
 [data-thema="wueste"] #view-now.open .artwrap{opacity:0;pointer-events:none;transition:opacity .3s}
 .nextrow .rest .num{font-family:var(--serif);font-size:15px;color:var(--ink-2)}
 
+/* ══════════════ Drei eigene Spieler ══════════════
+   Ist ein Thema mit eigenem Spieler gewaehlt, tritt in „Jetzt laeuft" die
+   Flaeche #fremd an die Stelle von Deckel, Buehne und Sockel. Der Rest der
+   App bleibt, wie er ist: die Sammlung ist eine eigene Seite und ueber den
+   Knopf links oben (und ueber die Reiterleiste) zu erreichen, die Suche
+   ueber den Knopf rechts oben.
+   Die Regelwerke stammen aus den Blaettern und stehen deshalb weiter unter
+   deren Wurzelklassen .mg / .aa / .kl — nur die Farben kommen jetzt aus
+   den Merkmalen des Themas. */
+.fremd{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
+[data-spieler] #view-now .lid,
+[data-spieler] #view-now .stage,
+[data-spieler] #view-now .foot{display:none}
+[data-spieler] .fremd{display:flex}
+.fremd .kopfz{display:flex;align-items:center;justify-content:space-between;flex:none;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 26px 8px}
+.fremd .kopfz .mitte{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+
+/* ── „Kissen" — Blatt 02 ── */
+.fremd.mg{--karte:var(--tint);--hell:var(--neu-hell);--dunkel:var(--neu-dunkel);
+  background:var(--paper);color:var(--ink)}
+.fremd.mg .kissen{background:var(--karte);border-radius:26px;
+  box-shadow:-9px -9px 20px var(--hell),10px 10px 26px var(--dunkel)}
+.fremd.mg .rund{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+  color:var(--ink-3);background:var(--karte);
+  box-shadow:-5px -5px 12px var(--hell),6px 6px 14px var(--dunkel)}
+.fremd.mg .rund:active{box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
+.fremd.mg .spieler{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:0 30px 20px;overflow:hidden}
+.fremd.mg .deck{position:relative;width:var(--dk);height:calc(var(--dk) * .84);flex:none;
+  --dk:min(80vw,34vh);border-radius:30px;background:linear-gradient(150deg,#FAFAFF,#E6E6F0);
+  box-shadow:-12px -12px 26px var(--hell),14px 14px 34px var(--dunkel)}
+.fremd.mg .deck .teller{position:absolute;left:6%;top:8%;width:74%;aspect-ratio:1;border-radius:50%;
+  background:
+    repeating-radial-gradient(circle at 50% 50%,#0A0A0E 0 1.6px,#17171D 1.6px 3.2px),
+    radial-gradient(circle at 30% 24%,rgba(255,255,255,.22),transparent 44%);
+  box-shadow:0 10px 24px rgba(30,30,60,.28);animation:mgdreh 4.2s linear infinite}
+.fremd.mg .deck .teller.halt{animation-play-state:paused}
+@keyframes mgdreh{to{transform:rotate(360deg)}}
+.fremd.mg .deck .teller .label{position:absolute;inset:34%;border-radius:50%;background:#F7F7FC;
+  display:grid;place-items:center;font-size:14px;font-weight:700;color:var(--ink-2);overflow:hidden;
+  box-shadow:0 0 0 1px rgba(0,0,0,.18)}
+.fremd.mg .deck .teller .label img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  border-radius:50%}
+.fremd.mg .deck .arm{position:absolute;right:9%;top:9%;width:26px;height:26px;border-radius:50%;
+  --al:calc(var(--dk) * .33);
+  background:linear-gradient(150deg,#FDFDFF,#D8D8E4);box-shadow:0 2px 6px rgba(30,30,60,.24);
+  transform-origin:50% 50%;transition:transform .45s cubic-bezier(.4,0,.2,1)}
+.fremd.mg .deck .arm::before{content:'';position:absolute;left:50%;top:12px;width:4px;height:var(--al);
+  margin-left:-2px;border-radius:3px;background:linear-gradient(180deg,#3C3C48,#15151C)}
+.fremd.mg .deck .arm::after{content:'';position:absolute;left:50%;top:calc(var(--al) + 4px);width:16px;
+  height:22px;margin-left:-8px;border-radius:3px;background:linear-gradient(150deg,#FBFBFF,#C9C9D6);
+  box-shadow:0 2px 5px rgba(30,30,60,.3)}
+.fremd.mg .deck .stift{position:absolute;right:11%;top:5%;width:8px;height:8px;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.fremd.mg .deck .stift.zwei{right:15%}
+.fremd.mg .titel{text-align:center;margin-top:clamp(12px,2.6vh,26px);max-width:100%}
+.fremd.mg .titel h1{font-size:clamp(21px,3.4vh,30px);font-weight:700;letter-spacing:-.02em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fremd.mg .titel .ar{margin-top:6px;font-size:15px;color:var(--ink-2);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.fremd.mg .balken{display:flex;align-items:center;justify-content:center;gap:5px;
+  height:clamp(38px,7vh,64px);cursor:pointer;margin-top:clamp(12px,2.4vh,22px);width:100%;
+  touch-action:none}
+.fremd.mg .balken b{width:5px;border-radius:3px;background:var(--ink-4);opacity:.5;
+  transition:opacity .15s}
+.fremd.mg .balken b.war{opacity:1;background:var(--accent)}
+.fremd.mg .uhr{text-align:center;margin-top:12px;font-size:15px;color:var(--ink-2);
+  font-variant-numeric:tabular-nums;letter-spacing:.05em}
+.fremd.mg .transport{display:flex;align-items:center;justify-content:center;gap:22px;
+  margin-top:clamp(14px,2.6vh,26px)}
+.fremd.mg .flach{width:92px;height:56px;border-radius:22px;display:grid;place-items:center;
+  color:var(--ink-2)}
+.fremd.mg .knauf{width:clamp(84px,13vh,104px);height:clamp(84px,13vh,104px);border-radius:50%;
+  display:grid;place-items:center;color:var(--ink);position:relative}
+.fremd.mg .knauf::after{content:'';position:absolute;inset:14px;border-radius:50%;
+  box-shadow:inset -3px -3px 8px var(--hell),inset 4px 4px 9px var(--dunkel)}
+.fremd.mg .knauf svg{position:relative;z-index:2}
+
+/* ── „Karte" — Blatt 03 ── */
+.fremd.aa{background:var(--paper);color:var(--ink)}
+.fremd.aa .karte{background:var(--karte-papier);color:var(--karte-tinte);border-radius:0 0 34px 34px;
+  flex:none;padding:0 26px 26px;display:flex;flex-direction:column}
+.fremd.aa .kopfz{padding-top:calc(env(safe-area-inset-top,0px) + 12px);padding-bottom:14px}
+.fremd.aa .kopfz .mitte{color:rgba(20,16,14,.55)}
+.fremd.aa .eck{width:44px;height:44px;border-radius:13px;background:#F2EFEA;display:grid;
+  place-items:center;color:var(--karte-tinte);box-shadow:0 1px 2px rgba(20,16,14,.08)}
+.fremd.aa h1{font-family:var(--serif);font-weight:400;font-size:clamp(24px,4.4vh,34px);line-height:1.05;
+  letter-spacing:-.01em;text-align:center;text-wrap:balance}
+.fremd.aa .ar{margin-top:8px;text-align:center;font-size:14px;color:rgba(20,16,14,.55)}
+.fremd.aa .zeit{font-family:var(--serif);font-size:clamp(30px,5.6vh,44px);text-align:center;
+  margin:16px 0 4px;font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.fremd.aa .welle{height:clamp(64px,12vh,104px);display:flex;align-items:center;gap:2px;cursor:pointer;
+  position:relative;padding:0 2px;touch-action:none}
+.fremd.aa .welle b{flex:1;border-radius:1px;background:rgba(20,16,14,.28);position:relative}
+.fremd.aa .welle b.war{background:linear-gradient(180deg,var(--accent),var(--accent-mid))}
+.fremd.aa .kopfl{position:absolute;top:0;bottom:0;width:2px;background:var(--accent);
+  pointer-events:none;transition:left .2s linear}
+.fremd.aa .kopfl::before{content:'';position:absolute;top:-4px;left:-3px;width:8px;height:8px;
+  border-radius:50%;background:var(--accent)}
+.fremd.aa .punkte{position:absolute;left:0;right:0;top:50%;height:1px;pointer-events:none;
+  background:repeating-linear-gradient(90deg,rgba(20,16,14,.3) 0 2px,transparent 2px 7px)}
+.fremd.aa .fuss{display:flex;justify-content:space-between;font-size:12px;color:rgba(20,16,14,.5);
+  font-variant-numeric:tabular-nums;margin-top:6px}
+.fremd.aa .unten{flex:1;min-height:0;display:flex;flex-direction:column;padding:18px 22px 0}
+.fremd.aa .tafel{background:var(--tint);border-radius:22px;padding:18px 20px 12px;flex:1;min-height:0;
+  display:flex;flex-direction:column}
+.fremd.aa .tafel h2{font-family:var(--serif);font-size:20px;font-weight:400;display:flex;
+  justify-content:space-between;align-items:center;flex:none}
+.fremd.aa .tafel h2 span{font-family:var(--sans);font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink-3)}
+.fremd.aa .qliste{margin-top:10px;overflow-y:auto;flex:1;min-height:0}
+.fremd.aa .qz{display:flex;align-items:center;gap:14px;padding:9px 2px;cursor:pointer;
+  border-bottom:1px solid var(--line)}
+.fremd.aa .qz .nr{width:20px;font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.fremd.aa .qz .t{flex:1;min-width:0;font-size:14.5px;color:var(--ink-3);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.fremd.aa .qz .d{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.fremd.aa .qz.an .t{color:var(--ink);font-weight:600}
+.fremd.aa .qz.an .nr{color:var(--accent)}
+.fremd.aa .tasten{display:flex;gap:14px;padding:14px 22px 20px;flex:none}
+.fremd.aa .taste{flex:1;height:clamp(64px,11vh,86px);border-radius:22px;background:var(--karte-papier);
+  display:grid;place-items:center}
+.fremd.aa .taste .rund{width:clamp(46px,7.4vh,54px);height:clamp(46px,7.4vh,54px);border-radius:50%;
+  background:#F2EFEA;display:grid;place-items:center;color:var(--karte-tinte);
+  box-shadow:inset 0 0 0 1px rgba(20,16,14,.06)}
+.fremd.aa .taste.haupt .rund{background:var(--accent);color:#fff;
+  box-shadow:0 6px 16px var(--accent-soft)}
+
+/* ── „Kiesel" — Blatt 05 ── */
+.fremd.kl{--karte:var(--tint);--hell:var(--neu-hell);--dunkel:var(--neu-dunkel);
+  background:var(--paper);color:var(--ink)}
+.fremd.kl .heraus{background:var(--karte);
+  box-shadow:-6px -6px 14px var(--hell),7px 7px 16px var(--dunkel)}
+.fremd.kl .hinein{background:var(--karte);
+  box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
+.fremd.kl .kopfz .mitte{font-size:12px;font-weight:800;letter-spacing:.18em;color:var(--ink)}
+.fremd.kl .rund{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+  color:var(--ink-2)}
+.fremd.kl .buehne{display:flex;align-items:center;justify-content:center;
+  padding:14px 26px clamp(14px,2.4vh,24px);flex:none}
+.fremd.kl .scheibe{width:var(--sg);height:var(--sg);--sg:min(52vw,22vh);border-radius:50%;
+  position:relative;display:grid;place-items:center;padding:9px;
+  box-shadow:-8px -8px 18px var(--hell),9px 9px 22px var(--dunkel)}
+.fremd.kl .scheibe .bild{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;
+  color:#fff;font-size:calc(var(--sg) / 4);font-weight:800;overflow:hidden;position:relative;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+.fremd.kl .scheibe .bild img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  border-radius:50%}
+.fremd.kl .titelzeile{text-align:center;padding:0 26px 14px;flex:none}
+.fremd.kl .titelzeile h1{font-size:21px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.fremd.kl .titelzeile .ar{font-size:13.5px;color:var(--ink-2);margin-top:3px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.fremd.kl .lauf{margin:0 26px 16px;flex:none}
+.fremd.kl .schiene{height:14px;border-radius:9px;position:relative;cursor:pointer;touch-action:none}
+.fremd.kl .schiene .voll{position:absolute;left:3px;top:3px;bottom:3px;border-radius:7px;
+  background:var(--accent);min-width:8px}
+.fremd.kl .zeiten{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;margin-top:7px}
+.fremd.kl .liste{flex:1;min-height:0;overflow-y:auto;padding:0 26px 10px}
+.fremd.kl .zeile{display:flex;align-items:center;gap:16px;padding:12px 16px;border-radius:20px;
+  cursor:pointer;margin-bottom:8px}
+.fremd.kl .zeile .m{flex:1;min-width:0}
+.fremd.kl .zeile .t{font-size:15.5px;font-weight:700;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.fremd.kl .zeile .s{font-size:12.5px;color:var(--ink-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.fremd.kl .zeile .knopf{width:48px;height:48px;border-radius:50%;flex:none;display:grid;
+  place-items:center;color:var(--ink-2);background:var(--karte);
+  box-shadow:-4px -4px 10px var(--hell),5px 5px 12px var(--dunkel)}
+.fremd.kl .zeile.an{background:var(--karte);
+  box-shadow:-6px -6px 14px var(--hell),7px 7px 18px var(--dunkel)}
+.fremd.kl .zeile.an .knopf{color:var(--accent-ink);
+  box-shadow:inset -3px -3px 8px var(--hell),inset 4px 4px 10px var(--dunkel)}
+.fremd.kl .strich{width:16px;height:3px;border-radius:2px;background:currentColor;display:block}
+.fremd.kl .fussz{text-align:center;font-size:11px;color:var(--ink-3);padding:0 0 12px;flex:none}
+
 /* ── Reiterleiste ── */
 /* z-index ueber dem Albumblatt (70): dauerhaft liegt die Leiste darunter und
    beruehrt es nie, hervorgeholt aber ueberdeckt sie dessen unteren Rand — und
@@ -536,6 +797,9 @@ button{cursor:pointer}
 
 <!-- ══════════ Jetzt läuft ══════════ -->
 <main class="view" id="view-now">
+  <!-- Themen mit eigenem Spieler bauen hier hinein; die drei Teile darunter
+       treten dann zurueck. -->
+  <div class="fremd" id="fremd"></div>
   <div class="lid">
     <span class="brand">Musiklib<em>.</em></span>
     <button class="qbtn" id="qbtn" aria-expanded="false" aria-label="Warteschlange">
@@ -654,7 +918,8 @@ button{cursor:pointer}
 
     <div class="group">
       <h2>Thema</h2>
-      <div class="hint">Farben, Anordnung und die Achse, auf der die Warteschlange liegt.</div>
+      <div class="hint">Farben, Anordnung und die ganze Seite „Jetzt läuft“. Sammlung und Suche
+      bleiben, wie sie sind.</div>
       <div class="choice hoch" id="themen"></div>
     </div>
 
@@ -729,6 +994,34 @@ const THEMEN = [
     ],
   },
 ];
+/* Drei Themen bringen einen eigenen Spieler mit (spieler: …). Sie erben
+   nichts von den beiden ersten ausser dem Unterbau — Warteschlange, Ton
+   und Sitzung. */
+THEMEN.push(
+  {
+    id: 'kissen', name: 'Kissen', spieler: 'kissen',
+    cap: 'Weiches Weiß, Knöpfe treten heraus. Ausschlag statt Achse.',
+    farbe: '#EDEDF4', rand: '#55556E', akzente: [
+      { id: 'nebel',   name: 'Nebel',   farbe: '#55556E' },
+      { id: 'flieder', name: 'Flieder', farbe: '#6E5AA8' },
+    ],
+  },
+  {
+    id: 'karte', name: 'Karte', spieler: 'karte',
+    cap: 'Weiße Karte über Schwarz, Zeit als Überschrift, roter Ausschlag.',
+    farbe: '#1A1A1C', rand: '#D8452B', akzente: [
+      { id: 'zinnober', name: 'Zinnober', farbe: '#D8452B' },
+    ],
+  },
+  {
+    id: 'kiesel', name: 'Kiesel', spieler: 'kiesel',
+    cap: 'Der Spieler ist die Zeile, die läuft — die Liste ist die Oberfläche.',
+    farbe: '#E3E3E3', rand: '#4A4A4A', akzente: [
+      { id: 'graphit', name: 'Graphit', farbe: '#4A4A4A' },
+      { id: 'stahl',   name: 'Stahl',   farbe: '#3F5A70' },
+    ],
+  },
+);
 const LEISTEN = [
   { id: 'dauerhaft', name: 'Dauerhaft', cap: 'Steht immer unten.' },
   { id: 'bedarf',    name: 'Bei Bedarf', cap: 'Liegt unter dem Rand. Der Griff holt sie hervor.' },
@@ -758,6 +1051,11 @@ function applySettings() {
   document.documentElement.dataset.thema = thema.id;
   document.documentElement.dataset.akzent = akzent;
   document.documentElement.dataset.leiste = leiste;
+  // Ein leeres data-spieler wuerde in [data-spieler] weiter treffen — also
+  // entfernen statt leeren, sonst bleibt der eingebaute Spieler verdeckt.
+  if (thema.spieler) document.documentElement.dataset.spieler = thema.spieler;
+  else document.documentElement.removeAttribute('data-spieler');
+  baueSpieler(thema.spieler || null);
   // Die Farbe der Statusleiste gehoert zum Thema, sonst steht am iPhone
   // ein elfenbeinfarbener Streifen ueber dem Sand.
   document.querySelector('meta[name="theme-color"]').setAttribute('content', thema.farbe);
@@ -1059,6 +1357,10 @@ function setPlayButton(playing) {
     : '<path d="M8 5v14l11-7z"/>';
   $('play-btn').classList.toggle('on', playing);
   $('play-btn').setAttribute('aria-label', playing ? 'Pause' : 'Abspielen');
+  // Die eigenen Spieler zeigen den Zustand an ihrer eigenen Taste. Bei Pause
+  // hoert timeupdate auf — ohne diesen Aufruf bliebe dort das Pausenzeichen
+  // stehen.
+  renderProgress();
 }
 
 function playCurrent(autoplay = true) {
@@ -1197,12 +1499,16 @@ function renderProgress() {
   if (qIndex < 0 || !T) {
     $('qcount').textContent = '0 / 0';
     $('np-rest').textContent = '0:00';
+    zeichneSpieler(null);
     return;
   }
   const o = offsets(), g = globalPos(), p = Math.min(100, g / T * 100);
   const i = railDrag ? indexAt(g) : qIndex;
   const lokal = g - o[i];
 
+  // Themen mit eigenem Spieler zeichnen ihre Flaeche; die beiden ersten
+  // ihre Achse. Gerechnet wird darueber dasselbe.
+  zeichneSpieler({ i, p, g, lokal, T, track: queue[i].track, album: queue[i].album });
   if (skalaAktiv()) zeichneSkala(i, p, g, lokal, T);
   else zeichneRand(i, p, g, T);
   document.querySelectorAll('[data-tick]').forEach(el =>
@@ -1324,6 +1630,293 @@ function zeichneSkala(i, p, g, lokal, T) {
 })();
 
 // Nah am Titelanfang faengt der Griff den Anfang — sonst trifft man ihn nie.
+// ---------- Die drei eigenen Spieler ----------
+// Ein Thema mit `spieler` baut sich seine Flaeche selbst. Gemeinsam ist nur
+// der Unterbau: dieselbe Warteschlange, dasselbe <audio>, dieselbe Sitzung.
+// Bibliothek und Suche haben diese Spieler nicht selbst — in mobile.html
+// sind beide eigene Seiten, und jeder Spieler traegt oben je einen Knopf
+// dorthin.
+
+// Ausschlag: pro Titel immer derselbe, damit die Wellenform beim Wechsel
+// nicht flackert. Echte Werte gaebe es erst mit einer Analyse beim Scan.
+function wave(seed, n) {
+  let x = 0;
+  for (const ch of String(seed)) x = (x * 31 + ch.charCodeAt(0)) >>> 0;
+  const out = [];
+  for (let i = 0; i < n; i++) {
+    x = (x * 1103515245 + 12345) >>> 0;
+    const r = ((x >>> 16) & 0x7fff) / 0x7fff;
+    const bogen = Math.sin(Math.PI * (i + .5) / n);
+    out.push(.18 + .82 * (0.35 + 0.65 * r) * (0.45 + 0.55 * bogen));
+  }
+  return out;
+}
+
+// Ziehen auf einer Leiste, waagerecht: liefert 0…1 bei Tippen und Ziehen.
+function bindZug(el, cb) {
+  let zieht = false;
+  const wert = ev => {
+    const r = el.getBoundingClientRect();
+    return Math.min(1, Math.max(0, (ev.clientX - r.left) / r.width));
+  };
+  el.addEventListener('pointerdown', ev => {
+    zieht = true;
+    try { el.setPointerCapture(ev.pointerId); } catch {}
+    cb(wert(ev));
+    ev.preventDefault();
+  });
+  el.addEventListener('pointermove', ev => { if (zieht) cb(wert(ev)); });
+  const ende = () => { zieht = false; };
+  el.addEventListener('pointerup', ende);
+  el.addEventListener('pointercancel', ende);
+}
+
+// Spulen innerhalb des laufenden Titels — ohne das Einrasten von springeZu(),
+// das nur fuer die Achse ueber die ganze Warteschlange gedacht ist.
+function spuleImTitel(f) {
+  if (qIndex < 0) return;
+  const ziel = Math.min(1, Math.max(0, f)) * dauer(qIndex);
+  if (isFinite(audio.duration) && audio.duration) {
+    audio.currentTime = Math.min(ziel, audio.duration - 0.3);
+  } else {
+    pendingSeek = ziel;
+  }
+  renderProgress();
+}
+function springeAufIndex(k) {
+  if (k < 0 || k >= queue.length) return;
+  if (k === qIndex) { togglePlay(); return; }
+  qIndex = k;
+  playCurrent(true);
+}
+
+const SVG = {
+  play: w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`,
+  pause: w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M6.5 4h3.6v16H6.5zM13.9 4h3.6v16h-3.6z"/></svg>`,
+  prev: w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M19 20L9 12l10-8v16zM5 4h2.2v16H5z"/></svg>`,
+  next: w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M5 4l10 8-10 8V4zm13.8 0H21v16h-2.2z"/></svg>`,
+  grid: w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    stroke-width="1.6" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/>
+    <rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
+    <rect x="14" y="14" width="7" height="7" rx="1"/></svg>`,
+  search: w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="7"/>
+    <line x1="21" y1="21" x2="16.7" y2="16.7"/></svg>`,
+};
+// Zwei Knoepfe stehen in jedem der drei Spieler an derselben Stelle: links
+// die Sammlung, rechts die Suche. Beides sind eigene Seiten dieser App.
+const kopfHTML = (klasse, mitte) => `
+  <div class="kopfz">
+    <button class="${klasse}" data-zur-lib aria-label="Sammlung">${SVG.grid(19)}</button>
+    <span class="mitte">${mitte}</span>
+    <button class="${klasse}" data-zur-suche aria-label="Suchen">${SVG.search(19)}</button>
+  </div>`;
+function kopfVerdrahten(wurzel) {
+  wurzel.querySelector('[data-zur-lib]').onclick = () => setView('lib');
+  wurzel.querySelector('[data-zur-suche]').onclick = () => setView('search');
+}
+
+const SPIELER = {
+  // Blatt 02 — der Ausschlag ist die Spulleiste, das Laufwerk das Bild.
+  kissen: {
+    klasse: 'mg',
+    bau(w) {
+      w.innerHTML = kopfHTML('rund', 'Jetzt läuft') + `
+        <div class="spieler">
+          <div class="deck">
+            <span class="stift"></span><span class="stift zwei"></span>
+            <div class="teller" data-teller><div class="label" data-label></div></div>
+            <div class="arm" data-arm></div>
+          </div>
+          <div class="titel"><h1 data-titel>Nichts ausgewählt</h1><div class="ar" data-ar></div></div>
+          <div class="balken" data-balken>${'<b></b>'.repeat(19)}</div>
+          <div class="uhr"><span data-jetzt>0:00</span> / <span data-ende>0:00</span></div>
+          <div class="transport">
+            <button class="flach kissen" data-prev aria-label="Vorheriger Titel">${SVG.prev(22)}</button>
+            <button class="knauf kissen" data-pp aria-label="Abspielen">${SVG.pause(28)}</button>
+            <button class="flach kissen" data-next aria-label="Nächster Titel">${SVG.next(22)}</button>
+          </div>
+        </div>`;
+      kopfVerdrahten(w);
+      w.querySelector('[data-pp]').onclick = togglePlay;
+      w.querySelector('[data-next]').onclick = playNext;
+      w.querySelector('[data-prev]').onclick = playPrev;
+      bindZug(w.querySelector('[data-balken]'), spuleImTitel);
+      this.balken = [...w.querySelectorAll('[data-balken] b')];
+      this.letzter = null;
+    },
+    zeichne(w, z) {
+      const q = s => w.querySelector(s);
+      const spielt = !audio.paused && !!audio.src;
+      q('[data-pp]').innerHTML = spielt ? SVG.pause(28) : SVG.play(28);
+      q('[data-teller]').classList.toggle('halt', !spielt);
+      if (!z) { this.letzter = null; return; }
+      if (this.letzter !== z.track.id) {
+        this.letzter = z.track.id;
+        q('[data-titel]').textContent = z.track.title;
+        q('[data-ar]').textContent = z.album.artist;
+        const label = q('[data-label]');
+        const url = coverURL(z.album);
+        label.innerHTML = url ? `<img src="${url}" alt="">` : esc(initial(z.album));
+        const aus = wave(z.track.id, this.balken.length);
+        this.balken.forEach((b, i) => b.style.height = Math.round(28 + aus[i] * 72) + '%');
+      }
+      const f = z.lokal / Math.max(1, dauer(z.i));
+      this.balken.forEach((b, i) => b.classList.toggle('war', i / this.balken.length <= f));
+      q('[data-jetzt]').textContent = fmt(z.lokal);
+      q('[data-ende]').textContent = fmt(dauer(z.i));
+      q('[data-arm]').style.transform = `rotate(${(14 + 16 * f).toFixed(2)}deg)`;
+    },
+  },
+
+  // Blatt 03 — die Zeit ist so gross gesetzt wie der Titel, und genau eine
+  // Farbe traegt die Position.
+  karte: {
+    klasse: 'aa',
+    bau(w) {
+      w.innerHTML = `
+        <div class="karte">
+          ${kopfHTML('eck', 'Jetzt läuft')}
+          <h1 data-titel>Nichts ausgewählt</h1>
+          <div class="ar" data-ar></div>
+          <div class="zeit" data-zeit>00:00:00</div>
+          <div class="welle" data-welle><div class="punkte"></div>${'<b></b>'.repeat(46)}
+            <div class="kopfl" data-kopf></div></div>
+          <div class="fuss"><span data-vor>0:00</span><span data-rest>−0:00</span></div>
+        </div>
+        <div class="unten">
+          <div class="tafel">
+            <h2>Warteschlange <span data-qlen></span></h2>
+            <div class="qliste" data-queue></div>
+          </div>
+        </div>
+        <div class="tasten">
+          <button class="taste" data-prev aria-label="Vorheriger Titel"><span class="rund">${SVG.prev(22)}</span></button>
+          <button class="taste haupt" data-pp aria-label="Abspielen"><span class="rund">${SVG.pause(24)}</span></button>
+          <button class="taste" data-next aria-label="Nächster Titel"><span class="rund">${SVG.next(22)}</span></button>
+        </div>`;
+      kopfVerdrahten(w);
+      w.querySelector('[data-pp]').onclick = togglePlay;
+      w.querySelector('[data-next]').onclick = playNext;
+      w.querySelector('[data-prev]').onclick = playPrev;
+      bindZug(w.querySelector('[data-welle]'), spuleImTitel);
+      this.balken = [...w.querySelectorAll('[data-welle] b')];
+      this.letzter = null;
+      this.letzteQ = null;
+    },
+    zeichne(w, z) {
+      const q = s => w.querySelector(s);
+      const spielt = !audio.paused && !!audio.src;
+      q('[data-pp]').querySelector('.rund').innerHTML = spielt ? SVG.pause(24) : SVG.play(24);
+      if (!z) { this.letzter = null; this.letzteQ = null; return; }
+      const kasten = q('[data-queue]');
+      const kennung = queue.map(x => x.track.id).join();
+      if (this.letzteQ !== kennung) {
+        this.letzteQ = kennung;
+        kasten.innerHTML = queue.map((x, i) => `
+          <div class="qz" data-fq="${i}"><span class="nr">${String(i + 1).padStart(2, '0')}</span>
+            <span class="t">${esc(x.track.title)}</span>
+            <span class="d">${fmt(dauer(i))}</span></div>`).join('');
+        [...kasten.children].forEach(el => el.onclick = () => springeAufIndex(+el.dataset.fq));
+        q('[data-qlen]').textContent = fmtLang(z.T);
+      }
+      [...kasten.children].forEach((el, i) => el.classList.toggle('an', i === z.i));
+      if (this.letzter !== z.track.id) {
+        this.letzter = z.track.id;
+        q('[data-titel]').textContent = z.track.title;
+        q('[data-ar]').textContent = `${z.album.artist} · ${z.album.title}`;
+        const aus = wave(z.track.id, this.balken.length);
+        this.balken.forEach((b, i) => b.style.height = Math.round(aus[i] * 100) + '%');
+      }
+      const f = z.lokal / Math.max(1, dauer(z.i));
+      this.balken.forEach((b, i) => b.classList.toggle('war', i / this.balken.length <= f));
+      q('[data-kopf]').style.left = (f * 100).toFixed(2) + '%';
+      const s = Math.max(0, Math.round(z.lokal));
+      q('[data-zeit]').textContent =
+        [Math.floor(s / 3600), Math.floor(s % 3600 / 60), s % 60]
+          .map(n => String(n).padStart(2, '0')).join(':');
+      q('[data-vor]').textContent = fmt(z.lokal);
+      q('[data-rest]').textContent = '− ' + fmt(dauer(z.i) - z.lokal);
+    },
+  },
+
+  // Blatt 05 — der Spieler ist die Zeile, die laeuft. „Weiter" gibt es
+  // nicht; wer den naechsten Titel will, tippt ihn an.
+  kiesel: {
+    klasse: 'kl',
+    bau(w) {
+      w.innerHTML = kopfHTML('rund heraus', 'Jetzt läuft') + `
+        <div class="buehne">
+          <div class="scheibe heraus"><div class="bild" data-bild></div></div>
+        </div>
+        <div class="titelzeile"><h1 data-titel>Nichts ausgewählt</h1><div class="ar" data-ar></div></div>
+        <div class="lauf">
+          <div class="schiene hinein" data-bahn><span class="voll" data-voll></span></div>
+          <div class="zeiten"><span data-jetzt>0:00</span><span data-ende>−0:00</span></div>
+        </div>
+        <div class="liste" data-liste></div>
+        <div class="fussz">Musiklib · <span data-alb></span></div>`;
+      kopfVerdrahten(w);
+      bindZug(w.querySelector('[data-bahn]'), spuleImTitel);
+      this.letzteQ = null;
+    },
+    zeichne(w, z) {
+      const q = s => w.querySelector(s);
+      const liste = q('[data-liste]');
+      if (!z) { this.letzteQ = null; liste.innerHTML = ''; return; }
+      const spielt = !audio.paused && !!audio.src;
+      const kennung = queue.map(x => x.track.id).join();
+      if (this.letzteQ !== kennung) {
+        this.letzteQ = kennung;
+        liste.innerHTML = queue.map((x, i) => `
+          <div class="zeile" data-fq="${i}">
+            <div class="m"><div class="t">${esc(x.track.title)}</div>
+              <div class="s">${esc(x.album.artist)}</div></div>
+            <button class="knopf" data-k="${i}" aria-label="Abspielen"><i class="strich"></i></button>
+          </div>`).join('');
+        [...liste.children].forEach(el => {
+          el.onclick = () => springeAufIndex(+el.dataset.fq);
+          el.querySelector('[data-k]').onclick = ev => {
+            ev.stopPropagation();
+            springeAufIndex(+el.dataset.fq);
+          };
+        });
+        const bild = q('[data-bild]');
+        const url = coverURL(z.album);
+        bild.style.background = url ? 'none' : 'var(--accent)';
+        bild.innerHTML = url ? `<img src="${url}" alt="">` : esc(initial(z.album));
+        q('[data-alb]').textContent = z.album.title;
+      }
+      [...liste.children].forEach((el, i) => {
+        const an = i === z.i;
+        el.classList.toggle('an', an);
+        el.querySelector('[data-k]').innerHTML =
+          an ? (spielt ? SVG.pause(19) : SVG.play(19)) : '<i class="strich"></i>';
+      });
+      q('[data-titel]').textContent = z.track.title;
+      q('[data-ar]').textContent = `${z.album.artist} · ${z.album.title}`;
+      q('[data-voll]').style.width =
+        `calc(${((z.lokal / Math.max(1, dauer(z.i))) * 100).toFixed(2)}% - 6px)`;
+      q('[data-jetzt]').textContent = fmt(z.lokal);
+      q('[data-ende]').textContent = '−' + fmt(dauer(z.i) - z.lokal);
+    },
+  },
+};
+
+let spielerAktiv = null;      // Kennung des gebauten Spielers, sonst null
+function baueSpieler(id) {
+  if (spielerAktiv === id) return;
+  spielerAktiv = id;
+  const w = $('fremd');
+  w.className = 'fremd' + (id ? ' ' + SPIELER[id].klasse : '');
+  w.innerHTML = '';
+  if (id) SPIELER[id].bau(w);
+}
+function zeichneSpieler(z) {
+  if (!spielerAktiv) return;
+  SPIELER[spielerAktiv].zeichne($('fremd'), z);
+}
+
 function springeZu(sekunden) {
   const T = gesamt();
   if (!T) return;

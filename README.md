@@ -33,7 +33,7 @@ Keine Datenbank. Alles, was die App weiß, liegt in `library.json`.
 Der Dienst macht drei Dinge:
 
 1. **Scannen** – `*.mp3` rekursiv unter `/music` finden, ID3-Tags (Titel, Interpret, Album, Coverbild …) per `mutagen` auslesen, in eine flache `library.json` schreiben. Cover landen als separate Dateien in `data/covers/`.
-2. **Ausliefern** – Eine einzige `index.html` (das ganze UI in einer Datei) plus JSON-Endpunkt.
+2. **Ausliefern** – Drei einzelne HTML-Dateien (je das ganze UI in einer Datei: `index.html` am Schreibtisch, `mobile.html` am Handy, `player.html` als reiner Spieler für iPad und PC) plus JSON-Endpunkt.
 3. **Streamen** – MP3-Dateien per HTTP-Range, damit Vor- und Zurückspulen auf dem Handy flüssig läuft.
 
 ## Installation auf unraid
@@ -57,6 +57,7 @@ Dort einen neuen Ordner `musiklib` anlegen und vier Dateien hineinkopieren:
 ├── app.py
 ├── index.html
 ├── mobile.html
+├── player.html
 └── requirements.txt
 ```
 
@@ -112,11 +113,48 @@ eine eigene, hellere Oberfläche fürs Handy. Sie greift auf dieselbe Sammlung z
 - **Drei Reiter:** Sammlung, Suche, Jetzt läuft. Ein Titel startet die Wiedergabe und wechselt in „Jetzt läuft".
 - **Die Achse am rechten Rand** ist die ganze Warteschlange: eine Marke je Titel. Daran ziehen spult — auch über Titelgrenzen hinweg. Kurzes Antippen (oder der Zähler oben rechts) klappt die Titelliste auf.
 - **Einstellungen** über das Zahnrad oben rechts in der Sammlung. Sie gelten nur für dieses Gerät und bleiben gespeichert:
-  - **Thema:** _Papier_ (Elfenbein und Messing) oder _Desert Rose_ (Sand und Burgunder). Das ist mehr als die Farbe: bei Desert Rose sitzt das Cover in einem Passepartout, die Seite steht auf einer Mittelachse, und die Warteschlange liegt als gravierte Skala waagerecht unter dem Bild statt senkrecht im rechten Rand. Gespult wird dort durch Ziehen auf der Skala; eine Sprechblase nennt dabei den Titel, in dem man landet.
-  - **Farbakzent:** färbt Abspielknopf, Achse und Hervorhebungen. Jedes Thema bringt eigene mit — Papier: Messing, Petrol, Grün; Desert Rose: Ton, Rosé.
+  - **Thema:** fünf zur Wahl. Ein Thema ist mehr als die Farbe — es bestimmt die ganze Seite „Jetzt läuft"; Sammlung und Suche bleiben, wie sie sind.
+    - _Papier_ (Elfenbein und Messing): die Warteschlange steht als Achse senkrecht im rechten Rand, eine Marke je Titel.
+    - _Desert Rose_ (Sand und Burgunder): das Cover sitzt in einem Passepartout, die Seite steht auf einer Mittelachse, und dieselbe Warteschlange liegt als gravierte Skala waagerecht unter dem Bild. Gespult wird dort durch Ziehen auf der Skala; eine Sprechblase nennt dabei den Titel, in dem man landet.
+    - _Kissen_ (weiches Weiß): ein Laufwerk als Bild, darunter der Ausschlag des Titels als Spulleiste, große gepolsterte Tasten.
+    - _Karte_ (weiße Karte über Schwarz): die verstrichene Zeit ist so groß gesetzt wie der Titel, darunter der Ausschlag in Rot, im Dunkeln die Warteschlange.
+    - _Kiesel_ (Grau in Grau): der Spieler ist die Zeile, die läuft — herausgehoben aus der Liste. Wer den nächsten Titel will, tippt ihn an statt „Weiter".
+    - In den letzten drei stehen oben links die **Sammlung** und oben rechts die **Suche** als Knopf.
+  - **Farbakzent:** färbt Abspielknopf, Achse und Hervorhebungen. Jedes Thema bringt eigene mit — Papier: Messing, Petrol, Grün; Desert Rose: Ton, Rosé; Kissen: Nebel, Flieder; Karte: Zinnober (nur einer — dieses Thema erlaubt genau eine Farbe); Kiesel: Graphit, Stahl.
   - **Untere Leiste:** _Dauerhaft_ (Voreinstellung) oder _Bei Bedarf_. Bei Bedarf liegt sie unter dem Bildschirmrand, die Sammlung bekommt den freien Platz. Unten in der Mitte bleibt ein kurzer Strich stehen — ein Tippen darauf holt die Leiste hervor, nach der Wahl eines Reiters (oder nach ein paar Sekunden) geht sie von selbst zurück.
 - **Bewusst nicht enthalten:** Scannen, die Liste übersprungener Dateien und die Sortierwahl — das bleibt am Schreibtisch. Ohne WLAN zum NAS gibt es keine Musik; einen Offline-Betrieb kann die Seite über `http://` nicht bieten.
 - Wiedergabe, Pause und Titelwechsel funktionieren auch über Sperrbildschirm und Kopfhörertasten. Öffnet man auf demselben Gerät beide Ansichten, läuft die Sitzung nahtlos weiter.
+
+## Am iPad und am Schreibtisch: der Spieler
+
+Neben Schreibtischseite und Handyseite liegt unter
+
+```
+http://<unraid-ip>:8080/ipad      (dieselbe Seite auch unter /pc)
+```
+
+ein **reiner Spieler**: hören und finden, sonst nichts. Gescannt wird weiterhin am Schreibtisch. Beide Adressen liefern dieselbe Datei — welche Ansicht passt, entscheidet nicht das Gerät, sondern man selbst.
+
+- **Zwölf Ansichten zur Wahl.** Der kleine Knopf unten rechts (oder die Taste **L**) öffnet die Liste. Die Wahl bleibt auf diesem Gerät gespeichert; was gerade läuft, läuft beim Wechsel weiter.
+
+  | Ansicht | Gedacht für | Gespult wird … |
+  |---|---|---|
+  | **Gerät** | iPad hoch | am Drehtonarm — schwenken heißt spulen |
+  | **Werkstisch** | PC | am selben Tonarm; rechts liegt die Sammlung als Textliste offen daneben |
+  | **Vollbild** | iPad quer | an den Rillen der Platte; gespielte Ringe leuchten |
+  | **Deck** | PC | an der Bandleiste unter der Kassette; links wächst der Wickel, rechts wird er dünner |
+  | **Handgerät** | iPad quer | ebenso, nur fast randlos und mit Tasten so breit wie Daumen |
+  | **Aufgeschlagen** | iPad quer | an einer Haarlinie; sonst steht fast nichts auf dem Bildschirm |
+  | **Register** | PC | ebenso, dazu links die Warteschlange in Haarlinien |
+  | **Bedienteil** | PC | am Metallrad — drehen; oben drei Cover als Leuchtflächen |
+  | **Konsole** | iPad quer | ebenso, größeres Rad, zwei Leuchtflächen |
+  | **Pult** | PC | an der Leiste unter der Platte; links Lautstärke und Titelliste |
+  | **Turm** | PC | an der Leiste an der Frontplatte; die Zeiger schlagen nur aus, solange Ton läuft |
+  | **Vollverstärker** | iPad quer | ebenso, alles auf einer Frontplatte statt auf zwei Geräten |
+
+- **Bibliothek und Suche gibt es in jeder Ansicht**, immer hinter *einem* Knopf und immer als Blende über dem Gerät, nie als eigene Seite: Auswurftaste am Kassettendeck, am Rack und am Verstärker, Rasterzeichen im Weißraum, Schalter mit Lampe am Pult, Listenzeichen an den Drehreglern der Platte. Gesucht wird überall über Albumtitel, Interpret, Jahr und alle Titelnamen. Einzige Ausnahme sind **Werkstisch** und **Deck**: dort liegt die Sammlung ohnehin offen daneben, und die Suchzeile steht direkt darüber.
+- **Tastatur:** **Leertaste** Wiedergabe/Pause, **←/→** 5 Sekunden, **↑/↓** Lautstärke, **n**/**p** Titelwechsel, **L** Ansicht wechseln, **Esc** schließt Bibliothek und Liste.
+- Sperrbildschirm und Medientasten bedienen dieselbe Warteschlange. Die Sitzung wird mit den beiden anderen Oberflächen geteilt: auf demselben Gerät läuft sie zwischen Schreibtisch, Handy und Spieler weiter.
 
 ## Bedienung
 
@@ -131,7 +169,7 @@ eine eigene, hellere Oberfläche fürs Handy. Sie greift auf dieselbe Sammlung z
 
 ## Updates und Wartung
 
-**Code-Änderungen einfach per SMB einspielen**: `app.py`, `index.html` oder `mobile.html` in `/mnt/user/appdata/musiklib/` ersetzen, dann:
+**Code-Änderungen einfach per SMB einspielen**: `app.py`, `index.html`, `mobile.html` oder `player.html` in `/mnt/user/appdata/musiklib/` ersetzen, dann:
 
 - **HTML-Änderung**: nur Browser-Reload, kein Container-Neustart nötig.
 - **Python-Änderung**: Container neu starten (unraid → musiklib → Restart).

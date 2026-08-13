@@ -591,6 +591,10 @@ def test_mobile_settings_are_one_object_in_storage(phone):
 # --------------------------------------------------------------------------
 
 def waehle_thema(phone, wert):
+    # Der Knopf zu den Einstellungen steht im Kopf der Sammlung — laeuft
+    # gerade etwas, ist diese Seite nicht die sichtbare.
+    phone.evaluate("setView('lib')")
+    phone.wait_for_timeout(150)
     phone.click("#settings-btn")
     phone.wait_for_timeout(200)
     phone.click(f"#themen button[data-wert='{wert}']")
@@ -696,3 +700,205 @@ def test_mobile_shares_the_session_with_the_desktop_page(phone, server):
     phone.wait_for_selector(".album")
     phone.wait_for_function("document.getElementById('now-title').textContent !== '—'")
     assert phone.inner_text("#now-title") == "Kometenmelodie"
+
+
+# --------------------------------------------------------------------------
+# Handy: die Themen mit eigenem Spieler
+# --------------------------------------------------------------------------
+
+EIGENE_SPIELER = ["kissen", "karte", "kiesel"]
+
+
+@pytest.mark.parametrize("thema", EIGENE_SPIELER)
+def test_mobile_own_player_replaces_the_built_in_one(phone, thema):
+    """Drei Themen bringen eine ganze Oberflaeche mit, nicht nur Farben."""
+    waehle_thema(phone, thema)
+    phone.locator(".card", has_text="Autobahn").first.click()
+    phone.locator(".trk").first.click()
+    phone.wait_for_function("!document.getElementById('audio').paused")
+
+    assert phone.evaluate("document.documentElement.dataset.spieler") == thema
+    assert sichtbar(phone, "#fremd")
+    # Deckel, Buehne und Sockel des eingebauten Spielers treten zurueck.
+    for teil in ("#view-now .lid", "#stage", "#view-now .foot"):
+        assert not sichtbar(phone, teil), f"{teil} steht noch im Weg"
+    assert phone.inner_text("#fremd [data-titel]") == "Autobahn"
+
+    # Zurueck heisst wirklich zurueck.
+    waehle_thema(phone, "papier")
+    phone.evaluate("setView('now')")
+    phone.wait_for_timeout(150)
+    assert phone.evaluate("document.documentElement.hasAttribute('data-spieler')") is False
+    assert sichtbar(phone, "#stage") and not sichtbar(phone, "#fremd")
+
+
+@pytest.mark.parametrize("thema", EIGENE_SPIELER)
+def test_mobile_own_player_button_follows_the_audio_element(phone, thema):
+    """Der Knopf kommt aus dem Ereignis, nie aus der Annahme neben dem Klick."""
+    waehle_thema(phone, thema)
+    phone.locator(".card", has_text="Autobahn").first.click()
+    phone.locator(".trk").first.click()
+    phone.wait_for_function("!document.getElementById('audio').paused")
+
+    knopf = "#fremd [data-pp], #fremd .zeile.an [data-k]"
+    phone.wait_for_selector(knopf)
+    assert "M6.5 4h3.6" in phone.eval_on_selector(knopf, "el => el.innerHTML"), "Pause erwartet"
+
+    # von aussen gesteuert — wie Sperrbildschirm oder Kopfhoerertaste
+    phone.evaluate("document.getElementById('audio').pause()")
+    phone.wait_for_timeout(200)
+    assert "M8 5v14" in phone.eval_on_selector(knopf, "el => el.innerHTML"), "Abspielen erwartet"
+
+
+@pytest.mark.parametrize("thema", EIGENE_SPIELER)
+def test_mobile_own_player_reaches_library_and_search(phone, thema):
+    """Sammlung und Suche bleiben aus jedem Spieler ueber einen Knopf erreichbar."""
+    waehle_thema(phone, thema)
+    phone.evaluate("setView('now')")
+    phone.wait_for_timeout(150)
+
+    phone.click("#fremd [data-zur-lib]")
+    phone.wait_for_function("view === 'lib'")
+
+    phone.evaluate("setView('now')")
+    phone.wait_for_timeout(150)
+    phone.click("#fremd [data-zur-suche]")
+    phone.wait_for_function("view === 'search'")
+
+
+def test_mobile_own_player_seeks_within_the_track(phone):
+    """Die Leiste des eigenen Spielers spult, ohne den Titel zu wechseln."""
+    waehle_thema(phone, "kiesel")
+    phone.locator(".card", has_text="Autobahn").first.click()
+    phone.locator(".trk").first.click()
+    phone.wait_for_function("!document.getElementById('audio').paused")
+    phone.evaluate("document.getElementById('audio').pause()")
+
+    r = phone.eval_on_selector("#fremd [data-bahn]", """el => {
+      const b = el.getBoundingClientRect();
+      return {x: b.x, y: b.y + b.height / 2, w: b.width};
+    }""")
+    phone.mouse.click(r["x"] + r["w"] * 0.5, r["y"])
+    phone.wait_for_timeout(250)
+    assert phone.evaluate("qIndex") == 0, "Spulen darf den Titel nicht wechseln"
+    assert phone.evaluate("document.getElementById('audio').currentTime") > 5
+
+
+# --------------------------------------------------------------------------
+# Spieler fuer iPad und PC
+# --------------------------------------------------------------------------
+
+@pytest.fixture
+def player(browser, server):
+    """Eigener Kontext im Schreibtischformat, auf /pc."""
+    context = browser.new_context(viewport={"width": 1280, "height": 860})
+    pg = context.new_page()
+    pg.errors = []
+    pg.on("pageerror", lambda e: pg.errors.append(str(e)))
+    pg.goto(server + "/pc", wait_until="domcontentloaded")
+    pg.wait_for_function("typeof LAYOUTS !== 'undefined' && document.querySelector('#buehne > *')")
+    yield pg
+    assert pg.errors == [], f"JavaScript-Fehler auf der Seite: {pg.errors}"
+    context.close()
+
+
+def layout_ids(pg):
+    return pg.evaluate("LAYOUTS.map(l => l.id)")
+
+
+def test_player_offers_twelve_layouts(player):
+    ids = layout_ids(player)
+    assert len(ids) == 12
+    assert len(set(ids)) == 12, "Kennungen muessen eindeutig sein"
+    assert player.title() == "Musiklib · Spieler"
+
+
+def test_player_every_layout_plays_and_stops(player):
+    """Jedes Layout baut, spielt ab und haelt wieder an."""
+    for lid in layout_ids(player):
+        player.evaluate("id => zeigeLayout(id)", lid)
+        player.wait_for_selector("#buehne [data-pp]")
+        player.click("#buehne [data-pp]")
+        player.wait_for_function("!ton.paused", timeout=5000)
+        player.click("#buehne [data-pp]")
+        player.wait_for_function("ton.paused", timeout=5000)
+
+
+def test_player_library_and_search_are_reachable_in_every_layout(player):
+    """Die Regel aus den Entwuerfen: Sammlung und Suche hinter einem Knopf.
+
+    Zwei Layouts sind die vereinbarte Ausnahme — dort liegt die Sammlung
+    ohnehin offen daneben, und die Suchzeile steht direkt darueber.
+    """
+    offen = {"werkstisch", "deck"}
+    for lid in layout_ids(player):
+        player.evaluate("id => zeigeLayout(id)", lid)
+        knopf = player.locator("#buehne [data-bib], #buehne [data-auswurf]")
+        if lid in offen:
+            assert knopf.count() == 0, f"{lid} braucht keinen Knopf"
+        else:
+            assert knopf.count() == 1, f"{lid} hat keinen Knopf zur Bibliothek"
+            knopf.click()
+            player.wait_for_timeout(250)
+        feld = player.locator("#buehne [data-suche]")
+        assert feld.count() == 1, f"{lid} hat kein Suchfeld"
+        feld.fill("Mensch")
+        player.wait_for_timeout(200)
+        zeilen = player.locator(
+            "#buehne [data-bibliothek] [data-alb], #buehne [data-regal] [data-alb],"
+            " #buehne [data-liste] [data-t]")
+        assert zeilen.count() >= 1, f"{lid}: Suche findet das Album nicht"
+        zeilen.first.click()
+        player.wait_for_function("deck.album && deck.album.t === 'Die Mensch-Maschine'",
+                                 timeout=5000)
+        player.evaluate("ton.pause()")
+        player.keyboard.press("Escape")
+        player.wait_for_timeout(150)
+
+
+def test_player_search_matches_track_titles_too(player):
+    player.evaluate("zeigeLayout('werkstisch')")
+    player.fill("#buehne [data-suche]", "Kometenmelodie")
+    player.wait_for_timeout(200)
+    assert player.evaluate("suche('Kometenmelodie').map(a => a.t)") == ["Autobahn"]
+
+
+def test_player_layout_choice_survives_reload(player, server):
+    player.evaluate("zeigeLayout('konsole')")
+    assert player.evaluate("localStorage.getItem('musiklib:layout')") == '"konsole"'
+    player.reload(wait_until="domcontentloaded")
+    player.wait_for_function("typeof aktuell !== 'undefined' && aktuell")
+    assert player.evaluate("aktuell.id") == "konsole"
+
+
+def test_player_shares_the_session_with_the_desktop_page(player, server):
+    """Dieselben Schluessel, dieselbe Form — die Sitzung laeuft weiter."""
+    player.evaluate("zeigeLayout('aufgeschlagen')")
+    player.evaluate("""() => {
+      const a = ALBUMS.find(x => x.t === 'Autobahn');
+      deck.ladeAlbum(a, 1);
+    }""")
+    player.wait_for_function("!ton.paused", timeout=5000)
+    player.evaluate("ton.pause()")
+
+    gespeichert = json.loads(player.evaluate("localStorage.getItem('musiklib:session')"))
+    assert gespeichert["qIndex"] == 1
+    assert len(gespeichert["items"][0]) == 2, "Form muss [albumId, trackId] bleiben"
+
+    player.goto(server, wait_until="domcontentloaded")   # Schreibtischseite
+    player.wait_for_selector(".album")
+    player.wait_for_function("document.getElementById('now-title').textContent !== '—'")
+    assert player.inner_text("#now-title") == "Kometenmelodie"
+
+
+def test_player_reports_a_moved_file_instead_of_stopping_silently(player):
+    """Ein Titel, dessen Datei verschwunden ist, sagt das — er schweigt nicht."""
+    player.evaluate("zeigeLayout('aufgeschlagen')")
+    player.evaluate("""() => {
+      ton.src = '/api/stream/gibtsnicht';
+      ton.load();
+    }""")
+    player.wait_for_function("deck.fehler !== ''", timeout=5000)
+    player.wait_for_function(
+        "document.querySelector('#buehne [data-alb]').textContent.includes('nicht abspielbar')",
+        timeout=5000)
