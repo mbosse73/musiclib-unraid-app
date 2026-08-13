@@ -1,0 +1,152 @@
+<title>Spieler-Entwürfe</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+.gitter{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:34px 30px;
+  padding:44px 0 0}
+.blatt{display:block;text-decoration:none;color:inherit}
+.blatt .bild{border:1px solid var(--line-2);background:var(--paper);padding:8px;overflow:hidden;
+  aspect-ratio:4/3;display:grid;place-items:center}
+.blatt .bild img{width:100%;height:100%;object-fit:cover;filter:saturate(.92);transition:transform .3s}
+.blatt:hover .bild img{transform:scale(1.03)}
+.blatt .nr{margin-top:14px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--brass)}
+.blatt h3{font-family:var(--serif);font-size:23px;font-weight:400;margin-top:5px;letter-spacing:-.01em}
+.blatt p{margin-top:8px;font-size:13.5px;color:var(--ink-2)}
+.blatt .geraete{margin-top:11px;display:flex;gap:7px;flex-wrap:wrap}
+.blatt .geraete span{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);
+  border:1px solid var(--line-2);border-radius:2px;padding:3px 8px}
+.tafel{margin-top:70px}
+.tafel table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:18px}
+.tafel th{text-align:left;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);
+  font-weight:400;padding:0 14px 10px 0;border-bottom:1px solid var(--line-2)}
+.tafel td{padding:11px 14px 11px 0;border-bottom:1px solid var(--line);color:var(--ink-2);
+  vertical-align:top}
+.tafel td b{color:var(--ink);font-weight:600}
+.tafel td.mit{color:var(--brass)}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Entwürfe für ipad.html und pc.html</div>
+      <h1>Dreizehn Blätter, <em>sechsundzwanzig</em> Spieler</h1>
+      <p class="lede">Zu jedem Foto aus <code style="font-family:var(--mono);font-size:13px">mckups_player/</code>
+      zwei Varianten eines reinen Spielers — im Geräterahmen, den die Vorlage verträgt: <b>PC, iPad quer,
+      iPad hoch, und wo das Format es hergibt, das Telefon</b>. Alle Entwürfe sind bedienbar: abspielen,
+      spulen, Titel wechseln. Nichts davon spricht mit dem Backend; die Sammlung ist erfunden und in
+      jedem Blatt dieselbe.</p>
+      <p class="lede" style="margin-top:14px">Gedacht als Auswahl, nicht als Lieferung: Aus einem oder
+      zwei dieser Blätter werden später <b>ipad.html</b> und <b>pc.html</b> — je eine einzelne Datei,
+      genau wie <code style="font-family:var(--mono);font-size:13px">mobile.html</code>.</p>
+    </div>
+    <figure class="vorlage">
+      <img src="../../mckups_player/Bildschirmfoto%202026-08-13%20um%2011.32.25.png" alt="">
+      <figcaption>13 Vorlagen · 26 Entwürfe</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <div class="gitter" id="gitter"></div>
+
+  <div class="tafel">
+    <div class="regel" style="margin-bottom:34px"></div>
+    <h2 style="font-family:var(--serif);font-size:27px;font-weight:400">Woran man sie unterscheidet</h2>
+    <p class="etext" style="margin-top:12px;max-width:70ch">Nicht die Farbe entscheidet, sondern der
+    Griff: Woran zieht man, um zu spulen, und was sieht man, ohne zu tippen? Danach sortiert:</p>
+    <table>
+      <tr><th style="width:170px">Blatt</th><th style="width:230px">Womit gespult wird</th>
+        <th style="width:210px">Was ohne Tippen sichtbar ist</th><th>Geräte</th></tr>
+      <tr><td><b>01 Pixel &amp; Chrom</b></td><td>Wellenform</td><td>Warteschlange und Sammlung</td>
+        <td>PC · iPad quer</td></tr>
+      <tr><td><b>02 Milchglas</b></td><td>Balkenreihe</td><td>Ein Titel, Liste zum Stöbern</td>
+        <td>iPad hoch · Handy</td></tr>
+      <tr><td><b>03 Antiqua &amp; Ausschlag</b></td><td>Ausschlag mit Kopf</td><td>Warteschlange</td>
+        <td>Handy · iPad hoch</td></tr>
+      <tr><td><b>04 Tonring</b></td><td>Linie (Ring = Lautstärke)</td><td>Ein Titel, am iPad die Warteschlange</td>
+        <td>Handy · iPad hoch</td></tr>
+      <tr><td><b>05 Kieselliste</b></td><td>Kissenschiene</td><td>Die ganze Warteschlange</td>
+        <td>iPad hoch · Handy</td></tr>
+      <tr><td><b>06 Die Platte</b></td><td class="mit">Tonarm</td><td>Nichts — am PC eine Textliste</td>
+        <td>iPad hoch · PC</td></tr>
+      <tr><td><b>07 Sternkarte</b></td><td class="mit">Rillen der Platte</td><td>Titel, am PC die Warteschlange</td>
+        <td>PC · iPad quer</td></tr>
+      <tr><td><b>08 Kassette</b></td><td class="mit">Wickel und Bandleiste</td><td>Album, Regal am PC</td>
+        <td>PC · iPad quer</td></tr>
+      <tr><td><b>09 Karten &amp; Kiesel</b></td><td>Schiene</td><td class="mit">Spieler, Album und Regal zugleich</td>
+        <td>PC · iPad quer</td></tr>
+      <tr><td><b>10 Weißraum</b></td><td>Haarlinie</td><td>Titel, am PC das Register</td>
+        <td>iPad quer · PC</td></tr>
+      <tr><td><b>11 Rack</b></td><td class="mit">Metallrad (drehen)</td><td>Zwei bis drei Alben</td>
+        <td>PC · iPad quer</td></tr>
+      <tr><td><b>12 Studiogerät</b></td><td>Leiste unter der Platte</td><td>Album, fünf Titelnummern</td>
+        <td>PC · iPad quer</td></tr>
+      <tr><td><b>13 Nussbaum &amp; Champagner</b></td><td>Leiste an der Frontplatte</td>
+        <td>Titel, vier Titel zur Wahl, <b>Pegel</b></td><td>PC · iPad quer</td></tr>
+    </table>
+  </div>
+
+  <div class="schluss">
+    <h2>Was für alle dreizehn gilt</h2>
+    <ol>
+      <li><span><b>Reine Spieler.</b> Kein Scan, keine Suche, keine Fehlerliste — so wie
+      <code>mobile.html</code> bewusst weniger kann als <code>index.html</code>. Wer scannen will, geht
+      auf die Schreibtischseite.</span></li>
+      <li><span><b>Dieselben Schlüssel im <code>localStorage</code>.</b>
+      <code>musiklib:session</code>, <code>volume</code>, <code>muted</code>, <code>shuffle</code> —
+      unverändert in Form und Bedeutung, sonst reißt die Sitzung beim Wechsel zwischen Telefon,
+      iPad und Schreibtisch ab.</span></li>
+      <li><span><b>Drei Endpunkte, mehr nicht.</b> <code>/api/library</code>,
+      <code>/api/cover/{name}</code>, <code>/api/stream/{id}</code>. Keiner dieser Entwürfe braucht
+      ein neues Feld in <code>library.json</code> — mit einer Ausnahme: die Wellenform in Blatt 01
+      wäre echt nur mit einer Analyse beim Scan.</span></li>
+      <li><span><b>Je eine Datei am Ende.</b> Diese Blätter teilen sich <code>_seite.css</code> und
+      <code>_demo.js</code>, weil sie Papier sind. <code>ipad.html</code> und <code>pc.html</code>
+      werden einzelne Dateien ohne Bauwerkzeug — über SMB zu ändern, ohne Neustart des
+      Containers.</span></li>
+      <li><span><b>Der Knopf folgt dem Ton, nicht dem Klick.</b> In allen Entwürfen wird Abspielen/Pause
+      aus dem Zustand gesetzt, nie neben dem Aufruf — die Regel aus <code>index.html</code>, damit
+      Sperrbildschirm und Tastatur nicht auseinanderlaufen.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Spieler-Entwürfe</span><span>13 Vorlagen · 26 Varianten · alle bedienbar</span></footer>
+</div>
+
+<script>
+'use strict';
+const BLAETTER = [
+  ['01','pixel-und-chrom','Pixel &amp; Chrom','10.38.39',
+   'Gerenderter Plattenspieler, Wellenform als Spulleiste, Pixelschrift.',['PC','iPad quer']],
+  ['02','milchglas','Milchglas','10.39.25',
+   'Weiche weiße Fläche, Knöpfe treten heraus, Liste in die Tiefe gestaffelt.',['iPad hoch','Handy']],
+  ['03','antiqua-und-ausschlag','Antiqua &amp; Ausschlag','10.47.45',
+   'Weiße Karte über Schwarz, Zeit als Überschrift, roter Ausschlag.',['Handy','iPad hoch']],
+  ['04','tonring','Tonring','10.49.09',
+   'Lautstärke läuft rund ums Cover, Position gerade darunter.',['Handy','iPad hoch']],
+  ['05','kieselliste','Kieselliste','10.49.38',
+   'Der Spieler ist die Zeile, die läuft — die Liste ist die Oberfläche.',['iPad hoch','Handy']],
+  ['06','die-platte','Die Platte','10.52.13',
+   'Ein Gerät ohne Wort. Der Tonarm ist die Spulleiste.',['iPad hoch','PC']],
+  ['07','sternkarte','Sternkarte','10.52.28',
+   'Nachtblau, die Platte nur aus Rillen — gespielte Ringe leuchten.',['PC','iPad quer']],
+  ['08','kassette','Kassette','10.53.28',
+   'Links wächst der Wickel, rechts wird er dünner. Tasten mit Druckpunkt.',['PC','iPad quer']],
+  ['09','karten-und-kiesel','Karten &amp; Kiesel','11.01.34',
+   'Spieler, Album und Regal als drei Karten, die liegen bleiben.',['PC','iPad quer']],
+  ['10','weissraum','Weißraum','11.06.13',
+   'Platte über den Rand hinaus, Haarlinie als Position, sonst nichts.',['iPad quer','PC']],
+  ['11','rack','Rack','11.22.42',
+   'Gebürstetes Metall, Cover als Leuchtflächen, Rad zum Spulen.',['PC','iPad quer']],
+  ['12','studiogeraet','Studiogerät','11.25.10',
+   'Salbei und Terracotta: links die Regler, rechts die Platte.',['PC','iPad quer']],
+  ['13','nussbaum-und-champagner','Nussbaum &amp; Champagner','11.32.25',
+   'Holz, Champagner, zwei Zeiger — sie schlagen nur aus, solange Ton läuft.',['PC','iPad quer']],
+];
+document.getElementById('gitter').innerHTML = BLAETTER.map(([nr, datei, name, foto, text, ger]) => `
+  <a class="blatt" href="${nr}-${datei}.html">
+    <div class="bild"><img src="../../mckups_player/Bildschirmfoto%202026-08-13%20um%20${foto}.png" alt=""></div>
+    <div class="nr">Blatt ${nr} · Vorlage ${foto}</div>
+    <h3>${name}</h3>
+    <p>${text}</p>
+    <div class="geraete">${ger.map(g => `<span>${g}</span>`).join('')}</div>
+  </a>`).join('');
+</script>

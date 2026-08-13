@@ -1,0 +1,279 @@
+<title>06 · Die Platte</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 06 — Vorlage: ein Plattenspieler ohne ein einziges Wort. Weiße
+   Platte, schwarzer Teller, der Tonarm ein gerader Balken, zwei kleine
+   Skalen unten.
+   Genommen: der Tonarm IST die Spulleiste. Der Knopf am Balken steht dort,
+   wo die Nadel steht — ziehen heißt spulen, und es sieht aus wie das Gerät.
+   ══════════════════════════════════════════════════════════════════════════ */
+.dp{
+  --grund:#EFEFEC; --slab:#F6F6F3; --tief:#25251F;
+  --tinte:#1A1A16; --tinte-2:#6E6E66; --tinte-3:#A5A59C;
+  --linie:rgba(26,26,22,.18);
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  background:var(--grund);color:var(--tinte);font-family:var(--sans);height:100%;overflow:hidden;
+  display:flex;flex-direction:column}
+.dp *{font-family:inherit}
+.dp .kap{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--tinte-2)}
+
+/* ── die Platte ── */
+.dp .slab{position:relative;background:var(--slab);flex:none;
+  box-shadow:inset 0 0 0 1px rgba(26,26,22,.07),0 22px 50px rgba(26,26,22,.10)}
+.dp .marke{position:absolute;left:34px;top:32px;width:52px;height:52px;border-radius:50%;
+  border:1px solid var(--linie);display:grid;place-items:center;font-size:8px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--tinte-3)}
+.dp .seit{position:absolute;right:26px;top:34px;writing-mode:vertical-rl;font-size:11px;
+  letter-spacing:.42em;text-transform:uppercase;color:var(--tinte-3)}
+.dp .teller{position:absolute;left:50%;transform:translateX(-50%);top:var(--to,74px);
+  width:var(--td,420px);height:var(--td,420px);border-radius:50%;
+  background:
+    repeating-radial-gradient(circle at 50% 50%,#2A2A26 0 1.4px,#333330 1.4px 2.8px),
+    radial-gradient(circle at 34% 28%,rgba(255,255,255,.12),transparent 52%);
+  box-shadow:0 16px 34px rgba(26,26,22,.22);animation:dpdreh 4.4s linear infinite}
+.dp .teller.halt{animation-play-state:paused}
+@keyframes dpdreh{to{transform:translateX(-50%) rotate(360deg)}}
+.dp .teller .mitte{position:absolute;inset:31%;border-radius:50%;background:var(--slab);
+  display:grid;place-items:center;box-shadow:0 0 0 1px rgba(26,26,22,.12)}
+.dp .teller .mitte .cov{width:76%;height:76%;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-size:22px;font-weight:600}
+.dp .teller .dorn{position:absolute;left:50%;top:50%;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;
+  border-radius:50%;background:var(--tief);z-index:2}
+
+/* ── Tonarm als Spulleiste ── */
+.dp .armzeile{position:absolute;left:0;right:0;top:var(--ao,530px);height:64px;cursor:pointer;
+  touch-action:none}
+.dp .arm{position:absolute;left:9%;right:9%;top:50%;height:7px;border-radius:4px;background:var(--tief);
+  transform:translateY(-50%)}
+.dp .arm::before{content:'';position:absolute;left:-42px;top:-1px;width:52px;height:7px;
+  border-radius:4px;background:var(--tief);transform:rotate(30deg);transform-origin:100% 50%}
+.dp .kreis{position:absolute;top:50%;width:96px;height:96px;border-radius:50%;border:1px solid var(--linie);
+  transform:translate(-50%,-50%);transition:left .18s linear;pointer-events:none}
+.dp .nadel{position:absolute;top:50%;width:48px;height:48px;border-radius:50%;background:var(--tief);
+  transform:translate(-50%,-50%);transition:left .18s linear;
+  box-shadow:0 4px 10px rgba(26,26,22,.28)}
+
+/* ── zwei Skalen ── */
+.dp .skalen{position:absolute;left:0;right:0;top:var(--so,614px);display:flex;justify-content:center;
+  gap:70px}
+.dp .skala{width:64px;height:64px;border-radius:50%;border:1px solid var(--linie);position:relative;
+  display:grid;place-items:center;cursor:pointer;touch-action:none}
+.dp .skala i{width:1.5px;height:22px;background:var(--tinte);display:block;transform-origin:50% 100%;
+  position:absolute;top:10px;left:50%;margin-left:-.75px}
+.dp .skala span{position:absolute;right:-24px;bottom:6px;font-size:8px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--tinte-3)}
+
+/* ── Schrift unter der Platte ── */
+.dp .text{padding:var(--tp,28px) 42px 0;display:flex;align-items:flex-start;justify-content:space-between;
+  gap:30px}
+.dp .text h1{font-size:var(--tg,22px);font-weight:500;letter-spacing:-.01em;line-height:1.2}
+.dp .text .ar{margin-top:6px;font-size:13px;color:var(--tinte-2)}
+.dp .text .zeit{font-size:13px;color:var(--tinte-2);font-variant-numeric:tabular-nums;text-align:right;
+  white-space:nowrap}
+.dp .transport{display:flex;gap:26px;align-items:center;justify-content:center;padding:var(--trp,22px) 0 0}
+.dp .transport button{color:var(--tinte-2)}
+.dp .transport .pp{width:52px;height:52px;border-radius:50%;background:var(--tief);color:var(--slab);
+  display:grid;place-items:center}
+
+/* ── Liste (PC) ── */
+.dp .liste{flex:1;min-width:0;padding:44px 46px 0;overflow:hidden}
+.dp .liste .kopfz{display:flex;justify-content:space-between;align-items:baseline;
+  border-bottom:1px solid var(--linie);padding-bottom:12px;margin-bottom:6px}
+.dp .lz{display:flex;align-items:baseline;gap:20px;padding:11px 4px;border-bottom:1px solid rgba(26,26,22,.07);
+  cursor:pointer;font-size:15px}
+.dp .lz:hover{background:rgba(26,26,22,.035)}
+.dp .lz .nr{width:24px;font-size:11px;color:var(--tinte-3);font-variant-numeric:tabular-nums}
+.dp .lz .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--tinte-2)}
+.dp .lz .ar{font-size:12px;color:var(--tinte-3);white-space:nowrap}
+.dp .lz .d{font-size:12px;color:var(--tinte-3);font-variant-numeric:tabular-nums;width:44px;text-align:right}
+.dp .lz.an .t{color:var(--tinte);font-weight:600}
+.dp .lz.an .nr{color:var(--tinte)}
+.dp.quer{flex-direction:row}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 06</div>
+      <h1>Die Platte</h1>
+      <p class="lede">Die strengste der Vorlagen: ein Gerät, kein Wort. Übernommen ist der eine Gedanke,
+      der daraus eine Bedienung macht — <b>der Tonarm ist die Spulleiste</b>. Die Nadel steht dort, wo das
+      Stück steht; sie zu schieben ist dasselbe wie zu spulen.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <img src="../../mckups_player/Bildschirmfoto%202026-08-13%20um%2010.52.13.png" alt="Vorlage">
+      <figcaption>Vorlage · 10.52.13</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Gerät</h2><span class="marke geraet">iPad hoch · 834 × 1194</span></div>
+    <p class="etext">Das iPad wird zum Gegenstand: Die Platte füllt den Bildschirm bis auf eine schmale
+    Schriftzeile. Wer mehr will als abspielen, muss dafür wischen — <b>hier gibt es nichts als das Stück,
+    das läuft</b>. Aufgestellt neben der Anlage ist das keine Einschränkung, sondern der Zweck.
+    <span class="probier"><b>Ausprobieren:</b> die schwarze Nadel am Balken ziehen. Die kleinen Skalen
+    sind Lautstärke und Balance.</span></p>
+    <div class="buehne">
+      <div class="rahmen ipad-hoch">
+        <div class="schirm"><div class="dp" id="v1"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Nichts abzulesen, alles zu greifen</dd></div>
+      <div><dt>Schwäche</dt><dd><b>Keine Sammlung</b> — Auswahl passiert woanders</dd></div>
+      <div><dt>Detail</dt><dd>Nadelposition = Abspielposition, eine Zahl, zwei Anzeigen</dd></div>
+      <div><dt>Aufwand</dt><dd>gering — eine Leiste, ein Kreis</dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Werkstisch</h2><span class="marke geraet">PC · 1440 × 900</span></div>
+    <p class="etext">Am Schreibtisch ist die Strenge zu streng: Das Gerät bleibt links in Originalgröße,
+    rechts steht die Sammlung als <b>reine Textliste</b> — keine Cover, keine Kacheln, nur Nummer, Titel,
+    Interpret, Länge. Damit hat der Entwurf beides: das Gerät zum Anfassen und die Liste zum Suchen.
+    <span class="probier"><b>Ausprobieren:</b> rechts eine Zeile anklicken; der Teller nimmt das Cover
+    als Mittelaufkleber.</span></p>
+    <div class="buehne">
+      <div class="rahmen pc">
+        <div class="schirm">
+          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
+          <div class="flaeche"><div class="dp quer" id="v2"></div></div>
+        </div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Liste ohne Bilder — <b>schnell, auch bei 900 Titeln</b></dd></div>
+      <div><dt>Schwäche</dt><dd>Ohne Cover ist Stöbern lustlos</dd></div>
+      <div><dt>Kosten</dt><dd>keine Bilder = kaum Netzverkehr</dd></div>
+      <div><dt>Nähe zu index.html</dt><dd>mittel — dieselbe Idee, radikaler gesetzt</dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Der Tonarm als Leiste braucht eine Trefferfläche.</b> Der sichtbare Balken ist 7 px
+      hoch; angefasst wird ein unsichtbarer Streifen von 64 px. Ohne den trifft niemand die Nadel —
+      am iPad schon gar nicht.</span></li>
+      <li><span><b>Die Nadel darf nicht springen, während man zieht.</b> Position aus der Uhr nur
+      übernehmen, wenn gerade nicht gezogen wird; sonst zuckt der Griff bei jedem
+      <code>timeupdate</code> zurück.</span></li>
+      <li><span><b>Die Textliste ist der billigste Weg zu einer großen Sammlung.</b> Kein
+      <code>/api/cover</code>, kein <code>content-visibility</code>-Kunstgriff — 900 Zeilen Text
+      scrollen ohne Nachdenken.</span></li>
+      <li><span><b>Der Mittelaufkleber ist das Cover.</b> Rund beschnitten auf 24 % Durchmesser fällt vom
+      Bild fast nichts auf — genug, um Alben zu unterscheiden, zu wenig, um Text zu lesen. Das ist der
+      Preis dieser Form.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für ipad.html / pc.html</span><span>Blatt 06 · Die Platte</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+const d1 = new Deck('ryu', {qi:1, pos:96,  speed:6});
+const d2 = new Deck('sat', {qi:0, pos:52,  speed:6});
+
+const slabHTML = (h) => `
+  <div class="slab" style="height:${h}px">
+    <div class="marke">Musiklib</div>
+    <div class="seit">Seite A</div>
+    <div class="teller" data-teller>
+      <div class="mitte"><div class="cov" data-cov></div></div><span class="dorn"></span>
+    </div>
+    <div class="armzeile" data-arm>
+      <span class="arm"></span>
+      <span class="kreis" data-kreis></span>
+      <span class="nadel" data-nadel></span>
+    </div>
+    <div class="skalen">
+      <div class="skala" data-vol><i data-volz></i><span>Vol</span></div>
+      <div class="skala"><i style="transform:rotate(12deg)"></i><span>Bal</span></div>
+    </div>
+  </div>`;
+
+const textHTML = `
+  <div class="text">
+    <div><h1 data-titel></h1><div class="ar" data-ar></div></div>
+    <div class="zeit"><span data-jetzt></span> / <span data-ende></span></div>
+  </div>
+  <div class="transport">
+    <button data-prev>${I.prev(22)}</button>
+    <button class="pp" data-pp>${I.pause(20)}</button>
+    <button data-next>${I.next(22)}</button>
+  </div>`;
+
+document.getElementById('v1').innerHTML = slabHTML(800) + textHTML;
+
+document.getElementById('v2').innerHTML =
+  `<div style="width:720px;flex:none;display:flex;flex-direction:column">${slabHTML(664)}${textHTML}</div>
+   <div class="liste">
+     <div class="kopfz"><span class="kap">Sammlung</span><span class="kap" data-anz></span></div>
+     <div data-liste></div>
+   </div>`;
+
+function verdrahte(wurzel, deck, stil){
+  const $  = s => wurzel.querySelector(s);
+  const $$ = s => [...wurzel.querySelectorAll(s)];
+  Object.entries(stil).forEach(([k,v]) => wurzel.style.setProperty(k, v));
+
+  $('[data-pp]').onclick   = () => deck.toggle();
+  $('[data-next]').onclick = () => deck.next();
+  $('[data-prev]').onclick = () => deck.prev();
+
+  /* der Balken reicht von 9 % bis 91 % der Breite — dazwischen liegt die Nadel */
+  let zieht = false;
+  bindDrag($('[data-arm]'), (f, art) => {
+    zieht = art !== 'end' && art !== 'tap';
+    deck.seek(clamp((f - .09) / .82, 0, 1));
+  });
+  bindDrag($('[data-vol]'), f => deck.setVol(f), {achse:'x'});
+
+  const liste = $('[data-liste]');
+  if (liste){
+    const zeilen = TLIST.filter(t => ['sat','bac','koe','par','blu'].includes(t.al)).slice(0,16);
+    liste.innerHTML = zeilen.map((t,i) => `
+      <div class="lz" data-t="${t.id}"><span class="nr">${String(i+1).padStart(2,'0')}</span>
+        <span class="t">${esc(t.t)}</span><span class="ar">${esc(albOf(t).ar)}</span>
+        <span class="d">${fmt(t.d)}</span></div>`).join('');
+    $('[data-anz]').textContent = zeilen.length + ' von ' + TLIST.length;
+    $$('[data-t]').forEach(el => el.onclick = () => {
+      const t = TRACKS[el.dataset.t], a = albOf(t);
+      deck.queue = a.tr.map((_,i) => `${a.id}-${i}`);
+      deck.qi = t.no - 1; deck.pos = 0; deck.playing = true; deck.render();
+    });
+  }
+
+  let letzter = null;
+  deck.onRender = d => {
+    const t = d.track, a = d.album;
+    if (letzter !== t.id){
+      letzter = t.id;
+      $('[data-titel]').textContent = t.t;
+      $('[data-ar]').textContent = a.ar + ' · ' + a.t + ' · ' + a.y;
+      $('[data-cov]').textContent = ini(a);
+      $('[data-cov]').style.background = grad(a);
+      $$('[data-t]').forEach(el => el.classList.toggle('an', el.dataset.t === t.id));
+    }
+    const links = (9 + d.frac*82).toFixed(2) + '%';
+    if (!zieht){ $('[data-nadel]').style.left = links; $('[data-kreis]').style.left = links; }
+    $('[data-jetzt]').textContent = fmt(d.pos);
+    $('[data-ende]').textContent  = fmt(d.dur);
+    $('[data-pp]').innerHTML = d.playing ? I.pause(20) : I.play(20);
+    $('[data-teller]').classList.toggle('halt', !d.playing);
+    $('[data-volz]').style.transform = `rotate(${(-140 + d.vol*280).toFixed(1)}deg)`;
+  };
+  deck.render();
+}
+verdrahte(document.getElementById('v1'), d1,
+  {'--td':'520px','--to':'80px','--ao':'632px','--so':'706px','--tp':'34px','--tg':'26px'});
+verdrahte(document.getElementById('v2'), d2,
+  {'--td':'392px','--to':'62px','--ao':'474px','--so':'544px','--tp':'26px','--tg':'22px','--trp':'18px'});
+})();
+</script>

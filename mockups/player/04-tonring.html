@@ -1,0 +1,288 @@
+<title>04 · Tonring</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 04 — Vorlage: Ton-in-Ton, Titel fett und groß, das Cover sitzt in
+   einer Scheibe, um die ein offener Ring als Regler läuft.
+   Genommen: der Ring als Lautstärke, die Linie darunter als Position —
+   zwei Regler, zwei verschiedene Formen, keine Verwechslung möglich.
+   ══════════════════════════════════════════════════════════════════════════ */
+.tr{
+  --grund:#EDEBE5; --erhoben:#F3F1EC; --tief:#E1DED6;
+  --tinte:#191712; --tinte-2:#6F6A60; --tinte-3:#A9A399;
+  --hell:rgba(255,255,255,.9); --schatten:rgba(60,54,42,.20);
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  background:var(--grund);color:var(--tinte);font-family:var(--sans);height:100%;overflow:hidden;
+  display:flex;flex-direction:column;padding:0 var(--pad,30px)}
+.tr *{font-family:inherit}
+
+.tr .kz{display:flex;align-items:center;justify-content:space-between;padding:10px 0 var(--kzu,14px);flex:none}
+.tr .kz button{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--tinte)}
+.tr .kopftitel{padding-bottom:var(--kpu,20px)}
+.tr .kopftitel .ar{font-size:var(--arg,15px);font-weight:700}
+.tr .kopftitel h1{font-size:var(--tg,40px);font-weight:800;letter-spacing:-.03em;line-height:1.02;
+  margin-top:4px}
+
+/* ── Scheibe mit Ring ── */
+.tr .ringfeld{position:relative;width:var(--rf,300px);height:var(--rf,300px);margin:0 auto;flex:none}
+.tr .ring{position:absolute;inset:0;cursor:pointer;touch-action:none}
+.tr .ring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.tr .ring .bahn{fill:none;stroke:rgba(60,54,42,.16);stroke-width:1.5}
+.tr .ring .fuell{fill:none;stroke:var(--tinte-2);stroke-width:2.2;stroke-linecap:round}
+.tr .ring .griff{fill:var(--tinte)}
+.tr .ring .pm{position:absolute;font-size:15px;color:var(--tinte-2);font-weight:700}
+.tr .ring .pm.plus{top:-4px;left:50%;margin-left:-24px}
+.tr .ring .pm.minus{bottom:-6px;left:50%;margin-left:-24px}
+.tr .scheibe{position:absolute;inset:11%;border-radius:50%;background:var(--tief);
+  box-shadow:inset 0 2px 6px rgba(255,255,255,.7),0 10px 24px var(--schatten);
+  display:grid;place-items:center}
+.tr .platte{width:64%;height:64%;border-radius:50%;background:#100F0D;display:grid;place-items:center;
+  box-shadow:0 6px 16px rgba(0,0,0,.3);animation:trdreh 5s linear infinite}
+.tr .platte.halt{animation-play-state:paused}
+@keyframes trdreh{to{transform:rotate(360deg)}}
+.tr .platte .cov{width:62%;height:62%;border-radius:3px;display:grid;place-items:center;color:#fff;
+  font-size:var(--cg,22px);font-weight:800}
+
+/* ── Position ── */
+.tr .lauf{margin-top:var(--lo,34px)}
+.tr .lauf .zeiten{display:flex;justify-content:space-between;font-size:12px;color:var(--tinte-2);
+  font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.tr .bahn2{position:relative;height:26px;display:flex;align-items:center;cursor:pointer;margin-top:4px;
+  touch-action:none}
+.tr .bahn2 .schiene{position:absolute;left:0;right:0;height:2px;background:rgba(60,54,42,.20);
+  border-radius:2px}
+.tr .bahn2 .voll{position:absolute;left:0;height:2px;background:var(--tinte);border-radius:2px}
+.tr .bahn2 .knopf{position:absolute;width:20px;height:20px;border-radius:50%;background:var(--tinte);
+  margin-left:-10px;box-shadow:0 3px 8px var(--schatten);transition:left .18s linear}
+
+/* ── Transport ── */
+.tr .transport{display:flex;align-items:center;justify-content:center;gap:var(--tg2,26px);
+  margin-top:var(--to,26px)}
+.tr .kreis{width:var(--kk,56px);height:var(--kk,56px);border-radius:50%;display:grid;place-items:center;
+  color:var(--tinte-2);background:var(--erhoben);
+  box-shadow:-4px -4px 10px var(--hell),5px 5px 12px var(--schatten)}
+.tr .voll2{width:var(--vv,84px);height:var(--vv,84px);border-radius:50%;background:var(--tinte);color:var(--grund);
+  display:grid;place-items:center;box-shadow:0 8px 20px rgba(25,23,18,.32)}
+
+/* ── Warteschlange (nur iPad) ── */
+.tr .queue{flex:1;min-height:0;margin-top:30px;overflow:hidden;border-top:1px solid rgba(60,54,42,.16)}
+.tr .queue .kopfz{display:flex;justify-content:space-between;align-items:baseline;padding:14px 0 6px}
+.tr .queue .kopfz b{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--tinte-2)}
+.tr .queue .kopfz span{font-size:12px;color:var(--tinte-3)}
+.tr .qz{display:flex;align-items:center;gap:16px;padding:12px 8px;border-radius:14px;cursor:pointer}
+.tr .qz:hover{background:rgba(60,54,42,.05)}
+.tr .qz.an{background:var(--erhoben);box-shadow:-3px -3px 9px var(--hell),4px 4px 11px var(--schatten)}
+.tr .qz .nr{width:22px;font-size:12px;color:var(--tinte-3);font-variant-numeric:tabular-nums}
+.tr .qz .t{flex:1;min-width:0;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  color:var(--tinte-2)}
+.tr .qz.an .t{color:var(--tinte);font-weight:700}
+.tr .qz .d{font-size:12.5px;color:var(--tinte-3);font-variant-numeric:tabular-nums}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 04</div>
+      <h1>Tonring</h1>
+      <p class="lede">Zwei Regler, die man nie verwechselt: Die <b>Lautstärke läuft rund</b> um das Cover,
+      die <b>Position gerade</b> darunter. Die Vorlage macht das vor, und es ist der eine Griff, mit dem ein
+      Spieler ohne Beschriftung auskommt.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <img src="../../mckups_player/Bildschirmfoto%202026-08-13%20um%2010.49.09.png" alt="Vorlage">
+      <figcaption>Vorlage · 10.49.09</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Handstück</h2><span class="marke geraet">Handy · 390 × 844</span></div>
+    <p class="etext">Die Vorlage, aufgeräumt: Interpret klein, Titel fett, dann die Scheibe mit dem Ring.
+    Unten drei Knöpfe, davon einer gefüllt — <b>es gibt immer nur eine Hauptsache</b>. Alles andere
+    (Warteschlange, Sammlung) liegt hinter der Kopfzeile.
+    <span class="probier"><b>Ausprobieren:</b> am Ring ziehen (Lautstärke), an der Linie ziehen
+    (Position).</span></p>
+    <div class="buehne">
+      <div class="rahmen telefon">
+        <div class="schirm"><div class="kerbe"></div><div class="tr" id="v1"></div><div class="griff"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Lautstärke <b>ohne Menü</b>, direkt am Cover</dd></div>
+      <div><dt>Schwäche</dt><dd>Ein Ring ist mit dem Daumen ungenauer als ein Schieber</dd></div>
+      <div><dt>Detail</dt><dd>+ und − stehen an den Ringenden, nicht als Beschriftung</dd></div>
+      <div><dt>Aufwand</dt><dd>mittel — Ringziehen ist Winkelrechnung</dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Standgerät</h2><span class="marke geraet">iPad hoch · 834 × 1194</span></div>
+    <p class="etext">Dieselbe Anordnung, aber das iPad hat Platz für das, was am Telefon fehlt: die
+    <b>Warteschlange steht unter dem Transport</b>, der laufende Titel als erhabene Kachel. Damit wird aus
+    dem Handstück ein Gerät, das man hinstellt und aus zwei Metern bedient.
+    <span class="probier"><b>Ausprobieren:</b> unten einen Titel wählen; Ring und Linie gelten weiter.</span></p>
+    <div class="buehne">
+      <div class="rahmen ipad-hoch">
+        <div class="schirm"><div class="tr" id="v2"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Spieler und Warteschlange in einem Bild</dd></div>
+      <div><dt>Schwäche</dt><dd>Keine Sammlung — die bleibt eine Ebene tiefer</dd></div>
+      <div><dt>Quer</dt><dd>Ring links, Warteschlange rechts — trägt ebenfalls</dd></div>
+      <div><dt>Nähe zu mobile.html</dt><dd>gering: dort ist die Achse die Warteschlange, hier das Cover</dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Ringziehen ist <code>atan2</code>.</b> Aus dem Zeigerpunkt relativ zur Ringmitte wird
+      ein Winkel, der auf den Bogen (hier 300°) abgebildet wird. Wichtig ist der Sprung am offenen Ende:
+      ohne Begrenzung springt die Lautstärke beim Überziehen von 100 auf 0.</span></li>
+      <li><span><b>Lautstärke gehört ins <code>localStorage</code>.</b>
+      <code>musiklib:volume</code> und <code>musiklib:muted</code> teilen sich alle Oberflächen —
+      wer am iPad leiser dreht, findet es am Telefon leiser wieder. Schlüsselnamen also unverändert
+      übernehmen.</span></li>
+      <li><span><b>Die drehende Platte darf nicht die Lautstärke tragen.</b> Zwei Kreisgesten auf demselben
+      Element sind eine zu viel — deshalb dreht innen das Cover und außen liegt der Ring, mit sichtbarem
+      Abstand dazwischen.</span></li>
+      <li><span><b>Der gefüllte Knopf ist der einzige.</b> Wenn Zurück und Weiter dieselbe Fläche bekommen
+      wie Abspielen, sucht das Auge bei jedem Blick neu.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für ipad.html</span><span>Blatt 04 · Tonring</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+const d1 = new Deck('ohi', {qi:0, pos:72,  speed:7});
+const d2 = new Deck('bac', {qi:2, pos:34,  speed:7});
+
+/* offener Ring: 300° Bogen, oben offen */
+const R = 46, BOGEN = 300, START = 210;                 // in SVG-Koordinaten (0…100)
+const punkt = w => {
+  const rad = (START + w*BOGEN) * Math.PI / 180;
+  return [50 + R*Math.cos(rad), 50 + R*Math.sin(rad)];
+};
+const bogenPfad = (von, bis) => {
+  const [x1,y1] = punkt(von), [x2,y2] = punkt(bis);
+  const gross = (bis-von)*BOGEN > 180 ? 1 : 0;
+  return `M ${x1.toFixed(2)} ${y1.toFixed(2)} A ${R} ${R} 0 ${gross} 1 ${x2.toFixed(2)} ${y2.toFixed(2)}`;
+};
+
+const feldHTML = `
+  <div class="ringfeld">
+    <div class="ring" data-ring>
+      <svg viewBox="0 0 100 100">
+        <path class="bahn" d="${bogenPfad(0,1)}"></path>
+        <path class="fuell" data-fuell></path>
+        <circle class="griff" data-griff r="3.4"></circle>
+      </svg>
+      <span class="pm plus">+</span><span class="pm minus">−</span>
+    </div>
+    <div class="scheibe"><div class="platte" data-platte><div class="cov" data-cov></div></div></div>
+  </div>`;
+
+const spielerHTML = `
+  <div class="kz">
+    <button>${I.back(19)} Zurück</button>
+    <button>${I.list(20)}</button>
+  </div>
+  <div class="kopftitel"><div class="ar" data-ar></div><h1 data-titel></h1></div>
+  ${feldHTML}
+  <div class="lauf">
+    <div class="zeiten"><span data-jetzt></span><span data-ende></span></div>
+    <div class="bahn2" data-bahn>
+      <span class="schiene"></span><span class="voll" data-voll></span><span class="knopf" data-knopf></span>
+    </div>
+  </div>
+  <div class="transport">
+    <button class="kreis" data-prev>${I.prev(20)}</button>
+    <button class="voll2" data-pp>${I.pause(28)}</button>
+    <button class="kreis" data-next>${I.next(20)}</button>
+  </div>`;
+
+document.getElementById('v1').innerHTML =
+  `<div class="sbar" style="color:#191712"><span>9:41</span><div class="ic">${I.vol(15)}</div></div>` +
+  spielerHTML;
+
+document.getElementById('v2').innerHTML =
+  `<div class="sbar" style="color:#191712"><span>9:41</span><div class="ic">${I.vol(15)}</div></div>` +
+  spielerHTML +
+  `<div class="queue"><div class="kopfz"><b>Warteschlange</b><span data-qlen></span></div>
+     <div data-queue></div></div>`;
+
+function verdrahte(wurzel, deck, stil){
+  const $  = s => wurzel.querySelector(s);
+  const $$ = s => [...wurzel.querySelectorAll(s)];
+  Object.entries(stil).forEach(([k,v]) => wurzel.style.setProperty(k, v));
+
+  $('[data-pp]').onclick   = () => deck.toggle();
+  $('[data-next]').onclick = () => deck.next();
+  $('[data-prev]').onclick = () => deck.prev();
+  bindDrag($('[data-bahn]'), f => deck.seek(f));
+
+  /* Ring: Winkel um die Mitte, auf 0…1 des Bogens abgebildet */
+  const ring = $('[data-ring]');
+  const ringWert = ev => {
+    const r = ring.getBoundingClientRect();
+    let g = Math.atan2(ev.clientY - (r.top + r.height/2), ev.clientX - (r.left + r.width/2)) * 180/Math.PI;
+    let w = (g - START + 360*2) % 360;
+    if (w > BOGEN) w = (w - BOGEN) < (360 - w) ? BOGEN : 0;   // am offenen Ende festhalten
+    return w / BOGEN;
+  };
+  let zieht = false;
+  ring.addEventListener('pointerdown', ev => {
+    zieht = true; ring.setPointerCapture(ev.pointerId); deck.setVol(ringWert(ev)); ev.preventDefault(); });
+  ring.addEventListener('pointermove', ev => { if (zieht) deck.setVol(ringWert(ev)); });
+  ring.addEventListener('pointerup',     () => zieht = false);
+  ring.addEventListener('pointercancel', () => zieht = false);
+
+  const qKasten = $('[data-queue]');
+  let letztesAlbum = null, letzter = null;
+  deck.onRender = d => {
+    const t = d.track, a = d.album;
+    if (qKasten && letztesAlbum !== a.id){
+      letztesAlbum = a.id;
+      qKasten.innerHTML = d.queue.map((id,i) => {
+        const tr = TRACKS[id];
+        return `<div class="qz" data-q="${i}"><span class="nr">${String(i+1).padStart(2,'0')}</span>
+          <span class="t">${esc(tr.t)}</span><span class="d">${fmt(tr.d)}</span></div>`;
+      }).join('');
+      [...qKasten.children].forEach(el => el.onclick = () => d.jump(+el.dataset.q));
+      $('[data-qlen]').textContent = a.t + ' · ' + fmtLang(d.total);
+    }
+    if (qKasten) [...qKasten.children].forEach((el,i) => el.classList.toggle('an', i === d.qi));
+    if (letzter !== t.id){
+      letzter = t.id;
+      $('[data-titel]').textContent = t.t;
+      $('[data-ar]').textContent = a.ar;
+      $('[data-cov]').textContent = ini(a);
+      $('[data-cov]').style.background = grad(a);
+    }
+    const f = d.frac;
+    $('[data-voll]').style.width  = (f*100).toFixed(2) + '%';
+    $('[data-knopf]').style.left  = (f*100).toFixed(2) + '%';
+    $('[data-jetzt]').textContent = fmt2(d.pos);
+    $('[data-ende]').textContent  = fmt2(d.dur);
+    $('[data-pp]').innerHTML = d.playing ? I.pause(28) : I.play(28);
+    $('[data-platte]').classList.toggle('halt', !d.playing);
+    $('[data-fuell]').setAttribute('d', bogenPfad(0, Math.max(.001, d.vol)));
+    const [gx,gy] = punkt(d.vol);
+    $('[data-griff]').setAttribute('cx', gx.toFixed(2));
+    $('[data-griff]').setAttribute('cy', gy.toFixed(2));
+  };
+  deck.render();
+}
+verdrahte(document.getElementById('v1'), d1,
+  {'--pad':'30px','--tg':'38px','--rf':'292px','--cg':'22px'});
+verdrahte(document.getElementById('v2'), d2,
+  {'--pad':'56px','--tg':'54px','--arg':'18px','--rf':'352px','--cg':'28px','--lo':'36px',
+   '--to':'34px','--kk':'70px','--vv':'104px','--tg2':'40px','--kzu':'20px','--kpu':'26px'});
+})();
+</script>

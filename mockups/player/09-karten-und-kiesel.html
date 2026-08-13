@@ -1,0 +1,309 @@
+<title>09 · Karten &amp; Kiesel</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 09 — Vorlage: drei weiche graue Karten übereinander — „läuft
+   gerade", „das Album", „alle Alben". Cover stecken halb in der Hülle,
+   daneben schaut die Platte heraus.
+   Genommen: die Karten als Ebenen ohne Seitenwechsel und die Hülle als
+   Coverform. Das ist der einzige Entwurf hier, der eine Sammlung, ein Album
+   und den Spieler gleichzeitig zeigt.
+   ══════════════════════════════════════════════════════════════════════════ */
+.kk{
+  --grund:#B9B9B9; --karte:#E6E6E6; --karte-2:#EDEDED;
+  --tinte:#33333A; --tinte-2:#75757E; --tinte-3:#A0A0A8;
+  --hell:rgba(255,255,255,.85); --dunkel:rgba(90,90,96,.22);
+  --gold:#D8A43C;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  background:linear-gradient(160deg,#C2C2C2,#A9A9AC);color:var(--tinte);font-family:var(--sans);
+  height:100%;overflow:hidden;padding:var(--pad,26px);display:flex;gap:22px}
+.kk *{font-family:inherit}
+.kk .karte{background:var(--karte);border-radius:20px;padding:22px 26px;
+  box-shadow:-7px -7px 16px rgba(255,255,255,.5),9px 9px 24px rgba(60,60,66,.28)}
+.kk .spalte{display:flex;flex-direction:column;gap:22px;min-width:0}
+.kk h2{font-size:19px;font-weight:600;letter-spacing:-.01em}
+.kk .kap{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--tinte-3)}
+.kk .x{width:38px;height:38px;border-radius:50%;background:var(--karte-2);display:grid;place-items:center;
+  color:var(--tinte-2);box-shadow:-3px -3px 8px rgba(255,255,255,.7),4px 4px 10px var(--dunkel)}
+
+/* ── Hülle mit Platte ── */
+.kk .huelle{position:relative;width:var(--hg,150px);height:var(--hg,150px);flex:none}
+.kk .huelle .scheibe{position:absolute;right:-24%;top:6%;width:88%;height:88%;border-radius:50%;
+  background:repeating-radial-gradient(circle at 50% 50%,#2C2C30 0 1.4px,#3A3A40 1.4px 2.8px);
+  box-shadow:2px 2px 8px rgba(60,60,66,.4);animation:kkdreh 4s linear infinite}
+.kk .huelle .scheibe.halt{animation-play-state:paused}
+@keyframes kkdreh{to{transform:rotate(360deg)}}
+.kk .huelle .scheibe::after{content:'';position:absolute;inset:38%;border-radius:50%;background:#D8D8DC}
+.kk .huelle .cov{position:absolute;inset:0;border-radius:4px;display:grid;place-items:center;color:#fff;
+  font-size:calc(var(--hg,150px) / 4);font-weight:700;box-shadow:3px 4px 12px rgba(60,60,66,.4);
+  z-index:2}
+
+/* ── Karte „läuft gerade" ── */
+.kk .jetzt{display:flex;gap:26px;align-items:center}
+.kk .jetzt .rechts{flex:1;min-width:0}
+.kk .jetzt .zeile1{display:flex;align-items:baseline;gap:10px}
+.kk .jetzt .zeile1 b{font-size:21px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.kk .jetzt .zeile1 span{font-size:14px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.kk .jetzt .trk{margin-top:4px;font-size:16px;color:var(--tinte-2)}
+.kk .lauf{margin-top:16px}
+.kk .lauf .bahn{position:relative;height:20px;display:flex;align-items:center;cursor:pointer;
+  touch-action:none}
+.kk .lauf .schiene{position:absolute;left:0;right:0;height:7px;border-radius:5px;background:var(--karte-2);
+  box-shadow:inset -2px -2px 5px rgba(255,255,255,.8),inset 3px 3px 7px var(--dunkel)}
+.kk .lauf .knopf{position:absolute;width:16px;height:16px;border-radius:50%;background:#F4F4F6;
+  margin-left:-8px;box-shadow:0 2px 6px rgba(60,60,66,.4);transition:left .18s linear}
+.kk .lauf .zeiten{display:flex;justify-content:space-between;font-size:11.5px;color:var(--tinte-3);
+  font-variant-numeric:tabular-nums;margin-top:2px}
+.kk .knoepfe{display:flex;align-items:center;gap:14px;margin-top:16px}
+.kk .knoepfe button{width:44px;height:44px;border-radius:50%;background:var(--karte-2);display:grid;
+  place-items:center;color:var(--tinte-2);
+  box-shadow:-3px -3px 8px rgba(255,255,255,.75),4px 4px 10px var(--dunkel)}
+.kk .knoepfe button.gross{width:58px;height:58px;color:var(--tinte)}
+.kk .knoepfe button.an{color:var(--gold);
+  box-shadow:inset -2px -2px 6px rgba(255,255,255,.7),inset 3px 3px 8px var(--dunkel)}
+.kk .oben{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+
+/* ── Karte „Album" ── */
+.kk .albkopf{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+.kk .sterne{color:var(--gold);font-size:13px;letter-spacing:2px}
+.kk .titel{display:grid;grid-template-columns:repeat(var(--sp,2),1fr);gap:2px 30px;margin-top:16px}
+.kk .tz{display:flex;align-items:baseline;gap:10px;padding:7px 8px;border-radius:8px;cursor:pointer;
+  font-size:14px;color:var(--tinte-2)}
+.kk .tz:hover{background:rgba(255,255,255,.35)}
+.kk .tz .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kk .tz .d{font-size:12px;color:var(--tinte-3);font-variant-numeric:tabular-nums}
+.kk .tz.an{color:var(--tinte);font-weight:600}
+.kk .tz .laut{width:14px;flex:none;color:var(--tinte);opacity:0}
+.kk .tz.an .laut{opacity:1}
+
+/* ── Karte „Alben" ── */
+.kk .reihe{display:flex;align-items:center;gap:26px;justify-content:center;margin:14px 0 12px;
+  min-height:0}
+.kk .rk{cursor:pointer;transition:transform .2s;flex:none}
+.kk .rk.mitte{transform:scale(1.12)}
+.kk .pfeile{display:flex;align-items:center;justify-content:center;gap:26px}
+.kk .pfeile .name{text-align:center;min-width:190px}
+.kk .pfeile .name b{font-size:15px;font-style:italic}
+.kk .pfeile .name div{font-size:12px;color:var(--tinte-3)}
+.kk .pfeile button{width:40px;height:40px;border-radius:50%;background:var(--karte-2);display:grid;
+  place-items:center;color:var(--tinte-2);
+  box-shadow:-3px -3px 8px rgba(255,255,255,.75),4px 4px 10px var(--dunkel)}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 09</div>
+      <h1>Karten <em>&amp;</em> Kiesel</h1>
+      <p class="lede">Der einzige Entwurf, der <b>Spieler, Album und Sammlung gleichzeitig</b> zeigt —
+      als drei Karten, die nebeneinander liegen bleiben. Nichts schiebt sich über etwas anderes, nichts
+      muss geschlossen werden, damit man das Nächste sieht.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <img src="../../mckups_player/Bildschirmfoto%202026-08-13%20um%2011.01.34.png" alt="Vorlage">
+      <figcaption>Vorlage · 11.01.34</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Schreibtisch</h2><span class="marke geraet">PC · 1440 × 900</span></div>
+    <p class="etext">Zwei Spalten statt drei Etagen: links läuft die Musik und darunter steht das Regal,
+    rechts liegt das offene Album mit allen Titeln in zwei Spalten. <b>Die Karten ändern nie ihren
+    Platz</b> — was wechselt, ist ihr Inhalt.
+    <span class="probier"><b>Ausprobieren:</b> unten links mit den Pfeilen blättern, ein Cover anklicken,
+    rechts einen Titel starten.</span></p>
+    <div class="buehne">
+      <div class="rahmen pc">
+        <div class="schirm">
+          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
+          <div class="flaeche"><div class="kk" id="v1"></div></div>
+        </div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Alles sichtbar, <b>kein Wechsel, kein Zurück</b></dd></div>
+      <div><dt>Schwäche</dt><dd>Bei sehr langen Alben scrollt die rechte Karte</dd></div>
+      <div><dt>Cover</dt><dd>Hülle plus Platte — <b>quadratisch bleibt quadratisch</b></dd></div>
+      <div><dt>Nähe zu index.html</dt><dd>groß — dieselben Bausteine, andere Oberfläche</dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Etagen</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
+    <p class="etext">Die Anordnung der Vorlage, eins zu eins: drei Karten übereinander. Auf dem iPad ist
+    das die bessere Form, weil die Finger von oben nach unten arbeiten und die unterste Karte —
+    das Regal — <b>im Daumenbereich liegt</b>. Die Titelliste steht einspaltig, sonst wird sie eng.
+    <span class="probier"><b>Ausprobieren:</b> unten blättern; die mittlere Karte folgt der Auswahl.</span></p>
+    <div class="buehne">
+      <div class="rahmen ipad-quer">
+        <div class="schirm"><div class="kk" id="v2"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Vertraute Reihenfolge: läuft — Album — Regal</dd></div>
+      <div><dt>Schwäche</dt><dd>Drei Karten auf 834 px: jede bekommt wenig Höhe</dd></div>
+      <div><dt>Hochkant</dt><dd>Trägt besser — dann drei volle Etagen</dd></div>
+      <div><dt>Aufwand</dt><dd>mittel — die Karten sind einfach, die Schatten viele</dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Drei Karten heißen drei Zustände, die zusammenpassen müssen.</b> Läuft ein Titel aus
+      Album A, während Album B geöffnet ist, muss die mittlere Karte B zeigen und trotzdem A als
+      „läuft" markieren. Das ist eine zweite Variable neben <code>qIndex</code> — in
+      <code>index.html</code> gibt es die bereits als geöffnetes Album.</span></li>
+      <li><span><b>Die Hülle ist zwei Ebenen.</b> Cover vorn, Platte dahinter, 24 % versetzt. Bei
+      fehlendem Cover trägt der Verlauf mit Anfangsbuchstaben — genau wie in
+      <code>index.html</code>, wo <code>album.cover</code> fehlen darf.</span></li>
+      <li><span><b>Zweispaltige Titellisten brauchen eine Obergrenze.</b> Ab etwa 20 Titeln (Bach,
+      Sammelalben) wird die Karte höher als der Bildschirm; dann muss die Liste selbst scrollen, nicht
+      die Seite — sonst wandert der Spieler aus dem Bild.</span></li>
+      <li><span><b>Kein Umschalten heißt: alles bleibt geladen.</b> Bei 900 Alben ist das Regal die
+      teure Karte. <code>content-visibility:auto</code> mit <code>contain-intrinsic-size</code> wie bei
+      <code>.album</code> in <code>index.html</code> — sonst ruckelt das Blättern.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für pc.html / ipad.html</span><span>Blatt 09 · Karten &amp; Kiesel</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+const d1 = new Deck('koe', {qi:1, pos:120, speed:8});
+const d2 = new Deck('sat', {qi:2, pos:60,  speed:8});
+
+const jetztHTML = `
+  <div class="karte jetzt">
+    <div class="huelle"><div class="scheibe" data-scheibe></div><div class="cov" data-cov></div></div>
+    <div class="rechts">
+      <div class="oben"><span class="kap">Läuft gerade</span><button class="x">${I.disc(18)}</button></div>
+      <div class="zeile1"><b data-alb></b><span data-ar></span></div>
+      <div class="trk" data-titel></div>
+      <div class="lauf">
+        <div class="bahn" data-bahn><span class="schiene"></span><span class="knopf" data-knopf></span></div>
+        <div class="zeiten"><span data-jetzt></span><span data-ende></span></div>
+      </div>
+      <div class="knoepfe">
+        <button data-repeat>${I.repeat(18)}</button>
+        <button data-prev>${I.prev(18)}</button>
+        <button class="gross" data-pp>${I.pause(22)}</button>
+        <button data-next>${I.next(18)}</button>
+        <button data-shuffle>${I.shuffle(18)}</button>
+      </div>
+    </div>
+  </div>`;
+
+const albumHTML = `
+  <div class="karte" style="flex:1;min-height:0;display:flex;flex-direction:column">
+    <div class="albkopf">
+      <div><h2 data-oalb></h2><div class="kap" style="margin-top:5px" data-oar></div></div>
+      <button class="x">${I.fwd(18)}</button>
+    </div>
+    <div class="kap" style="margin-top:12px;display:flex;gap:14px;align-items:center">
+      <span data-oanz></span><span class="sterne">★★★</span></div>
+    <div class="titel" data-titelliste></div>
+  </div>`;
+
+const regalHTML = `
+  <div class="karte">
+    <div class="oben"><span class="kap">Alle Alben</span><button class="x">${I.grid(18)}</button></div>
+    <div class="reihe" data-reihe></div>
+    <div class="pfeile">
+      <button data-links>${I.back(17)}</button>
+      <div class="name"><b data-ralb></b><div data-rar></div></div>
+      <button data-rechts>${I.fwd(17)}</button>
+    </div>
+  </div>`;
+
+document.getElementById('v1').innerHTML = `
+  <div class="spalte" style="width:600px;flex:none">${jetztHTML}${regalHTML}</div>
+  <div class="spalte" style="flex:1">${albumHTML}</div>`;
+
+document.getElementById('v2').innerHTML = `
+  <div class="spalte" style="flex:1">${jetztHTML}${albumHTML}${regalHTML}</div>`;
+
+function verdrahte(wurzel, deck, stil){
+  const $  = s => wurzel.querySelector(s);
+  const $$ = s => [...wurzel.querySelectorAll(s)];
+  Object.entries(stil).forEach(([k,v]) => wurzel.style.setProperty(k, v));
+
+  let offen = deck.album.id;                      // welches Album die mittlere Karte zeigt
+  let mitte = ALBUMS.findIndex(a => a.id === offen);
+
+  $('[data-pp]').onclick   = () => deck.toggle();
+  $('[data-next]').onclick = () => deck.next();
+  $('[data-prev]').onclick = () => deck.prev();
+  $$('[data-repeat],[data-shuffle]').forEach(b => b.onclick = () => b.classList.toggle('an'));
+  bindDrag($('[data-bahn]'), f => deck.seek(f));
+  $('[data-links]').onclick  = () => { mitte = (mitte - 1 + ALBUMS.length) % ALBUMS.length; zeigeRegal(); };
+  $('[data-rechts]').onclick = () => { mitte = (mitte + 1) % ALBUMS.length; zeigeRegal(); };
+
+  function zeigeRegal(){
+    const um = [-1,0,1].map(k => ALBUMS[(mitte + k + ALBUMS.length) % ALBUMS.length]);
+    $('[data-reihe]').innerHTML = um.map((a,k) => `
+      <div class="rk${k===1?' mitte':''}" data-rk="${a.id}">
+        <div class="huelle" style="--hg:${k===1?116:96}px">
+          <div class="scheibe" style="animation:none"></div>
+          <div class="cov" style="background:${grad(a)}">${ini(a)}</div></div>
+      </div>`).join('');
+    $$('[data-rk]').forEach(el => el.onclick = () => oeffne(el.dataset.rk));
+    $('[data-ralb]').textContent = ALBUMS[mitte].t;
+    $('[data-rar]').textContent  = ALBUMS[mitte].ar + ' · ' + ALBUMS[mitte].y;
+  }
+  function oeffne(id){
+    offen = id;
+    mitte = ALBUMS.findIndex(a => a.id === id);
+    zeigeAlbum(); zeigeRegal();
+  }
+  function zeigeAlbum(){
+    const a = ALBUMS.find(x => x.id === offen);
+    $('[data-oalb]').textContent = a.t;
+    $('[data-oar]').textContent  = a.ar + ' · ' + a.y;
+    $('[data-oanz]').textContent = a.tr.length + ' Titel · ' + fmtLang(albDur(a));
+    $('[data-titelliste]').innerHTML = a.tr.map(([t,d],i) => `
+      <div class="tz" data-t="${a.id}-${i}"><span class="laut">${I.vol(13)}</span>
+        <span class="t">${esc(t)}</span><span class="d">${fmt(d)}</span></div>`).join('');
+    $$('[data-t]').forEach(el => el.onclick = () => {
+      const [alb, nr] = el.dataset.t.split('-');
+      const al = ALBUMS.find(x => x.id === alb);
+      deck.queue = al.tr.map((_,i) => `${alb}-${i}`);
+      deck.qi = +nr; deck.pos = 0; deck.playing = true; deck.render();
+    });
+    markiere();
+  }
+  function markiere(){
+    $$('[data-t]').forEach(el => el.classList.toggle('an', el.dataset.t === deck.queue[deck.qi]));
+  }
+
+  let letzter = null;
+  deck.onRender = d => {
+    const t = d.track, a = d.album;
+    if (letzter !== t.id){
+      letzter = t.id;
+      $('[data-alb]').textContent = a.t;
+      $('[data-ar]').textContent = '— ' + a.ar;
+      $('[data-titel]').textContent = t.t;
+      $('[data-cov]').textContent = ini(a);
+      $('[data-cov]').style.background = grad(a);
+      markiere();
+    }
+    $('[data-knopf]').style.left = (d.frac*100).toFixed(2) + '%';
+    $('[data-jetzt]').textContent = fmt(d.pos);
+    $('[data-ende]').textContent  = fmt(d.dur);
+    $('[data-pp]').innerHTML = d.playing ? I.pause(22) : I.play(22);
+    $('[data-scheibe]').classList.toggle('halt', !d.playing);
+  };
+  zeigeAlbum(); zeigeRegal(); deck.render();
+}
+verdrahte(document.getElementById('v1'), d1, {'--hg':'150px','--sp':'2'});
+verdrahte(document.getElementById('v2'), d2, {'--hg':'120px','--sp':'3','--pad':'22px'});
+})();
+</script>

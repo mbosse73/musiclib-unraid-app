@@ -14,6 +14,8 @@ The application the container runs is four files:
 
 `conftest.py`, `test_app.py`, `test_frontend.py` and `requirements-dev.txt` exist only for local development — the compose `command` installs `requirements.txt` alone, so none of them ever reaches the container. `docker-compose.yml` and `README.md` (in German) cover unraid deployment; not relevant to app logic.
 
+`mockups/` holds design drafts, never anything the container serves: `handy.html`/`faden.html`/`faden-cover.html` are the drafts `mobile.html` came out of, and `mockups/player/` holds thirteen sheets (`index.html` is the overview) with two player variants each — drafts for a future `ipad.html` and `pc.html`, built from the photos in `mckups_player/`. Unlike the app pages these share `_seite.css` and `_demo.js`; the single-file rule applies to what gets deployed, not to the drafts. All of them are demos with an invented library and a fake clock — no API, no `localStorage`.
+
 ## Running locally
 
 There is no linter and no build step. There *is* a pytest suite; run it before and after changes.

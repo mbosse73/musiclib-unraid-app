@@ -1,0 +1,310 @@
+<title>08 · Kassette</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 08 — Vorlage: eine durchsichtige Kassette, Typ I, Seite A.
+   Genommen: die Wickel. Links wächst, rechts schrumpft — das ist die
+   ehrlichste Fortschrittsanzeige, die es gibt, und sie braucht keine Zahl.
+   Weggelassen: alles Nostalgische außer der Form. Das Gerät ist von 1985,
+   die Bedienung nicht.
+   ══════════════════════════════════════════════════════════════════════════ */
+.ks{
+  --grund:#232327; --grund-2:#2C2C31; --glas:rgba(228,232,240,.13); --kante:rgba(236,240,248,.30);
+  --hell:#EEF0F4; --hell-2:#A8ACB6; --hell-3:#6E7280;
+  --orange:#E2652B; --band:#2A211C;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
+  background:radial-gradient(90% 70% at 50% 30%,#2E2E34,var(--grund) 70%);
+  color:var(--hell);font-family:var(--sans);height:100%;overflow:hidden;display:flex}
+.ks *{font-family:inherit}
+.ks .kap{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--hell-3)}
+
+.ks .buehne{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:var(--bg,30px);padding:30px}
+
+/* ── Kassette ── */
+.ks .kass{position:relative;width:var(--kw,620px);height:calc(var(--kw,620px) * .625);flex:none;
+  border-radius:10px;background:linear-gradient(150deg,rgba(240,244,252,.18),rgba(200,206,220,.07));
+  box-shadow:inset 0 0 0 1px var(--kante),inset 0 2px 0 rgba(255,255,255,.22),
+    0 26px 60px rgba(0,0,0,.55);backdrop-filter:blur(2px)}
+.ks .kass .schraube{position:absolute;width:12px;height:12px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#4A4A52,#1A1A1E);box-shadow:0 0 0 1px rgba(255,255,255,.10)}
+.ks .kass .fenster{position:absolute;left:14%;right:14%;top:22%;bottom:26%;border-radius:6px;
+  background:rgba(10,10,14,.30);box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)}
+.ks .wickel{position:absolute;top:50%;border-radius:50%;transform:translate(-50%,-50%);
+  background:repeating-radial-gradient(circle at 50% 50%,#241C18 0 1.5px,#332821 1.5px 3px);
+  box-shadow:0 2px 8px rgba(0,0,0,.5);transition:width .3s linear,height .3s linear}
+.ks .nabe{position:absolute;top:50%;width:74px;height:74px;border-radius:50%;transform:translate(-50%,-50%);
+  background:#EDEFF3;box-shadow:0 0 0 1px rgba(0,0,0,.25),inset 0 0 0 8px rgba(0,0,0,.06);
+  animation:ksdreh 2.4s linear infinite}
+.ks .nabe.halt{animation-play-state:paused}
+@keyframes ksdreh{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.ks .nabe::before{content:'';position:absolute;inset:22%;border-radius:50%;background:#1F1F24}
+.ks .nabe i{position:absolute;left:50%;top:8%;width:5px;height:20%;margin-left:-2.5px;background:#1F1F24;
+  border-radius:2px;transform-origin:50% 100%}
+.ks .nabe i:nth-child(2){transform:rotate(60deg)}
+.ks .nabe i:nth-child(3){transform:rotate(120deg)}
+.ks .nabe i:nth-child(4){transform:rotate(180deg)}
+.ks .nabe i:nth-child(5){transform:rotate(240deg)}
+.ks .nabe i:nth-child(6){transform:rotate(300deg)}
+.ks .bandlinie{position:absolute;top:50%;height:calc(var(--kw,620px) * .052);background:var(--band);
+  transform:translateY(-50%);box-shadow:0 0 0 1px rgba(0,0,0,.3)}
+
+/* Etikett */
+.ks .etikett{position:absolute;left:9%;right:9%;top:7%;height:26%;border-radius:3px;
+  background:linear-gradient(180deg,#F4F4F0,#E4E4DE);color:#1A1A1E;padding:8px 14px;
+  display:flex;align-items:center;gap:14px;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.ks .etikett .streifen{width:8px;align-self:stretch;border-radius:2px;flex:none;
+  background:linear-gradient(180deg,var(--orange) 0 33%,#E5B23A 33% 66%,#3E7D5A 66%)}
+.ks .etikett .zeilen{flex:1;min-width:0}
+.ks .etikett .t{font-size:var(--etg,17px);font-weight:700;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;letter-spacing:-.01em}
+.ks .etikett .s{font-size:11.5px;color:#55555E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  margin-top:2px}
+.ks .etikett .typ{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:#55555E;text-align:right;
+  line-height:1.5;white-space:nowrap}
+.ks .seite{position:absolute;left:9%;bottom:6%;font-family:var(--mono);font-size:11px;letter-spacing:.2em;
+  color:var(--hell-2)}
+.ks .laufwerk{position:absolute;right:9%;bottom:6%;font-family:var(--mono);font-size:11px;
+  letter-spacing:.14em;color:var(--hell-2);font-variant-numeric:tabular-nums}
+
+/* ── Zählwerk und Spulleiste ── */
+.ks .zaehler{display:flex;align-items:center;gap:18px}
+.ks .zaehler .fach{font-family:var(--mono);font-size:var(--zg,30px);letter-spacing:.06em;
+  background:#15151A;border-radius:4px;padding:6px 16px;box-shadow:inset 0 2px 6px rgba(0,0,0,.7);
+  color:var(--orange);font-variant-numeric:tabular-nums}
+.ks .band{width:var(--bw,620px);height:34px;display:flex;align-items:center;cursor:pointer;
+  touch-action:none;position:relative}
+.ks .band .schiene{position:absolute;left:0;right:0;height:3px;background:rgba(255,255,255,.14)}
+.ks .band .voll{position:absolute;left:0;height:3px;background:var(--orange)}
+.ks .band .griff{position:absolute;width:14px;height:22px;border-radius:3px;background:var(--hell);
+  margin-left:-7px;box-shadow:0 2px 6px rgba(0,0,0,.5);transition:left .18s linear}
+
+/* ── Tasten ── */
+.ks .tasten{display:flex;gap:6px}
+.ks .tasten button{width:var(--tw,86px);height:var(--th,54px);border-radius:4px;color:#22222A;
+  background:linear-gradient(180deg,#DDE0E6,#B4B8C2);display:grid;place-items:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 3px 0 #6E727C,0 6px 12px rgba(0,0,0,.45);
+  transform:translateY(0);transition:transform .08s,box-shadow .08s}
+.ks .tasten button:active,.ks .tasten button.gedrueckt{transform:translateY(3px);
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.4),0 0 0 #6E727C}
+.ks .tasten button.rot{background:linear-gradient(180deg,#EE8A54,var(--orange));color:#25150C;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 3px 0 #8E3A14,0 6px 12px rgba(0,0,0,.45)}
+
+/* ── Regal ── */
+.ks .regal{width:var(--rw,300px);flex:none;border-left:1px solid rgba(255,255,255,.09);padding:30px 26px;
+  overflow:hidden;background:rgba(0,0,0,.16)}
+.ks .regal .kap{display:block;margin-bottom:18px}
+.ks .spine{height:60px;border-radius:4px;margin-bottom:9px;padding:0 14px;display:flex;align-items:center;
+  gap:12px;cursor:pointer;background:linear-gradient(150deg,rgba(240,244,252,.16),rgba(200,206,220,.06));
+  box-shadow:inset 0 0 0 1px rgba(236,240,248,.18)}
+.ks .spine:hover{background:linear-gradient(150deg,rgba(240,244,252,.24),rgba(200,206,220,.1))}
+.ks .spine .farbe{width:6px;align-self:stretch;margin:10px 0;border-radius:2px;flex:none}
+.ks .spine .m{flex:1;min-width:0}
+.ks .spine .t{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ks .spine .s{font-size:11px;color:var(--hell-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ks .spine.an{box-shadow:inset 0 0 0 1px var(--orange)}
+.ks .spine.an .t{color:var(--orange)}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 08</div>
+      <h1>Kassette</h1>
+      <p class="lede">Eine Anzeige, die niemand erklären muss: <b>links wächst der Wickel, rechts wird er
+      dünner</b>. Wer als Kind eine Kassette in der Hand hatte, weiß nach einer halben Sekunde, wie weit
+      das Stück ist — ganz ohne Balken und ohne Zahl.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <img src="../../mckups_player/Bildschirmfoto%202026-08-13%20um%2010.53.28.png" alt="Vorlage">
+      <figcaption>Vorlage · 10.53.28</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Deck</h2><span class="marke geraet">PC · 1440 × 900</span></div>
+    <p class="etext">Die Kassette liegt in der Mitte, darunter das Zählwerk und fünf Tasten mit
+    Druckpunkt. Rechts steht die Sammlung als <b>Regal</b> — jedes Album ein Rücken, wie im Schuhkarton.
+    Das Umschalten ist derselbe Griff wie damals: Kassette raus, Kassette rein.
+    <span class="probier"><b>Ausprobieren:</b> rechts ein Album wählen, an der orangen Leiste spulen,
+    Play drücken — die Naben halten an.</span></p>
+    <div class="buehne">
+      <div class="rahmen pc">
+        <div class="schirm">
+          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
+          <div class="flaeche"><div class="ks" id="v1"></div></div>
+        </div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Fortschritt <b>ohne Zahl und ohne Balken</b></dd></div>
+      <div><dt>Schwäche</dt><dd>Nur ein Album zurzeit — das Regal ist die ganze Navigation</dd></div>
+      <div><dt>Detail</dt><dd>Wickelradien aus der Gesamtlaufzeit, nicht aus dem Einzeltitel</dd></div>
+      <div><dt>Cover</dt><dd>Kommen nicht vor: das Etikett ist Schrift</dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Handgerät</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
+    <p class="etext">Ohne Regal, dafür groß: die Kassette füllt das iPad fast randlos, die Tasten sind so
+    breit wie Daumen. Das ist der Entwurf für das Gerät, das <b>neben der Anlage liegt</b> — anfassen,
+    drücken, weiterhören.
+    <span class="probier"><b>Ausprobieren:</b> die Tasten drücken; sie geben nach wie echte.</span></p>
+    <div class="buehne">
+      <div class="rahmen ipad-quer">
+        <div class="schirm"><div class="ks" id="v2"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Tasten, die man <b>ohne Hinsehen</b> trifft</dd></div>
+      <div><dt>Schwäche</dt><dd>Titelliste fehlt ganz — nur vor und zurück</dd></div>
+      <div><dt>Hochkant</dt><dd>Trägt nicht: eine Kassette ist quer</dd></div>
+      <div><dt>Aufwand</dt><dd>mittel — die Wickel sind Rechnerei, sonst CSS</dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Der Wickel misst das ganze Band, nicht den Titel.</b> Sonst springt die Anzeige bei
+      jedem Titelwechsel zurück auf Anfang. Grundlage ist also die Summe der Warteschlange
+      (<code>queue.reduce</code>) und die Position darin — dieselbe Zahl, die
+      <code>mobile.html</code> für seine Achse schon rechnet.</span></li>
+      <li><span><b>Fläche, nicht Radius.</b> Bandlänge wächst mit der <em>Fläche</em> des Wickels, also
+      geht der Radius mit der Wurzel: <code>r = √(r₀² + (r₁²−r₀²)·f)</code>. Linear sieht am Anfang zu
+      schnell und am Ende zu langsam aus — man merkt es, ohne es benennen zu können.</span></li>
+      <li><span><b>Tastendruck ist kein Effekt, sondern Rückmeldung.</b> Die 3 px, die die Taste
+      nachgibt, ersetzen die fehlende Beschriftung. Ohne sie weiß man bei Berührung nicht, ob getroffen
+      wurde.</span></li>
+      <li><span><b>Die Naben drehen nur bei Ton.</b> <code>animation-play-state</code> am
+      <code>play</code>/<code>pause</code>-Ereignis — die einzige Stelle, an der dieser Entwurf zeigt,
+      ob überhaupt etwas läuft.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für pc.html / ipad.html</span><span>Blatt 08 · Kassette</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+const d1 = new Deck('blu', {qi:1, pos:70,  speed:9});
+const d2 = new Deck('ohi', {qi:0, pos:150, speed:9});
+
+const kassHTML = `
+  <div class="kass">
+    <span class="schraube" style="left:12px;top:12px"></span>
+    <span class="schraube" style="right:12px;top:12px"></span>
+    <span class="schraube" style="left:12px;bottom:12px"></span>
+    <span class="schraube" style="right:12px;bottom:12px"></span>
+    <div class="etikett">
+      <span class="streifen"></span>
+      <div class="zeilen"><div class="t" data-etalb></div><div class="s" data-ar></div></div>
+      <div class="typ">TYPE I<br>NORMAL POSITION<br>120 µs EQ</div>
+    </div>
+    <div class="fenster">
+      <span class="bandlinie" data-bandl></span>
+      <span class="wickel" data-wl></span>
+      <span class="wickel" data-wr></span>
+      <span class="nabe" data-nl><i></i><i></i><i></i><i></i><i></i><i></i></span>
+      <span class="nabe" data-nr><i></i><i></i><i></i><i></i><i></i><i></i></span>
+    </div>
+    <span class="seite">SEITE A</span>
+    <span class="laufwerk" data-lauf></span>
+  </div>`;
+
+const bedienHTML = `
+  <div class="zaehler">
+    <span class="kap">Zählwerk</span>
+    <span class="fach" data-zaehler></span>
+    <span class="kap" data-rest></span>
+  </div>
+  <div class="band" data-band>
+    <span class="schiene"></span><span class="voll" data-voll></span><span class="griff" data-griff></span>
+  </div>
+  <div class="tasten">
+    <button data-prev>${I.prev(20)}</button>
+    <button data-zurueck>${I.back(20)}</button>
+    <button class="rot" data-pp>${I.play(20)}</button>
+    <button data-vor>${I.fwd(20)}</button>
+    <button data-next>${I.next(20)}</button>
+  </div>`;
+
+document.getElementById('v1').innerHTML =
+  `<div class="buehne">${kassHTML}${bedienHTML}</div>
+   <div class="regal"><span class="kap">Regal</span><div data-regal></div></div>`;
+document.getElementById('v2').innerHTML = `<div class="buehne">${kassHTML}${bedienHTML}</div>`;
+
+function verdrahte(wurzel, deck, stil){
+  const $  = s => wurzel.querySelector(s);
+  const $$ = s => [...wurzel.querySelectorAll(s)];
+  Object.entries(stil).forEach(([k,v]) => wurzel.style.setProperty(k, v));
+  const kw = parseFloat(stil['--kw']);
+  const rNabe = kw * .062, rVoll = kw * .155;                 // Nabe und voller Wickel
+
+  $('[data-pp]').onclick   = () => deck.toggle();
+  $('[data-next]').onclick = () => deck.next();
+  $('[data-prev]').onclick = () => deck.prev();
+  $('[data-vor]').onclick      = () => deck.seekGlobal(deck.gpos + 30);
+  $('[data-zurueck]').onclick  = () => deck.seekGlobal(deck.gpos - 30);
+  bindDrag($('[data-band]'), f => deck.seekGlobal(f * deck.total));
+
+  const regal = $('[data-regal]');
+  if (regal){
+    regal.innerHTML = ALBUMS.slice(0,7).map(a => `
+      <div class="spine" data-alb="${a.id}">
+        <span class="farbe" style="background:${grad(a)}"></span>
+        <div class="m"><div class="t">${esc(a.t)}</div>
+          <div class="s">${esc(a.ar)} · ${fmtLang(albDur(a))}</div></div></div>`).join('');
+    $$('.spine').forEach(el => el.onclick = () => {
+      const a = ALBUMS.find(x => x.id === el.dataset.alb);
+      deck.queue = a.tr.map((_,i) => `${a.id}-${i}`);
+      deck.qi = 0; deck.pos = 0; deck.playing = true; deck.render();
+    });
+  }
+
+  /* Wickelradius über die Fläche, nicht über den Radius */
+  const radius = f => Math.sqrt(rNabe*rNabe + (rVoll*rVoll - rNabe*rNabe) * clamp(f,0,1));
+
+  let letztesAlbum = null;
+  deck.onRender = d => {
+    const a = d.album;
+    if (letztesAlbum !== a.id){
+      letztesAlbum = a.id;
+      $('[data-etalb]').textContent = a.t;
+      $('[data-ar]').textContent = a.ar + ' · ' + a.tr.length + ' Titel';
+      $$('.spine').forEach(el => el.classList.toggle('an', el.dataset.alb === a.id));
+    }
+    const f  = d.gpos / d.total;
+    const linksX = 22, rechtsX = 78;                          // in Prozent des Fensters
+    const rl = radius(f), rr = radius(1 - f);
+    const setz = (el, x, r) => {
+      el.style.left = x + '%'; el.style.width = (r*2) + 'px'; el.style.height = (r*2) + 'px'; };
+    setz($('[data-wl]'), linksX,  rl);
+    setz($('[data-wr]'), rechtsX, rr);
+    $('[data-nl]').style.left = linksX + '%';
+    $('[data-nr]').style.left = rechtsX + '%';
+    $('[data-bandl]').style.left  = linksX + '%';
+    $('[data-bandl]').style.width = (rechtsX - linksX) + '%';
+    $('[data-nl]').classList.toggle('halt', !d.playing);
+    $('[data-nr]').classList.toggle('halt', !d.playing);
+    $('[data-voll]').style.width = (f*100).toFixed(2) + '%';
+    $('[data-griff]').style.left = (f*100).toFixed(2) + '%';
+    $('[data-zaehler]').textContent = String(Math.floor(d.gpos/6)).padStart(4,'0');
+    $('[data-rest]').textContent = 'Rest ' + fmtLang(d.total - d.gpos);
+    $('[data-lauf]').textContent = `${String(d.qi+1).padStart(2,'0')} · ${fmt(d.pos)} / ${fmt(d.dur)}`;
+    $('[data-pp]').innerHTML = d.playing ? I.pause(20) : I.play(20);
+    $('[data-pp]').classList.toggle('gedrueckt', d.playing);
+  };
+  deck.render();
+}
+verdrahte(document.getElementById('v1'), d1,
+  {'--kw':'660px','--bw':'660px','--etg':'18px','--zg':'30px','--tw':'92px','--th':'56px','--bg':'26px'});
+verdrahte(document.getElementById('v2'), d2,
+  {'--kw':'900px','--bw':'900px','--etg':'24px','--zg':'38px','--tw':'128px','--th':'72px','--bg':'34px'});
+})();
+</script>
