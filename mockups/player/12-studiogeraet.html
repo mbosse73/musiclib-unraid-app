@@ -16,17 +16,13 @@
   background:var(--grund);color:var(--tinte);font-family:var(--sans);height:100%;overflow:hidden;
   position:relative;display:flex}
 .sg *{font-family:inherit}
-.sg .geist{position:absolute;left:-2%;top:50%;transform:translateY(-50%);font-size:var(--gg,300px);
-  font-weight:800;letter-spacing:-.05em;color:rgba(34,34,28,.045);pointer-events:none;white-space:nowrap;
-  line-height:.8}
 .sg .kap{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--tinte-2)}
 
 /* ── linke Werkzeugseite ── */
 .sg .werkzeug{width:var(--ww,470px);flex:none;padding:var(--wp,40px);position:relative;z-index:2;
   display:flex;flex-direction:column;justify-content:center;gap:var(--wg,34px)}
-.sg .schieberreihe{display:flex;gap:var(--sg2,56px)}
 .sg .schieberfeld{display:flex;flex-direction:column;align-items:center;gap:12px}
-.sg .schieber{width:34px;height:var(--sh,190px);position:relative;cursor:pointer;touch-action:none}
+.sg .schieber{width:34px;height:190px;position:relative;cursor:pointer;touch-action:none}
 .sg .schieber .stange{position:absolute;left:50%;top:0;bottom:0;width:2px;margin-left:-1px;
   background:var(--tinte)}
 .sg .schieber .griff{position:absolute;left:0;right:0;height:26px;border-radius:4px;margin-top:-13px;
@@ -34,24 +30,11 @@
     inset 0 1px 0 rgba(255,255,255,.9);transition:top .12s}
 .sg .schieber .griff::after{content:'';position:absolute;left:4px;right:4px;top:50%;height:1px;
   background:rgba(34,34,28,.35)}
-.sg .knopfreihe{display:flex;gap:var(--kg,50px)}
-.sg .knopffeld{display:flex;flex-direction:column;align-items:center;gap:12px}
-.sg .knopf{width:var(--kd,86px);height:var(--kd,86px);border-radius:50%;position:relative;
-  border:1.5px solid var(--tinte);cursor:pointer;touch-action:none}
-.sg .knopf .zeiger{position:absolute;left:50%;top:8px;width:0;height:0;margin-left:-6px;
-  border-left:6px solid transparent;border-right:6px solid transparent;border-top:10px solid var(--tinte);
-  transform-origin:50% calc(var(--kd,86px) / 2 - 8px)}
-.sg .knopf .punkt{position:absolute;inset:34%;border-radius:50%;background:rgba(34,34,28,.14)}
-.sg .knopf .bogen{position:absolute;inset:-9px;border-radius:50%;
-  border:1.5px solid transparent;border-top-color:var(--terra);border-right-color:var(--terra);
-  transform:rotate(-45deg)}
 .sg .fenster{background:#F6F6F0;border-radius:6px;padding:10px 14px;width:96px;
   box-shadow:inset 0 0 0 1px rgba(34,34,28,.2)}
 .sg .fenster .z{font-family:var(--mono);font-size:15px;color:var(--tinte-3);text-align:center;
   line-height:1.7;font-variant-numeric:tabular-nums;cursor:pointer}
 .sg .fenster .z.an{color:var(--terra);font-weight:700}
-.sg .fenster .z.an::before{content:'—';position:absolute;margin-left:-22px;color:var(--terra)}
-.sg .zeile{display:flex;align-items:center;gap:16px}
 
 /* ── Variante 1: ein langer Regler, eine Anzeige, ein Schalter ── */
 .sg .w1{flex-direction:row;align-items:stretch;gap:var(--w1g,46px)}
@@ -198,45 +181,25 @@
     </dl>
   </section>
 
-  <section class="entwurf">
-    <div class="ekopf"><h2>Variante 2 · Frontplatte</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
-    <p class="etext">Auf dem iPad rücken die Regler an den unteren Rand und werden zu einer
-    <b>Frontplatte</b>, die Platte darüber ist das Bild. Die Reihenfolge folgt der Hand: oben schauen,
-    unten greifen.
-    <span class="probier"><b>Ausprobieren:</b> unten die Schieber ziehen — die Werte gelten für beide
-    Varianten getrennt.</span></p>
-    <div class="buehne">
-      <div class="rahmen ipad-quer">
-        <div class="schirm"><div class="sg" id="v2" style="flex-direction:column-reverse"></div></div>
-      </div>
-    </div>
-    <dl class="zettel">
-      <div><dt>Stärke</dt><dd>Greifen unten, schauen oben — <b>keine Kreuzung</b></dd></div>
-      <div><dt>Schwäche</dt><dd>Die Frontplatte kostet 240 px Höhe</dd></div>
-      <div><dt>Hochkant</dt><dd>Trägt gut: Platte oben, Frontplatte unten</dd></div>
-      <div><dt>Farbe</dt><dd>Salbei und Terracotta — <b>ein Paar, keine Palette</b></dd></div>
-    </dl>
-  </section>
 
   <div class="schluss">
     <h2>Was das im Code bedeutet</h2>
     <ol>
-      <li><span><b>Tiefen und Höhen wären echte Arbeit</b> — deshalb stehen sie in Variante 1 nicht
-      mehr da. Dafür bräuchte es die Web Audio API: <code>MediaElementSource</code> plus zwei
+      <li><span><b>Tiefen und Höhen wären echte Arbeit</b> — deshalb stehen sie nicht mehr da. Dafür bräuchte es die Web Audio API: <code>MediaElementSource</code> plus zwei
       <code>BiquadFilter</code>. Das ist machbar, verändert aber die Wiedergabe von Grund auf — und iOS
-      spielt dann nur noch nach einer Nutzergeste. Variante 2 zeigt weiter, wie die Vorlage mit den
-      Knöpfen aussieht; gebaut wird Variante 1.</span></li>
+      spielt dann nur noch nach einer Nutzergeste. Solange die App das nicht tut, hat die Frontplatte
+      keine Knöpfe dafür.</span></li>
       <li><span><b>Balance dagegen ist billig:</b> ein <code>StereoPannerNode</code> oder, ganz ohne
       Web Audio, gar nichts — dann bleibt der Knopf Zierde. Lieber eine Attrappe weniger als eine
       Bedienung, die nichts tut.</span></li>
       <li><span><b>Die Titelanzeige führt Nummer und Namen.</b> Sechs Zeilen passen; bei längeren Alben
       muss sie scrollen und die laufende Zeile in der Mitte halten, sonst verliert man den Bezug. Namen
-      brauchen Breite — deshalb ist die linke Hälfte in Variante 1 um 150 px gewachsen, sonst steht dort
+      brauchen Breite — deshalb ist die linke Hälfte um 150 px gewachsen, sonst steht dort
       „Gymnopédi…“ statt „Gymnopédie No. 1“.</span></li>
-      <li><span><b>Die großen blassen Buchstaben gibt es nur noch in Variante 2.</b> Sie sind Text,
-      kein Bild: ein <code>&lt;div&gt;</code> mit 4,5 % Deckkraft und <code>pointer-events:none</code>,
-      sonst fängt es Klicks ab, die den Reglern gelten. In Variante 1 fällt es weg — eine Frontplatte
-      trägt Beschriftung, kein Wasserzeichen.</span></li>
+      <li><span><b>Die blasse Hintergrundschrift der Vorlage ist gestrichen.</b> Sie wäre Text, kein
+      Bild — ein <code>&lt;div&gt;</code> mit 4,5 % Deckkraft und <code>pointer-events:none</code>,
+      sonst fängt sie Klicks ab, die den Reglern gelten. Eine Frontplatte trägt Beschriftung, kein
+      Wasserzeichen.</span></li>
     </ol>
   </div>
 
@@ -248,42 +211,6 @@
 'use strict';
 (() => {
 const d1 = new Deck('sat', {qi:3, pos:110, speed:7});
-const d2 = new Deck('bac', {qi:1, pos:40,  speed:7});
-
-const werkzeugHTML = `
-  <div class="werkzeug">
-    <div class="schieberreihe">
-      <div class="schieberfeld">
-        <div class="schieber" data-vol><span class="stange"></span><span class="griff" data-volgriff></span></div>
-        <span class="kap">Lautstärke</span>
-      </div>
-      <div class="schieberfeld">
-        <div class="schieber" data-bal><span class="stange"></span><span class="griff" data-balgriff></span></div>
-        <span class="kap">Balance</span>
-      </div>
-      <div class="schieberfeld" style="justify-content:flex-end">
-        <div class="fenster" data-fenster></div>
-        <span class="kap">Titel</span>
-      </div>
-    </div>
-    <div class="knopfreihe">
-      <div class="knopffeld">
-        <div class="knopf" data-tief><span class="bogen"></span><span class="zeiger" data-tiefz></span>
-          <span class="punkt"></span></div>
-        <span class="kap">Tiefen</span>
-      </div>
-      <div class="knopffeld">
-        <div class="knopf" data-hoch><span class="bogen"></span><span class="zeiger" data-hochz></span>
-          <span class="punkt"></span></div>
-        <span class="kap">Höhen</span>
-      </div>
-      <div class="knopffeld">
-        <div class="knopf" data-mix><span class="bogen"></span><span class="zeiger" data-mixz></span>
-          <span class="punkt"></span></div>
-        <span class="kap">Blende</span>
-      </div>
-    </div>
-  </div>`;
 
 /* Variante 1: Lautstärke über die volle Höhe, daneben Balance und Titelanzeige,
    darunter der Schalter, der die Bibliothek öffnet. Keine Klangregler. */
@@ -341,8 +268,6 @@ document.getElementById('v1').innerHTML =
        <button class="schalter" data-bib-zu style="--sd:56px"><i></i></button></div>
      <div class="raster" data-bibliothek></div>
    </div>`;
-document.getElementById('v2').innerHTML =
-  `<div class="geist">musiklib</div>` + werkzeugHTML + quelleHTML;
 
 function verdrahte(wurzel, deck, stil){
   const $  = s => wurzel.querySelector(s);
@@ -361,17 +286,6 @@ function verdrahte(wurzel, deck, stil){
   bindDrag($('[data-bal]'), f => { balance = 1-f; setzeSchieber($('[data-balgriff]'), balance); },
     {achse:'y'});
   setzeSchieber($('[data-balgriff]'), balance);
-
-  /* Knöpfe: 270° Bereich, Zeiger folgt dem Winkel — nur in Variante 2 vorhanden */
-  [['[data-tief]','[data-tiefz]',.5],['[data-hoch]','[data-hochz]',.62],['[data-mix]','[data-mixz]',.4]]
-    .forEach(([kn, ze, start]) => {
-      const el = $(kn), zeiger = $(ze);
-      if (!el) return;
-      let w = start;
-      const zeichne = () => zeiger.style.transform = `rotate(${(-135 + w*270).toFixed(1)}deg)`;
-      zeichne();
-      bindDrag(el, f => { w = f; zeichne(); }, {achse:'y', umgekehrt:true});
-    });
 
   /* Schalter: die Bibliothek legt sich über das Gerät */
   const blende = $('[data-bib-blende]');
@@ -398,11 +312,9 @@ function verdrahte(wurzel, deck, stil){
     const t = d.track, a = d.album;
     if (letztesAlbum !== a.id){
       letztesAlbum = a.id;
-      const breit = fenster.classList.contains('breit');
-      fenster.innerHTML = d.queue.slice(0, breit ? 6 : 5).map((id,i) => breit
-        ? `<div class="z" data-q="${i}"><b>${String(i+1).padStart(2,'0')}</b>
-             <span>${esc(TRACKS[id].t)}</span></div>`
-        : `<div class="z" data-q="${i}">${String(i+1).padStart(2,'0')}</div>`).join('');
+      fenster.innerHTML = d.queue.slice(0,6).map((id,i) =>
+        `<div class="z" data-q="${i}"><b>${String(i+1).padStart(2,'0')}</b>
+           <span>${esc(TRACKS[id].t)}</span></div>`).join('');
       [...fenster.children].forEach(el => el.onclick = () => d.jump(+el.dataset.q));
       $('[data-lab]').textContent  = a.t;
       $('[data-lab2]').textContent = a.ar + ' · ' + a.y;
@@ -429,14 +341,5 @@ function verdrahte(wurzel, deck, stil){
 }
 verdrahte(document.getElementById('v1'), d1,
   {'--td':'400px','--al':'300px','--bw':'400px','--ww':'620px','--w1g':'40px','--wp':'44px 46px'});
-verdrahte(document.getElementById('v2'), d2,
-  {'--td':'330px','--al':'250px','--bw':'380px','--gg':'260px','--ww':'100%','--wp':'22px 40px',
-   '--sh':'120px','--kd':'70px','--tz':'18px','--wg':'22px','--sg2':'70px','--kg':'70px',
-   '--arx':'-6%','--ary':'-8%'});
-
-/* auf dem iPad steht das Werkzeug als Zeile unten, nicht als Spalte links */
-const v2 = document.getElementById('v2');
-v2.querySelector('.werkzeug').style.cssText +=
-  ';flex-direction:row;align-items:flex-end;justify-content:center;gap:70px;flex:none';
 })();
 </script>

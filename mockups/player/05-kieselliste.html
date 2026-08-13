@@ -67,14 +67,6 @@
 .kl .zeile.an .knopf{color:var(--tinte);box-shadow:inset -3px -3px 8px var(--hell),inset 4px 4px 10px var(--dunkel)}
 .kl .strich{width:16px;height:3px;border-radius:2px;background:currentColor;display:block}
 .kl .fuss{text-align:center;font-size:11px;color:var(--tinte-3);padding:0 0 14px;flex:none}
-
-/* ── Variante iPad: zwei Spalten ── */
-.kl.tab{flex-direction:row}
-.kl.tab .links{width:376px;flex:none;display:flex;flex-direction:column;
-  border-right:1px solid rgba(80,80,80,.12)}
-.kl.tab .rechts{flex:1;min-width:0;display:flex;flex-direction:column}
-.kl.tab .buehne{flex-direction:column;margin-top:auto}
-.kl.tab .links .lauf{margin-bottom:auto}
 </style>
 
 <div class="seite">
@@ -94,25 +86,6 @@
   </header>
   <div class="regel"></div>
 
-  <section class="entwurf">
-    <div class="ekopf"><h2>Variante 1 · Pult</h2><span class="marke geraet">iPad hoch · 834 × 1194</span></div>
-    <p class="etext">Links das Gerät — rundes Cover, Titel, Position —, rechts die Warteschlange in voller
-    Länge. Auf dem iPad ist die Liste nicht mehr auf sechs Zeilen begrenzt, und genau davon lebt der
-    Entwurf: <b>man sieht, was kommt</b>, nicht nur, was läuft.
-    <span class="probier"><b>Ausprobieren:</b> rechts eine Zeile antippen; der Knopf der laufenden
-    Zeile wird zur Pause.</span></p>
-    <div class="buehne">
-      <div class="rahmen ipad-hoch">
-        <div class="schirm"><div class="kl tab" id="v1"></div></div>
-      </div>
-    </div>
-    <dl class="zettel">
-      <div><dt>Stärke</dt><dd>Warteschlange <b>ohne Umweg</b>, ein Antippen je Titel</dd></div>
-      <div><dt>Schwäche</dt><dd>Alles grau — Zustände nur über Tiefe unterscheidbar</dd></div>
-      <div><dt>Cover</dt><dd>Rund beschnitten: quadratische Cover verlieren die Ecken</dd></div>
-      <div><dt>Aufwand</dt><dd>gering — eine Liste, eine hervorgehobene Zeile</dd></div>
-    </dl>
-  </section>
 
   <section class="entwurf">
     <div class="ekopf"><h2>Variante 2 · Kiesel</h2><span class="marke geraet">Handy · 390 × 844</span></div>
@@ -159,7 +132,6 @@
 <script>
 'use strict';
 (() => {
-const d1 = new Deck('kob', {qi:1, pos:140, speed:7});
 const d2 = new Deck('blu', {qi:2, pos:61,  speed:7});
 
 const kopfHTML = `
@@ -181,11 +153,6 @@ const kopfHTML = `
 
 const listeHTML = `<div class="liste" data-liste></div>
   <div class="fuss">Musiklib · <span data-alb></span></div>`;
-
-document.getElementById('v1').innerHTML =
-  `<div class="links">${kopfHTML}</div><div class="rechts">
-     <div class="kz"><span class="mitte">Warteschlange</span><button class="rund heraus">${I.list(19)}</button></div>
-     ${listeHTML}</div>`;
 
 document.getElementById('v2').innerHTML =
   `<div class="sbar" style="color:#1C1C1C"><span>9:41</span><div class="ic">${I.vol(15)}</div></div>` +
@@ -234,9 +201,6 @@ function verdrahte(wurzel, deck, stil){
   };
   deck.render();
 }
-verdrahte(document.getElementById('v1'), d1,
-  {'--pad':'30px','--sg':'236px','--gg':'70px','--tg':'26px','--arg':'15px','--zp':'17px','--ztg':'18px',
-   '--zsg':'14px','--kg':'58px','--zm':'12px','--bo':'26px','--bu':'30px','--bg':'22px'});
 verdrahte(document.getElementById('v2'), d2, {});
 })();
 </script>

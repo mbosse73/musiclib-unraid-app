@@ -73,19 +73,6 @@
 .aa .taste .rund{width:var(--rr,58px);height:var(--rr,58px);border-radius:50%;background:var(--hell);
   display:grid;place-items:center;color:var(--tinte);box-shadow:inset 0 0 0 1px rgba(20,16,14,.06)}
 .aa .taste.haupt .rund{background:var(--rot);color:#fff;box-shadow:0 6px 16px rgba(216,69,43,.35)}
-
-/* ── Variante 2: iPad hoch ── */
-.aa.tab .karte{padding:0 40px 34px;border-radius:0 0 44px 44px}
-.aa.tab .unten{flex-direction:row;padding:26px 26px 0;gap:20px}
-.aa.tab .tafel{flex:1}
-.aa.tab .raster{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
-.aa.tab .rasterk{cursor:pointer}
-.aa.tab .rasterk .cv{aspect-ratio:1;border-radius:14px;display:grid;place-items:center;color:#fff;
-  font-family:var(--serif);font-size:28px}
-.aa.tab .rasterk .t{margin-top:8px;font-size:13px;color:var(--hell);white-space:nowrap;overflow:hidden;
-  text-overflow:ellipsis}
-.aa.tab .rasterk .s{font-size:11.5px;color:var(--hell-2);white-space:nowrap;overflow:hidden;
-  text-overflow:ellipsis}
 </style>
 
 <div class="seite">
@@ -126,24 +113,6 @@
     </dl>
   </section>
 
-  <section class="entwurf">
-    <div class="ekopf"><h2>Variante 2 · Doppelseite</h2><span class="marke geraet">iPad hoch · 834 × 1194</span></div>
-    <p class="etext">Auf dem iPad wird aus der Karte eine <b>Kopfzeile über die ganze Breite</b> und aus
-    dem dunklen Rest eine Doppelseite: links die Warteschlange, rechts die Sammlung als Raster. Der
-    Ausschlag ist jetzt 700 px breit — auf dieser Länge trifft man Sekunden, nicht Minuten.
-    <span class="probier"><b>Ausprobieren:</b> rechts ein Album wählen; die Karte oben schreibt sich neu.</span></p>
-    <div class="buehne">
-      <div class="rahmen ipad-hoch">
-        <div class="schirm"><div class="aa tab" id="v2"></div></div>
-      </div>
-    </div>
-    <dl class="zettel">
-      <div><dt>Stärke</dt><dd>Spieler und Sammlung ohne Umschalten</dd></div>
-      <div><dt>Schwäche</dt><dd>Die weiße Karte nimmt ein Drittel der Höhe</dd></div>
-      <div><dt>Quer</dt><dd>Möglich, aber die Karte wird dann eine flache Leiste</dd></div>
-      <div><dt>Nähe zu index.html</dt><dd>mittel — Rasteransicht, andere Farben</dd></div>
-    </dl>
-  </section>
 
   <div class="schluss">
     <h2>Was das im Code bedeutet</h2>
@@ -169,7 +138,6 @@
 'use strict';
 (() => {
 const d1 = new Deck('par', {qi:0, pos:213, speed:8});
-const d2 = new Deck('koe', {qi:1, pos:88,  speed:8});
 const lang = s => { s = Math.max(0, Math.round(s));
   return [Math.floor(s/3600), Math.floor(s%3600/60), s%60].map(n => String(n).padStart(2,'0')).join(':'); };
 
@@ -206,15 +174,6 @@ document.getElementById('v1').innerHTML =
   `<div class="sbar" style="color:#14100E;background:var(--papier)"><span>9:41</span>
      <div class="ic">${I.vol(15)}</div></div>` +
   karteHTML(46) + `<div class="unten">${qtafelHTML}</div>` + tastenHTML;
-
-document.getElementById('v2').innerHTML =
-  `<div class="sbar" style="color:#14100E;background:var(--papier)"><span>9:41</span>
-     <div class="ic">${I.vol(15)}</div></div>` +
-  karteHTML(96) +
-  `<div class="unten">${qtafelHTML}
-    <div class="tafel"><h2>Sammlung <span>8 Alben</span></h2>
-      <div class="raster" data-raster></div></div>
-  </div>` + tastenHTML;
 
 function verdrahte(wurzel, deck, opts){
   const $  = s => wurzel.querySelector(s);
@@ -278,6 +237,5 @@ function verdrahte(wurzel, deck, opts){
   deck.render();
 }
 verdrahte(document.getElementById('v1'), d1, {tg:'34px', zg:'44px', wh:'104px', th:'86px', rr:'54px'});
-verdrahte(document.getElementById('v2'), d2, {tg:'52px', zg:'62px', wh:'140px', th:'104px', rr:'66px'});
 })();
 </script>
