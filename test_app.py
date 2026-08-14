@@ -314,6 +314,19 @@ def test_player_page_is_served_at_both_addresses(client):
     assert "<title>Musiklib · Spieler</title>" in seiten[0]
 
 
+def test_missing_page_file_says_which_one(client, tmp_path, monkeypatch):
+    """Eine vergessene Datei ist ein Kopierfehler, kein Serverabsturz.
+
+    Der Code wird per SMB kopiert; bleibt dabei eine Oberflaeche liegen,
+    muss der Browser sagen welche — nicht „Internal Server Error".
+    """
+    c, app, data = client
+    monkeypatch.setattr(app, "APP_DIR", tmp_path)
+    r = c.get("/tag")
+    assert r.status_code == 404
+    assert "tag.html" in r.json()["detail"]
+
+
 def test_day_page_is_served(client):
     """Vierte Oberflaeche: /tag liefert den Spieler mit einem Knopf."""
     c, app, data = client

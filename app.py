@@ -527,9 +527,26 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
+def _seite(name: str) -> FileResponse:
+    """Eine der vier Oberflaechen ausliefern.
+
+    Der Code wird per SMB kopiert, Datei fuer Datei — dabei bleibt leicht
+    eine liegen. Ohne diese Pruefung wirft FileResponse tief im Server einen
+    RuntimeError, und im Browser steht nur „Internal Server Error"; welche
+    Datei fehlt, sieht man erst im Containerlog. Ein Satz, der sie beim
+    Namen nennt, ist an dieser Stelle mehr wert.
+    """
+    p = APP_DIR / name
+    if not p.is_file():
+        log.error("Oberflaeche %s fehlt in %s", name, APP_DIR)
+        raise HTTPException(
+            404, f"{name} liegt nicht im Ordner der App ({APP_DIR}) — Datei nachkopieren.")
+    return FileResponse(p, media_type="text/html")
+
+
 @app.get("/")
 def index():
-    return FileResponse(APP_DIR / "index.html", media_type="text/html")
+    return _seite("index.html")
 
 
 @app.get("/mobil")
@@ -540,7 +557,7 @@ def mobile():
     als Schreibtisch, die Erkennung ginge also schief. Wer sie will, ruft
     /mobil auf und legt sie auf den Home-Bildschirm.
     """
-    return FileResponse(APP_DIR / "mobile.html", media_type="text/html")
+    return _seite("mobile.html")
 
 
 @app.get("/ipad")
@@ -553,7 +570,7 @@ def player():
     Schreibtisch). Die Wahl liegt im localStorage, die Adresse ist nur der
     Weg dorthin.
     """
-    return FileResponse(APP_DIR / "player.html", media_type="text/html")
+    return _seite("player.html")
 
 
 @app.get("/tag")
@@ -565,7 +582,7 @@ def tag():
     Datum errechnet — der Server weiss davon nichts und braucht dafuer auch
     kein Feld in library.json.
     """
-    return FileResponse(APP_DIR / "tag.html", media_type="text/html")
+    return _seite("tag.html")
 
 
 @app.get("/api/library")
