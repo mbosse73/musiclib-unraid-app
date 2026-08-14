@@ -26,9 +26,19 @@ Die sechs Dateien, die im Container laufen:
 | `tag.html` | `/tag` |
 | `requirements.txt` | Abhängigkeiten, werden beim Containerstart installiert |
 
-Dazu `docker-compose.yml` sowie die Testdateien (`conftest.py`, `test_app.py`,
-`test_frontend.py`, `requirements-dev.txt`), die nur lokal gebraucht werden und
-nie in den Container kommen.
+Dazu `docker-compose.yml`.
+
+Die Testdateien (`conftest.py`, `test_app.py`, `test_frontend.py`,
+`requirements-dev.txt`) liegen hier bewusst **nicht**: sie kommen nie in den
+Container, und eine zweite Kopie im Baum bringt pytest durcheinander (es
+sammelt dann denselben Modulnamen zweimal ein und bricht ab). Wer sie
+braucht, holt sie aus der Historie:
+`git checkout ed0f1b0 -- conftest.py test_app.py test_frontend.py`
+
+Geprüfter Zustand dieses Stands: `pytest` → 111 Tests, alle grün
+(einmal flatterte `test_session_is_restored_without_autoplay` unter Volllast,
+allein ausgeführt läuft er durch — ein Zeitproblem im Test, kein Fehler in
+der App).
 
 ## Zurückspielen
 
