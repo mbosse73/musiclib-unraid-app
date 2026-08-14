@@ -27,9 +27,9 @@ dasselbe Display in zwei Tönen. Statt zwei fast gleicher Blätter bekommt in 44
 das iPhone die schwarze und der Rechner die silberne Fassung — so bleiben beide
 Fotos erhalten.
 
-## 43 Sonnenglas — sieben Scheiben
+## 43 Sonnenglas — sechs Scheiben
 
-Von 43 gibt es sechs zusätzliche Fassungen. **Die Farbe bleibt in allen gleich**
+Von 43 gibt es fünf zusätzliche Fassungen. **Die Farbe bleibt in allen gleich**
 (dasselbe Abendrot); was sich ändert, ist allein die Scheibe: ihre **Dicke** und
 ihre **Oberfläche**.
 
@@ -39,16 +39,20 @@ ihre **Oberfläche**.
 | 43a | Milchglas | 64 px · 26 % | satiniert, weicher Lichtverlauf oben |
 | 43b | Klarglas | 3 px · 5 % | poliert, harter Spiegelstreifen quer |
 | 43c | Mattglas | 48 px · 30 % | geätzt, Korn 14 %, gar kein Glanz |
-| 43d | Riffelglas | 20 px · 15 % | gegossen, Rippen im Abstand 26 px |
-| 43e | Blockglas | 130 px · 40 % | satiniert, sichtbare Stärke 16 px an der Kante |
 | 43f | Rauchglas | 12 px · 36 % | poliert, **dunkel getönt statt weiss** |
+| 43g | Schliffglas | 8 px Trübung, **34 px Fase** | klar poliert, **Licht von links, Schlagschatten rechts** |
+
+Die Buchstaben d und e sind frei: dort standen *Riffelglas* (gegossen, gerippt)
+und *Blockglas* (130 px, milchig), beide wieder entfernt. Ihre Nummern werden
+nicht neu vergeben, damit ein Blick auf eine ältere Aufnahme eindeutig bleibt.
 
 Wie die Rezepte gebaut sind: `blur` ist die Dicke, `weiss` die Eigenfarbe,
 `rand`/`kante` die Kanten. Die Oberfläche liegt in zwei Pseudo-Lagen darüber —
 `glanz` (weicher Verlauf oben) und `streif` (harter Spiegelstreifen) in
 `::after`, `riffel` (Rippen) und `koern` (geätztes Korn) in `::before`. `dicke`
-setzt zusätzlich einen hellen Innenring mit Schattenansatz, der die Materialstärke
-an der Kante zeigt.
+setzt zusätzlich einen Innenring, der die Materialstärke an der Kante zeigt;
+`licht` dreht diesen Ring in eine Richtung, und `schatten` überschreibt den
+Schlagschatten mit eigenem Versatz.
 
 Drei Dinge, die die Reihe gezeigt hat:
 
@@ -61,9 +65,14 @@ Drei Dinge, die die Reihe gezeigt hat:
 - **Rauchglas dreht die Richtung um.** Alle anderen hellen die Karte auf, 43f
   dunkelt sie ab. Weisse Schrift wird dadurch kontrastreicher, nicht schwächer —
   es ist die einzige Fassung, die auch über einem hellen Himmel noch trüge.
+- **Dick heisst nicht milchig.** 43g hat nur 8 px Trübung und ist trotzdem die
+  dickste Scheibe der Reihe: die Stärke steckt in der 34 px breiten Fase, deren
+  innere Kante links leuchtet und rechts ins Dunkle läuft, plus dem
+  Schlagschatten, der nach rechts fällt. Bei allen anderen Fassungen ist der
+  Schatten mittig — nur hier steht eine Lichtquelle im Bild.
 
-Alle sieben liegen in einer Datei (`d43.py`); `FASSUNGEN` hält je Fassung nur
-noch das Glasrezept, Himmel und Coverfarben sind gemeinsam. Eine achte anzulegen
+Alle sechs liegen in einer Datei (`d43.py`); `FASSUNGEN` hält je Fassung nur
+noch das Glasrezept, Himmel und Coverfarben sind gemeinsam. Eine siebte anzulegen
 ist ein Eintrag in diesem Wörterbuch, sonst nichts.
 
 **Ein Foto ist nicht verwertet:** 23.56.39 ist ein 15 KB grosses Vorschaubild,
@@ -92,7 +101,7 @@ Git-Historie stehen sie im Commit „Acht Spieler aus den Fotos in player2".
 
 ```bash
 cd design/entwuerfe/src
-python3 baualle.py          # schreibt alle 20 Dateien nach ../html/
+python3 baualle.py          # schreibt alle 18 Dateien nach ../html/
 ```
 
 `werkzeug.py` hält, was alle vier teilen: das eine Beispielalbum, die Zeichen

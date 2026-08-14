@@ -8,9 +8,11 @@ Zufallstaste ist gelb, alles andere weiss.
 
 Sieben Fassungen bei **immer derselben Abendfarbe**. Was sich ändert, ist allein
 die Scheibe: ihre **Dicke** (von 3 px Weichzeichnung bis 130) und ihre
-**Oberfläche** — poliert, matt geätzt, geriffelt, rauchgetönt. Beides hängt
+**Oberfläche** — poliert, matt geätzt, rauchgetönt, geschliffen. Beides hängt
 zusammen: dickes Glas streut mehr und wird milchiger, poliertes spiegelt
-stattdessen, geätztes hat Korn und gar keinen Glanz.
+stattdessen, geätztes hat Korn und gar keinen Glanz. Die letzte Fassung zeigt,
+dass dick nicht milchig heissen muss: klares Glas verrät seine Stärke über die
+Kante und den Schatten, nicht über die Trübung.
 """
 from werkzeug import (A, biblio, mischen, nexti, pausei, prev, schreibe,
                       wiederholen, SANS, MONO)
@@ -29,7 +31,8 @@ def _f(name, titel, glas, tinte='#ffffff', stumm='rgba(255,255,255,.68)', akzent
 
 # glas: blur = Dicke, weiss = Eigenfarbe, rand/kante = Kanten, saettigung = Durchblick.
 # glanz = weicher Lichtverlauf oben, streif = harter Spiegelstreifen quer,
-# koern = geätztes Korn, riffel = Rippenabstand in px, dicke = sichtbare Glasstärke.
+# koern = geätztes Korn, riffel = Rippenabstand in px, dicke = sichtbare Glasstärke,
+# licht = Richtung des Lichteinfalls, schatten = eigener Schlagschatten (x,y,blur,deckung).
 FASSUNGEN = {
     '': _f('Sonnenglas', 'Die Vorlage — mittleres Glas, leicht satiniert',
            dict(blur=26, weiss=.13, rand=.24, kante=.34, saettigung=1.0)),
@@ -43,15 +46,16 @@ FASSUNGEN = {
     'c': _f('Mattglas', 'Geätzt: kein Glanz, dafür Korn — Licht wird gestreut, nicht geworfen',
             dict(blur=48, weiss=.30, rand=.16, kante=.20, koern=.14, saettigung=.85)),
 
-    'd': _f('Riffelglas', 'Gegossen und gerippt — der Hintergrund bricht in senkrechte Streifen',
-            dict(blur=20, weiss=.15, rand=.30, kante=.48, riffel=26, saettigung=1.1)),
 
-    'e': _f('Blockglas', 'Sehr dick, mit sichtbarer Stärke an der Kante',
-            dict(blur=130, weiss=.40, rand=.50, kante=.88, glanz=.18, dicke=16, saettigung=1.2)),
 
     'f': _f('Rauchglas', 'Dunkel getönt und poliert — die Scheibe dämpft, statt aufzuhellen',
             dict(blur=12, weiss=.36, rand=.26, kante=.44, streif=.42, saettigung=1.15,
                  ton='rgba(18,10,8,'), stumm='rgba(255,255,255,.60)'),
+
+    'g': _f('Schliffglas',
+            'Sehr dick, aber klar — Licht von links, Schlagschatten nach rechts',
+            dict(blur=8, weiss=.07, rand=.28, kante=.55, saettigung=1.18,
+                 dicke=34, licht='links', schatten=(54, 28, 64, .58))),
 }
 
 
@@ -63,6 +67,10 @@ def _css(g, f):
     # Oberflaeche 1: weicher Lichtverlauf oben (satiniert) oder harter
     # Spiegelstreifen quer (poliert). Geaetztes Glas bekommt beides nicht.
     lagen = []
+    if gl.get('licht') == 'links':
+        # Heller Ansatz links, Abfall nach rechts — der Verlauf macht die Richtung.
+        lagen.append(f'linear-gradient(96deg, {hell}.30) 0%, {hell}.08) 20%, '
+                     f'{hell}0) 46%, rgba(0,0,0,.10) 74%, rgba(0,0,0,.20) 100%)')
     if gl.get('glanz'):
         lagen.append(f'linear-gradient(180deg, {hell}{gl["glanz"]}) 0%, {hell}0) 62%)')
     if gl.get('streif'):
@@ -91,10 +99,30 @@ def _css(g, f):
     repeating-linear-gradient(37deg, {hell}.9) 0 1px, {hell}0) 1px 3px),
     repeating-linear-gradient(-53deg, rgba(0,0,0,.7) 0 1px, {hell}0) 1px 4px)}}'''
 
-    # Sichtbare Glasstaerke: ein heller Innenring plus ein Schattenansatz darunter.
-    dicke = (f', inset 0 0 0 {gl["dicke"] * g:.0f}px {hell}.14)'
-             f', inset 0 {gl["dicke"] * g:.0f}px {gl["dicke"] * g * 1.8:.0f}px rgba(0,0,0,.22)'
-             if gl.get('dicke') else '')
+    # Sichtbare Glasstaerke. Ohne Lichtrichtung ein gleichmaessiger Innenring;
+    # mit Licht von links wird die linke Innenflaeche hell und die rechte dunkel —
+    # das ist es, was dickes klares Glas von dickem milchigem unterscheidet.
+    d = gl.get('dicke', 0) * g
+    if not d:
+        dicke = ''
+    elif gl.get('licht') == 'links':
+        dicke = (f', inset {d:.0f}px 0 {d * 1.4:.0f}px {hell}.40)'
+                 f', inset {-d:.0f}px 0 {d * 1.6:.0f}px rgba(0,0,0,.40)'
+                 f', inset 0 {d * .5:.0f}px {d:.0f}px {hell}.14)')
+    else:
+        dicke = (f', inset 0 0 0 {d:.0f}px {hell}.14)'
+                 f', inset 0 {d:.0f}px {d * 1.8:.0f}px rgba(0,0,0,.22)')
+
+    # Schlagschatten: standardmaessig mittig unter der Karte, sonst wie angegeben.
+    if gl.get('schatten'):
+        sx, sy, sb, sa = gl['schatten']
+        wurf = f'{sx * g:.0f}px {sy * g:.0f}px {sb * g:.0f}px rgba(0,0,0,{sa})'
+    else:
+        wurf = f'0 {26 * g:.0f}px {60 * g:.0f}px rgba(0,0,0,.38)'
+
+    # Licht von links: linke Kante leuchtet, rechte laeuft ins Dunkle.
+    seiten = (f'\n  border-left-color:{hell}.95);border-right-color:rgba(0,0,0,.30);'
+              if gl.get('licht') == 'links' else '')
 
     return f'''
 .stage{{background:linear-gradient(180deg, {", ".join(f["himmel"])});
@@ -108,10 +136,10 @@ def _css(g, f):
    beiden Pseudo-Lagen darueber. Alles andere bleibt ueber alle Fassungen gleich. */
 .glas{{position:relative;background:{ton}{gl["weiss"]});
   border:1px solid {ton if ton.startswith("rgba(255") else hell}{gl["rand"]});
-  border-top-color:{hell}{gl["kante"]});
+  border-top-color:{hell}{gl["kante"]});{seiten}
   backdrop-filter:blur({gl["blur"] * g:.0f}px) saturate({gl["saettigung"]});
   -webkit-backdrop-filter:blur({gl["blur"] * g:.0f}px) saturate({gl["saettigung"]});
-  box-shadow:0 {26 * g:.0f}px {60 * g:.0f}px rgba(0,0,0,.38),
+  box-shadow:{wurf},
     inset 0 1px 0 {hell}{gl["kante"]}){dicke}}}{vor}{nach}
 .glas > *{{position:relative;z-index:1}}
 
