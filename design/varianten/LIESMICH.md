@@ -2,12 +2,25 @@
 
 Hier liegen Fassungen, die von einem Blatt aus `design/html/` abgeleitet sind.
 Das gelieferte Paket selbst bleibt unangetastet — es ist die Referenz, gegen die
-sich vergleichen lässt.
+sich vergleichen lässt. Was für Etappe 5 gilt, steht in `design/AUSWAHL.md`.
 
 Namensschema wie im Paket, mit einem Buchstaben hinter der Nummer:
 `fotoNNx_Konzeptname_plattform.html`.
 
-## 33 Glass Musiknote
+Alle Dateien hier sind **aus dem Original erzeugt, nicht von Hand nachgebaut** —
+jede unterscheidet sich vom gelieferten Blatt in wenigen Zeilen, damit ein
+`diff` gegen `design/html/` die Änderung vollständig zeigt.
+
+## 31 Vinyl Rote Tasten — nur PC
+
+Die drei roten Tasten standen linksbündig unter einer Fortschrittsleiste, die
+über die ganze Spalte läuft. `foto31a_…-Zentriert_pc.html` setzt
+`justify-content:center` auf die Tastenreihe; sonst ändert sich nichts.
+
+Das iPhone-Blatt ist unverändert und liegt deshalb nicht hier — dort gilt
+weiterhin `design/html/foto31_Vinyl-Rote-Tasten_iphone.html`.
+
+## 33 Glass Musiknote — zwei Fassungen zur Auswahl
 
 Im Original liegen drei Farbscheiben (`linear-gradient(150deg,#f2703c,#e0455f)`)
 mit nur 2 px Weichzeichnung hinter der Milchglaskarte. Auf beiden Plattformen
@@ -24,5 +37,17 @@ und 120 px/55 %. Die beiden weicheren sind zwar am besten lesbar, nehmen dem
 Entwurf aber fast die ganze Farbe; 90 px/72 % hält den warmen Ton und lässt die
 Zeiten trotzdem klar stehen.
 
-Erzeugt aus dem Original, nicht von Hand nachgebaut — die Dateien
-unterscheiden sich vom gelieferten Blatt in genau einer Zeile.
+## 36 / 37 Song-Poster schwarz und weiß — beide Plattformen
+
+Zwei Änderungen, je Blatt:
+
+1. **QR-Code entfernt.** Er saß im Poster rechts neben dem Albumtitel (ein SVG
+   aus 37 Rechtecken). Ersatzlos gestrichen; der Titelblock rückt nach.
+2. **Nur PC: die Tastenreihe unter der Fortschrittsleiste zentriert.** Die
+   Transporttasten standen linksbündig, der Bibliotheksknopf per
+   `margin-left:auto` ganz rechts. Jetzt steht die Reihe auf
+   `justify-content:center`, und der Bibliotheksknopf hält seinen Platz am
+   rechten Rand über `position:absolute` — er bleibt also erreichbar, ohne die
+   Mitte zu verschieben.
+
+Die iPhone-Blätter bekommen nur Änderung 1; ihre Tastenreihe war schon mittig.
