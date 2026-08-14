@@ -12,13 +12,19 @@ html,body{width:1600px;height:1000px;overflow:hidden}
 
 /* Die Scheibe: Dicke steckt in blur und Eigenfarbe, die Oberflaeche in den
    beiden Pseudo-Lagen darueber. Alles andere bleibt ueber alle Fassungen gleich. */
-.glas{position:relative;background:rgba(255,255,255,0.13);
-  border:1px solid rgba(255,255,255,0.24);
-  border-top-color:rgba(255,255,255,0.34);
-  backdrop-filter:blur(19px) saturate(1.0);
-  -webkit-backdrop-filter:blur(19px) saturate(1.0);
+.glas{position:relative;background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.3);
+  border-top-color:rgba(255,255,255,0.48);
+  backdrop-filter:blur(15px) saturate(1.1);
+  -webkit-backdrop-filter:blur(15px) saturate(1.1);
   box-shadow:0 19px 44px rgba(0,0,0,.38),
-    inset 0 1px 0 rgba(255,255,255,0.34)}
+    inset 0 1px 0 rgba(255,255,255,0.48)}
+.glas::before{content:"";position:absolute;inset:0;border-radius:inherit;
+  pointer-events:none;backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  background:repeating-linear-gradient(90deg,
+    rgba(255,255,255,.16) 0 1.9px, rgba(255,255,255,0) 1.9px 8.9px,
+    rgba(0,0,0,.13) 8.9px 10.8px, rgba(255,255,255,0) 10.8px 19.2px)}
 .glas > *{position:relative;z-index:1}
 
 .linie{position:relative;border-radius:999px;background:#ffffff59}
@@ -29,8 +35,8 @@ html,body{width:1600px;height:1000px;overflow:hidden}
   font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace}
 .tasten{display:flex;align-items:center;justify-content:space-between}
 .bib{display:inline-flex;align-items:center;border-radius:999px;
-  background:rgba(255,255,255,0.17);border:1px solid rgba(255,255,255,0.24);
-  backdrop-filter:blur(13px);text-transform:uppercase}
+  background:rgba(255,255,255,0.19);border:1px solid rgba(255,255,255,0.3);
+  backdrop-filter:blur(10px);text-transform:uppercase}
 .marke{letter-spacing:3.0px;text-transform:uppercase;color:rgba(255,255,255,.68)}
 
 </style></head><body><div class="stage"><div class="horizont" style="top:640px;bottom:0"></div>
@@ -68,5 +74,5 @@ html,body{width:1600px;height:1000px;overflow:hidden}
   <div style="margin-top:26px"><div class="tasten" style="gap:7px"><svg width="31" height="31" viewBox="0 0 24 24" fill="none" stroke="#f2d64b" stroke-width="1.924" stroke-linecap="round"><path d="M3 6h4l4 12h6M3 18h4l2-6"/><path d="M17 3l4 3-4 3M17 15l4 3-4 3"/></svg><svg width="34" height="34" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#ffffff" stroke-width="2" fill="#ffffff" stroke-linejoin="round"/></svg><svg width="35" height="35" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#ffffff"/><rect x="14" y="5" width="4" height="14" fill="#ffffff"/></svg><svg width="34" height="34" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#ffffff" stroke-width="2" fill="#ffffff" stroke-linejoin="round"/></svg><svg width="31" height="31" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.776" stroke-linecap="round"><path d="M4 9a5 5 0 0 1 5-5h9"/><path d="M15 1l3 3-3 3"/><path d="M20 15a5 5 0 0 1-5 5H6"/><path d="M9 23l-3-3 3-3"/></svg></div></div>
 </div>
   </div>
-  <div class="marke" style="font-size:15px">Die Vorlage — mittleres Glas, leicht satiniert</div>
+  <div class="marke" style="font-size:15px">Gegossen und gerippt — der Hintergrund bricht in senkrechte Streifen</div>
 </div></div></body></html>

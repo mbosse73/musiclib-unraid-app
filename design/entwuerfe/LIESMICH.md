@@ -27,34 +27,43 @@ dasselbe Display in zwei Tönen. Statt zwei fast gleicher Blätter bekommt in 44
 das iPhone die schwarze und der Rechner die silberne Fassung — so bleiben beide
 Fotos erhalten.
 
-## 43 Sonnenglas — sechs Fassungen
+## 43 Sonnenglas — sieben Scheiben
 
-Von 43 gibt es fünf zusätzliche Fassungen. Sie spielen **zwei Achsen** gegen­
-einander durch: die Farbwelt hinter dem Glas und die Dicke des Glases selbst.
-Dick heisst dabei nicht nur mehr Weichzeichnung, sondern auch mehr Eigenfarbe,
-ein hellerer Rand und ein kräftigerer Innenglanz — echtes Glas wird mit der
-Dicke milchiger, nicht bloss unschärfer.
+Von 43 gibt es sechs zusätzliche Fassungen. **Die Farbe bleibt in allen gleich**
+(dasselbe Abendrot); was sich ändert, ist allein die Scheibe: ihre **Dicke** und
+ihre **Oberfläche**.
 
-| Nr | Name | Farbwelt | Glasrezept |
+| Nr | Name | Dicke | Oberfläche |
 |---|---|---|---|
-| 43 | Sonnenglas | Abendrot (die Vorlage) | Weichzeichnung 26 px · Eigenfarbe 13 % · Rand 24 % |
-| 43a | Milchglas | dasselbe Abendrot | 64 px · 26 % · Rand 44 % — das Bild dahinter verschwimmt fast ganz |
-| 43b | Blaue Stunde | kühle Dämmerung | 9 px · 6 % · Rand 14 % — kaum mehr als eine Tönung |
-| 43c | Morgenmilch | blasser kalter Morgen | 86 px · 46 % · Rand 72 %, **dunkle Schrift** |
-| 43d | Gewitter | Sturmviolett, grüner Akzent | 22 px · 11 % · Kante 78 % · Glanzlage 34 % — spiegelt statt zu streuen |
-| 43e | Neonnacht | Magenta/Violett, cyan Akzent | 34 px · **cyan eingefärbtes Glas** · Sättigung ×1,5 |
+| 43 | Sonnenglas | 26 px · 13 % | leicht satiniert (die Vorlage) |
+| 43a | Milchglas | 64 px · 26 % | satiniert, weicher Lichtverlauf oben |
+| 43b | Klarglas | 3 px · 5 % | poliert, harter Spiegelstreifen quer |
+| 43c | Mattglas | 48 px · 30 % | geätzt, Korn 14 %, gar kein Glanz |
+| 43d | Riffelglas | 20 px · 15 % | gegossen, Rippen im Abstand 26 px |
+| 43e | Blockglas | 130 px · 40 % | satiniert, sichtbare Stärke 16 px an der Kante |
+| 43f | Rauchglas | 12 px · 36 % | poliert, **dunkel getönt statt weiss** |
 
-Zwei Erkenntnisse aus der Reihe, die beim Portieren zählen:
+Wie die Rezepte gebaut sind: `blur` ist die Dicke, `weiss` die Eigenfarbe,
+`rand`/`kante` die Kanten. Die Oberfläche liegt in zwei Pseudo-Lagen darüber —
+`glanz` (weicher Verlauf oben) und `streif` (harter Spiegelstreifen) in
+`::after`, `riffel` (Rippen) und `koern` (geätztes Korn) in `::before`. `dicke`
+setzt zusätzlich einen hellen Innenring mit Schattenansatz, der die Materialstärke
+an der Kante zeigt.
 
-- **Ab etwa 40 px Weichzeichnung trägt weisse Schrift auf hellem Grund nicht
-  mehr.** 43c musste deshalb auf dunkle Schrift wechseln — eine Glasdicke ist
-  also keine reine Geschmacksfrage, sie zieht die Schriftfarbe mit.
-- **Eingefärbtes Glas (43e) ersetzt den Akzent nicht, es verstärkt ihn.** Der
-  cyanfarbene Ton im Glas und die cyanfarbene Zufallstaste sind dieselbe
-  Entscheidung, nicht zwei.
+Drei Dinge, die die Reihe gezeigt hat:
 
-Alle sechs liegen in einer Datei (`d43.py`); `FASSUNGEN` hält Himmel, Horizont,
-Glasrezept, Schrift, Akzent und Coverfarben je Fassung. Eine siebte anzulegen
+- **Dicke und Oberfläche sind nicht unabhängig.** Dickes Glas streut und wird
+  milchig (43a, 43e); poliertes Glas spiegelt stattdessen und braucht deshalb
+  wenig Weichzeichnung, sonst hebt sich der Streifen nicht ab (43b, 43f).
+- **Geätztes Glas verträgt keinen Glanz.** In 43c ist beides abgeschaltet und
+  nur Korn übrig — sobald ein Verlauf dazukommt, sieht es wieder nach Kunststoff
+  aus statt nach Glas.
+- **Rauchglas dreht die Richtung um.** Alle anderen hellen die Karte auf, 43f
+  dunkelt sie ab. Weisse Schrift wird dadurch kontrastreicher, nicht schwächer —
+  es ist die einzige Fassung, die auch über einem hellen Himmel noch trüge.
+
+Alle sieben liegen in einer Datei (`d43.py`); `FASSUNGEN` hält je Fassung nur
+noch das Glasrezept, Himmel und Coverfarben sind gemeinsam. Eine achte anzulegen
 ist ein Eintrag in diesem Wörterbuch, sonst nichts.
 
 **Ein Foto ist nicht verwertet:** 23.56.39 ist ein 15 KB grosses Vorschaubild,
@@ -83,7 +92,7 @@ Git-Historie stehen sie im Commit „Acht Spieler aus den Fotos in player2".
 
 ```bash
 cd design/entwuerfe/src
-python3 baualle.py          # schreibt alle 18 Dateien nach ../html/
+python3 baualle.py          # schreibt alle 20 Dateien nach ../html/
 ```
 
 `werkzeug.py` hält, was alle vier teilen: das eine Beispielalbum, die Zeichen

@@ -12,15 +12,15 @@ html,body{width:1080px;height:2340px;overflow:hidden}
 
 /* Die Scheibe: Dicke steckt in blur und Eigenfarbe, die Oberflaeche in den
    beiden Pseudo-Lagen darueber. Alles andere bleibt ueber alle Fassungen gleich. */
-.glas{position:relative;background:rgba(255,255,255,0.26);
-  border:1px solid rgba(255,255,255,0.44);
-  border-top-color:rgba(255,255,255,0.62);
-  backdrop-filter:blur(64px) saturate(1.1);
-  -webkit-backdrop-filter:blur(64px) saturate(1.1);
+.glas{position:relative;background:rgba(18,10,8,0.36);
+  border:1px solid rgba(255,255,255,0.26);
+  border-top-color:rgba(255,255,255,0.44);
+  backdrop-filter:blur(12px) saturate(1.15);
+  -webkit-backdrop-filter:blur(12px) saturate(1.15);
   box-shadow:0 26px 60px rgba(0,0,0,.38),
-    inset 0 1px 0 rgba(255,255,255,0.62)}
+    inset 0 1px 0 rgba(255,255,255,0.44)}
 .glas::after{content:"";position:absolute;inset:0;border-radius:inherit;
-  pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 62%)}
+  pointer-events:none;background:linear-gradient(116deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.42) 44%, rgba(255,255,255,0.19) 50%, rgba(255,255,255,0) 58%)}
 .glas > *{position:relative;z-index:1}
 
 .linie{position:relative;border-radius:999px;background:#ffffff59}
@@ -31,9 +31,9 @@ html,body{width:1080px;height:2340px;overflow:hidden}
   font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace}
 .tasten{display:flex;align-items:center;justify-content:space-between}
 .bib{display:inline-flex;align-items:center;border-radius:999px;
-  background:rgba(255,255,255,0.30);border:1px solid rgba(255,255,255,0.44);
-  backdrop-filter:blur(45px);text-transform:uppercase}
-.marke{letter-spacing:4.0px;text-transform:uppercase;color:rgba(255,255,255,.68)}
+  background:rgba(18,10,8,0.40);border:1px solid rgba(255,255,255,0.26);
+  backdrop-filter:blur(10px);text-transform:uppercase}
+.marke{letter-spacing:4.0px;text-transform:uppercase;color:rgba(255,255,255,.60)}
 
 </style></head><body><div class="stage"><div class="horizont" style="top:1520px;bottom:0"></div>
 <div class="huegel" style="left:-260px;top:1360px;width:1000px;height:420px"></div>
@@ -57,7 +57,7 @@ html,body{width:1080px;height:2340px;overflow:hidden}
     <div style="flex:1;min-width:0">
       <div style="font-size:54px;font-weight:700;overflow:hidden;
         white-space:nowrap;text-overflow:ellipsis">Blue in Green</div>
-      <div style="font-size:33px;color:rgba(255,255,255,.68);
+      <div style="font-size:33px;color:rgba(255,255,255,.60);
         margin-top:8px;overflow:hidden;white-space:nowrap;
         text-overflow:ellipsis">Miles Davis</div>
     </div>
@@ -70,5 +70,5 @@ html,body{width:1080px;height:2340px;overflow:hidden}
   <div style="margin-top:36px"><div class="tasten" style="gap:10px"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#f2d64b" stroke-width="2.6" stroke-linecap="round"><path d="M3 6h4l4 12h6M3 18h4l2-6"/><path d="M17 3l4 3-4 3M17 15l4 3-4 3"/></svg><svg width="46" height="46" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#ffffff" stroke-width="2" fill="#ffffff" stroke-linejoin="round"/></svg><svg width="48" height="48" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#ffffff"/><rect x="14" y="5" width="4" height="14" fill="#ffffff"/></svg><svg width="46" height="46" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#ffffff" stroke-width="2" fill="#ffffff" stroke-linejoin="round"/></svg><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"><path d="M4 9a5 5 0 0 1 5-5h9"/><path d="M15 1l3 3-3 3"/><path d="M20 15a5 5 0 0 1-5 5H6"/><path d="M9 23l-3-3 3-3"/></svg></div></div>
 </div>
   </div>
-  <div class="marke" style="font-size:20px">Dieselbe Scheibe, doppelt so dick</div>
+  <div class="marke" style="font-size:20px">Dunkel getönt und poliert — die Scheibe dämpft, statt aufzuhellen</div>
 </div></div></body></html>

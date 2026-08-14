@@ -6,77 +6,96 @@ unten steht der Horizont schwarz. Durch das Glas scheint beides gedämpft
 hindurch. Die Zeiten stehen als „verstrichen" und „−verbleibend", die
 Zufallstaste ist gelb, alles andere weiss.
 
-Sechs Fassungen, die zwei Dinge gegeneinander durchspielen: **die Farbwelt hinter
-dem Glas** und **die Dicke des Glases selbst**. Dick heisst hier nicht nur mehr
-Weichzeichnung, sondern auch mehr Eigenfarbe, ein hellerer Rand und ein
-kräftigerer Innenglanz — so wie echtes Glas mit der Dicke milchiger wird.
+Sieben Fassungen bei **immer derselben Abendfarbe**. Was sich ändert, ist allein
+die Scheibe: ihre **Dicke** (von 3 px Weichzeichnung bis 130) und ihre
+**Oberfläche** — poliert, matt geätzt, geriffelt, rauchgetönt. Beides hängt
+zusammen: dickes Glas streut mehr und wird milchiger, poliertes spiegelt
+stattdessen, geätztes hat Korn und gar keinen Glanz.
 """
 from werkzeug import (A, biblio, mischen, nexti, pausei, prev, schreibe,
                       wiederholen, SANS, MONO)
 
 
 # Jede Fassung: Himmel, Horizont, Glasrezept, Schrift, Akzent, Coverfarben.
+HIMMEL = ['#f0913c 0%', '#d9662c 26%', '#7a3418 48%', '#23150e 62%', '#0b0906 100%']
+COVER = ('#f6a24a', '#dd6a2c', '#8a3a1a', '#ffe6b0', '#1b120c')
+
+
+def _f(name, titel, glas, tinte='#ffffff', stumm='rgba(255,255,255,.68)', akzent='#f2d64b'):
+    """Immer derselbe Himmel — nur die Scheibe ist anders."""
+    return dict(name=name, titel=titel, himmel=HIMMEL, boden='#0d0906', huegel='#140d08',
+                glas=glas, tinte=tinte, stumm=stumm, akzent=akzent, cover=COVER)
+
+
+# glas: blur = Dicke, weiss = Eigenfarbe, rand/kante = Kanten, saettigung = Durchblick.
+# glanz = weicher Lichtverlauf oben, streif = harter Spiegelstreifen quer,
+# koern = geätztes Korn, riffel = Rippenabstand in px, dicke = sichtbare Glasstärke.
 FASSUNGEN = {
-    '': dict(
-        name='Sonnenglas', titel='Abendrot, mittleres Glas',
-        himmel=['#f0913c 0%', '#d9662c 26%', '#7a3418 48%', '#23150e 62%', '#0b0906 100%'],
-        boden='#0d0906', huegel='#140d08',
-        glas=dict(blur=26, weiss=.13, rand=.24, kante=.34, glanz=0, saettigung=1.0),
-        tinte='#ffffff', stumm='rgba(255,255,255,.68)', akzent='#f2d64b',
-        cover=('#f6a24a', '#dd6a2c', '#8a3a1a', '#ffe6b0', '#1b120c'),
-    ),
-    'a': dict(
-        name='Milchglas', titel='Dasselbe Abendrot, doppelt so dickes Glas',
-        himmel=['#f0913c 0%', '#d9662c 26%', '#7a3418 48%', '#23150e 62%', '#0b0906 100%'],
-        boden='#0d0906', huegel='#140d08',
-        glas=dict(blur=64, weiss=.26, rand=.44, kante=.62, glanz=.22, saettigung=1.1),
-        tinte='#fffaf4', stumm='rgba(255,250,244,.72)', akzent='#ffd94f',
-        cover=('#f6a24a', '#dd6a2c', '#8a3a1a', '#ffe6b0', '#1b120c'),
-    ),
-    'b': dict(
-        name='Blaue Stunde', titel='Kühle Dämmerung, hauchdünnes Glas',
-        himmel=['#2f5f9e 0%', '#22406f 24%', '#16294a 46%', '#0c1526 66%', '#05080f 100%'],
-        boden='#04070d', huegel='#080d18',
-        glas=dict(blur=9, weiss=.06, rand=.14, kante=.20, glanz=0, saettigung=1.0),
-        tinte='#eef3fb', stumm='rgba(238,243,251,.60)', akzent='#7fd4ff',
-        cover=('#4d84c8', '#2b4f8a', '#132844', '#cfe4ff', '#070c16'),
-    ),
-    'c': dict(
-        name='Morgenmilch', titel='Blasser Morgen, sehr dickes Glas, dunkle Schrift',
-        himmel=['#eef3f4 0%', '#dbe6e8 30%', '#c3d3d6 52%', '#a9bcc0 72%', '#8fa4a8 100%'],
-        boden='#7b9095', huegel='#8ca1a5',
-        glas=dict(blur=86, weiss=.46, rand=.72, kante=.86, glanz=.30, saettigung=1.0),
-        tinte='#1e2a2c', stumm='rgba(30,42,44,.62)', akzent='#c2662a',
-        cover=('#dfeaec', '#b9cbcf', '#8ba1a6', '#ffffff', '#61787d'),
-    ),
-    'd': dict(
-        name='Gewitter', titel='Sturmviolett, mittleres Glas mit hartem Glanz',
-        himmel=['#6b5b86 0%', '#4a3f63 24%', '#2e2942 46%', '#17151f 68%', '#08070b 100%'],
-        boden='#07060a', huegel='#0d0b12',
-        glas=dict(blur=22, weiss=.11, rand=.52, kante=.78, glanz=.34, saettigung=1.2),
-        tinte='#f4f2f8', stumm='rgba(244,242,248,.62)', akzent='#5fe0b0',
-        cover=('#8b76a8', '#584a75', '#2a2440', '#ded4f0', '#100e18'),
-    ),
-    'e': dict(
-        name='Neonnacht', titel='Nachtstadt, eingefärbtes Glas statt weissem',
-        himmel=['#c0357f 0%', '#7a2270 22%', '#3d1a55 44%', '#181233 66%', '#06050f 100%'],
-        boden='#05040c', huegel='#0a0816',
-        glas=dict(blur=34, weiss=.10, rand=.30, kante=.46, glanz=.10, saettigung=1.5,
-                  ton='rgba(80,220,255,'),
-        tinte='#eafaff', stumm='rgba(234,250,255,.62)', akzent='#41e6ff',
-        cover=('#d1478d', '#7a2270', '#2a1547', '#ffd6ef', '#0b0818'),
-    ),
+    '': _f('Sonnenglas', 'Die Vorlage — mittleres Glas, leicht satiniert',
+           dict(blur=26, weiss=.13, rand=.24, kante=.34, saettigung=1.0)),
+
+    'a': _f('Milchglas', 'Dieselbe Scheibe, doppelt so dick',
+            dict(blur=64, weiss=.26, rand=.44, kante=.62, glanz=.22, saettigung=1.1)),
+
+    'b': _f('Klarglas', 'Dünn und poliert — der Himmel bleibt scharf, das Glas spiegelt',
+            dict(blur=3, weiss=.05, rand=.50, kante=.92, streif=.55, saettigung=1.05)),
+
+    'c': _f('Mattglas', 'Geätzt: kein Glanz, dafür Korn — Licht wird gestreut, nicht geworfen',
+            dict(blur=48, weiss=.30, rand=.16, kante=.20, koern=.14, saettigung=.85)),
+
+    'd': _f('Riffelglas', 'Gegossen und gerippt — der Hintergrund bricht in senkrechte Streifen',
+            dict(blur=20, weiss=.15, rand=.30, kante=.48, riffel=26, saettigung=1.1)),
+
+    'e': _f('Blockglas', 'Sehr dick, mit sichtbarer Stärke an der Kante',
+            dict(blur=130, weiss=.40, rand=.50, kante=.88, glanz=.18, dicke=16, saettigung=1.2)),
+
+    'f': _f('Rauchglas', 'Dunkel getönt und poliert — die Scheibe dämpft, statt aufzuhellen',
+            dict(blur=12, weiss=.36, rand=.26, kante=.44, streif=.42, saettigung=1.15,
+                 ton='rgba(18,10,8,'), stumm='rgba(255,255,255,.60)'),
 }
 
 
 def _css(g, f):
     gl = f['glas']
     ton = gl.get('ton', 'rgba(255,255,255,')
-    glanz = (f'''
-.glas::after{{content:"";position:absolute;left:0;right:0;top:0;height:38%;
-  border-radius:inherit;pointer-events:none;
-  background:linear-gradient(180deg, rgba(255,255,255,{gl["glanz"]}) 0%,
-    rgba(255,255,255,0) 100%)}}''' if gl['glanz'] else '')
+    hell = 'rgba(255,255,255,'
+
+    # Oberflaeche 1: weicher Lichtverlauf oben (satiniert) oder harter
+    # Spiegelstreifen quer (poliert). Geaetztes Glas bekommt beides nicht.
+    lagen = []
+    if gl.get('glanz'):
+        lagen.append(f'linear-gradient(180deg, {hell}{gl["glanz"]}) 0%, {hell}0) 62%)')
+    if gl.get('streif'):
+        lagen.append(f'linear-gradient(116deg, {hell}0) 30%, {hell}{gl["streif"]}) 44%, '
+                     f'{hell}{gl["streif"] * .45:.2f}) 50%, {hell}0) 58%)')
+    nach = (f'''
+.glas::after{{content:"";position:absolute;inset:0;border-radius:inherit;
+  pointer-events:none;background:{", ".join(lagen)}}}''' if lagen else '')
+
+    # Oberflaeche 2: Rippen (gegossen) oder Korn (geaetzt) liegen unter dem Glanz.
+    vor = ''
+    if gl.get('riffel'):
+        r = gl['riffel'] * g
+        vor = f'''
+.glas::before{{content:"";position:absolute;inset:0;border-radius:inherit;
+  pointer-events:none;backdrop-filter:blur({gl["blur"] * g * .55:.0f}px);
+  -webkit-backdrop-filter:blur({gl["blur"] * g * .55:.0f}px);
+  background:repeating-linear-gradient(90deg,
+    {hell}.16) 0 {r * .10:.1f}px, {hell}0) {r * .10:.1f}px {r * .46:.1f}px,
+    rgba(0,0,0,.13) {r * .46:.1f}px {r * .56:.1f}px, {hell}0) {r * .56:.1f}px {r:.1f}px)}}'''
+    elif gl.get('koern'):
+        vor = f'''
+.glas::before{{content:"";position:absolute;inset:0;border-radius:inherit;
+  pointer-events:none;opacity:{gl["koern"]};
+  background:
+    repeating-linear-gradient(37deg, {hell}.9) 0 1px, {hell}0) 1px 3px),
+    repeating-linear-gradient(-53deg, rgba(0,0,0,.7) 0 1px, {hell}0) 1px 4px)}}'''
+
+    # Sichtbare Glasstaerke: ein heller Innenring plus ein Schattenansatz darunter.
+    dicke = (f', inset 0 0 0 {gl["dicke"] * g:.0f}px {hell}.14)'
+             f', inset 0 {gl["dicke"] * g:.0f}px {gl["dicke"] * g * 1.8:.0f}px rgba(0,0,0,.22)'
+             if gl.get('dicke') else '')
+
     return f'''
 .stage{{background:linear-gradient(180deg, {", ".join(f["himmel"])});
   font-family:{SANS};color:{f["tinte"]}}}
@@ -85,15 +104,16 @@ def _css(g, f):
 .horizont{{position:absolute;left:0;right:0;background:{f["boden"]}}}
 .huegel{{position:absolute;border-radius:50%;background:{f["huegel"]}}}
 
-/* Glasdicke: Weichzeichnung, Eigenfarbe, Randhelligkeit und Innenglanz
-   wachsen gemeinsam — dünnes Glas ist fast nur eine Tönung. */
+/* Die Scheibe: Dicke steckt in blur und Eigenfarbe, die Oberflaeche in den
+   beiden Pseudo-Lagen darueber. Alles andere bleibt ueber alle Fassungen gleich. */
 .glas{{position:relative;background:{ton}{gl["weiss"]});
-  border:1px solid {ton}{gl["rand"]});
-  border-top-color:{ton}{gl["kante"]});
+  border:1px solid {ton if ton.startswith("rgba(255") else hell}{gl["rand"]});
+  border-top-color:{hell}{gl["kante"]});
   backdrop-filter:blur({gl["blur"] * g:.0f}px) saturate({gl["saettigung"]});
   -webkit-backdrop-filter:blur({gl["blur"] * g:.0f}px) saturate({gl["saettigung"]});
   box-shadow:0 {26 * g:.0f}px {60 * g:.0f}px rgba(0,0,0,.38),
-    inset 0 1px 0 {ton}{gl["kante"]})}}{glanz}
+    inset 0 1px 0 {hell}{gl["kante"]}){dicke}}}{vor}{nach}
+.glas > *{{position:relative;z-index:1}}
 
 .linie{{position:relative;border-radius:999px;background:{f["tinte"]}59}}
 .linie i{{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:{f["tinte"]}}}
@@ -103,7 +123,7 @@ def _css(g, f):
   font-family:{MONO}}}
 .tasten{{display:flex;align-items:center;justify-content:space-between}}
 .bib{{display:inline-flex;align-items:center;border-radius:999px;
-  background:{ton}{min(gl["weiss"] + .04, .5):.2f});border:1px solid {ton}{gl["rand"]});
+  background:{ton}{min(gl["weiss"] + .04, .5):.2f});border:1px solid {hell}{gl["rand"]});
   backdrop-filter:blur({max(10, gl["blur"] * .7) * g:.0f}px);text-transform:uppercase}}
 .marke{{letter-spacing:{4 * g:.1f}px;text-transform:uppercase;color:{f["stumm"]}}}
 '''
