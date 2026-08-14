@@ -1,0 +1,14 @@
+# Nur fuer lokale Tests — wird im Container NIE installiert.
+# docker-compose installiert ausschliesslich requirements.txt, damit die
+# Laufzeit-Abhaengigkeiten klein und der Containerstart schnell bleiben.
+#
+#   python3 -m venv .venv
+#   .venv/bin/pip install -r requirements.txt -r requirements-dev.txt
+#   .venv/bin/python -m playwright install chromium   # einmalig, fuer test_frontend.py
+#   .venv/bin/python -m pytest -q
+pytest==9.1.1
+httpx2==2.10.0
+
+# Fuer test_frontend.py. Fehlt das Paket oder der Browser, ueberspringen sich
+# die Frontend-Tests; die Backend-Tests laufen davon unabhaengig.
+playwright==1.62.0

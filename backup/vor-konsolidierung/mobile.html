@@ -1,0 +1,2328 @@
+<!doctype html>
+<html lang="de" data-thema="papier" data-akzent="messing">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#FBF9F5">
+<!-- Ohne diese drei Zeilen startet „Zum Home-Bildschirm" mit Safari-Leiste. -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Musiklib">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAACsUlEQVR42u3dwW3DMBBEURalltJM+s0h8MUN5GAgcTSz+4BfAEG+OLYoUefx/SX92DEFgkNwCA7BITgEh+AQHIJDcEhwCA7BITgEh+AQHIJDcAgOCQ7BITgEh+AQHIJDcAgOwSHBITgEx+t9flwvBgcKFy6LcPwtiIVQDhaIrMDx/yZmKzlYIDIWRxqLSUQOFoiMwtHCop3IIYOPCTh6WZQSOWTw0Y1jkowiH4cMPipxTGXRQuSQwUcZjtuXh49QHAl/uz4/EnGEfLD7/wIHHD04cr4S+nKahSPq94IfL0E40n5M+nGbgiPwSoOLH3DAkY0j8xqlK6f344i9gO3KOhxwpOJI3vqyLQcHHJE4wjfN7enDAUcejvzbbdwQBAccYTgqbtRzNyEccMABRwWOlvu/3acOBxwxOIqeHPGQCxxwwAEHHHC04uh6WtWztXDAAQcccMABBxxwwLEER93ZOg4DggMOOOCAAw444IADDjjggAMOOOCAAw444IADDjjggAMOOGzZ27KHAw444IADDjjggAMOODwO6XFIOOCAAw444HDsk2Of4IBjOg5HTTpqEg444IDDwfgLZcABh5fxlOPwpiY44PACwBIZcMCRiuPhpcPBMuCAIxhHyDK0jGodjoSVqBgSHHDAEbYY+eNZjePe9QgfDBx3LknySOC4eVVihwEHHHAE+8gcAxwRPgIHAEfxYUDjZUTjWOIjef6jccwmkj/zBThG+qiY9g4cw3y0zHkNjjE+iia8CUc7kbqp7sNR6qNxnitxdBHpneFiHE52g2PI85VwIHJNms9ROOypwpFFZPAETsbxPihLJm0Ljt9wWTtFe3EIDsEhOASH4BAcgkNwCA4JDsEhOASH4BAcgkNwCA7BITgkOASH4BAcgkNwCA7BITgEhwSH4BAcekdPDA1vEv9Njf8AAAAASUVORK5CYII=">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23FBF9F5'/%3E%3Ccircle cx='16' cy='16' r='10' fill='%238A6534'/%3E%3Crect x='15' y='9' width='2' height='14' fill='%23FBF9F5'/%3E%3C/svg%3E">
+<title>Musiklib</title>
+<style>
+/* ══════════════════════════════════════════════════════════════════════
+   Musiklib — Handy-Oberflaeche.
+
+   Bewusst kleiner geschnitten als index.html: suchen und hoeren. Scannen,
+   uebersprungene Dateien und die Sortierwahl bleiben am Schreibtisch.
+   Papier statt Nacht, weil man das Geraet im Hellen haelt; aus dem Gold
+   wird ein Messing, weil helles Gold auf Weiss nicht traegt.
+   ══════════════════════════════════════════════════════════════════════ */
+/* ── Themen ───────────────────────────────────────────────────────────
+   Ein Thema ist die ganze Palette, nicht nur ein Akzent: :root traegt
+   „Papier", [data-thema="wueste"] traegt „Desert Rose". Alles, was Farbe
+   hat, muss deshalb ueber ein Merkmal laufen — auch Schatten (--schatten
+   als RGB-Tripel) und der Schleier der Reiterleiste (--veil). Eine feste
+   Farbe im Regelwerk waere ein Loch, durch das Elfenbein in den Sand
+   laeuft. */
+:root{
+  --paper:#FBF9F5;
+  --tint:#F1EDE4;
+  --ink:#241E18;
+  --ink-2:#5F574B;
+  --ink-3:#766D5F;   /* lesbare Beischrift */
+  --ink-4:#A0968A;   /* schmueckend: Haarlinien, Marken, Ruhezustaende */
+  --ink-5:rgba(36,30,24,.26);   /* Verklungenes: schon gespielte Titel */
+  --line:rgba(36,30,24,.10);
+  --line-2:rgba(36,30,24,.22);
+  --schatten:36,30,24;
+  --veil:rgba(251,249,245,.94);
+  --warn:#9C4A2E;
+  --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  --tabs:60px;       /* Hoehe der Reiterleiste */
+  --unten:60px;      /* Platz, den die Blaetter unten freilassen */
+  --safe:env(safe-area-inset-bottom,0px);
+}
+/* „Bei Bedarf": die Leiste liegt unter dem Rand, stehen bleibt nur der Griff. */
+[data-leiste="bedarf"]{--unten:18px}
+/* ── Farbakzente ──────────────────────────────────────────────────────
+   Zwei Toene je Akzent: --accent traegt Flaechen und Linien, --accent-ink
+   traegt Schrift. Beim Gruen liegt der Flaechenton bewusst heller, als es
+   fuer Text zulaessig waere — deshalb die zweite, dunklere Stufe. */
+:root,[data-akzent="messing"]{
+  --accent:#8A6534; --accent-ink:#7A5A2E;
+  --accent-soft:rgba(138,101,52,.09); --accent-mid:rgba(138,101,52,.42);
+}
+[data-akzent="petrol"]{
+  --accent:#1F6470; --accent-ink:#1B5A66;
+  --accent-soft:rgba(31,100,112,.10); --accent-mid:rgba(31,100,112,.42);
+}
+[data-akzent="gruen"]{
+  --accent:#4F8A46; --accent-ink:#3D6B36;
+  --accent-soft:rgba(79,138,70,.10); --accent-mid:rgba(79,138,70,.42);
+}
+
+/* ── Thema „Desert Rose" ──────────────────────────────────────────────
+   Farben unveraendert aus der Themen-Sammlung: Sand, Sand hell, Clay,
+   Dusty Rose, Deep Burgundy. Zwei Abweichungen, beide bewusst:
+   die Schrift bleibt bei den Schriften des Hauses (FreeSans traegt keinen
+   Player), und Clay steht mit 2,4:1 auf Sand nur fuer Linien und Marken —
+   Text laeuft in Burgunder (7,9:1) oder in der dunkleren Akzentstufe.
+   --tint ist hier heller als --paper, nicht dunkler: im Sand ist die
+   zweite Flaeche das aufgehellte Passepartout, kein Schatten.
+   Steht nach den Akzenten, damit es deren Vorgabe auf :root ueberschreibt. */
+[data-thema="wueste"]{
+  --paper:#E8D5C4;   /* Sand */
+  --tint:#F3E7DA;    /* Sand hell */
+  --ink:#5D2E46;     /* Deep Burgundy */
+  --ink-2:rgba(93,46,70,.90);
+  --ink-3:rgba(93,46,70,.78);
+  --ink-4:rgba(93,46,70,.52);
+  --ink-5:rgba(93,46,70,.30);
+  --line:rgba(93,46,70,.14);
+  --line-2:rgba(93,46,70,.26);
+  --schatten:93,46,70;
+  --veil:rgba(232,213,196,.94);
+  --warn:#8E3B2A;
+  /* Vorgabe-Akzent des Themas: Clay traegt die Achse, wie im Entwurf. */
+  --accent:#B87D6D; --accent-ink:#854C3B;
+  --accent-soft:rgba(184,125,109,.16); --accent-mid:rgba(184,125,109,.55);
+}
+[data-thema="wueste"][data-akzent="rose"]{
+  --accent:#D4A5A5; --accent-ink:#8E4750;
+  --accent-soft:rgba(212,165,165,.20); --accent-mid:rgba(212,165,165,.62);
+}
+/* Die Form des Themas — Passepartout, Skala, Mittelachse — steht weiter
+   unten bei „Jetzt laeuft": sie muss den Rand ueberschreiben koennen. */
+
+/* ── Drei Themen mit eigenem Spieler ─────────────────────────────────
+   „Papier" und „Desert Rose" teilen sich denselben Spieler und
+   unterscheiden sich in der Achse. Die naechsten drei bringen jeweils
+   eine eigene Oberflaeche fuer „Jetzt laeuft" mit — aus den Blaettern
+   02 (Kissen), 03 Antiqua & Ausschlag (Karte) und 05 Kieselliste
+   (Kiesel). Palette und Spieler gehoeren zusammen: ein Thema ist die
+   ganze Erscheinung, nicht nur ein Anstrich fuer eine Seite.
+   Sammlung, Suche, Album und Reiterleiste bleiben dieselben — sie
+   nehmen nur die Farben des Themas an. */
+
+/* „Kissen": alles aus einem Material, Tiefe statt Kontur. */
+[data-thema="kissen"]{
+  --paper:#EDEDF4;
+  --tint:#F2F2F8;
+  --ink:#1B1B25;
+  --ink-2:#4E4E63;
+  --ink-3:#6E6E82;
+  --ink-4:#A6A6B8;
+  --ink-5:rgba(27,27,37,.26);
+  --line:rgba(27,27,37,.08);
+  --line-2:rgba(27,27,37,.16);
+  --schatten:88,88,124;
+  --veil:rgba(237,237,244,.94);
+  --warn:#A33B3B;
+  /* die beiden Toene der weichen Flaeche — ein Kissen braucht Licht und
+     Schatten aus derselben Palette, sonst wirkt es aufgeklebt */
+  --neu-hell:rgba(255,255,255,.95);
+  --neu-dunkel:rgba(88,88,124,.16);
+  --accent:#55556E; --accent-ink:#3E3E55;
+  --accent-soft:rgba(85,85,110,.10); --accent-mid:rgba(85,85,110,.42);
+}
+[data-thema="kissen"][data-akzent="flieder"]{
+  --accent:#6E5AA8; --accent-ink:#544189;
+  --accent-soft:rgba(110,90,168,.12); --accent-mid:rgba(110,90,168,.46);
+}
+
+/* „Karte": weisse Karte ueber schwarzem Grund. Genau eine Farbe ist
+   erlaubt, und die traegt ausschliesslich die Abspielposition — deshalb
+   hat dieses Thema auch nur einen Akzent. */
+[data-thema="karte"]{
+  --paper:#1A1A1C;
+  --tint:#242427;
+  --ink:#F2EFEA;
+  --ink-2:#C4BFB8;
+  --ink-3:#8E8983;
+  --ink-4:#6A6660;
+  --ink-5:rgba(242,239,234,.28);
+  --line:rgba(255,255,255,.09);
+  --line-2:rgba(255,255,255,.20);
+  --schatten:0,0,0;
+  --veil:rgba(26,26,28,.94);
+  --warn:#E0785E;
+  --karte-papier:#FBFAF8;
+  --karte-tinte:#14100E;
+  --accent:#D8452B; --accent-ink:#E7644C;
+  --accent-soft:rgba(216,69,43,.16); --accent-mid:rgba(216,69,43,.55);
+}
+
+/* „Kiesel": derselbe weiche Grund wie „Kissen", nur grauer und
+   nuechterner — hier ist der Spieler die Zeile, die laeuft. */
+[data-thema="kiesel"]{
+  --paper:#E3E3E3;
+  --tint:#E9E9E9;
+  --ink:#1C1C1C;
+  --ink-2:#4A4A4A;
+  --ink-3:#6A6A6A;
+  --ink-4:#9A9A9A;
+  --ink-5:rgba(28,28,28,.26);
+  --line:rgba(28,28,28,.08);
+  --line-2:rgba(28,28,28,.16);
+  --schatten:80,80,80;
+  --veil:rgba(227,227,227,.94);
+  --warn:#9C3B2E;
+  --neu-hell:rgba(255,255,255,.9);
+  --neu-dunkel:rgba(80,80,80,.22);
+  --accent:#4A4A4A; --accent-ink:#333333;
+  --accent-soft:rgba(74,74,74,.09); --accent-mid:rgba(74,74,74,.40);
+}
+[data-thema="kiesel"][data-akzent="stahl"]{
+  --accent:#3F5A70; --accent-ink:#2E4354;
+  --accent-soft:rgba(63,90,112,.11); --accent-mid:rgba(63,90,112,.45);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--paper);color:var(--ink)}
+body{
+  font-family:var(--sans);font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+  overscroll-behavior:none;
+}
+button,input{font:inherit;color:inherit;background:none;border:none}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.caps{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+.num{font-variant-numeric:tabular-nums}
+
+/* ── Ebenen ── */
+.view{
+  position:fixed;inset:0 0 calc(var(--unten) + var(--safe)) 0;
+  display:none;flex-direction:column;background:var(--paper);
+}
+.view.on{display:flex}
+.body{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.body::-webkit-scrollbar{display:none}
+.body{scrollbar-width:none}
+
+.hd{padding:calc(env(safe-area-inset-top,0px) + 14px) 22px 10px;flex-shrink:0}
+.hd .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-family:var(--serif);font-size:17px}
+.brand em{font-style:italic;color:var(--accent-ink)}
+.hd .big{font-family:var(--serif);font-weight:400;font-size:28px;letter-spacing:-.01em}
+.hd .sub{margin-top:4px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+.icon-btn{width:44px;height:44px;margin-right:-10px;display:flex;align-items:center;
+  justify-content:center;color:var(--ink-3);border-radius:50%}
+.icon-btn:active{background:var(--tint)}
+
+/* ── Sammlung ──
+   min-width:0 an der Kachel ist nicht schmueckend: Rasterelemente sind sonst
+   mindestens so breit wie ihr laengster unumbrechbarer Inhalt, und die
+   Interpretenzeile laeuft mit white-space:nowrap. Ein langer Name schiebt die
+   Spalte dann ueber den Bildschirmrand hinaus und die Sammlung scrollt
+   waagerecht. Mit 0 greift stattdessen das Auslassungszeichen. */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:26px 16px;padding:12px 22px 30px}
+/* align-self:start, weil Browser den Inhalt eines <button> senkrecht mittig
+   setzen: in einer Reihe mit zweizeiligem Titel saenke die Nachbarkachel sonst
+   um eine halbe Zeile ab. */
+.card{min-width:0;align-self:start}
+@media (min-width:600px){                    /* iPad: nicht zwei Riesenkacheln */
+  .grid{grid-template-columns:repeat(auto-fill,minmax(158px,1fr))}
+}
+.card .cov{width:100%;aspect-ratio:1;border-radius:1px;background:var(--tint);position:relative;
+  overflow:hidden;box-shadow:0 6px 18px rgba(var(--schatten),.14)}
+.card .cov img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.card .cov .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);
+  font-style:italic;font-size:38px;color:var(--ink-4)}
+.card .t{margin-top:10px;font-family:var(--serif);font-size:14.5px;line-height:1.25;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  overflow-wrap:anywhere}
+.card .a{margin-top:3px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card.now .t{color:var(--accent-ink)}
+
+/* ── Suche ── */
+.searchwrap{padding:2px 22px 12px;flex-shrink:0}
+.search{display:flex;align-items:center;gap:10px;background:var(--tint);border:1px solid transparent;
+  border-radius:3px;padding:12px 13px;transition:border-color .2s,background .2s}
+.search:focus-within{border-color:var(--accent);background:var(--paper)}
+.search input{flex:1;min-width:0;outline:none;font-size:16px}   /* 16px: sonst zoomt iOS beim Fokus */
+.search input::placeholder{color:var(--ink-4)}
+.search .clr{color:var(--ink-3);display:none;padding:2px}
+.search.has .clr{display:block}
+.search svg{color:var(--ink-3);flex-shrink:0}
+
+.sec{padding:18px 22px 6px;display:flex;align-items:baseline;justify-content:space-between}
+.row{display:flex;align-items:center;gap:13px;padding:9px 22px;transition:background .14s;width:100%;
+  text-align:left}
+.row:active{background:var(--tint)}
+.row .sw{width:46px;height:46px;border-radius:1px;flex-shrink:0;position:relative;overflow:hidden;
+  background:var(--tint)}
+.row .sw img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.row .sw .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);
+  font-style:italic;font-size:17px;color:var(--ink-4)}
+.row .m{flex:1;min-width:0}
+.row .t,.row .s{display:block}
+.row .t{font-family:var(--serif);font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .s{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .d{font-size:11px;color:var(--ink-3);flex-shrink:0}
+.row .chev{color:var(--ink-4);flex-shrink:0;display:flex}
+.row.now .t{color:var(--accent-ink)}
+.empty{padding:64px 34px;text-align:center;font-family:var(--serif);font-size:18px;color:var(--ink-3)}
+.empty small{display:block;margin-top:8px;font-family:var(--sans);font-size:12.5px;color:var(--ink-4)}
+
+/* ══════════════════ Jetzt läuft — „Der Rand" ══════════════════ */
+#view-now{padding:0}
+.lid{display:flex;align-items:center;justify-content:space-between;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 30px 0;flex-shrink:0}
+.qbtn{display:flex;align-items:center;gap:9px;padding:8px 0 8px 12px;color:var(--ink-3);
+  transition:color .25s}
+.qbtn:active,.qbtn[aria-expanded="true"]{color:var(--accent-ink)}
+.qbtn .n{font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-variant-numeric:tabular-nums}
+.qbtn .gl{display:flex;flex-direction:column;gap:3px;width:13px}
+.qbtn .gl i{display:block;height:1px;background:currentColor;transition:width .3s,transform .3s,opacity .3s}
+.qbtn .gl i:nth-child(1){width:13px}
+.qbtn .gl i:nth-child(2){width:9px}
+.qbtn .gl i:nth-child(3){width:13px}
+.qbtn[aria-expanded="true"] .gl i:nth-child(1){transform:translateY(4px) rotate(9deg)}
+.qbtn[aria-expanded="true"] .gl i:nth-child(2){opacity:0}
+.qbtn[aria-expanded="true"] .gl i:nth-child(3){transform:translateY(-4px) rotate(-9deg)}
+
+.stage{flex:1;min-height:0;position:relative;padding:22px 78px 0 30px}
+.artwrap{position:relative}
+.art{width:100%;aspect-ratio:1;border-radius:1px;background:var(--tint);position:relative;overflow:hidden;
+  box-shadow:0 20px 44px rgba(var(--schatten),.24);
+  transition:width .55s cubic-bezier(.3,.8,.25,1),box-shadow .5s}
+.art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.art .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);
+  font-style:italic;font-size:72px;color:var(--ink-4)}
+/* Haarrahmen mit Abstand — wie in einer Vitrine */
+.frame{position:absolute;inset:-11px;border:1px solid var(--line-2);border-radius:1px;
+  transition:opacity .4s ease;pointer-events:none}
+.meta{margin-top:34px;transition:opacity .4s ease,transform .5s cubic-bezier(.3,.8,.25,1)}
+.meta h2{font-family:var(--serif);font-weight:400;font-size:26px;line-height:1.2;letter-spacing:-.01em;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.meta .by{margin-top:11px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta .alb{margin-top:5px;font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-3);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta .err{margin-top:11px;font-size:12px;color:var(--warn)}
+
+/* Der Rand: die Achse steht dort, wo sonst nur Papier ist */
+.rail{position:absolute;top:22px;bottom:14px;right:0;width:78px;z-index:5;touch-action:none}
+.rline{position:absolute;top:0;bottom:0;right:30px;width:1px;background:var(--line-2)}
+.rdone{position:absolute;top:0;right:29px;width:3px;height:0;background:var(--accent);border-radius:2px}
+.rtick{position:absolute;right:24px;width:13px;height:1px;background:var(--line-2)}
+.rtick.past{background:var(--accent-mid)}
+.rband{position:absolute;right:28px;width:5px;background:var(--accent-soft);border-radius:3px;
+  transition:top .4s cubic-bezier(.3,.8,.25,1),height .4s cubic-bezier(.3,.8,.25,1)}
+.rknob{position:absolute;right:30px;width:11px;height:11px;border-radius:50%;background:var(--paper);
+  border:1.5px solid var(--accent);transform:translate(50%,-50%);pointer-events:none;
+  transition:width .18s,height .18s,box-shadow .18s}
+.rail.grabbing .rknob{width:17px;height:17px;box-shadow:0 0 0 7px var(--accent-soft)}
+.rnum{position:absolute;right:44px;width:32px;text-align:right;transform:translateY(-50%);
+  font-size:9px;letter-spacing:.06em;color:var(--ink-3);font-variant-numeric:tabular-nums;white-space:nowrap}
+.rhint{position:absolute;right:52px;bottom:0;font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-4);writing-mode:vertical-rl;transition:opacity .5s;pointer-events:none}
+.rhint.gone{opacity:0}
+
+/* Beim Ziehen tritt das Bild zurueck und der Titel unter dem Griff nach vorn */
+.veil{position:absolute;inset:0;background:var(--paper);opacity:0;pointer-events:none;
+  transition:opacity .3s ease;z-index:4}
+.peek{position:absolute;left:30px;right:92px;top:46%;transform:translateY(-50%);z-index:6;opacity:0;
+  pointer-events:none;transition:opacity .28s ease}
+.peek .n{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-ink)}
+.peek h3{font-family:var(--serif);font-weight:400;font-size:29px;line-height:1.15;margin-top:9px;
+  letter-spacing:-.01em}
+.peek .t{margin-top:9px;font-size:11px;letter-spacing:.14em;color:var(--ink-2);font-variant-numeric:tabular-nums}
+#view-now.dragging .veil{opacity:.9}
+#view-now.dragging .peek{opacity:1}
+#view-now.dragging .meta,#view-now.dragging .frame{opacity:0}
+#view-now.dragging .art{box-shadow:0 8px 20px rgba(var(--schatten),.10)}
+
+/* Aufgeklappt: das Bild tritt zurueck, die Titel treten hervor */
+.qlist{position:absolute;left:30px;right:92px;top:22px;bottom:8px;opacity:0;pointer-events:none;
+  transition:opacity .4s ease;z-index:3;text-align:right;overflow:hidden}
+#view-now.open .qlist{opacity:1;pointer-events:auto}
+#view-now.open .art{width:96px}
+#view-now.open .frame{opacity:0}
+#view-now.open .meta{opacity:0;transform:translateY(8px)}
+.qitem{position:absolute;left:0;right:0;transition:top .4s cubic-bezier(.3,.8,.25,1);text-align:right}
+.qitem .t,.qitem .d{display:block}
+.qitem .t{font-family:var(--serif);font-size:16px;color:var(--ink-3);line-height:1.25;
+  transition:color .3s,font-size .3s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qitem .d{font-size:9.5px;letter-spacing:.14em;color:var(--ink-4);margin-top:3px;
+  font-variant-numeric:tabular-nums;opacity:0;transition:opacity .3s}
+.qitem.now .t{color:var(--ink);font-size:22px}
+.qitem.now .d{opacity:1;color:var(--ink-3)}
+.qitem.past .t{color:var(--ink-5)}
+
+.foot{flex-shrink:0;padding:0 30px 22px;position:relative;z-index:7}
+.transport{display:flex;align-items:center;justify-content:center;gap:34px;padding-top:20px;
+  border-top:1px solid var(--line)}
+.tb{width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--ink-2);
+  border-radius:50%}
+.tb:active{color:var(--ink);background:var(--tint)}
+.play{width:56px;height:56px;border-radius:50%;border:1px solid var(--accent);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,color .2s,transform .12s,border-color .2s}
+.play:active{transform:scale(.95)}
+.play.on{background:var(--accent);color:var(--paper)}
+.nextrow{margin-top:20px;display:flex;align-items:baseline;gap:12px;width:100%;text-align:left}
+.nextrow .k{font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);flex-shrink:0}
+.nextrow .v{flex:1;min-width:0;font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nextrow .rest{flex-shrink:0;display:flex;align-items:baseline;gap:8px}
+
+/* ══════════════ Desert Rose — „Die Skala" ══════════════
+   Das zweite Thema ist nicht nur eine Palette: die Warteschlange liegt hier
+   waagerecht unter dem Bild statt senkrecht im rechten Rand, und die Seite
+   steht auf einer Mittelachse statt links. Beide Achsen stehen im Markup,
+   das Thema zeigt eine davon — der Zustand (Warteschlange, Position) ist
+   derselbe, nur die Zeichnung wechselt. */
+.skala{display:none}
+[data-thema="wueste"] .rail,[data-thema="wueste"] .veil,
+[data-thema="wueste"] .peek,[data-thema="wueste"] .rhint{display:none}
+[data-thema="wueste"] .skala{display:block}
+
+/* Kopf: mittig, mit dem kurzen Strich des Entwurfs */
+[data-thema="wueste"] .lid{flex-direction:column;justify-content:center;gap:0;padding-bottom:0}
+[data-thema="wueste"] .lid .brand{display:none}
+[data-thema="wueste"] .qbtn{padding:2px 0 0}
+[data-thema="wueste"] .qbtn .n{letter-spacing:.3em}
+[data-thema="wueste"] .lid::after{content:'';width:26px;height:1px;background:var(--accent);margin-top:10px}
+
+/* Buehne: Bild, Beschriftung, Titel. Alle senkrechten Masse haengen an der
+   Bildschirmhoehe — auf einem kurzen Geraet (320x568) stapelten sich sonst
+   Bild, Beschriftung und Titel ueber den Fuss hinaus. overflow:hidden ist der
+   letzte Riegel: lieber ein angeschnittenes Bild als ein zerfallener Fuss. */
+[data-thema="wueste"] .stage{padding:14px 30px 0;display:flex;flex-direction:column;
+  align-items:center;overflow:hidden}
+/* Die Kachel weicht der Hoehe, nicht der Breite: was Kopf, Beschriftung,
+   Skala und Fuss brauchen, ist eine feste Groesse (rund 510 Punkte — inklusive einer zweiten Titelzeile) und kein
+   Anteil — deshalb eine Differenz und kein vh-Faktor. Auf gewoehnlichen
+   Geraeten greift die Deckelung bei 300, erst ein kurzer Bildschirm zieht das
+   Bild kleiner. svh statt vh, wo es geht: in Safari mit Adressleiste ist vh
+   die groessere, unsichtbare Hoehe. */
+[data-thema="wueste"] .artwrap{width:min(76vw,300px,calc(100vh - 512px));
+  width:min(76vw,300px,calc(100svh - 512px));
+  margin-top:clamp(4px,1.6vh,13px);flex-shrink:0}
+[data-thema="wueste"] .frame{inset:-13px;background:var(--tint);border-color:var(--line);
+  box-shadow:0 16px 34px rgba(var(--schatten),.16)}
+[data-thema="wueste"] .art{z-index:1;box-shadow:none}
+/* Beschriftung ueber dem Titel: Interpret in Versalien, Album kursiv */
+[data-thema="wueste"] .meta{display:flex;flex-direction:column;align-items:center;text-align:center;
+  margin-top:clamp(16px,3.4vh,30px);width:100%}
+[data-thema="wueste"] .meta .by{order:1;margin-top:0;font-size:10px;letter-spacing:.28em;color:var(--ink)}
+[data-thema="wueste"] .meta .alb{order:2;margin-top:6px;font-size:14px;color:var(--ink-3)}
+[data-thema="wueste"] .meta h2{order:3;margin-top:clamp(10px,2.4vh,22px);text-wrap:balance;
+  font-size:clamp(21px,6.2vw,26px)}
+[data-thema="wueste"] .meta .err{order:4}
+
+/* Die gravierte Skala: Haarraster, Marken je Titel, Zeiger */
+.skala{width:100%;padding:clamp(10px,2vh,18px) 0 4px;position:relative;touch-action:none}
+.ruler{position:relative;height:34px}
+.hairs{position:absolute;left:0;right:0;top:16px;height:7px;opacity:.5;
+  background-image:repeating-linear-gradient(90deg,var(--accent) 0 1px,transparent 1px 7px)}
+.base{position:absolute;left:0;right:0;top:16px;height:1px;background:var(--line-2)}
+.sdone{position:absolute;left:0;top:16px;height:2px;width:0;background:var(--accent)}
+.big{position:absolute;top:6px;width:1px;height:17px;background:var(--ink-4)}
+.big.past{background:var(--accent)}
+.sno{position:absolute;top:24px;transform:translateX(-50%);font-size:8.5px;letter-spacing:.12em;
+  color:var(--ink-4);font-variant-numeric:tabular-nums}
+.sno.on{color:var(--ink)}
+.mark{position:absolute;top:4px;width:0;height:0;border-left:5px solid transparent;
+  border-right:5px solid transparent;border-top:7px solid var(--ink);transform:translateX(-50%);z-index:3}
+.markline{position:absolute;top:11px;width:1px;height:16px;background:var(--ink);
+  transform:translateX(-50%);z-index:3}
+.bubble{position:absolute;bottom:calc(100% + 6px);transform:translateX(-50%);white-space:nowrap;
+  background:var(--ink);color:var(--tint);padding:5px 12px;font-size:10px;letter-spacing:.06em;
+  opacity:0;transition:opacity .18s;pointer-events:none;z-index:4;max-width:82vw;overflow:hidden;
+  text-overflow:ellipsis;box-shadow:0 6px 16px rgba(var(--schatten),.28)}
+/* Beim Ziehen sagt hier die Sprechblase, wo man landet — anders als am Rand
+   muss dafuer nichts zuruecktreten: die Skala steht neben dem Bild, nicht
+   darueber. Die Regeln des Randes werden deshalb zurueckgenommen. */
+[data-thema="wueste"] #view-now.dragging .bubble{opacity:1}
+[data-thema="wueste"] #view-now.dragging .meta,
+[data-thema="wueste"] #view-now.dragging .frame{opacity:1}
+[data-thema="wueste"] #view-now.dragging .art{box-shadow:none}
+.times{display:flex;justify-content:space-between;margin-top:8px;font-size:9.5px;letter-spacing:.14em;
+  color:var(--ink-3);font-variant-numeric:tabular-nums}
+
+/* Fuss: gefuellte Scheibe wie im Entwurf, „Als Naechstes" mittig.
+   Die Restzeit steht hier rechts in der Skala, nicht in der Zeile. */
+[data-thema="wueste"] .transport{gap:30px;border-top:none;padding-top:clamp(10px,2.2vh,18px)}
+[data-thema="wueste"] .nextrow{margin-top:clamp(10px,2.2vh,18px)}
+/* Die Scheibe traegt Burgunder wie im Entwurf, nicht den Akzent: der Akzent
+   liegt in der Skala. Sie ist immer gefuellt — das Zeichen sagt den Zustand. */
+[data-thema="wueste"] .play{width:60px;height:60px;border:none;background:var(--ink);
+  color:var(--tint);box-shadow:0 8px 18px rgba(var(--schatten),.30)}
+[data-thema="wueste"] .nextrow{flex-direction:column;align-items:center;gap:5px;margin-top:18px;
+  padding-top:14px;border-top:1px solid var(--line);text-align:center}
+[data-thema="wueste"] .nextrow .k{letter-spacing:.24em}
+[data-thema="wueste"] .nextrow .v{flex:none;max-width:100%;font-size:15px}
+[data-thema="wueste"] .nextrow .rest{display:none}
+
+/* Sand auf Ton traegt keine Schrift (1,9:1) — die Taste nimmt die dunklere
+   Akzentstufe und das aufgehellte Sand. */
+[data-thema="wueste"] .act{background:var(--accent-ink);color:var(--tint)}
+
+/* Aufgeklappt: ohne senkrechte Achse ist die Zeitlage keine Ordnung mehr —
+   die Warteschlange steht hier als gewoehnliche, mittige Liste. */
+[data-thema="wueste"] .qlist{left:24px;right:24px;top:14px;bottom:4px;text-align:center;
+  overflow-y:auto;padding:4px 0}
+[data-thema="wueste"] .qitem{position:static;width:100%;padding:7px 0;text-align:center}
+[data-thema="wueste"] .qitem .d{opacity:1}
+[data-thema="wueste"] #view-now.open .art{width:100%}
+[data-thema="wueste"] #view-now.open .artwrap{opacity:0;pointer-events:none;transition:opacity .3s}
+.nextrow .rest .num{font-family:var(--serif);font-size:15px;color:var(--ink-2)}
+
+/* ══════════════ Drei eigene Spieler ══════════════
+   Ist ein Thema mit eigenem Spieler gewaehlt, tritt in „Jetzt laeuft" die
+   Flaeche #fremd an die Stelle von Deckel, Buehne und Sockel. Der Rest der
+   App bleibt, wie er ist: die Sammlung ist eine eigene Seite und ueber den
+   Knopf links oben (und ueber die Reiterleiste) zu erreichen, die Suche
+   ueber den Knopf rechts oben.
+   Die Regelwerke stammen aus den Blaettern und stehen deshalb weiter unter
+   deren Wurzelklassen .mg / .aa / .kl — nur die Farben kommen jetzt aus
+   den Merkmalen des Themas. */
+.fremd{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
+[data-spieler] #view-now .lid,
+[data-spieler] #view-now .stage,
+[data-spieler] #view-now .foot{display:none}
+[data-spieler] .fremd{display:flex}
+.fremd .kopfz{display:flex;align-items:center;justify-content:space-between;flex:none;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 26px 8px}
+.fremd .kopfz .mitte{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+
+/* ── „Kissen" — Blatt 02 ── */
+.fremd.mg{--karte:var(--tint);--hell:var(--neu-hell);--dunkel:var(--neu-dunkel);
+  background:var(--paper);color:var(--ink)}
+.fremd.mg .kissen{background:var(--karte);border-radius:26px;
+  box-shadow:-9px -9px 20px var(--hell),10px 10px 26px var(--dunkel)}
+.fremd.mg .rund{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+  color:var(--ink-3);background:var(--karte);
+  box-shadow:-5px -5px 12px var(--hell),6px 6px 14px var(--dunkel)}
+.fremd.mg .rund:active{box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
+.fremd.mg .spieler{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:0 30px 20px;overflow:hidden}
+.fremd.mg .deck{position:relative;width:var(--dk);height:calc(var(--dk) * .84);flex:none;
+  --dk:min(80vw,34vh);border-radius:30px;background:linear-gradient(150deg,#FAFAFF,#E6E6F0);
+  box-shadow:-12px -12px 26px var(--hell),14px 14px 34px var(--dunkel)}
+.fremd.mg .deck .teller{position:absolute;left:6%;top:8%;width:74%;aspect-ratio:1;border-radius:50%;
+  background:
+    repeating-radial-gradient(circle at 50% 50%,#0A0A0E 0 1.6px,#17171D 1.6px 3.2px),
+    radial-gradient(circle at 30% 24%,rgba(255,255,255,.22),transparent 44%);
+  box-shadow:0 10px 24px rgba(30,30,60,.28);animation:mgdreh 4.2s linear infinite}
+.fremd.mg .deck .teller.halt{animation-play-state:paused}
+@keyframes mgdreh{to{transform:rotate(360deg)}}
+.fremd.mg .deck .teller .label{position:absolute;inset:34%;border-radius:50%;background:#F7F7FC;
+  display:grid;place-items:center;font-size:14px;font-weight:700;color:var(--ink-2);overflow:hidden;
+  box-shadow:0 0 0 1px rgba(0,0,0,.18)}
+.fremd.mg .deck .teller .label img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  border-radius:50%}
+.fremd.mg .deck .arm{position:absolute;right:9%;top:9%;width:26px;height:26px;border-radius:50%;
+  --al:calc(var(--dk) * .33);
+  background:linear-gradient(150deg,#FDFDFF,#D8D8E4);box-shadow:0 2px 6px rgba(30,30,60,.24);
+  transform-origin:50% 50%;transition:transform .45s cubic-bezier(.4,0,.2,1)}
+.fremd.mg .deck .arm::before{content:'';position:absolute;left:50%;top:12px;width:4px;height:var(--al);
+  margin-left:-2px;border-radius:3px;background:linear-gradient(180deg,#3C3C48,#15151C)}
+.fremd.mg .deck .arm::after{content:'';position:absolute;left:50%;top:calc(var(--al) + 4px);width:16px;
+  height:22px;margin-left:-8px;border-radius:3px;background:linear-gradient(150deg,#FBFBFF,#C9C9D6);
+  box-shadow:0 2px 5px rgba(30,30,60,.3)}
+.fremd.mg .deck .stift{position:absolute;right:11%;top:5%;width:8px;height:8px;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.fremd.mg .deck .stift.zwei{right:15%}
+.fremd.mg .titel{text-align:center;margin-top:clamp(12px,2.6vh,26px);max-width:100%}
+.fremd.mg .titel h1{font-size:clamp(21px,3.4vh,30px);font-weight:700;letter-spacing:-.02em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fremd.mg .titel .ar{margin-top:6px;font-size:15px;color:var(--ink-2);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.fremd.mg .balken{display:flex;align-items:center;justify-content:center;gap:5px;
+  height:clamp(38px,7vh,64px);cursor:pointer;margin-top:clamp(12px,2.4vh,22px);width:100%;
+  touch-action:none}
+.fremd.mg .balken b{width:5px;border-radius:3px;background:var(--ink-4);opacity:.5;
+  transition:opacity .15s}
+.fremd.mg .balken b.war{opacity:1;background:var(--accent)}
+.fremd.mg .uhr{text-align:center;margin-top:12px;font-size:15px;color:var(--ink-2);
+  font-variant-numeric:tabular-nums;letter-spacing:.05em}
+.fremd.mg .transport{display:flex;align-items:center;justify-content:center;gap:22px;
+  margin-top:clamp(14px,2.6vh,26px)}
+.fremd.mg .flach{width:92px;height:56px;border-radius:22px;display:grid;place-items:center;
+  color:var(--ink-2)}
+.fremd.mg .knauf{width:clamp(84px,13vh,104px);height:clamp(84px,13vh,104px);border-radius:50%;
+  display:grid;place-items:center;color:var(--ink);position:relative}
+.fremd.mg .knauf::after{content:'';position:absolute;inset:14px;border-radius:50%;
+  box-shadow:inset -3px -3px 8px var(--hell),inset 4px 4px 9px var(--dunkel)}
+.fremd.mg .knauf svg{position:relative;z-index:2}
+
+/* ── „Karte" — Blatt 03 ── */
+.fremd.aa{background:var(--paper);color:var(--ink)}
+.fremd.aa .karte{background:var(--karte-papier);color:var(--karte-tinte);border-radius:0 0 34px 34px;
+  flex:none;padding:0 26px 26px;display:flex;flex-direction:column}
+.fremd.aa .kopfz{padding-top:calc(env(safe-area-inset-top,0px) + 12px);padding-bottom:14px}
+.fremd.aa .kopfz .mitte{color:rgba(20,16,14,.55)}
+.fremd.aa .eck{width:44px;height:44px;border-radius:13px;background:#F2EFEA;display:grid;
+  place-items:center;color:var(--karte-tinte);box-shadow:0 1px 2px rgba(20,16,14,.08)}
+.fremd.aa h1{font-family:var(--serif);font-weight:400;font-size:clamp(24px,4.4vh,34px);line-height:1.05;
+  letter-spacing:-.01em;text-align:center;text-wrap:balance}
+.fremd.aa .ar{margin-top:8px;text-align:center;font-size:14px;color:rgba(20,16,14,.55)}
+.fremd.aa .zeit{font-family:var(--serif);font-size:clamp(30px,5.6vh,44px);text-align:center;
+  margin:16px 0 4px;font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.fremd.aa .welle{height:clamp(64px,12vh,104px);display:flex;align-items:center;gap:2px;cursor:pointer;
+  position:relative;padding:0 2px;touch-action:none}
+.fremd.aa .welle b{flex:1;border-radius:1px;background:rgba(20,16,14,.28);position:relative}
+.fremd.aa .welle b.war{background:linear-gradient(180deg,var(--accent),var(--accent-mid))}
+.fremd.aa .kopfl{position:absolute;top:0;bottom:0;width:2px;background:var(--accent);
+  pointer-events:none;transition:left .2s linear}
+.fremd.aa .kopfl::before{content:'';position:absolute;top:-4px;left:-3px;width:8px;height:8px;
+  border-radius:50%;background:var(--accent)}
+.fremd.aa .punkte{position:absolute;left:0;right:0;top:50%;height:1px;pointer-events:none;
+  background:repeating-linear-gradient(90deg,rgba(20,16,14,.3) 0 2px,transparent 2px 7px)}
+.fremd.aa .fuss{display:flex;justify-content:space-between;font-size:12px;color:rgba(20,16,14,.5);
+  font-variant-numeric:tabular-nums;margin-top:6px}
+.fremd.aa .unten{flex:1;min-height:0;display:flex;flex-direction:column;padding:18px 22px 0}
+.fremd.aa .tafel{background:var(--tint);border-radius:22px;padding:18px 20px 12px;flex:1;min-height:0;
+  display:flex;flex-direction:column}
+.fremd.aa .tafel h2{font-family:var(--serif);font-size:20px;font-weight:400;display:flex;
+  justify-content:space-between;align-items:center;flex:none}
+.fremd.aa .tafel h2 span{font-family:var(--sans);font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink-3)}
+.fremd.aa .qliste{margin-top:10px;overflow-y:auto;flex:1;min-height:0}
+.fremd.aa .qz{display:flex;align-items:center;gap:14px;padding:9px 2px;cursor:pointer;
+  border-bottom:1px solid var(--line)}
+.fremd.aa .qz .nr{width:20px;font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.fremd.aa .qz .t{flex:1;min-width:0;font-size:14.5px;color:var(--ink-3);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.fremd.aa .qz .d{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.fremd.aa .qz.an .t{color:var(--ink);font-weight:600}
+.fremd.aa .qz.an .nr{color:var(--accent)}
+.fremd.aa .tasten{display:flex;gap:14px;padding:14px 22px 20px;flex:none}
+.fremd.aa .taste{flex:1;height:clamp(64px,11vh,86px);border-radius:22px;background:var(--karte-papier);
+  display:grid;place-items:center}
+.fremd.aa .taste .rund{width:clamp(46px,7.4vh,54px);height:clamp(46px,7.4vh,54px);border-radius:50%;
+  background:#F2EFEA;display:grid;place-items:center;color:var(--karte-tinte);
+  box-shadow:inset 0 0 0 1px rgba(20,16,14,.06)}
+.fremd.aa .taste.haupt .rund{background:var(--accent);color:#fff;
+  box-shadow:0 6px 16px var(--accent-soft)}
+
+/* ── „Kiesel" — Blatt 05 ── */
+.fremd.kl{--karte:var(--tint);--hell:var(--neu-hell);--dunkel:var(--neu-dunkel);
+  background:var(--paper);color:var(--ink)}
+.fremd.kl .heraus{background:var(--karte);
+  box-shadow:-6px -6px 14px var(--hell),7px 7px 16px var(--dunkel)}
+.fremd.kl .hinein{background:var(--karte);
+  box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
+.fremd.kl .kopfz .mitte{font-size:12px;font-weight:800;letter-spacing:.18em;color:var(--ink)}
+.fremd.kl .rund{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+  color:var(--ink-2)}
+.fremd.kl .buehne{display:flex;align-items:center;justify-content:center;
+  padding:14px 26px clamp(14px,2.4vh,24px);flex:none}
+.fremd.kl .scheibe{width:var(--sg);height:var(--sg);--sg:min(52vw,22vh);border-radius:50%;
+  position:relative;display:grid;place-items:center;padding:9px;
+  box-shadow:-8px -8px 18px var(--hell),9px 9px 22px var(--dunkel)}
+.fremd.kl .scheibe .bild{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;
+  color:#fff;font-size:calc(var(--sg) / 4);font-weight:800;overflow:hidden;position:relative;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+.fremd.kl .scheibe .bild img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  border-radius:50%}
+.fremd.kl .titelzeile{text-align:center;padding:0 26px 14px;flex:none}
+.fremd.kl .titelzeile h1{font-size:21px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.fremd.kl .titelzeile .ar{font-size:13.5px;color:var(--ink-2);margin-top:3px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.fremd.kl .lauf{margin:0 26px 16px;flex:none}
+.fremd.kl .schiene{height:14px;border-radius:9px;position:relative;cursor:pointer;touch-action:none}
+.fremd.kl .schiene .voll{position:absolute;left:3px;top:3px;bottom:3px;border-radius:7px;
+  background:var(--accent);min-width:8px}
+.fremd.kl .zeiten{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;margin-top:7px}
+.fremd.kl .liste{flex:1;min-height:0;overflow-y:auto;padding:0 26px 10px}
+.fremd.kl .zeile{display:flex;align-items:center;gap:16px;padding:12px 16px;border-radius:20px;
+  cursor:pointer;margin-bottom:8px}
+.fremd.kl .zeile .m{flex:1;min-width:0}
+.fremd.kl .zeile .t{font-size:15.5px;font-weight:700;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.fremd.kl .zeile .s{font-size:12.5px;color:var(--ink-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.fremd.kl .zeile .knopf{width:48px;height:48px;border-radius:50%;flex:none;display:grid;
+  place-items:center;color:var(--ink-2);background:var(--karte);
+  box-shadow:-4px -4px 10px var(--hell),5px 5px 12px var(--dunkel)}
+.fremd.kl .zeile.an{background:var(--karte);
+  box-shadow:-6px -6px 14px var(--hell),7px 7px 18px var(--dunkel)}
+.fremd.kl .zeile.an .knopf{color:var(--accent-ink);
+  box-shadow:inset -3px -3px 8px var(--hell),inset 4px 4px 10px var(--dunkel)}
+.fremd.kl .strich{width:16px;height:3px;border-radius:2px;background:currentColor;display:block}
+.fremd.kl .fussz{text-align:center;font-size:11px;color:var(--ink-3);padding:0 0 12px;flex:none}
+
+/* ── Reiterleiste ── */
+/* z-index ueber dem Albumblatt (70): dauerhaft liegt die Leiste darunter und
+   beruehrt es nie, hervorgeholt aber ueberdeckt sie dessen unteren Rand — und
+   muss dann davor stehen, nicht dahinter. Unter den Einstellungen (80) bleibt
+   sie, die decken bewusst alles zu. */
+.tabs{position:fixed;left:0;right:0;bottom:0;height:calc(var(--tabs) + var(--safe));
+  padding-bottom:var(--safe);z-index:75;display:flex;
+  background:var(--veil);border-top:1px solid var(--line-2);
+  backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);
+  transition:transform .3s cubic-bezier(.3,.75,.2,1)}
+.tabs button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  color:var(--ink-4);font-size:9px;letter-spacing:.14em;text-transform:uppercase}
+.tabs button.on{color:var(--accent-ink)}
+
+/* Weggeschoben statt nur unsichtbar: visibility nimmt sie zugleich aus der
+   Tabulatorreihenfolge, sonst blieben drei unerreichbare Knoepfe im Fokusweg. */
+[data-leiste="bedarf"] .tabs{transform:translateY(100%);visibility:hidden;
+  transition:transform .3s cubic-bezier(.3,.75,.2,1),visibility 0s .3s}
+[data-leiste="bedarf"] .tabs.zeigen{transform:none;visibility:visible;
+  transition:transform .3s cubic-bezier(.3,.75,.2,1)}
+
+/* Der Griff: eine Haarlinie im Sockel — sichtbar, damit die Leiste nicht
+   verschollen ist. Die Trefferflaeche reicht ueber die Marke hinaus nach oben. */
+.grip{position:fixed;left:50%;bottom:0;z-index:76;width:104px;
+  height:calc(30px + var(--safe));padding-bottom:calc(var(--safe) + 7px);
+  transform:translateX(-50%);display:none;align-items:flex-end;justify-content:center;
+  transition:opacity .25s}
+[data-leiste="bedarf"] .grip{display:flex}
+.grip i{display:block;width:34px;height:2px;border-radius:2px;
+  background:var(--ink-4);transition:width .25s,background .25s}
+.grip:active i{width:52px;background:var(--accent)}
+.leiste-offen .grip{opacity:0;pointer-events:none}
+
+/* ── Geschobene Seiten (Album, Einstellungen) ── */
+.sheet{position:fixed;inset:0 0 calc(var(--unten) + var(--safe)) 0;background:var(--paper);z-index:70;
+  transform:translateX(100%);transition:transform .34s cubic-bezier(.3,.75,.2,1);
+  display:flex;flex-direction:column;visibility:hidden}
+.sheet.on{transform:translateX(0);visibility:visible}
+.sheet.full{bottom:0;z-index:80}
+.back{display:flex;align-items:center;gap:7px;color:var(--accent-ink);font-size:13.5px;
+  padding:calc(env(safe-area-inset-top,0px) + 12px) 22px 6px;align-self:flex-start}
+.albhead{padding:6px 22px 2px;display:flex;gap:16px;align-items:flex-end}
+.albhead .cov{width:112px;height:112px;border-radius:1px;flex-shrink:0;position:relative;overflow:hidden;
+  background:var(--tint);box-shadow:0 10px 26px rgba(var(--schatten),.2)}
+.albhead .cov img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.albhead .cov .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);
+  font-style:italic;font-size:36px;color:var(--ink-4)}
+.albhead .t{font-family:var(--serif);font-size:21px;line-height:1.2}
+.albhead .a{margin-top:5px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-2)}
+.albhead .mt{margin-top:6px;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.albact{padding:18px 22px 6px}
+.act{background:var(--accent);color:var(--paper);border-radius:24px;padding:11px 20px;font-size:13px;
+  display:inline-flex;align-items:center;gap:9px}
+.act:active{opacity:.85}
+.trk{display:grid;grid-template-columns:24px 1fr auto;align-items:center;gap:14px;padding:12px 22px;
+  border-bottom:1px solid var(--line);width:100%;text-align:left}
+.trk:active{background:var(--tint)}
+.trk .n{font-size:11px;color:var(--ink-4);font-variant-numeric:tabular-nums}
+.trk .t{min-width:0;font-family:var(--serif);font-size:15px;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.trk .d{font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.trk.now .t,.trk.now .n,.trk.now .d{color:var(--accent-ink)}
+
+/* ── Einstellungen ── */
+.set-h1{font-family:var(--serif);font-size:28px;padding:2px 22px 4px}
+.set-sub{padding:0 22px 18px;font-size:12.5px;color:var(--ink-3)}
+.group{border-top:1px solid var(--line-2);margin-top:6px;padding:16px 22px 20px}
+.group h2{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+.group .hint{margin-top:6px;font-size:12px;color:var(--ink-4);line-height:1.5}
+.accents{display:flex;gap:12px;margin-top:16px}
+.accents button{flex:1;display:flex;flex-direction:column;align-items:center;gap:9px;
+  padding:14px 6px 12px;border:1px solid var(--line);border-radius:3px;
+  transition:border-color .2s,background .2s}
+.accents button[aria-pressed="true"]{border-color:var(--ink-3);background:var(--tint)}
+.accents .dot{width:30px;height:30px;border-radius:50%;position:relative}
+.accents button[aria-pressed="true"] .dot::after{content:'';position:absolute;inset:-5px;
+  border:1px solid var(--ink-3);border-radius:50%}
+.accents .lbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+/* Zweispaltige Wahl — die Form fuer alles, was nur zwei oder drei Zustaende hat */
+.choice{display:flex;gap:12px;margin-top:16px}
+.choice button{flex:1;min-width:0;padding:13px 13px 12px;text-align:left;
+  border:1px solid var(--line);border-radius:3px;transition:border-color .2s,background .2s}
+.choice button[aria-pressed="true"]{border-color:var(--ink-3);background:var(--tint)}
+.choice .lbl{display:block;font-family:var(--serif);font-size:15px}
+.choice button[aria-pressed="true"] .lbl{color:var(--accent-ink)}
+.choice .cap{display:block;margin-top:5px;font-size:11px;line-height:1.5;color:var(--ink-4)}
+/* Themen brauchen mehr Zeile als zwei Woerter — untereinander statt nebeneinander */
+.choice.hoch{flex-direction:column}
+.choice.hoch button{display:flex;align-items:flex-start;gap:14px;padding:14px}
+.choice.hoch .lbl{flex-shrink:0;width:96px}
+.choice.hoch .cap{margin-top:0;flex:1;min-width:0}
+.choice .probe{flex-shrink:0;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid var(--line-2);margin-top:1px}
+.choice .probe i{display:block;width:9px;height:9px;border-radius:50%}
+.soon{padding:16px 22px 40px;font-size:12px;color:var(--ink-4);line-height:1.6}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<!-- ══════════ Sammlung ══════════ -->
+<main class="view on" id="view-lib">
+  <header class="hd">
+    <div class="row">
+      <span class="brand">Musiklib<em>.</em></span>
+      <button class="icon-btn" id="settings-btn" aria-label="Einstellungen">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="3.2"/>
+          <path d="M19.4 15a1.6 1.6 0 0 0 .32 1.77l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.6 1.6 0 0 0-1.77-.32 1.6 1.6 0 0 0-1 1.47V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.77.32l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.6 1.6 0 0 0 4.72 15a1.6 1.6 0 0 0-1.47-1H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.32-1.77l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.6 1.6 0 0 0 9 4.72 1.6 1.6 0 0 0 10 3.25V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.47 1.6 1.6 0 0 0 1.77-.32l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.6 1.6 0 0 0 19.28 9v0a1.6 1.6 0 0 0 1.47 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/>
+        </svg>
+      </button>
+    </div>
+    <div class="sub" id="lib-sub">Wird geladen …</div>
+  </header>
+  <div class="body">
+    <div class="grid" id="grid"></div>
+    <p class="empty" id="lib-empty" hidden>Bibliothek ist leer.
+      <small>Am Schreibtisch einen Scan starten.</small></p>
+  </div>
+</main>
+
+<!-- ══════════ Suche ══════════ -->
+<main class="view" id="view-search">
+  <header class="hd"><h1 class="big">Suche</h1></header>
+  <div class="searchwrap">
+    <div class="search" id="searchbox">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.7" y2="16.7"/></svg>
+      <input type="text" id="q" placeholder="Album, Titel, Interpret" autocomplete="off"
+             autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+      <button class="clr" id="q-clear" aria-label="Suche leeren">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="body" id="results"></div>
+</main>
+
+<!-- ══════════ Jetzt läuft ══════════ -->
+<main class="view" id="view-now">
+  <!-- Themen mit eigenem Spieler bauen hier hinein; die drei Teile darunter
+       treten dann zurueck. -->
+  <div class="fremd" id="fremd"></div>
+  <div class="lid">
+    <span class="brand">Musiklib<em>.</em></span>
+    <button class="qbtn" id="qbtn" aria-expanded="false" aria-label="Warteschlange">
+      <span class="n" id="qcount">0 / 0</span>
+      <span class="gl"><i></i><i></i><i></i></span>
+    </button>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="artwrap">
+      <div class="art" id="art"><span class="ini">♪</span></div>
+      <div class="frame"></div>
+    </div>
+    <div class="meta" id="meta">
+      <h2 id="np-title">Nichts ausgewählt</h2>
+      <div class="by" id="np-artist"></div>
+      <div class="alb" id="np-album"></div>
+      <div class="err" id="np-error" hidden>Titel nicht abspielbar — bitte neu scannen</div>
+    </div>
+
+    <div class="veil"></div>
+    <div class="qlist" id="qlist"></div>
+
+    <div class="peek" id="peek">
+      <div class="n" id="peek-no"></div>
+      <h3 id="peek-title"></h3>
+      <div class="t" id="peek-time"></div>
+    </div>
+
+    <div class="rail" id="rail">
+      <div class="rline"></div>
+      <div class="rband" id="rband"></div>
+      <div id="rticks"></div>
+      <div class="rdone" id="rdone"></div>
+      <div class="rknob" id="rknob"></div>
+      <div class="rnum num" id="rnum"></div>
+      <div class="rhint" id="rhint">Ziehen zum Spulen</div>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <!-- Die zweite Achse: waagerecht, nur im Thema „Desert Rose" sichtbar.
+         Sie steht im Fuss und nicht in der Buehne, damit ein kurzer
+         Bildschirm sie nicht unter den Titel schiebt. -->
+    <div class="skala" id="skala">
+      <div class="ruler" id="ruler">
+        <div class="hairs"></div>
+        <div class="base"></div>
+        <div class="sdone" id="sdone"></div>
+        <div id="sticks"></div>
+        <div class="markline" id="smarkline"></div>
+        <div class="mark" id="smark"></div>
+        <div class="bubble" id="sbubble"></div>
+      </div>
+      <div class="times"><span class="num" id="szeit"></span><span class="num" id="srest"></span></div>
+    </div>
+    <div class="transport">
+      <button class="tb" id="prev-btn" aria-label="Vorheriger Titel">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 20L9 12l10-8v16zM5 4h2v16H5z"/></svg>
+      </button>
+      <button class="play" id="play-btn" aria-label="Abspielen">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" id="play-glyph">
+          <path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button class="tb" id="next-btn" aria-label="Nächster Titel">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M5 4l10 8-10 8V4zm14 0h2v16h-2z"/></svg>
+      </button>
+    </div>
+    <button class="nextrow" id="nextrow">
+      <span class="k">Danach</span>
+      <span class="v" id="np-next">—</span>
+      <span class="rest"><span class="k">Noch</span><span class="num" id="np-rest">0:00</span></span>
+    </button>
+  </div>
+</main>
+
+<!-- ══════════ Reiterleiste ══════════ -->
+<nav class="tabs" id="tabs">
+  <button data-view="lib" class="on">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+      <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Sammlung</button>
+  <button data-view="search">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.7" y2="16.7"/></svg>
+    Suche</button>
+  <button data-view="now">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="7" cy="18" r="3"/><circle cx="18" cy="15.5" r="2.6"/><path d="M10 18V6l10.6-2.4v12"/></svg>
+    Jetzt läuft</button>
+</nav>
+<button class="grip" id="grip" aria-label="Leiste einblenden"><i></i></button>
+
+<!-- ══════════ Album ══════════ -->
+<section class="sheet" id="album-sheet" aria-hidden="true">
+  <button class="back" id="album-back">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+         stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Zurück</button>
+  <div class="body" id="album-body"></div>
+</section>
+
+<!-- ══════════ Einstellungen ══════════ -->
+<section class="sheet full" id="settings-sheet" aria-hidden="true">
+  <button class="back" id="settings-back">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+         stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Fertig</button>
+  <div class="body">
+    <h1 class="set-h1">Einstellungen</h1>
+    <p class="set-sub">Gilt nur für dieses Gerät.</p>
+
+    <div class="group">
+      <h2>Thema</h2>
+      <div class="hint">Farben, Anordnung und die ganze Seite „Jetzt läuft“. Sammlung und Suche
+      bleiben, wie sie sind.</div>
+      <div class="choice hoch" id="themen"></div>
+    </div>
+
+    <div class="group">
+      <h2>Farbakzent</h2>
+      <div class="hint">Färbt Abspielknopf, Achse und Hervorhebungen. Jedes Thema bringt eigene mit.</div>
+      <div class="accents" id="accents"></div>
+    </div>
+
+    <div class="group">
+      <h2>Untere Leiste</h2>
+      <div class="hint">Sammlung, Suche und „Jetzt läuft“.</div>
+      <div class="choice" id="leiste"></div>
+    </div>
+
+    <div class="group">
+      <h2>Am Ende der Warteschlange</h2>
+      <div class="hint">Eine Warteschlange ist ein Album. Danach geht es weiter — oder eben nicht.</div>
+      <div class="choice" id="fortsetzung"></div>
+    </div>
+
+    <div class="group">
+      <h2>Bildschirm anlassen</h2>
+      <div class="hint">Beim iPhone drosselt ein dunkler Bildschirm das WLAN, und der Ton kann
+      abreißen. Bleibt der Bildschirm an, passiert das nicht. Er bleibt nur an, solange Musik läuft.</div>
+      <div class="choice" id="wach"></div>
+    </div>
+
+    <p class="soon">Weitere Einstellungen kommen hierher — die Gruppen darüber sind so gebaut,
+      dass eine neue nur ein weiterer Block ist.</p>
+  </div>
+</section>
+
+<audio id="audio" preload="none"></audio>
+
+<script>
+'use strict';
+
+const $ = id => document.getElementById(id);
+const audio = $('audio');
+
+let library = { albums: [], album_count: 0, track_count: 0 };
+let queue = [];          // [{track, album}]
+let qIndex = -1;
+let pendingSeek = 0;     // Position, die nach loadedmetadata gesetzt wird
+let fehlerText = '';     // steht statt der Interpretenzeile, wenn etwas klemmt
+let shuffle = false;
+let view = 'lib';
+let openQueue = false;   // Warteschlange im „Jetzt läuft" aufgeklappt
+let currentAlbum = null; // im Album-Blatt gezeigtes Album
+
+// ---------- gespeicherte Einstellungen ----------
+// Wie in index.html: faellt localStorage aus, laeuft die App unveraendert weiter.
+const STORE = 'musiklib:';
+function store(key, value) {
+  try { localStorage.setItem(STORE + key, JSON.stringify(value)); } catch {}
+}
+function restore(key, fallback) {
+  try {
+    const raw = localStorage.getItem(STORE + key);
+    return raw === null ? fallback : JSON.parse(raw);
+  } catch { return fallback; }
+}
+
+// ---------- Einstellungen ----------
+// Ein Objekt statt vieler Schluessel: spaetere Optionen brauchen dann keinen
+// neuen Eintrag in localStorage, nur ein weiteres Feld.
+// Ein Thema ist die ganze Erscheinung: Palette, Anordnung und die Achse, auf
+// der die Warteschlange liegt. Es bringt seine eigenen Akzente mit — Messing
+// auf Sand waere keine Wahl, sondern ein Fehler. Die Kennungen sind deshalb
+// ueber alle Themen hinweg eindeutig.
+const THEMEN = [
+  {
+    id: 'papier', name: 'Papier', cap: 'Elfenbein und Messing. Die Achse liegt im rechten Rand.',
+    farbe: '#FBF9F5', rand: '#8A6534', akzente: [
+      { id: 'messing', name: 'Messing', farbe: '#8A6534' },
+      { id: 'petrol',  name: 'Petrol',  farbe: '#1F6470' },
+      { id: 'gruen',   name: 'Grün',    farbe: '#4F8A46' },
+    ],
+  },
+  {
+    id: 'wueste', name: 'Desert Rose', cap: 'Sand und Burgunder. Die Achse liegt als Skala unter dem Bild.',
+    farbe: '#E8D5C4', rand: '#5D2E46', akzente: [
+      { id: 'ton',  name: 'Ton',  farbe: '#B87D6D' },
+      { id: 'rose', name: 'Rosé', farbe: '#D4A5A5' },
+    ],
+  },
+];
+/* Drei Themen bringen einen eigenen Spieler mit (spieler: …). Sie erben
+   nichts von den beiden ersten ausser dem Unterbau — Warteschlange, Ton
+   und Sitzung. */
+THEMEN.push(
+  {
+    id: 'kissen', name: 'Kissen', spieler: 'kissen',
+    cap: 'Weiches Weiß, Knöpfe treten heraus. Ausschlag statt Achse.',
+    farbe: '#EDEDF4', rand: '#55556E', akzente: [
+      { id: 'nebel',   name: 'Nebel',   farbe: '#55556E' },
+      { id: 'flieder', name: 'Flieder', farbe: '#6E5AA8' },
+    ],
+  },
+  {
+    id: 'karte', name: 'Karte', spieler: 'karte',
+    cap: 'Weiße Karte über Schwarz, Zeit als Überschrift, roter Ausschlag.',
+    farbe: '#1A1A1C', rand: '#D8452B', akzente: [
+      { id: 'zinnober', name: 'Zinnober', farbe: '#D8452B' },
+    ],
+  },
+  {
+    id: 'kiesel', name: 'Kiesel', spieler: 'kiesel',
+    cap: 'Der Spieler ist die Zeile, die läuft — die Liste ist die Oberfläche.',
+    farbe: '#E3E3E3', rand: '#4A4A4A', akzente: [
+      { id: 'graphit', name: 'Graphit', farbe: '#4A4A4A' },
+      { id: 'stahl',   name: 'Stahl',   farbe: '#3F5A70' },
+    ],
+  },
+);
+const LEISTEN = [
+  { id: 'dauerhaft', name: 'Dauerhaft', cap: 'Steht immer unten.' },
+  { id: 'bedarf',    name: 'Bei Bedarf', cap: 'Liegt unter dem Rand. Der Griff holt sie hervor.' },
+];
+// Eine Warteschlange ist ein Album. Was danach geschieht, teilen sich alle
+// drei Oberflaechen ueber `musiklib:fortsetzung`.
+const FORTSETZUNGEN = [
+  { id: 'weiter',      name: 'Nächstes Album', cap: 'Danach läuft das nächste Album der Sammlung.' },
+  { id: 'wiederholen', name: 'Wiederholen',    cap: 'Dieselbe Warteschlange beginnt von vorn.' },
+  { id: 'halt',        name: 'Anhalten',       cap: 'Nach dem letzten Titel ist Schluss.' },
+];
+// Der Bildschirm bleibt an, solange Ton laeuft — gegen die WLAN-Drosselung
+// bei dunklem Bildschirm. Kostet Akku, deshalb aus als Vorgabe.
+const WACH = [
+  { id: 'aus', name: 'Aus', cap: 'Der Bildschirm geht wie gewohnt aus.' },
+  { id: 'an',  name: 'An',  cap: 'Bleibt an, solange Musik läuft. Hält das WLAN wach, kostet Akku.' },
+];
+const EINSTELLUNGEN_STANDARD = {
+  thema: 'papier', akzent: 'messing', leiste: 'dauerhaft',
+  fortsetzung: 'weiter', wach: 'aus',
+};
+let settings = { ...EINSTELLUNGEN_STANDARD, ...(restore('einstellungen', null) || {}) };
+
+function gewaehlt(liste, wert, ersatz) {
+  return liste.some(x => x.id === wert) ? wert : ersatz;
+}
+function themaVon(id) {
+  return THEMEN.find(t => t.id === id) || THEMEN[0];
+}
+function aktuellesThema() {
+  return themaVon(gewaehlt(THEMEN, settings.thema, 'papier'));
+}
+// Nur „Desert Rose" legt die Warteschlange waagerecht — an einer Stelle
+// gefragt, nicht an zehn verteilt.
+function skalaAktiv() {
+  return aktuellesThema().id === 'wueste';
+}
+
+function applySettings() {
+  const thema = aktuellesThema();
+  const akzent = gewaehlt(thema.akzente, settings.akzent, thema.akzente[0].id);
+  const leiste = gewaehlt(LEISTEN, settings.leiste, 'dauerhaft');
+  document.documentElement.dataset.thema = thema.id;
+  document.documentElement.dataset.akzent = akzent;
+  document.documentElement.dataset.leiste = leiste;
+  // Ein leeres data-spieler wuerde in [data-spieler] weiter treffen — also
+  // entfernen statt leeren, sonst bleibt der eingebaute Spieler verdeckt.
+  if (thema.spieler) document.documentElement.dataset.spieler = thema.spieler;
+  else document.documentElement.removeAttribute('data-spieler');
+  baueSpieler(thema.spieler || null);
+  // Die Farbe der Statusleiste gehoert zum Thema, sonst steht am iPhone
+  // ein elfenbeinfarbener Streifen ueber dem Sand.
+  document.querySelector('meta[name="theme-color"]').setAttribute('content', thema.farbe);
+
+  renderAkzente(thema, akzent);
+  document.querySelectorAll('#themen button').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.wert === thema.id));
+  });
+  document.querySelectorAll('#leiste button').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.wert === leiste));
+  });
+  const fortsetzung = gewaehlt(FORTSETZUNGEN, settings.fortsetzung, 'weiter');
+  const wach = gewaehlt(WACH, settings.wach, 'aus');
+  document.querySelectorAll('#fortsetzung button').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.wert === fortsetzung));
+  });
+  document.querySelectorAll('#wach button').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.wert === wach));
+  });
+  wachHalten();
+  // „Dauerhaft" laesst keinen eingeblendeten Zustand uebrig, den man
+  // spaeter nicht mehr los wird.
+  zeigeLeiste(leiste === 'dauerhaft');
+  // Achsenwechsel und geaenderte Sockelhoehe: beide Achsen neu zeichnen.
+  renderProgress();
+  if (view === 'now') requestAnimationFrame(layoutQueueList);
+}
+function setSetting(key, value) {
+  setSettings({ [key]: value });
+}
+function setSettings(teil) {
+  settings = { ...settings, ...teil };
+  store('einstellungen', settings);
+  applySettings();
+}
+// Die Akzente gehoeren dem Thema, also werden sie mit ihm neu gesetzt.
+function renderAkzente(thema, akzent) {
+  const feld = $('accents');
+  if (feld.dataset.fuer !== thema.id) {
+    feld.dataset.fuer = thema.id;
+    feld.innerHTML = thema.akzente.map(a => `
+      <button data-akzent="${a.id}" aria-pressed="false">
+        <span class="dot" style="background:${a.farbe}"></span>
+        <span class="lbl">${a.name}</span>
+      </button>`).join('');
+  }
+  feld.querySelectorAll('button').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.akzent === akzent));
+  });
+}
+
+function buildSettings() {
+  $('themen').innerHTML = THEMEN.map(t => `
+    <button data-wert="${t.id}" aria-pressed="false">
+      <span class="probe" style="background:${t.farbe}">
+        <i style="background:${t.rand}"></i></span>
+      <span class="lbl">${t.name}</span>
+      <span class="cap">${t.cap}</span>
+    </button>`).join('');
+  $('themen').addEventListener('click', e => {
+    const b = e.target.closest('[data-wert]');
+    if (!b || b.dataset.wert === aktuellesThema().id) return;
+    // Der Akzent des alten Themas gilt im neuen nicht — mit ihm wechseln,
+    // sonst faellt applySettings ihn jedes Mal still zurueck.
+    setSettings({ thema: b.dataset.wert, akzent: themaVon(b.dataset.wert).akzente[0].id });
+  });
+
+  $('accents').addEventListener('click', e => {
+    const b = e.target.closest('[data-akzent]');
+    if (b) setSetting('akzent', b.dataset.akzent);
+  });
+
+  // data-wert, nicht data-leiste: [data-leiste="bedarf"] traegt oben im
+  // Stilblatt die Sockelhoehe — der Knopf soll sie nicht mitnehmen.
+  $('leiste').innerHTML = LEISTEN.map(l => `
+    <button data-wert="${l.id}" aria-pressed="false">
+      <span class="lbl">${l.name}</span>
+      <span class="cap">${l.cap}</span>
+    </button>`).join('');
+  $('leiste').addEventListener('click', e => {
+    const b = e.target.closest('[data-wert]');
+    if (b) setSetting('leiste', b.dataset.wert);
+  });
+
+  // Zwei weitere Gruppen nach demselben Muster — genau das war der Sinn des
+  // einen Einstellungsobjekts.
+  const knoepfe = liste => liste.map(x => `
+    <button data-wert="${x.id}" aria-pressed="false">
+      <span class="lbl">${x.name}</span>
+      <span class="cap">${x.cap}</span>
+    </button>`).join('');
+  $('fortsetzung').innerHTML = knoepfe(FORTSETZUNGEN);
+  $('fortsetzung').addEventListener('click', e => {
+    const b = e.target.closest('[data-wert]');
+    if (b) setSetting('fortsetzung', b.dataset.wert);
+  });
+  $('wach').innerHTML = knoepfe(WACH);
+  $('wach').addEventListener('click', e => {
+    const b = e.target.closest('[data-wert]');
+    if (b) setSetting('wach', b.dataset.wert);
+  });
+  // Kann das Geraet den Bildschirm gar nicht wachhalten, waere die Wahl eine
+  // Luege — dann steht dort, warum sie nichts tut.
+  if (!('wakeLock' in navigator)) {
+    $('wach').insertAdjacentHTML('afterend',
+      '<div class="hint" style="margin-top:10px">Dieser Browser kennt die Bildschirmsperre nicht ' +
+      '(am iPhone ab iOS 16.4). Die Wahl bleibt ohne Wirkung.</div>');
+  }
+}
+
+// ---------- Die Leiste bei Bedarf ----------
+// Eingeblendet bleibt sie nur, solange sie gebraucht wird: nach der Wahl eines
+// Reiters, nach einer Beruehrung daneben und nach ein paar Sekunden Ruhe geht
+// sie zurueck. Der Griff bleibt sichtbar — eine Geste, die man nicht sieht,
+// ist keine.
+let leisteTimer;
+function leisteAufBedarf() {
+  return gewaehlt(LEISTEN, settings.leiste, 'dauerhaft') === 'bedarf';
+}
+function zeigeLeiste(v) {
+  clearTimeout(leisteTimer);
+  const an = v || !leisteAufBedarf();
+  $('tabs').classList.toggle('zeigen', an);
+  document.documentElement.classList.toggle('leiste-offen', an && leisteAufBedarf());
+  if (an && leisteAufBedarf()) leisteTimer = setTimeout(() => zeigeLeiste(false), 4000);
+}
+
+// ---------- Helfer ----------
+function fmt(s) {
+  if (!s || !isFinite(s)) return '0:00';
+  s = Math.floor(s);
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+}
+function fmtLang(s) {                 // ab einer Stunde ist mm:ss nicht mehr lesbar
+  s = Math.max(0, Math.floor(s || 0));
+  const h = Math.floor(s / 3600);
+  return h ? `${h}:${String(Math.floor(s % 3600 / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
+           : fmt(s);
+}
+function fmtGesamt(s) {
+  s = Math.floor(s || 0);
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
+  return h ? `${h} Std ${m} Min` : `${m} Min`;
+}
+function esc(s) {
+  return (s == null ? '' : String(s)).replace(/[&<>"']/g,
+    c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function initial(album) {
+  return ((album.title || '?').trim().charAt(0) || '?').toUpperCase();
+}
+function coverURL(album) {
+  return album.cover ? `/api/cover/${encodeURIComponent(album.cover)}` : null;
+}
+function coverHTML(album, klasse) {
+  const url = coverURL(album);
+  return `<div class="${klasse}">${url
+    ? `<img loading="lazy" src="${url}" alt="">`
+    : `<span class="ini">${esc(initial(album))}</span>`}</div>`;
+}
+function albumDauer(a) {
+  return a.tracks.reduce((n, t) => n + (t.duration || 0), 0);
+}
+
+// ---------- Bibliothek ----------
+function indexLibrary() {
+  for (const a of library.albums) {
+    const parts = [a.title, a.artist];
+    for (const t of a.tracks) {
+      parts.push(t.title);
+      if (t.artist) parts.push(t.artist);
+    }
+    a._q = parts.join('\n').toLowerCase();
+  }
+}
+
+async function loadLibrary() {
+  try {
+    const r = await fetch('/api/library');
+    library = await r.json();
+    indexLibrary();
+    $('lib-sub').textContent =
+      `${library.album_count} Alben · ${library.track_count} Titel`;
+    renderGrid();
+    renderResults();
+  } catch {
+    $('lib-sub').textContent = 'Bibliothek nicht erreichbar';
+  }
+}
+
+function renderGrid() {
+  const grid = $('grid');
+  const leer = !library.albums.length;
+  $('lib-empty').hidden = !leer;
+  grid.innerHTML = library.albums.map((a, i) => `
+    <button class="card" data-album="${i}">
+      ${coverHTML(a, 'cov')}
+      <div class="t">${esc(a.title)}</div>
+      <div class="a">${esc(a.artist)}</div>
+    </button>`).join('');
+  markPlayingInLists();
+}
+
+// ---------- Suche ----------
+function renderResults() {
+  const q = $('q').value.trim().toLowerCase();
+  const box = $('results');
+  if (!q) {
+    box.innerHTML = library.albums.length
+      ? `<div class="sec"><span class="caps">Alle Alben</span>
+           <span class="caps">${library.albums.length}</span></div>` +
+        library.albums.map((a, i) => albumRow(a, i)).join('') + '<div style="height:24px"></div>'
+      : '';
+    markPlayingInLists();
+    return;
+  }
+
+  const alben = [];
+  const titel = [];
+  library.albums.forEach((a, i) => {
+    if ((a.title + ' ' + a.artist).toLowerCase().includes(q)) alben.push([a, i]);
+    a.tracks.forEach((t, k) => {
+      if (titel.length < 40 &&
+          ((t.title || '').toLowerCase().includes(q) ||
+           (t.artist || '').toLowerCase().includes(q))) titel.push([a, i, t, k]);
+    });
+  });
+
+  if (!alben.length && !titel.length) {
+    box.innerHTML = `<p class="empty">Nichts gefunden.
+      <small>Für „${esc($('q').value)}“ gibt es keinen Treffer.</small></p>`;
+    return;
+  }
+  const sec = (k, n) => `<div class="sec"><span class="caps">${k}</span><span class="caps">${n}</span></div>`;
+  box.innerHTML =
+    (alben.length ? sec('Alben', alben.length) + alben.map(([a, i]) => albumRow(a, i)).join('') : '') +
+    (titel.length ? sec('Titel', titel.length) +
+      titel.map(([a, i, t, k]) => trackRow(a, i, t, k)).join('') : '') +
+    '<div style="height:24px"></div>';
+  markPlayingInLists();
+}
+
+function albumRow(a, i) {
+  return `<button class="row" data-album="${i}">
+    ${coverHTML(a, 'sw')}
+    <span class="m"><span class="t">${esc(a.title)}</span>
+      <span class="s">${esc(a.artist)} · ${a.tracks.length} Titel</span></span>
+    <span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 18 15 12 9 6"/></svg></span>
+  </button>`;
+}
+function trackRow(a, i, t, k) {
+  return `<button class="row" data-album="${i}" data-track="${k}" data-id="${esc(t.id)}">
+    ${coverHTML(a, 'sw')}
+    <span class="m"><span class="t">${esc(t.title)}</span>
+      <span class="s">${esc(a.artist)} · ${esc(a.title)}</span></span>
+    <span class="d num">${fmt(t.duration)}</span>
+  </button>`;
+}
+
+// ---------- Album ----------
+function openAlbum(a) {
+  currentAlbum = a;
+  $('album-body').innerHTML = `
+    <div class="albhead">
+      ${coverHTML(a, 'cov')}
+      <div style="flex:1;min-width:0">
+        <div class="t">${esc(a.title)}</div>
+        <div class="a">${esc(a.artist)}</div>
+        <div class="mt">${[a.year, `${a.tracks.length} Titel`, fmtGesamt(albumDauer(a))]
+          .filter(Boolean).join(' · ')}</div>
+      </div>
+    </div>
+    <div class="albact"><button class="act" id="album-play">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      Album abspielen</button></div>
+    ${a.tracks.map((t, i) => `
+      <button class="trk" data-track="${i}" data-id="${esc(t.id)}">
+        <span class="n num">${String(t.track_no || i + 1).padStart(2, '0')}</span>
+        <span class="t">${esc(t.title)}</span>
+        <span class="d num">${fmt(t.duration)}</span>
+      </button>`).join('')}
+    <div style="height:40px"></div>`;
+  $('album-play').addEventListener('click', () => playFromAlbum(a, 0));
+  $('album-body').querySelectorAll('.trk').forEach(el => {
+    el.addEventListener('click', () => playFromAlbum(a, +el.dataset.track));
+  });
+  markPlayingInLists();
+  $('album-sheet').classList.add('on');
+  $('album-sheet').setAttribute('aria-hidden', 'false');
+}
+function closeAlbum() {
+  $('album-sheet').classList.remove('on');
+  $('album-sheet').setAttribute('aria-hidden', 'true');
+}
+
+// ---------- Wiedergabe ----------
+function shuffleInPlace(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Einziger Weg, eine neue Warteschlange zu setzen — wie in index.html.
+function loadQueue(items, startIndex, autoplay = true) {
+  if (!items.length) return;
+  queue = items;
+  qIndex = Math.max(0, Math.min(startIndex, items.length - 1));
+  if (shuffle) {
+    const chosen = queue[qIndex];
+    const rest = queue.filter((_, i) => i !== qIndex);
+    queue = [chosen, ...shuffleInPlace(rest)];
+    qIndex = 0;
+  }
+  buildRail();
+  playCurrent(autoplay);
+}
+function playFromAlbum(album, startIndex) {
+  loadQueue(album.tracks.map(t => ({ track: t, album })), startIndex);
+  closeAlbum();
+  setView('now');
+}
+
+// Der Knopf spiegelt immer den echten Zustand des <audio>-Elements, nie eine
+// Annahme — sonst laeuft er auseinander, sobald von aussen gesteuert wird
+// (Sperrbildschirm, Kopfhoerertaste, blockiertes Autoplay).
+function setPlayButton(playing) {
+  $('play-glyph').innerHTML = playing
+    ? '<path d="M6 4.5h3.4v15H6zM14.6 4.5H18v15h-3.4z"/>'
+    : '<path d="M8 5v14l11-7z"/>';
+  $('play-btn').classList.toggle('on', playing);
+  $('play-btn').setAttribute('aria-label', playing ? 'Pause' : 'Abspielen');
+  // Die eigenen Spieler zeigen den Zustand an ihrer eigenen Taste. Bei Pause
+  // hoert timeupdate auf — ohne diesen Aufruf bliebe dort das Pausenzeichen
+  // stehen.
+  renderProgress();
+}
+
+function playCurrent(autoplay = true) {
+  if (qIndex < 0 || qIndex >= queue.length) return;
+  const { track, album } = queue[qIndex];
+  $('np-error').hidden = true;
+  fehlerText = '';
+  heilungAbsagen();
+  audio.src = `/api/stream/${encodeURIComponent(track.id)}`;
+  if (autoplay) {
+    // blockiertes Autoplay: der Knopf bleibt korrekt, und nachdruck() fragt
+    // nach — im Hintergrund weist iOS den ersten Versuch oft ab.
+    tonGewuenscht = true;
+    nachVersuche = 0;
+    audio.play().catch(() => {});
+    nachdruck();
+  }
+
+  $('np-title').textContent = track.title;
+  $('np-artist').textContent = album.artist;
+  $('np-album').textContent = [album.title, album.year].filter(Boolean).join(' · ');
+  const art = $('art');
+  const url = coverURL(album);
+  art.innerHTML = url ? `<img src="${url}" alt="">` : `<span class="ini">${esc(initial(album))}</span>`;
+
+  renderQueueList();
+  markPlayingInLists();
+  renderProgress();
+
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: track.title,
+      artist: album.artist,
+      album: album.title,
+      artwork: url ? [{ src: url, sizes: '512x512' }] : [],
+    });
+  }
+}
+
+function hasNext() { return qIndex >= 0 && qIndex < queue.length - 1; }
+function playNext() { if (hasNext()) { qIndex++; playCurrent(); } }
+function playPrev() {
+  if (audio.currentTime > 3) { audio.currentTime = 0; return; }
+  if (qIndex > 0) { qIndex--; playCurrent(); }
+}
+function togglePlay() {
+  if (!audio.src) return;
+  if (audio.paused) {
+    tonGewuenscht = true; nachVersuche = 0;
+    audio.play().catch(() => {});
+    nachdruck();
+  } else {
+    tonGewuenscht = false;      // eine gewollte Pause ist kein Fehler
+    clearTimeout(nachTimer);
+    heilungAbsagen();
+    audio.pause();
+  }
+}
+
+function markPlayingInLists() {
+  const id = qIndex >= 0 && queue[qIndex] ? queue[qIndex].track.id : null;
+  document.querySelectorAll('.row[data-id]').forEach(el =>
+    el.classList.toggle('now', el.dataset.id === id));
+  document.querySelectorAll('.trk[data-id]').forEach(el =>
+    el.classList.toggle('now', el.dataset.id === id));
+  const albumId = qIndex >= 0 && queue[qIndex] ? queue[qIndex].album.id : null;
+  document.querySelectorAll('.card[data-album]').forEach(el =>
+    el.classList.toggle('now', library.albums[+el.dataset.album]?.id === albumId));
+}
+
+// ---------- Der Rand: die Warteschlange als Achse ----------
+// Alle Zeiten stammen aus library.json. Titel ohne Dauer bekommen die
+// Durchschnittslaenge der Warteschlange, sonst faellt die Achse zusammen.
+let railDrag = null;     // {ziel: Sekunden} solange gezogen wird
+
+function dauer(i) {
+  const d = queue[i] && queue[i].track.duration;
+  if (d > 0) return d;
+  const bekannt = queue.map(q => q.track.duration).filter(d => d > 0);
+  return bekannt.length ? bekannt.reduce((a, b) => a + b, 0) / bekannt.length : 180;
+}
+function offsets() {
+  const o = [];
+  let a = 0;
+  for (let i = 0; i < queue.length; i++) { o.push(a); a += dauer(i); }
+  return o;
+}
+function gesamt() {
+  let a = 0;
+  for (let i = 0; i < queue.length; i++) a += dauer(i);
+  return a;
+}
+function globalPos() {
+  if (railDrag) return railDrag.ziel;
+  if (qIndex < 0) return 0;
+  return offsets()[qIndex] + (audio.currentTime || 0);
+}
+function indexAt(v) {
+  const o = offsets();
+  for (let k = o.length - 1; k >= 0; k--) if (v >= o[k]) return k;
+  return 0;
+}
+
+// Beide Achsen werden gebaut, nicht nur die sichtbare: ein Themenwechsel
+// waehrend des Hoerens findet die andere sonst leer vor.
+function buildRail() {
+  const o = offsets(), T = gesamt() || 1;
+  const bei = i => o[i] / T * 100;
+  $('rticks').innerHTML = queue.map((_, i) =>
+    `<div class="rtick" data-tick="${i}" style="top:${bei(i)}%"></div>`).join('');
+  $('sticks').innerHTML = queue.map((_, i) => `
+    <div class="big" data-tick="${i}" style="left:${bei(i)}%"></div>
+    <div class="sno num" data-no="${i}" style="left:${Math.min(98.6, Math.max(1.4, bei(i)))}%">${i + 1}</div>`
+  ).join('');
+  renderQueueList();
+}
+
+function renderQueueList() {
+  const list = $('qlist');
+  list.innerHTML = queue.map((q, i) => `
+    <button class="qitem" data-q="${i}">
+      <span class="t">${esc(q.track.title)}</span>
+      <span class="d num">${fmt(q.track.duration)}</span>
+    </button>`).join('');
+  list.querySelectorAll('[data-q]').forEach(el => el.addEventListener('click', () => {
+    qIndex = +el.dataset.q;
+    playCurrent();
+  }));
+  layoutQueueList();
+}
+
+// Kurze Titel laegen sonst uebereinander. Der laufende steht groesser und
+// traegt eine zweite Zeile — direkt darunter braucht es mehr Luft.
+function layoutQueueList() {
+  const list = $('qlist');
+  const h = list.clientHeight;
+  // In der Skala ordnet die Zeit nicht mehr senkrecht — dort steht die
+  // Warteschlange als gewoehnliche Liste, ohne gesetzte Hoehen.
+  if (!h || !queue.length || skalaAktiv()) return;
+  const o = offsets(), T = gesamt() || 1;
+  let last = -Infinity;
+  list.querySelectorAll('[data-q]').forEach((el, i) => {
+    const min = (i - 1 === qIndex) ? 62 : 34;
+    let top = o[i] / T * h;
+    if (top - last < min) top = last + min;
+    last = top;
+    el.style.top = top + 'px';
+  });
+}
+
+function renderProgress() {
+  const T = gesamt();
+  if (qIndex < 0 || !T) {
+    $('qcount').textContent = '0 / 0';
+    $('np-rest').textContent = '0:00';
+    zeichneSpieler(null);
+    return;
+  }
+  const o = offsets(), g = globalPos(), p = Math.min(100, g / T * 100);
+  const i = railDrag ? indexAt(g) : qIndex;
+  const lokal = g - o[i];
+
+  // Themen mit eigenem Spieler zeichnen ihre Flaeche; die beiden ersten
+  // ihre Achse. Gerechnet wird darueber dasselbe.
+  zeichneSpieler({ i, p, g, lokal, T, track: queue[i].track, album: queue[i].album });
+  if (skalaAktiv()) zeichneSkala(i, p, g, lokal, T);
+  else zeichneRand(i, p, g, T);
+  document.querySelectorAll('[data-tick]').forEach(el =>
+    el.classList.toggle('past', +el.dataset.tick <= i));
+
+  $('qcount').textContent = `${i + 1} / ${queue.length}`;
+  $('np-rest').textContent = fmtLang(T - g);
+  $('np-next').textContent = i < queue.length - 1
+    ? queue[i + 1].track.title : 'Ende der Warteschlange';
+
+  $('peek-no').textContent = `Titel ${i + 1} von ${queue.length}`;
+  $('peek-title').textContent = queue[i].track.title;
+  $('peek-time').textContent = `${fmt(lokal)} — noch ${fmt(dauer(i) - lokal)}`;
+
+  document.querySelectorAll('[data-q]').forEach(el => {
+    const k = +el.dataset.q;
+    el.classList.toggle('now', k === i);
+    el.classList.toggle('past', k < i);
+  });
+}
+
+// „Papier": die Achse steht senkrecht im rechten Rand.
+function zeichneRand(i, p, g, T) {
+  const o = offsets();
+  $('rdone').style.height = p + '%';
+  $('rknob').style.top = p + '%';
+  $('rband').style.top = (o[i] / T * 100) + '%';
+  $('rband').style.height = (dauer(i) / T * 100) + '%';
+  $('rnum').style.top = p + '%';
+  $('rnum').textContent = fmt(g);
+}
+
+// „Desert Rose": dieselbe Achse als waagerechte Skala unter dem Bild.
+// Links steht die Stelle im laufenden Titel, rechts der Rest der ganzen
+// Warteschlange — die Sprechblase nennt beim Ziehen, wo man landet.
+function zeichneSkala(i, p, g, lokal, T) {
+  $('sdone').style.width = p + '%';
+  $('smark').style.left = p + '%';
+  $('smarkline').style.left = p + '%';
+  $('szeit').textContent = fmt(lokal);
+  $('srest').textContent = `noch ${fmtLang(T - g)}`;
+  const blase = $('sbubble');
+  blase.style.left = Math.min(88, Math.max(12, p)) + '%';
+  blase.textContent = `${queue[i].track.title} · ${fmt(lokal)}`;
+  document.querySelectorAll('[data-no]').forEach(el =>
+    el.classList.toggle('on', +el.dataset.no === i));
+}
+
+// Tippen und Ziehen sind zwei verschiedene Dinge: erst ab acht Punkten
+// Bewegung wird gespult, vorher bleibt es ein Tippen (= Warteschlange).
+(function bindRail() {
+  const rail = $('rail');
+  let aktiv = false, bewegt = false, startY = 0;
+  const zeitAn = e => {
+    const r = rail.getBoundingClientRect();
+    return Math.min(1, Math.max(0, (e.clientY - r.top) / r.height)) * gesamt();
+  };
+
+  rail.addEventListener('pointerdown', e => {
+    if (qIndex < 0) return;
+    aktiv = true; bewegt = false; startY = e.clientY;
+    rail.setPointerCapture(e.pointerId);
+  });
+  rail.addEventListener('pointermove', e => {
+    if (!aktiv) return;
+    if (!bewegt && Math.abs(e.clientY - startY) > 8) {
+      bewegt = true;
+      rail.classList.add('grabbing');
+      $('view-now').classList.add('dragging');
+      $('rhint').classList.add('gone');
+    }
+    if (bewegt) { railDrag = { ziel: zeitAn(e) }; renderProgress(); }
+  });
+  const ende = () => {
+    if (!aktiv) return;
+    aktiv = false;
+    if (!bewegt) { setQueueOpen(!openQueue); return; }
+    rail.classList.remove('grabbing');
+    $('view-now').classList.remove('dragging');
+    const ziel = railDrag ? railDrag.ziel : globalPos();
+    railDrag = null;
+    springeZu(ziel);
+  };
+  rail.addEventListener('pointerup', ende);
+  rail.addEventListener('pointercancel', ende);
+})();
+
+// Auf der waagerechten Skala ist ein Tippen eindeutig ein Spulen — sie
+// braucht die Trennung vom Rand nicht, wo dasselbe Tippen die Warteschlange
+// aufklappt. Gespult wird trotzdem erst beim Loslassen; unterwegs bewegt
+// sich nur die Anzeige, nicht die Wiedergabe.
+(function bindSkala() {
+  const skala = $('skala'), ruler = $('ruler');
+  let aktiv = false;
+  const zeitAn = e => {
+    const r = ruler.getBoundingClientRect();
+    return Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * gesamt();
+  };
+  const ziehe = e => { railDrag = { ziel: zeitAn(e) }; renderProgress(); };
+
+  skala.addEventListener('pointerdown', e => {
+    if (qIndex < 0) return;
+    aktiv = true;
+    skala.setPointerCapture(e.pointerId);
+    $('view-now').classList.add('dragging');
+    ziehe(e);
+  });
+  skala.addEventListener('pointermove', e => { if (aktiv) ziehe(e); });
+  const ende = () => {
+    if (!aktiv) return;
+    aktiv = false;
+    $('view-now').classList.remove('dragging');
+    const ziel = railDrag ? railDrag.ziel : globalPos();
+    railDrag = null;
+    springeZu(ziel);
+  };
+  skala.addEventListener('pointerup', ende);
+  skala.addEventListener('pointercancel', ende);
+})();
+
+// Nah am Titelanfang faengt der Griff den Anfang — sonst trifft man ihn nie.
+// ---------- Die drei eigenen Spieler ----------
+// Ein Thema mit `spieler` baut sich seine Flaeche selbst. Gemeinsam ist nur
+// der Unterbau: dieselbe Warteschlange, dasselbe <audio>, dieselbe Sitzung.
+// Bibliothek und Suche haben diese Spieler nicht selbst — in mobile.html
+// sind beide eigene Seiten, und jeder Spieler traegt oben je einen Knopf
+// dorthin.
+
+// Ausschlag: pro Titel immer derselbe, damit die Wellenform beim Wechsel
+// nicht flackert. Echte Werte gaebe es erst mit einer Analyse beim Scan.
+function wave(seed, n) {
+  let x = 0;
+  for (const ch of String(seed)) x = (x * 31 + ch.charCodeAt(0)) >>> 0;
+  const out = [];
+  for (let i = 0; i < n; i++) {
+    x = (x * 1103515245 + 12345) >>> 0;
+    const r = ((x >>> 16) & 0x7fff) / 0x7fff;
+    const bogen = Math.sin(Math.PI * (i + .5) / n);
+    out.push(.18 + .82 * (0.35 + 0.65 * r) * (0.45 + 0.55 * bogen));
+  }
+  return out;
+}
+
+// Ziehen auf einer Leiste, waagerecht: liefert 0…1 bei Tippen und Ziehen.
+function bindZug(el, cb) {
+  let zieht = false;
+  const wert = ev => {
+    const r = el.getBoundingClientRect();
+    return Math.min(1, Math.max(0, (ev.clientX - r.left) / r.width));
+  };
+  el.addEventListener('pointerdown', ev => {
+    zieht = true;
+    try { el.setPointerCapture(ev.pointerId); } catch {}
+    cb(wert(ev));
+    ev.preventDefault();
+  });
+  el.addEventListener('pointermove', ev => { if (zieht) cb(wert(ev)); });
+  const ende = () => { zieht = false; };
+  el.addEventListener('pointerup', ende);
+  el.addEventListener('pointercancel', ende);
+}
+
+// Spulen innerhalb des laufenden Titels — ohne das Einrasten von springeZu(),
+// das nur fuer die Achse ueber die ganze Warteschlange gedacht ist.
+function spuleImTitel(f) {
+  if (qIndex < 0) return;
+  const ziel = Math.min(1, Math.max(0, f)) * dauer(qIndex);
+  if (isFinite(audio.duration) && audio.duration) {
+    audio.currentTime = Math.min(ziel, audio.duration - 0.3);
+  } else {
+    pendingSeek = ziel;
+  }
+  renderProgress();
+}
+function springeAufIndex(k) {
+  if (k < 0 || k >= queue.length) return;
+  if (k === qIndex) { togglePlay(); return; }
+  qIndex = k;
+  playCurrent(true);
+}
+
+const SVG = {
+  play: w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`,
+  pause: w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M6.5 4h3.6v16H6.5zM13.9 4h3.6v16h-3.6z"/></svg>`,
+  prev: w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M19 20L9 12l10-8v16zM5 4h2.2v16H5z"/></svg>`,
+  next: w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M5 4l10 8-10 8V4zm13.8 0H21v16h-2.2z"/></svg>`,
+  grid: w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    stroke-width="1.6" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/>
+    <rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
+    <rect x="14" y="14" width="7" height="7" rx="1"/></svg>`,
+  search: w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="7"/>
+    <line x1="21" y1="21" x2="16.7" y2="16.7"/></svg>`,
+};
+// Zwei Knoepfe stehen in jedem der drei Spieler an derselben Stelle: links
+// die Sammlung, rechts die Suche. Beides sind eigene Seiten dieser App.
+const kopfHTML = (klasse, mitte) => `
+  <div class="kopfz">
+    <button class="${klasse}" data-zur-lib aria-label="Sammlung">${SVG.grid(19)}</button>
+    <span class="mitte">${mitte}</span>
+    <button class="${klasse}" data-zur-suche aria-label="Suchen">${SVG.search(19)}</button>
+  </div>`;
+function kopfVerdrahten(wurzel) {
+  wurzel.querySelector('[data-zur-lib]').onclick = () => setView('lib');
+  wurzel.querySelector('[data-zur-suche]').onclick = () => setView('search');
+}
+
+const SPIELER = {
+  // Blatt 02 — der Ausschlag ist die Spulleiste, das Laufwerk das Bild.
+  kissen: {
+    klasse: 'mg',
+    bau(w) {
+      w.innerHTML = kopfHTML('rund', 'Jetzt läuft') + `
+        <div class="spieler">
+          <div class="deck">
+            <span class="stift"></span><span class="stift zwei"></span>
+            <div class="teller" data-teller><div class="label" data-label></div></div>
+            <div class="arm" data-arm></div>
+          </div>
+          <div class="titel"><h1 data-titel>Nichts ausgewählt</h1><div class="ar" data-ar></div></div>
+          <div class="balken" data-balken>${'<b></b>'.repeat(19)}</div>
+          <div class="uhr"><span data-jetzt>0:00</span> / <span data-ende>0:00</span></div>
+          <div class="transport">
+            <button class="flach kissen" data-prev aria-label="Vorheriger Titel">${SVG.prev(22)}</button>
+            <button class="knauf kissen" data-pp aria-label="Abspielen">${SVG.pause(28)}</button>
+            <button class="flach kissen" data-next aria-label="Nächster Titel">${SVG.next(22)}</button>
+          </div>
+        </div>`;
+      kopfVerdrahten(w);
+      w.querySelector('[data-pp]').onclick = togglePlay;
+      w.querySelector('[data-next]').onclick = playNext;
+      w.querySelector('[data-prev]').onclick = playPrev;
+      bindZug(w.querySelector('[data-balken]'), spuleImTitel);
+      this.balken = [...w.querySelectorAll('[data-balken] b')];
+      this.letzter = null;
+    },
+    zeichne(w, z) {
+      const q = s => w.querySelector(s);
+      const spielt = !audio.paused && !!audio.src;
+      q('[data-pp]').innerHTML = spielt ? SVG.pause(28) : SVG.play(28);
+      q('[data-teller]').classList.toggle('halt', !spielt);
+      if (!z) { this.letzter = null; return; }
+      if (this.letzter !== z.track.id) {
+        this.letzter = z.track.id;
+        q('[data-titel]').textContent = z.track.title;
+        q('[data-ar]').textContent = z.album.artist;
+        const label = q('[data-label]');
+        const url = coverURL(z.album);
+        label.innerHTML = url ? `<img src="${url}" alt="">` : esc(initial(z.album));
+        const aus = wave(z.track.id, this.balken.length);
+        this.balken.forEach((b, i) => b.style.height = Math.round(28 + aus[i] * 72) + '%');
+      }
+      const f = z.lokal / Math.max(1, dauer(z.i));
+      this.balken.forEach((b, i) => b.classList.toggle('war', i / this.balken.length <= f));
+      q('[data-jetzt]').textContent = fmt(z.lokal);
+      q('[data-ende]').textContent = fmt(dauer(z.i));
+      q('[data-arm]').style.transform = `rotate(${(14 + 16 * f).toFixed(2)}deg)`;
+    },
+  },
+
+  // Blatt 03 — die Zeit ist so gross gesetzt wie der Titel, und genau eine
+  // Farbe traegt die Position.
+  karte: {
+    klasse: 'aa',
+    bau(w) {
+      w.innerHTML = `
+        <div class="karte">
+          ${kopfHTML('eck', 'Jetzt läuft')}
+          <h1 data-titel>Nichts ausgewählt</h1>
+          <div class="ar" data-ar></div>
+          <div class="zeit" data-zeit>00:00:00</div>
+          <div class="welle" data-welle><div class="punkte"></div>${'<b></b>'.repeat(46)}
+            <div class="kopfl" data-kopf></div></div>
+          <div class="fuss"><span data-vor>0:00</span><span data-rest>−0:00</span></div>
+        </div>
+        <div class="unten">
+          <div class="tafel">
+            <h2>Warteschlange <span data-qlen></span></h2>
+            <div class="qliste" data-queue></div>
+          </div>
+        </div>
+        <div class="tasten">
+          <button class="taste" data-prev aria-label="Vorheriger Titel"><span class="rund">${SVG.prev(22)}</span></button>
+          <button class="taste haupt" data-pp aria-label="Abspielen"><span class="rund">${SVG.pause(24)}</span></button>
+          <button class="taste" data-next aria-label="Nächster Titel"><span class="rund">${SVG.next(22)}</span></button>
+        </div>`;
+      kopfVerdrahten(w);
+      w.querySelector('[data-pp]').onclick = togglePlay;
+      w.querySelector('[data-next]').onclick = playNext;
+      w.querySelector('[data-prev]').onclick = playPrev;
+      bindZug(w.querySelector('[data-welle]'), spuleImTitel);
+      this.balken = [...w.querySelectorAll('[data-welle] b')];
+      this.letzter = null;
+      this.letzteQ = null;
+    },
+    zeichne(w, z) {
+      const q = s => w.querySelector(s);
+      const spielt = !audio.paused && !!audio.src;
+      q('[data-pp]').querySelector('.rund').innerHTML = spielt ? SVG.pause(24) : SVG.play(24);
+      if (!z) { this.letzter = null; this.letzteQ = null; return; }
+      const kasten = q('[data-queue]');
+      const kennung = queue.map(x => x.track.id).join();
+      if (this.letzteQ !== kennung) {
+        this.letzteQ = kennung;
+        kasten.innerHTML = queue.map((x, i) => `
+          <div class="qz" data-fq="${i}"><span class="nr">${String(i + 1).padStart(2, '0')}</span>
+            <span class="t">${esc(x.track.title)}</span>
+            <span class="d">${fmt(dauer(i))}</span></div>`).join('');
+        [...kasten.children].forEach(el => el.onclick = () => springeAufIndex(+el.dataset.fq));
+        q('[data-qlen]').textContent = fmtLang(z.T);
+      }
+      [...kasten.children].forEach((el, i) => el.classList.toggle('an', i === z.i));
+      if (this.letzter !== z.track.id) {
+        this.letzter = z.track.id;
+        q('[data-titel]').textContent = z.track.title;
+        q('[data-ar]').textContent = `${z.album.artist} · ${z.album.title}`;
+        const aus = wave(z.track.id, this.balken.length);
+        this.balken.forEach((b, i) => b.style.height = Math.round(aus[i] * 100) + '%');
+      }
+      const f = z.lokal / Math.max(1, dauer(z.i));
+      this.balken.forEach((b, i) => b.classList.toggle('war', i / this.balken.length <= f));
+      q('[data-kopf]').style.left = (f * 100).toFixed(2) + '%';
+      const s = Math.max(0, Math.round(z.lokal));
+      q('[data-zeit]').textContent =
+        [Math.floor(s / 3600), Math.floor(s % 3600 / 60), s % 60]
+          .map(n => String(n).padStart(2, '0')).join(':');
+      q('[data-vor]').textContent = fmt(z.lokal);
+      q('[data-rest]').textContent = '− ' + fmt(dauer(z.i) - z.lokal);
+    },
+  },
+
+  // Blatt 05 — der Spieler ist die Zeile, die laeuft. „Weiter" gibt es
+  // nicht; wer den naechsten Titel will, tippt ihn an.
+  kiesel: {
+    klasse: 'kl',
+    bau(w) {
+      w.innerHTML = kopfHTML('rund heraus', 'Jetzt läuft') + `
+        <div class="buehne">
+          <div class="scheibe heraus"><div class="bild" data-bild></div></div>
+        </div>
+        <div class="titelzeile"><h1 data-titel>Nichts ausgewählt</h1><div class="ar" data-ar></div></div>
+        <div class="lauf">
+          <div class="schiene hinein" data-bahn><span class="voll" data-voll></span></div>
+          <div class="zeiten"><span data-jetzt>0:00</span><span data-ende>−0:00</span></div>
+        </div>
+        <div class="liste" data-liste></div>
+        <div class="fussz">Musiklib · <span data-alb></span></div>`;
+      kopfVerdrahten(w);
+      bindZug(w.querySelector('[data-bahn]'), spuleImTitel);
+      this.letzteQ = null;
+    },
+    zeichne(w, z) {
+      const q = s => w.querySelector(s);
+      const liste = q('[data-liste]');
+      if (!z) { this.letzteQ = null; liste.innerHTML = ''; return; }
+      const spielt = !audio.paused && !!audio.src;
+      const kennung = queue.map(x => x.track.id).join();
+      if (this.letzteQ !== kennung) {
+        this.letzteQ = kennung;
+        liste.innerHTML = queue.map((x, i) => `
+          <div class="zeile" data-fq="${i}">
+            <div class="m"><div class="t">${esc(x.track.title)}</div>
+              <div class="s">${esc(x.album.artist)}</div></div>
+            <button class="knopf" data-k="${i}" aria-label="Abspielen"><i class="strich"></i></button>
+          </div>`).join('');
+        [...liste.children].forEach(el => {
+          el.onclick = () => springeAufIndex(+el.dataset.fq);
+          el.querySelector('[data-k]').onclick = ev => {
+            ev.stopPropagation();
+            springeAufIndex(+el.dataset.fq);
+          };
+        });
+        const bild = q('[data-bild]');
+        const url = coverURL(z.album);
+        bild.style.background = url ? 'none' : 'var(--accent)';
+        bild.innerHTML = url ? `<img src="${url}" alt="">` : esc(initial(z.album));
+        q('[data-alb]').textContent = z.album.title;
+      }
+      [...liste.children].forEach((el, i) => {
+        const an = i === z.i;
+        el.classList.toggle('an', an);
+        el.querySelector('[data-k]').innerHTML =
+          an ? (spielt ? SVG.pause(19) : SVG.play(19)) : '<i class="strich"></i>';
+      });
+      q('[data-titel]').textContent = z.track.title;
+      q('[data-ar]').textContent = `${z.album.artist} · ${z.album.title}`;
+      q('[data-voll]').style.width =
+        `calc(${((z.lokal / Math.max(1, dauer(z.i))) * 100).toFixed(2)}% - 6px)`;
+      q('[data-jetzt]').textContent = fmt(z.lokal);
+      q('[data-ende]').textContent = '−' + fmt(dauer(z.i) - z.lokal);
+    },
+  },
+};
+
+let spielerAktiv = null;      // Kennung des gebauten Spielers, sonst null
+function baueSpieler(id) {
+  if (spielerAktiv === id) return;
+  spielerAktiv = id;
+  const w = $('fremd');
+  w.className = 'fremd' + (id ? ' ' + SPIELER[id].klasse : '');
+  w.innerHTML = '';
+  if (id) SPIELER[id].bau(w);
+}
+function zeichneSpieler(z) {
+  if (!spielerAktiv) return;
+  SPIELER[spielerAktiv].zeichne($('fremd'), z);
+  // Die eigenen Spieler haben keine eigene Fehlerzeile — die Meldung tritt
+  // an die Stelle des Interpreten, wo sie niemand uebersieht.
+  if (fehlerText) {
+    const ar = $('fremd').querySelector('[data-ar]');
+    if (ar) ar.textContent = fehlerText;
+  }
+}
+
+function springeZu(sekunden) {
+  const T = gesamt();
+  if (!T) return;
+  let ziel = Math.min(Math.max(0, sekunden), T - 0.5);
+  const o = offsets();
+  const nah = o.find(x => Math.abs(x - ziel) < T * 0.012);
+  if (nah !== undefined) ziel = nah;
+
+  const i = indexAt(ziel);
+  const lokal = ziel - o[i];
+  if (i === qIndex) {
+    // gleicher Titel: nur die Position, kein Neuladen
+    if (isFinite(audio.duration)) audio.currentTime = Math.min(lokal, audio.duration - 0.3);
+    else { pendingSeek = lokal; }
+  } else {
+    qIndex = i;
+    pendingSeek = lokal;
+    playCurrent(!audio.paused || true);
+  }
+  renderProgress();
+}
+
+function setQueueOpen(v) {
+  openQueue = v;
+  $('view-now').classList.toggle('open', v);
+  $('qbtn').setAttribute('aria-expanded', String(v));
+  if (v) requestAnimationFrame(layoutQueueList);
+}
+
+// ---------- Am Ende der Warteschlange ----------
+// Eine Warteschlange ist ein Album. Was danach geschieht, steht in
+// `musiklib:fortsetzung` — demselben Schluessel, den index.html und
+// player.html lesen, mit denselben drei Werten.
+function naechstesAlbum() {
+  const letzte = queue[queue.length - 1];
+  if (!letzte || !library.albums.length) return null;
+  const i = library.albums.findIndex(a => a.id === letzte.album.id);
+  return library.albums[(i + 1) % library.albums.length] || null;
+}
+function amEnde() {
+  const wie = gewaehlt(FORTSETZUNGEN, settings.fortsetzung, 'weiter');
+  if (wie === 'wiederholen' && queue.length) { qIndex = 0; playCurrent(); return; }
+  if (wie === 'weiter') {
+    const a = naechstesAlbum();
+    if (a) { loadQueue(a.tracks.map(t => ({ track: t, album: a })), 0); return; }
+  }
+  tonGewuenscht = false;
+  setPlayButton(false);
+}
+
+// ---------- Nachdruck beim Titelwechsel ----------
+// Der wichtigste Fall auf dem iPhone: Am Ende eines Titels bekommt das
+// Element eine neue Quelle — und iOS weist play() im Hintergrund ab, weil es
+// als neuer Start gilt und nicht als Fortsetzung. Die Zurueckweisung kam
+// bisher als stiller abgefangener Fehler zurueck, und die Musik war aus.
+//
+// Also nachfragen: solange Ton gewuenscht ist und keiner laeuft, alle
+// NACH_VERZUG Millisekunden erneut play() rufen — und beim Zurueckkommen in
+// den Vordergrund noch einmal von vorn. `tonGewuenscht` unterscheidet dabei
+// die abgewiesene Wiedergabe von einer Pause, die jemand wollte.
+let tonGewuenscht = false;
+let NACH_VERZUG = 1200;        // veraenderlich fuer den Test
+const NACH_MAX = 8;
+let nachTimer = 0, nachVersuche = 0;
+
+function nachdruck() {
+  clearTimeout(nachTimer);
+  if (!tonGewuenscht) return;
+  nachTimer = setTimeout(() => {
+    nachTimer = 0;
+    if (!tonGewuenscht || !audio.src || !audio.paused) return;
+    if (++nachVersuche > NACH_MAX) return;
+    audio.play().catch(() => {});
+    nachdruck();
+  }, NACH_VERZUG);
+}
+
+// ---------- Wiederanlauf ----------
+// Ein Stream ueber WLAN reisst irgendwann ab: das Telefon drosselt bei
+// dunklem Bildschirm den Funk, die Platte im NAS schlaeft ein. Das Element
+// meldet dann „waiting" oder „stalled" und bleibt stehen — ohne diesen
+// Abschnitt fuer immer. Jeder Fortschritt sagt den Zeitgeber wieder ab; ein
+// Titel, dessen Datei fehlt, wird gemeldet statt endlos neu geladen.
+let HEIL_VERZUG = 6000;        // veraenderlich, damit der Test nicht wartet
+const HEIL_MAX = 5;
+let heilTimer = 0, heilVersuche = 0;
+
+function heilungPlanen(ms) {
+  clearTimeout(heilTimer);
+  heilTimer = setTimeout(versucheWeiter, ms || HEIL_VERZUG);
+}
+function heilungAbsagen() {
+  clearTimeout(heilTimer); heilTimer = 0; heilVersuche = 0;
+}
+function versucheWeiter() {
+  heilTimer = 0;
+  if (!audio.src || qIndex < 0) return;
+  if (heilVersuche >= HEIL_MAX) {
+    $('np-error').hidden = false;
+    fehlerText = 'Verbindung abgerissen — bitte neu laden';
+    renderProgress();
+    return;
+  }
+  heilVersuche++;
+  pendingSeek = audio.currentTime || 0;    // an derselben Stelle weiter
+  audio.load();                            // dieselbe Quelle, neue Verbindung
+  audio.play().catch(() => {});
+  heilungPlanen();
+}
+
+// ---------- Vorladen ----------
+// Kurz vor dem Ende den Anfang des naechsten Titels holen: das weckt die
+// Platte im NAS und haelt die Verbindung warm. Der Koerper wird nicht
+// gebraucht. (preload am Element hilft nicht — iOS ignoriert es.)
+const VORLAUF = 25;            // Sekunden vor dem Ende
+let vorgeladen = null;
+function ladeVor() {
+  let naechst = queue[qIndex + 1] && queue[qIndex + 1].track;
+  if (!naechst) {
+    const wie = gewaehlt(FORTSETZUNGEN, settings.fortsetzung, 'weiter');
+    if (wie === 'weiter') { const a = naechstesAlbum(); naechst = a && a.tracks[0]; }
+    else if (wie === 'wiederholen') naechst = queue[0] && queue[0].track;
+  }
+  if (!naechst || vorgeladen === naechst.id) return;
+  vorgeladen = naechst.id;
+  fetch(`/api/stream/${encodeURIComponent(naechst.id)}`, { headers: { Range: 'bytes=0-262143' } })
+    .then(r => r.arrayBuffer()).catch(() => {});
+}
+
+// ---------- Bildschirm anlassen ----------
+// Solange Ton laeuft und die Einstellung es erlaubt: der Bildschirm bleibt
+// an, damit iOS das WLAN nicht drosselt. iOS gibt die Sperre beim Ausblenden
+// von selbst frei, deshalb wird sie beim Zurueckkommen neu angefordert.
+let wachSchloss = null;
+function wachGewuenscht() {
+  return gewaehlt(WACH, settings.wach, 'aus') === 'an' && !audio.paused && !!audio.src;
+}
+async function wachHalten() {
+  try {
+    if (wachGewuenscht()) {
+      if (!wachSchloss && 'wakeLock' in navigator && document.visibilityState === 'visible') {
+        wachSchloss = await navigator.wakeLock.request('screen');
+        wachSchloss.addEventListener('release', () => { wachSchloss = null; });
+      }
+    } else if (wachSchloss) {
+      const s = wachSchloss; wachSchloss = null; await s.release();
+    }
+  } catch { wachSchloss = null; }
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') return;
+  wachHalten();
+  // Wurde im Hintergrund ein Titelwechsel abgewiesen, ist jetzt der Moment.
+  nachVersuche = 0;
+  nachdruck();
+});
+
+// ---------- Ereignisse des Audio-Elements ----------
+audio.addEventListener('play', () => {
+  setPlayButton(true); wachHalten();
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+});
+audio.addEventListener('pause', () => {
+  setPlayButton(false); saveSession(); wachHalten();
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+});
+audio.addEventListener('playing', () => { heilungAbsagen(); nachVersuche = 0; });
+audio.addEventListener('waiting', () => heilungPlanen());
+audio.addEventListener('stalled', () => heilungPlanen());
+audio.addEventListener('ended', () => { if (hasNext()) playNext(); else amEnde(); });
+audio.addEventListener('loadedmetadata', () => {
+  if (pendingSeek > 0 && isFinite(audio.duration)) {
+    audio.currentTime = Math.min(pendingSeek, audio.duration - 0.3);
+  }
+  pendingSeek = 0;
+});
+// Ein Titel, dessen Datei seit dem letzten Scan verschoben wurde, liefert 404 —
+// dann hilft kein neuer Versuch. Ein Netzfehler dagegen schon.
+audio.addEventListener('error', () => {
+  if (!audio.src) return;
+  const code = audio.error && audio.error.code;
+  if (code === 2 || code === 3) { heilungPlanen(1500); return; }
+  heilungAbsagen();
+  setPlayButton(false);
+  fehlerText = 'Titel nicht abspielbar — bitte neu scannen';
+  $('np-error').hidden = false;
+  renderProgress();
+});
+audio.addEventListener('timeupdate', () => {
+  heilungAbsagen();                        // Fortschritt heisst: alles in Ordnung
+  if (audio.duration && audio.duration - audio.currentTime < VORLAUF) ladeVor();
+  if (!railDrag) renderProgress();
+  const now = Date.now();
+  if (now - lastSaved > 5000) { lastSaved = now; saveSession(); }
+});
+
+if ('mediaSession' in navigator) {
+  const handlers = {
+    play: () => { tonGewuenscht = true; nachVersuche = 0;
+                  audio.play().catch(() => {}); nachdruck(); },
+    pause: () => { tonGewuenscht = false; clearTimeout(nachTimer); audio.pause(); },
+    previoustrack: playPrev,
+    nexttrack: playNext,
+  };
+  for (const [action, fn] of Object.entries(handlers)) {
+    try { navigator.mediaSession.setActionHandler(action, fn); } catch {}
+  }
+}
+
+// ---------- Bedienung ----------
+function setView(name) {
+  view = name;
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('on', v.id === 'view-' + name));
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.view === name));
+  if (name === 'now') requestAnimationFrame(layoutQueueList);
+  if (name === 'search') setTimeout(() => $('q').focus(), 60);
+}
+$('tabs').addEventListener('click', e => {
+  const b = e.target.closest('[data-view]');
+  if (!b) return;
+  setView(b.dataset.view);
+  // Kurz stehen lassen, damit die getroffene Wahl noch zu sehen ist.
+  if (leisteAufBedarf()) setTimeout(() => zeigeLeiste(false), 300);
+});
+$('grip').addEventListener('pointerdown', () => zeigeLeiste(true));
+document.addEventListener('pointerdown', e => {
+  if (!leisteAufBedarf()) return;
+  if (e.target.closest('#tabs, #grip')) return;
+  zeigeLeiste(false);
+}, true);
+
+$('play-btn').addEventListener('click', togglePlay);
+$('next-btn').addEventListener('click', playNext);
+$('prev-btn').addEventListener('click', playPrev);
+$('nextrow').addEventListener('click', playNext);
+$('qbtn').addEventListener('click', () => setQueueOpen(!openQueue));
+
+// Album- und Titelzeilen: ein Zuhoerer je Liste statt je Zeile
+document.addEventListener('click', e => {
+  const row = e.target.closest('.card[data-album], .row[data-album]');
+  if (!row) return;
+  const album = library.albums[+row.dataset.album];
+  if (!album) return;
+  if (row.dataset.track !== undefined) playFromAlbum(album, +row.dataset.track);
+  else openAlbum(album);
+});
+$('album-back').addEventListener('click', closeAlbum);
+
+let sucheTimer;
+$('q').addEventListener('input', () => {
+  $('searchbox').classList.toggle('has', !!$('q').value);
+  clearTimeout(sucheTimer);
+  sucheTimer = setTimeout(renderResults, 80);
+});
+$('q-clear').addEventListener('click', () => {
+  $('q').value = '';
+  $('searchbox').classList.remove('has');
+  renderResults();
+  $('q').focus();
+});
+
+$('settings-btn').addEventListener('click', () => {
+  $('settings-sheet').classList.add('on');
+  $('settings-sheet').setAttribute('aria-hidden', 'false');
+});
+$('settings-back').addEventListener('click', () => {
+  $('settings-sheet').classList.remove('on');
+  $('settings-sheet').setAttribute('aria-hidden', 'true');
+});
+
+window.addEventListener('resize', () => { if (view === 'now') layoutQueueList(); });
+
+// ---------- Sitzung ----------
+// Dieselben Schluessel und dieselbe Form wie index.html: auf demselben Geraet
+// laeuft die Sitzung zwischen beiden Ansichten weiter.
+let lastSaved = 0;
+
+function saveSession() {
+  if (qIndex < 0 || !queue.length) return;
+  store('session', {
+    items: queue.map(q => [q.album.id, q.track.id]),
+    qIndex,
+    position: Math.floor(audio.currentTime || 0),
+  });
+}
+
+function restoreSession() {
+  const saved = restore('session', null);
+  if (!saved || !Array.isArray(saved.items) || !saved.items.length) return;
+  const byId = new Map(library.albums.map(a => [a.id, a]));
+  const items = [];
+  let neuerIndex = 0;
+  saved.items.forEach(([albumId, trackId], i) => {
+    const album = byId.get(albumId);
+    const track = album && album.tracks.find(t => t.id === trackId);
+    if (!track) return;                        // Datei verschoben oder geloescht
+    if (i === saved.qIndex) neuerIndex = items.length;
+    items.push({ track, album });
+  });
+  if (!items.length) return;
+
+  queue = items;
+  qIndex = Math.min(neuerIndex, items.length - 1);
+  pendingSeek = saved.position || 0;
+  audio.preload = 'metadata';                  // sonst kommt kein loadedmetadata
+  buildRail();
+  playCurrent(false);                          // nie automatisch starten
+}
+
+window.addEventListener('pagehide', saveSession);
+
+// ---------- Start ----------
+shuffle = restore('shuffle', false);           // von der Schreibtischseite mitbenutzt
+audio.volume = Math.min(1, Math.max(0, restore('volume', 1)));
+audio.muted = restore('muted', false);
+buildSettings();
+applySettings();
+setPlayButton(false);
+loadLibrary().then(() => { if (qIndex < 0) restoreSession(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,1728 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14110F">
+<title>Musiklib</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #14110F;
+  --surface: #1E1A17;
+  --surface-2: #25201C;
+  --text: #EDE6DA;
+  --text-2: #8A8377;
+  --text-3: #5C554C;
+  --hair: rgba(237, 230, 218, 0.07);
+  --hair-strong: rgba(237, 230, 218, 0.16);
+  --gold: #C9A574;
+  --warn: #D9856A;
+  --player-h: 84px;
+  /* eine Schriftquelle, drei Rollen — Schrift hier zentral austauschen */
+  --mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --display: var(--mono);
+  --body: var(--mono);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { background: var(--bg); color: var(--text); }
+body {
+  font-family: var(--body);
+  font-size: 14px;
+  line-height: 1.65;
+  min-height: 100vh;
+  padding-bottom: calc(var(--player-h) + env(safe-area-inset-bottom));
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button, input { font: inherit; color: inherit; }
+
+/* ---------- HEADER ---------- */
+header {
+  padding: 48px 48px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 0;
+}
+.brand em {
+  font-style: italic;
+  color: var(--gold);
+  font-weight: 400;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--text-3);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+/* Scan-Meldungen koennen lang werden — kuerzen statt das Layout sprengen,
+   der volle Text haengt im title-Attribut. */
+#status-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.status.error #status-text { color: var(--warn); }
+.status.error .dot { background: var(--warn); }
+.dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 0 rgba(201, 165, 116, 0.5);
+  animation: pulse 1.6s ease-out infinite;
+}
+.dot.idle { background: var(--text-3); animation: none; box-shadow: none; }
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(201, 165, 116, 0.4); }
+  100% { box-shadow: 0 0 0 8px rgba(201, 165, 116, 0); }
+}
+
+.scan-btn {
+  background: transparent;
+  border: 1px solid var(--hair-strong);
+  color: var(--text-2);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+.scan-btn:hover { color: var(--text); border-color: var(--text-2); }
+
+/* signature: the search itself is the headline */
+.search-row {
+  display: flex;
+  align-items: baseline;
+  gap: 28px;
+  border-bottom: 1px solid var(--hair-strong);
+  padding-bottom: 28px;
+}
+.search-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  padding-bottom: 14px;
+  white-space: nowrap;
+}
+input[type="search"] {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-family: var(--display);
+  font-size: clamp(28px, 4.6vw, 52px);
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 1.1;
+  padding: 4px 0;
+  outline: none;
+  -webkit-appearance: none;
+}
+input[type="search"]::-webkit-search-cancel-button { display: none; }
+input[type="search"]::placeholder {
+  color: var(--text-3);
+  font-style: italic;
+  font-weight: 300;
+}
+
+.counts {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--text-3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  padding-top: 2px;
+}
+.counts strong { color: var(--text); font-weight: 500; }
+
+/* uebersprungene Dateien: Zaehler klappt die Liste auf */
+.skipped-toggle {
+  background: none;
+  border: none;
+  border-bottom: 1px dotted var(--hair-strong);
+  color: var(--warn);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0 0 1px;
+  cursor: pointer;
+}
+.skipped-toggle:hover { border-bottom-color: var(--warn); }
+.skipped-panel {
+  border: 1px solid var(--hair-strong);
+  border-radius: 2px;
+  padding: 16px 18px;
+  margin-top: -20px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.skipped-head {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--warn);
+  margin-bottom: 10px;
+}
+.skipped-list {
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--text-2);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  word-break: break-all;
+}
+
+/* ---------- TABS ---------- */
+.tabs {
+  padding: 0 48px;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  border-bottom: 1px solid var(--hair);
+  margin-top: 32px;
+  margin-bottom: 40px;
+}
+.sort-field {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sort-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.sort-field select {
+  background: var(--surface);
+  border: 1px solid var(--hair-strong);
+  border-radius: 2px;
+  color: var(--text-2);
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+.sort-field select:hover { color: var(--text); border-color: var(--text-3); }
+.tab {
+  background: none;
+  border: none;
+  color: var(--text-2);
+  font-size: 13px;
+  letter-spacing: 0.01em;
+  padding: 14px 0;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.tab.active { color: var(--text); }
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 1px;
+  background: var(--text);
+}
+.tab .count {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+}
+
+/* ---------- MAIN ---------- */
+main { padding: 0 48px 48px; }
+
+/* album grid */
+.album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(184px, 1fr));
+  gap: 36px 24px;
+}
+
+.album {
+  cursor: pointer;
+  /* Karten ausserhalb des Viewports ueberspringt der Browser bei Layout und
+     Paint. Die Groessenangabe verhindert, dass die Scrollbar dabei springt. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 260px;
+}
+.album .title { margin-top: 14px; }
+.album .artist { margin-top: 4px; }
+.album .year { margin-top: 6px; }
+
+.cover {
+  width: 100%;
+  padding-top: 100%;
+  height: 0;
+  background: var(--surface);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+  transition: transform 220ms cubic-bezier(.2,.7,.2,1);
+}
+.album:hover .cover { transform: translateY(-3px); }
+.cover img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Play button overlay on covers */
+.play-overlay {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--bg);
+  border: none;
+  cursor: pointer;
+  font-family: var(--display);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0 0 3px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 180ms ease, transform 180ms ease, background 120ms ease;
+  z-index: 2;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+.cover:hover .play-overlay,
+.play-overlay:focus-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.play-overlay:hover { background: var(--text); }
+.play-overlay:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+@media (hover: none) {
+  .play-overlay {
+    opacity: 1;
+    transform: translateY(0);
+    background: rgba(20, 17, 15, 0.7);
+    color: var(--text);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
+.detail-head .cover .play-overlay {
+  width: 50px; height: 50px;
+  font-size: 15px;
+  bottom: 14px; right: 14px;
+}
+.cover.empty {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 40px;
+  font-weight: 300;
+  color: var(--text-3);
+  background:
+    radial-gradient(circle at 30% 20%, rgba(201,165,116,0.04), transparent 60%),
+    var(--surface);
+}
+.cover.empty::after {
+  content: attr(data-initial);
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  line-height: 1;
+}
+
+.album .title {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.album .artist {
+  font-family: var(--display);
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--text-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.album .year {
+  font-family: var(--display);
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: 0;
+  margin-top: 2px;
+}
+
+/* artist list */
+.artist-list { display: flex; flex-direction: column; }
+.artist-row {
+  border-bottom: 1px solid var(--hair);
+  padding: 22px 0;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: baseline;
+  gap: 24px;
+  transition: padding-left 200ms ease;
+}
+.artist-row:hover { padding-left: 8px; }
+.artist-row .name {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.2;
+}
+.artist-row .stats {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.artist-row .arrow {
+  color: var(--text-3);
+  font-size: 16px;
+  transition: transform 200ms ease, color 200ms ease;
+  display: inline-block;
+}
+.artist-row.open .arrow { color: var(--text); transform: rotate(90deg); }
+.artist-row .play-all {
+  background: none;
+  border: 1px solid var(--hair-strong);
+  border-radius: 2px;
+  color: var(--text-3);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+.artist-row .play-all:hover { color: var(--text); border-color: var(--text-2); }
+.artist-albums {
+  grid-column: 1 / -1;
+  display: none;
+  padding: 24px 0 8px;
+}
+.artist-row.open .artist-albums {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 28px 16px;
+}
+.artist-albums .album .title { font-size: 13px; }
+
+/* detail overlay */
+.detail-overlay {
+  position: fixed; inset: 0;
+  background: rgba(14, 12, 11, 0.78);
+  backdrop-filter: blur(22px) saturate(120%);
+  -webkit-backdrop-filter: blur(22px) saturate(120%);
+  z-index: 100;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 64px 24px calc(var(--player-h) + 40px);
+  overflow-y: auto;
+  animation: fade 180ms ease;
+}
+.detail-overlay.open { display: flex; }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+.detail-panel {
+  width: 100%;
+  max-width: 760px;
+  background: var(--surface);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  animation: rise 240ms cubic-bezier(.2,.7,.2,1);
+}
+@keyframes rise { from { transform: translateY(12px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.close-btn {
+  position: absolute;
+  top: 20px; right: 22px;
+  background: none; border: none;
+  color: var(--text-2);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 8px 12px;
+  z-index: 1;
+}
+.close-btn:hover { color: var(--text); }
+
+.detail-head {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 36px;
+  padding: 36px;
+  border-bottom: 1px solid var(--hair);
+}
+.detail-head .cover { box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+.detail-info { padding-top: 6px; display: flex; flex-direction: column; gap: 4px; }
+.detail-info .eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.detail-info .title {
+  font-family: var(--display);
+  font-size: clamp(24px, 3.6vw, 36px);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: 0;
+  margin-bottom: 14px;
+}
+.detail-info .artist {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--gold);
+  font-weight: 400;
+}
+.detail-info .meta {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.tracklist { padding: 8px 0; }
+.track {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  align-items: center;
+  gap: 18px;
+  padding: 13px 36px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--hair);
+  transition: background 120ms ease;
+  position: relative;
+}
+/* Treffer der aktuellen Suche — sonst sucht man den Titel im Album erneut */
+.track.match .track-title { color: var(--gold); }
+.track.match::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--gold);
+}
+.track:hover { background: rgba(237, 230, 218, 0.025); }
+.track:last-child { border-bottom: none; }
+.track.playing .track-title,
+.track.playing .track-no,
+.track.playing .track-duration { color: var(--gold); }
+.track.playing .track-no .num { display: none; }
+.track.playing .track-no::before { content: '◆'; font-size: 9px; }
+
+.track-no {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-3);
+}
+.track-title { font-size: 14px; }
+.track-duration {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--text-3);
+}
+
+/* ---------- PLAYER ---------- */
+.player {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: var(--player-h);
+  background: rgba(30, 26, 23, 0.92);
+  border-top: 1px solid var(--hair-strong);
+  padding: 0 24px env(safe-area-inset-bottom);
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  z-index: 200;
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+
+.now-cover {
+  width: 52px; height: 52px;
+  background: var(--surface-2);
+  border-radius: 2px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.now-cover img { width: 100%; height: 100%; object-fit: cover; }
+.now-cover.empty {
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--display); font-style: italic;
+  color: var(--text-3); font-size: 16px;
+  font-weight: 300;
+}
+
+.now-info {
+  display: flex; flex-direction: column; gap: 2px;
+  min-width: 0;
+  flex-shrink: 1;
+  width: 22%;
+}
+.now-title {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.now-artist {
+  font-size: 11px;
+  color: var(--text-2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.controls {
+  display: flex; align-items: center; gap: 4px;
+  flex-shrink: 0;
+}
+.player button.ctrl {
+  background: none; border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 8px;
+  font-size: 18px;
+  line-height: 1;
+  border-radius: 50%;
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0.85;
+  transition: opacity 120ms, background 120ms;
+}
+.player button.ctrl:hover { opacity: 1; background: rgba(255,255,255,0.05); }
+.player button.play {
+  width: 40px; height: 40px;
+  background: var(--text);
+  color: var(--bg);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 13px;
+  margin: 0 4px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 120ms;
+}
+.player button.play:hover { background: var(--gold); }
+/* Was am Ende der Warteschlange geschieht — ein Knopf, der seinen Zustand
+   ausschreibt statt ihn in ein Zeichen zu verstecken: drei Zustaende sind
+   ein Zeichen zu viel. */
+.player button.ctrl.ende {
+  width: auto; padding: 0 10px; font-size: 10px; letter-spacing: 0.12em;
+  text-transform: uppercase; border-radius: 12px; opacity: 0.6;
+}
+.player button.ctrl.ende.on { opacity: 1; color: var(--gold); }
+.player button.ctrl[aria-pressed="true"] {
+  color: var(--gold);
+  opacity: 1;
+  background: rgba(201, 165, 116, 0.14);
+}
+
+/* Lautstaerke — am Handy ausgeblendet, dort regeln die Hardwaretasten */
+.volume {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.volume input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 74px;
+  height: 3px;
+  background: var(--hair-strong);
+  border-radius: 2px;
+  cursor: pointer;
+}
+.volume input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: var(--text-2);
+  transition: background 120ms;
+}
+.volume input[type="range"]:hover::-webkit-slider-thumb { background: var(--text); }
+.volume input[type="range"]::-moz-range-thumb {
+  width: 11px; height: 11px;
+  border: none;
+  border-radius: 50%;
+  background: var(--text-2);
+}
+.player button.vol-btn { font-size: 14px; width: 28px; height: 28px; }
+.player button.vol-btn.muted { color: var(--text-3); }
+
+.scrubber {
+  flex: 1;
+  display: flex; align-items: center; gap: 14px;
+  min-width: 0;
+}
+.time {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+  min-width: 36px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.bar {
+  flex: 1;
+  height: 3px;
+  background: var(--hair-strong);
+  position: relative;
+  cursor: pointer;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  background: var(--text);
+  width: 0%;
+  pointer-events: none;
+  transition: width 120ms linear;
+}
+
+/* empty & error */
+.empty-state {
+  padding: 120px 0;
+  text-align: center;
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 300;
+  color: var(--text-3);
+  font-size: 22px;
+  letter-spacing: 0;
+}
+
+/* ---------- MOBILE ---------- */
+@media (max-width: 760px) {
+  header { padding: 32px 20px 0; gap: 28px; }
+  .tabs { padding: 0 20px; gap: 24px; margin-top: 24px; margin-bottom: 28px; }
+  main { padding: 0 20px 24px; }
+
+  .top-row { gap: 12px; }
+  .scan-btn { padding: 7px 11px; }
+
+  .search-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding-bottom: 22px;
+  }
+  .search-label { padding-bottom: 0; font-size: 10px; }
+  input[type="search"] { font-size: 30px; padding: 2px 0; }
+  .counts { gap: 16px; font-size: 9.5px; }
+
+  .album-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 28px 14px; }
+  .cover.empty { font-size: 32px; }
+  .play-overlay { width: 34px; height: 34px; bottom: 8px; right: 8px; }
+
+  .artist-row { grid-template-columns: 1fr auto; }
+  .artist-row .stats { display: none; }
+  .artist-row .name { font-size: 22px; }
+  .artist-row.open .artist-albums { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+
+  .detail-overlay { padding: 24px 12px calc(var(--player-h) + 24px); }
+  .detail-head {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    padding: 24px;
+    text-align: left;
+  }
+  .detail-head .cover { max-width: 220px; }
+  .detail-info .meta { padding-top: 8px; }
+  .track { grid-template-columns: 26px 1fr auto; padding: 13px 24px; gap: 12px; }
+
+  .player { gap: 12px; padding: 0 14px env(safe-area-inset-bottom); }
+  .player .scrubber { display: none; }
+  /* Am Handy regeln die Hardwaretasten die Lautstaerke */
+  .player .volume { display: none; }
+  .now-cover { width: 44px; height: 44px; }
+  .now-info { flex: 1; width: auto; }
+
+  .tabs { flex-wrap: wrap; }
+  .sort-field { margin-left: 0; width: 100%; padding-bottom: 12px; }
+  .sort-field select { flex: 1; }
+  .artist-row { grid-template-columns: 1fr auto auto; }
+  .artist-row .play-all { padding: 5px 8px; font-size: 9.5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="top-row">
+    <div class="brand">Musiklib<em>.</em></div>
+    <div class="status">
+      <span class="dot idle" id="status-dot"></span>
+      <span id="status-text">Bereit</span>
+      <button class="scan-btn" id="scan-btn">Neu scannen</button>
+    </div>
+  </div>
+
+  <div class="search-row">
+    <div class="search-label">Suche</div>
+    <input type="search" id="search" placeholder="Alben, Interpreten …" autocomplete="off" spellcheck="false">
+  </div>
+
+  <div class="counts">
+    <span><strong id="album-count">0</strong> Alben</span>
+    <span><strong id="track-count">0</strong> Titel</span>
+    <span id="scan-time"></span>
+    <button type="button" class="skipped-toggle" id="skipped-toggle" hidden aria-expanded="false"></button>
+  </div>
+
+  <div class="skipped-panel" id="skipped-panel" hidden>
+    <div class="skipped-head">Nicht lesbar — fehlen in der Bibliothek</div>
+    <ul class="skipped-list" id="skipped-list"></ul>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" data-view="albums">Alben <span class="count" id="tab-album-count">—</span></button>
+  <button class="tab" data-view="artists">Interpreten <span class="count" id="tab-artist-count">—</span></button>
+  <label class="sort-field">
+    <span class="sort-label">Sortierung</span>
+    <select id="sort" aria-label="Sortierung">
+      <option value="artist">Interpret</option>
+      <option value="title">Albumtitel</option>
+      <option value="year-desc">Jahr, neueste zuerst</option>
+      <option value="year-asc">Jahr, älteste zuerst</option>
+      <option value="added">Zuletzt hinzugefügt</option>
+    </select>
+  </label>
+</nav>
+
+<main>
+  <div id="albums-view" class="album-grid"></div>
+  <div id="artists-view" class="artist-list" style="display:none;"></div>
+  <div id="empty" class="empty-state" style="display:none;">Nichts gefunden.</div>
+</main>
+
+<div class="detail-overlay" id="detail" aria-hidden="true">
+  <div class="detail-panel">
+    <button class="close-btn" id="close-detail">Schließen</button>
+    <div class="detail-head">
+      <div class="cover" id="detail-cover"></div>
+      <div class="detail-info">
+        <div class="eyebrow">Album</div>
+        <div class="title" id="detail-title"></div>
+        <div class="artist" id="detail-artist"></div>
+        <div class="meta" id="detail-meta"></div>
+      </div>
+    </div>
+    <div class="tracklist" id="detail-tracks"></div>
+  </div>
+</div>
+
+<div class="player" role="region" aria-label="Player">
+  <div class="now-cover empty" id="now-cover"></div>
+  <div class="now-info">
+    <div class="now-title" id="now-title">—</div>
+    <div class="now-artist" id="now-artist">Kein Titel ausgewählt</div>
+  </div>
+  <div class="controls">
+    <button class="ctrl" id="shuffle-btn" title="Zufallswiedergabe" aria-label="Zufallswiedergabe" aria-pressed="false">⤨</button>
+    <button class="ctrl" id="prev-btn" title="Vorheriger Titel" aria-label="Vorheriger Titel">↞</button>
+    <button class="play" id="play-btn" title="Abspielen" aria-label="Abspielen">▶</button>
+    <button class="ctrl" id="next-btn" title="Nächster Titel" aria-label="Nächster Titel">↠</button>
+    <button class="ctrl ende" id="end-btn" title="Am Ende: nächstes Album der Sammlung"
+      aria-label="Am Ende der Warteschlange">Weiter</button>
+  </div>
+  <div class="scrubber">
+    <span class="time" id="time-current">0:00</span>
+    <div class="bar" id="bar" role="slider" aria-label="Position"><div class="bar-fill" id="bar-fill"></div></div>
+    <span class="time" id="time-total">0:00</span>
+  </div>
+  <div class="volume">
+    <button class="ctrl vol-btn" id="mute-btn" title="Stumm schalten" aria-label="Stumm schalten">♪</button>
+    <input type="range" id="volume" min="0" max="100" step="1" value="100" aria-label="Lautstärke">
+  </div>
+  <audio id="audio" preload="none"></audio>
+</div>
+
+<script>
+'use strict';
+
+const $ = id => document.getElementById(id);
+const audio = $('audio');
+
+let library = { albums: [], album_count: 0, track_count: 0, scanned_at: null };
+let view = 'albums';
+let filtered = [];
+let queue = [];
+let qIndex = -1;
+let sortMode = 'artist';
+let shuffle = false;
+let query = '';        // aktuelle Sucheingabe, fuer die Treffermarkierung im Album
+let pendingSeek = 0;   // Position aus der letzten Sitzung, sobald Metadaten da sind
+
+// ---------- gespeicherte Einstellungen ----------
+// localStorage ist Beiwerk: faellt es aus (privater Modus, volles Kontingent),
+// laeuft die App unveraendert weiter.
+const STORE = 'musiklib:';
+function store(key, value) {
+  try { localStorage.setItem(STORE + key, JSON.stringify(value)); } catch {}
+}
+function restore(key, fallback) {
+  try {
+    const raw = localStorage.getItem(STORE + key);
+    return raw === null ? fallback : JSON.parse(raw);
+  } catch { return fallback; }
+}
+
+// ---------- utils ----------
+function fmtTime(s) {
+  if (!s || !isFinite(s)) return '0:00';
+  s = Math.floor(s);
+  const m = Math.floor(s / 60);
+  const ss = String(s % 60).padStart(2, '0');
+  return `${m}:${ss}`;
+}
+function fmtTotal(s) {
+  if (!s || !isFinite(s)) return '0 min';
+  s = Math.floor(s);
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  return h ? `${h} h ${m} min` : `${m} min`;
+}
+function esc(s) {
+  return (s == null ? '' : String(s)).replace(/[&<>"']/g, c => (
+    {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]
+  ));
+}
+function initial(album) {
+  return ((album.title || '?').trim().charAt(0) || '?').toUpperCase();
+}
+function setStatus(text, isError = false) {
+  const el = $('status-text');
+  el.textContent = text;
+  el.title = text;                       // gekuerzter Text bleibt vollstaendig lesbar
+  el.closest('.status').classList.toggle('error', isError);
+}
+function coverURL(album) {
+  return album.cover ? `/api/cover/${encodeURIComponent(album.cover)}` : null;
+}
+function setCover(album, container) {
+  const url = coverURL(album);
+  if (url) {
+    container.innerHTML = `<img loading="lazy" src="${url}" alt="">`;
+    container.classList.remove('empty');
+    container.removeAttribute('data-initial');
+  } else {
+    container.innerHTML = '';
+    container.classList.add('empty');
+    container.setAttribute('data-initial', initial(album));
+  }
+}
+
+function addPlayButton(coverEl, album) {
+  // remove any previous play button so this can be re-called safely
+  const existing = coverEl.querySelector(':scope > .play-overlay');
+  if (existing) existing.remove();
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'play-overlay';
+  btn.setAttribute('aria-label', `${album.title} abspielen`);
+  btn.textContent = '\u25B6';
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    playFromAlbum(album, 0);
+  });
+  coverEl.appendChild(btn);
+}
+
+// ---------- rendering ----------
+function buildAlbumCard(a, opts = {}) {
+  const el = document.createElement('div');
+  el.className = 'album';
+  el.innerHTML = `
+    <div class="cover ${a.cover ? '' : 'empty'}"${a.cover ? '' : ` data-initial="${esc(initial(a))}"`}>${
+      a.cover
+        ? `<img loading="lazy" src="${coverURL(a)}" alt="">`
+        : ''
+    }</div>
+    <div class="title">${esc(a.title)}</div>
+    ${opts.hideArtist ? '' : `<div class="artist">${esc(a.artist)}</div>`}
+    ${a.year ? `<div class="year">${a.year}</div>` : ''}
+  `;
+  addPlayButton(el.querySelector('.cover'), a);
+  el.addEventListener('click', (e) => {
+    if (e.target.closest('.play-overlay')) return;
+    e.stopPropagation();
+    openAlbum(a);
+  });
+  return el;
+}
+
+function renderAlbums(list) {
+  const root = $('albums-view');
+  root.innerHTML = '';
+  const frag = document.createDocumentFragment();
+  for (const a of list) frag.appendChild(buildAlbumCard(a));
+  root.appendChild(frag);
+}
+
+function groupByArtist(albums) {
+  const by = new Map();
+  for (const a of albums) {
+    if (!by.has(a.artist)) by.set(a.artist, []);
+    by.get(a.artist).push(a);
+  }
+  const out = [];
+  for (const [name, alb] of by) {
+    alb.sort((x, y) => (x.year || 9999) - (y.year || 9999));
+    const tracks = alb.reduce((n, x) => n + x.tracks.length, 0);
+    out.push({ name, albums: alb, tracks });
+  }
+  out.sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
+  return out;
+}
+
+function renderArtists(list) {
+  const root = $('artists-view');
+  root.innerHTML = '';
+  const artists = groupByArtist(list);
+  const frag = document.createDocumentFragment();
+  for (const ar of artists) {
+    const row = document.createElement('div');
+    row.className = 'artist-row';
+    row.innerHTML = `
+      <div class="name">${esc(ar.name)}</div>
+      <div class="stats">${ar.albums.length} ${ar.albums.length === 1 ? 'Album' : 'Alben'} · ${ar.tracks} Titel</div>
+      <button type="button" class="play-all">Alles abspielen</button>
+      <div class="arrow">›</div>
+      <div class="artist-albums"></div>
+    `;
+    row.querySelector('.play-all').addEventListener('click', (e) => {
+      e.stopPropagation();
+      playArtist(ar);
+    });
+    const grid = row.querySelector('.artist-albums');
+    for (const a of ar.albums) {
+      grid.appendChild(buildAlbumCard(a, { hideArtist: true }));
+    }
+    row.addEventListener('click', (e) => {
+      if (e.target.closest('.album') || e.target.closest('.play-all')) return;
+      row.classList.toggle('open');
+    });
+    frag.appendChild(row);
+  }
+  root.appendChild(frag);
+}
+
+// Der Suchtext jedes Albums wird einmal nach dem Laden gebaut, nicht bei
+// jedem Tastendruck neu — sonst laufen bei jeder Eingabe zehntausende
+// toLowerCase()-Aufrufe ueber die gesamte Sammlung.
+function indexLibrary() {
+  for (const a of library.albums) {
+    const parts = [a.title, a.artist];
+    for (const t of a.tracks) {
+      parts.push(t.title);
+      if (t.artist) parts.push(t.artist);
+    }
+    a._q = parts.join('\n').toLowerCase();
+  }
+}
+
+function trackMatches(t, q) {
+  if (!q) return false;
+  return t.title.toLowerCase().includes(q) ||
+         (t.artist || '').toLowerCase().includes(q);
+}
+
+const collate = (a, b) => (a || '').localeCompare(b || '', 'de', { sensitivity: 'base' });
+
+const SORTERS = {
+  artist:      (a, b) => collate(a.artist, b.artist) || (a.year || 0) - (b.year || 0) || collate(a.title, b.title),
+  title:       (a, b) => collate(a.title, b.title) || collate(a.artist, b.artist),
+  'year-desc': (a, b) => (b.year || 0) - (a.year || 0) || collate(a.artist, b.artist),
+  'year-asc':  (a, b) => (a.year || 9999) - (b.year || 9999) || collate(a.artist, b.artist),
+  added:       (a, b) => (b.added_at || 0) - (a.added_at || 0) || collate(a.artist, b.artist),
+};
+
+function applyFilter() {
+  query = $('search').value.trim().toLowerCase();
+  // immer eine eigene Liste sortieren, damit library.albums unangetastet bleibt
+  filtered = query ? library.albums.filter(a => a._q.includes(query)) : library.albums.slice();
+  filtered.sort(SORTERS[sortMode] || SORTERS.artist);
+  render();
+}
+
+function render() {
+  $('tab-album-count').textContent = filtered.length;
+  $('tab-artist-count').textContent = new Set(filtered.map(a => a.artist)).size;
+
+  const albumsRoot = $('albums-view');
+  const artistsRoot = $('artists-view');
+  const emptyEl = $('empty');
+
+  if (!filtered.length) {
+    albumsRoot.style.display = 'none';
+    artistsRoot.style.display = 'none';
+    emptyEl.style.display = 'block';
+    if (!library.albums.length) {
+      emptyEl.textContent = 'Bibliothek ist leer.';
+    } else {
+      emptyEl.textContent = 'Nichts gefunden.';
+    }
+    return;
+  }
+  emptyEl.style.display = 'none';
+
+  if (view === 'albums') {
+    albumsRoot.style.display = '';
+    artistsRoot.style.display = 'none';
+    renderAlbums(filtered);
+  } else {
+    albumsRoot.style.display = 'none';
+    artistsRoot.style.display = '';
+    renderArtists(filtered);
+  }
+}
+
+// ---------- album detail ----------
+function openAlbum(album) {
+  const coverEl = $('detail-cover');
+  setCover(album, coverEl);
+  addPlayButton(coverEl, album);
+  $('detail-title').textContent = album.title;
+  $('detail-artist').textContent = album.artist;
+  const total = album.tracks.reduce((n, t) => n + (t.duration || 0), 0);
+  const parts = [
+    album.year || null,
+    `${album.tracks.length} Titel`,
+    fmtTotal(total),
+  ].filter(Boolean);
+  $('detail-meta').textContent = parts.join(' · ');
+
+  const tl = $('detail-tracks');
+  tl.innerHTML = '';
+  album.tracks.forEach((t, i) => {
+    const el = document.createElement('div');
+    // Wer nach einem Liedtitel gesucht hat, soll ihn im Album nicht suchen muessen
+    el.className = trackMatches(t, query) ? 'track match' : 'track';
+    el.dataset.trackId = t.id;
+    el.innerHTML = `
+      <div class="track-no"><span class="num">${String(t.track_no || i+1).padStart(2,'0')}</span></div>
+      <div class="track-title">${esc(t.title)}</div>
+      <div class="track-duration">${fmtTime(t.duration)}</div>
+    `;
+    el.addEventListener('click', () => playFromAlbum(album, i));
+    tl.appendChild(el);
+  });
+
+  const cur = queue[qIndex];
+  if (cur) {
+    const el = tl.querySelector(`.track[data-track-id="${cur.track.id}"]`);
+    if (el) el.classList.add('playing');
+  }
+
+  $('detail').classList.add('open');
+  $('detail').setAttribute('aria-hidden', 'false');
+}
+
+function closeDetail() {
+  $('detail').classList.remove('open');
+  $('detail').setAttribute('aria-hidden', 'true');
+}
+$('close-detail').addEventListener('click', closeDetail);
+$('detail').addEventListener('click', (e) => { if (e.target === $('detail')) closeDetail(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDetail(); });
+
+// ---------- playback ----------
+function shuffleInPlace(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Einziger Weg, eine neue Warteschlange zu setzen — beruecksichtigt Shuffle.
+function loadQueue(items, startIndex, autoplay = true) {
+  if (!items.length) return;
+  queue = items;
+  qIndex = Math.max(0, Math.min(startIndex, items.length - 1));
+  if (shuffle) {
+    // Der angeklickte Titel bleibt der erste, der Rest wird gemischt.
+    const chosen = queue[qIndex];
+    const rest = queue.filter((_, i) => i !== qIndex);
+    queue = [chosen, ...shuffleInPlace(rest)];
+    qIndex = 0;
+  }
+  playCurrent(autoplay);
+}
+
+function playFromAlbum(album, startIndex) {
+  loadQueue(album.tracks.map(t => ({ track: t, album })), startIndex);
+}
+
+function playArtist(entry) {
+  const items = [];
+  for (const album of entry.albums) {
+    for (const t of album.tracks) items.push({ track: t, album });
+  }
+  loadQueue(items, 0);
+}
+
+function toggleShuffle() {
+  shuffle = !shuffle;
+  store('shuffle', shuffle);
+  $('shuffle-btn').setAttribute('aria-pressed', String(shuffle));
+  // Laufenden Titel behalten, nur den Rest der Warteschlange neu ordnen.
+  if (shuffle && qIndex >= 0) {
+    queue = queue.slice(0, qIndex + 1).concat(shuffleInPlace(queue.slice(qIndex + 1)));
+  }
+}
+
+// Der Button spiegelt immer den echten Zustand des <audio>-Elements, nie eine
+// Annahme — sonst laeuft er auseinander, sobald von aussen gesteuert wird
+// (Sperrbildschirm, Medientasten, blockiertes Autoplay).
+function setPlayButton(playing) {
+  $('play-btn').textContent = playing ? '❚❚' : '▶';
+  $('play-btn').setAttribute('aria-label', playing ? 'Pause' : 'Abspielen');
+}
+
+function playCurrent(autoplay = true) {
+  if (qIndex < 0 || qIndex >= queue.length) return;
+  const { track, album } = queue[qIndex];
+  heilungAbsagen();
+  audio.src = `/api/stream/${encodeURIComponent(track.id)}`;
+  if (autoplay) {
+    // blockiertes Autoplay: der Button bleibt korrekt, und nachdruck() fragt
+    // nach — im Hintergrund weist der Browser den ersten Versuch oft ab.
+    tonGewuenscht = true;
+    nachVersuche = 0;
+    audio.play().catch(() => {});
+    nachdruck();
+  }
+
+  $('now-title').textContent = track.title;
+  $('now-artist').textContent = `${album.artist} — ${album.title}`;
+  setCover(album, $('now-cover'));
+
+  document.querySelectorAll('.track.playing').forEach(el => el.classList.remove('playing'));
+  const cur = document.querySelector(`.track[data-track-id="${track.id}"]`);
+  if (cur) cur.classList.add('playing');
+
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: track.title,
+      artist: album.artist,
+      album: album.title,
+      artwork: album.cover ? [{ src: coverURL(album), sizes: '512x512' }] : [],
+    });
+  }
+}
+
+// ---------- Am Ende der Warteschlange ----------
+// Eine Warteschlange ist ein Album. Was danach geschieht, steht in
+// `musiklib:fortsetzung` — demselben Schluessel, den mobile.html und
+// player.html lesen, mit denselben drei Werten. Voreinstellung ist „weiter":
+// ein Player, der nach vierzig Minuten von selbst verstummt, wird als Fehler
+// erlebt, nicht als Absicht.
+const FORTSETZUNGEN = [
+  { id: 'weiter',      name: 'Weiter', title: 'Am Ende: nächstes Album der Sammlung' },
+  { id: 'wiederholen', name: 'Wdh.',   title: 'Am Ende: dieselbe Warteschlange von vorn' },
+  { id: 'halt',        name: 'Halt',   title: 'Am Ende: anhalten' },
+];
+let fortsetzung = FORTSETZUNGEN.some(f => f.id === restore('fortsetzung', null))
+  ? restore('fortsetzung', null) : 'weiter';
+
+function naechstesAlbum() {
+  const letzte = queue[queue.length - 1];
+  if (!letzte || !library.albums.length) return null;
+  const i = library.albums.findIndex(a => a.id === letzte.album.id);
+  return library.albums[(i + 1) % library.albums.length] || null;
+}
+function amEnde() {
+  if (fortsetzung === 'wiederholen' && queue.length) { qIndex = 0; playCurrent(); return; }
+  if (fortsetzung === 'weiter') {
+    const a = naechstesAlbum();
+    if (a) { loadQueue(a.tracks.map(t => ({ track: t, album: a })), 0); playCurrent(); return; }
+  }
+  tonGewuenscht = false;
+  setPlayButton(false);
+}
+function setFortsetzung(v) {
+  fortsetzung = v;
+  store('fortsetzung', v);
+  const f = FORTSETZUNGEN.find(x => x.id === v);
+  const btn = $('end-btn');
+  btn.textContent = f.name;
+  btn.title = f.title;
+  btn.classList.toggle('on', v !== 'halt');
+}
+
+// ---------- Nachdruck beim Titelwechsel ----------
+// Am Ende eines Titels bekommt das Element eine neue Quelle — und im
+// Hintergrund weist der Browser play() gern ab, weil das als neuer Start
+// gilt und nicht als Fortsetzung (auf dem iPhone die haeufigste Ursache
+// dafuer, dass die Musik „von allein" aufhoert). Die Zurueckweisung kam
+// bisher als still abgefangener Fehler zurueck.
+//
+// Also nachfragen, solange Ton gewuenscht ist und keiner laeuft.
+// `tonGewuenscht` unterscheidet das von einer Pause, die jemand wollte.
+let tonGewuenscht = false;
+let NACH_VERZUG = 1200;         // veraenderlich, damit der Test nicht wartet
+const NACH_MAX = 8;
+let nachTimer = 0, nachVersuche = 0;
+
+function nachdruck() {
+  clearTimeout(nachTimer);
+  if (!tonGewuenscht) return;
+  nachTimer = setTimeout(() => {
+    nachTimer = 0;
+    if (!tonGewuenscht || !audio.src || !audio.paused) return;
+    if (++nachVersuche > NACH_MAX) return;
+    audio.play().catch(() => {});
+    nachdruck();
+  }, NACH_VERZUG);
+}
+
+// ---------- Wiederanlauf ----------
+// Ein Stream ueber WLAN reisst irgendwann ab: das Telefon drosselt bei
+// dunklem Bildschirm den Funk, die Platte im NAS schlaeft ein. Das Element
+// meldet dann „waiting" oder „stalled" und bleibt stehen — ohne diesen
+// Abschnitt fuer immer. Jeder Fortschritt sagt den Zeitgeber wieder ab.
+let HEIL_VERZUG = 6000;
+const HEIL_MAX = 5;
+let heilTimer = 0, heilVersuche = 0;
+
+function heilungPlanen(ms) {
+  clearTimeout(heilTimer);
+  heilTimer = setTimeout(versucheWeiter, ms || HEIL_VERZUG);
+}
+function heilungAbsagen() {
+  clearTimeout(heilTimer); heilTimer = 0; heilVersuche = 0;
+}
+function versucheWeiter() {
+  heilTimer = 0;
+  if (!audio.src || qIndex < 0) return;
+  if (heilVersuche >= HEIL_MAX) {
+    $('now-artist').textContent = 'Verbindung abgerissen — bitte neu laden';
+    return;
+  }
+  heilVersuche++;
+  pendingSeek = audio.currentTime || 0;   // an derselben Stelle weiter
+  audio.load();                           // dieselbe Quelle, neue Verbindung
+  audio.play().catch(() => {});
+  heilungPlanen();
+}
+
+// ---------- Vorladen ----------
+// Kurz vor dem Ende den Anfang des naechsten Titels holen: das weckt die
+// Platte im NAS und haelt die Verbindung warm, damit der Wechsel keine
+// Luecke bekommt. Der Koerper wird nicht gebraucht.
+const VORLAUF = 25;             // Sekunden vor dem Ende
+let vorgeladen = null;
+function ladeVor() {
+  let naechst = queue[qIndex + 1] && queue[qIndex + 1].track;
+  if (!naechst && fortsetzung === 'weiter') {
+    const a = naechstesAlbum(); naechst = a && a.tracks[0];
+  } else if (!naechst && fortsetzung === 'wiederholen') {
+    naechst = queue[0] && queue[0].track;
+  }
+  if (!naechst || vorgeladen === naechst.id) return;
+  vorgeladen = naechst.id;
+  fetch(`/api/stream/${encodeURIComponent(naechst.id)}`, { headers: { Range: 'bytes=0-262143' } })
+    .then(r => r.arrayBuffer()).catch(() => {});
+}
+
+function hasNext() { return qIndex >= 0 && qIndex < queue.length - 1; }
+
+function playNext() {
+  if (hasNext()) { qIndex++; playCurrent(); }
+}
+
+function playPrev() {
+  if (audio.currentTime > 3) { audio.currentTime = 0; return; }
+  if (qIndex > 0) { qIndex--; playCurrent(); }
+}
+
+function togglePlay() {
+  if (!audio.src) return;
+  if (audio.paused) {
+    tonGewuenscht = true; nachVersuche = 0;
+    audio.play().catch(() => {});
+    nachdruck();
+  } else {
+    tonGewuenscht = false;        // eine gewollte Pause ist kein Fehler
+    clearTimeout(nachTimer);
+    heilungAbsagen();
+    audio.pause();
+  }
+}
+
+$('play-btn').addEventListener('click', togglePlay);
+$('next-btn').addEventListener('click', playNext);
+$('prev-btn').addEventListener('click', playPrev);
+$('shuffle-btn').addEventListener('click', toggleShuffle);
+$('end-btn').addEventListener('click', () => {
+  const i = FORTSETZUNGEN.findIndex(f => f.id === fortsetzung);
+  setFortsetzung(FORTSETZUNGEN[(i + 1) % FORTSETZUNGEN.length].id);
+});
+
+audio.addEventListener('play', () => {
+  setPlayButton(true);
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+});
+audio.addEventListener('pause', () => {
+  setPlayButton(false); saveSession();
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+});
+audio.addEventListener('playing', () => { heilungAbsagen(); nachVersuche = 0; });
+audio.addEventListener('waiting', () => heilungPlanen());
+audio.addEventListener('stalled', () => heilungPlanen());
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') return;
+  nachVersuche = 0;      // ein im Hintergrund abgewiesener Wechsel bekommt
+  nachdruck();           // jetzt seine Gelegenheit
+});
+
+// Position aus der letzten Sitzung anwenden, sobald die Dauer bekannt ist
+audio.addEventListener('loadedmetadata', () => {
+  if (pendingSeek > 0 && isFinite(audio.duration)) {
+    audio.currentTime = Math.min(pendingSeek, audio.duration - 1);
+  }
+  pendingSeek = 0;
+});
+
+audio.addEventListener('ended', () => {
+  if (hasNext()) playNext();
+  else amEnde();
+});
+
+// Ein Titel, dessen Datei seit dem letzten Scan verschoben wurde, liefert 404 —
+// dann hilft kein neuer Versuch. Ein Netzfehler dagegen schon.
+audio.addEventListener('error', () => {
+  if (!audio.src) return;
+  const code = audio.error && audio.error.code;
+  if (code === 2 || code === 3) { heilungPlanen(1500); return; }
+  heilungAbsagen();
+  setPlayButton(false);
+  $('now-artist').textContent = 'Titel nicht abspielbar — bitte neu scannen';
+});
+
+// Sperrbildschirm und Medientasten sollen dieselbe Warteschlange bedienen
+// wie die Knoepfe im Player.
+if ('mediaSession' in navigator) {
+  const handlers = {
+    play: () => { tonGewuenscht = true; nachVersuche = 0;
+                  audio.play().catch(() => {}); nachdruck(); },
+    pause: () => { tonGewuenscht = false; clearTimeout(nachTimer); audio.pause(); },
+    previoustrack: playPrev,
+    nexttrack: playNext,
+  };
+  for (const [action, fn] of Object.entries(handlers)) {
+    try { navigator.mediaSession.setActionHandler(action, fn); } catch {}
+  }
+}
+
+audio.addEventListener('timeupdate', () => {
+  heilungAbsagen();                       // Fortschritt heisst: alles in Ordnung
+  if (audio.duration && audio.duration - audio.currentTime < VORLAUF) ladeVor();
+  const c = audio.currentTime;
+  const d = audio.duration || 0;
+  $('time-current').textContent = fmtTime(c);
+  $('time-total').textContent = fmtTime(d);
+  $('bar-fill').style.width = d ? `${(c / d) * 100}%` : '0%';
+});
+
+$('bar').addEventListener('click', (e) => {
+  if (!audio.duration) return;
+  const r = e.currentTarget.getBoundingClientRect();
+  audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
+});
+
+// ---------- Lautstärke ----------
+function updateVolumeUI() {
+  const silent = audio.muted || audio.volume === 0;
+  $('volume').value = Math.round((audio.muted ? 0 : audio.volume) * 100);
+  $('mute-btn').textContent = silent ? '⃠' : '♪';
+  $('mute-btn').classList.toggle('muted', silent);
+  $('mute-btn').setAttribute('aria-label', silent ? 'Ton einschalten' : 'Stumm schalten');
+}
+
+$('volume').addEventListener('input', (e) => {
+  audio.volume = Number(e.target.value) / 100;
+  audio.muted = false;
+  store('volume', audio.volume);
+});
+$('mute-btn').addEventListener('click', () => {
+  audio.muted = !audio.muted;
+  store('muted', audio.muted);
+});
+audio.addEventListener('volumechange', updateVolumeUI);
+
+audio.volume = Math.min(1, Math.max(0, restore('volume', 1)));
+audio.muted = restore('muted', false);
+updateVolumeUI();
+
+shuffle = restore('shuffle', false);
+$('shuffle-btn').setAttribute('aria-pressed', String(shuffle));
+setFortsetzung(fortsetzung);
+
+// ---------- Tastatur ----------
+document.addEventListener('keydown', (e) => {
+  const tag = (e.target.tagName || '').toLowerCase();
+  const typing = tag === 'input' || tag === 'select' || tag === 'textarea';
+
+  if (e.key === '/' && !typing) { e.preventDefault(); $('search').focus(); return; }
+  if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
+
+  switch (e.key) {
+    case ' ':
+      e.preventDefault();       // sonst scrollt die Seite
+      togglePlay();
+      break;
+    case 'ArrowRight':
+      if (audio.duration) audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+      break;
+    case 'ArrowLeft':
+      if (audio.duration) audio.currentTime = Math.max(0, audio.currentTime - 10);
+      break;
+    case 'n': playNext(); break;
+    case 'p': playPrev(); break;
+    case 's': toggleShuffle(); break;
+  }
+});
+
+// ---------- Sitzung fortsetzen ----------
+// Am Handy wird der Tab staendig geschlossen; ohne das faengt man jedes Mal
+// von vorn an. Gespeichert wird nur, was sich aus library.json rekonstruieren
+// laesst — Track-IDs, die nach einem Scan nicht mehr existieren, entfallen.
+let lastSaved = 0;
+
+function saveSession() {
+  if (qIndex < 0 || !queue.length) return;
+  store('session', {
+    items: queue.map(q => [q.album.id, q.track.id]),
+    qIndex,
+    position: Math.floor(audio.currentTime || 0),
+  });
+}
+
+function restoreSession() {
+  const saved = restore('session', null);
+  if (!saved || !Array.isArray(saved.items) || !saved.items.length) return;
+
+  const albumById = new Map(library.albums.map(a => [a.id, a]));
+  const items = [];
+  let newIndex = 0;
+  saved.items.forEach(([albumId, trackId], i) => {
+    const album = albumById.get(albumId);
+    const track = album && album.tracks.find(t => t.id === trackId);
+    if (!track) return;                       // Datei verschoben oder geloescht
+    if (i === saved.qIndex) newIndex = items.length;
+    items.push({ track, album });
+  });
+  if (!items.length) return;
+
+  queue = items;
+  qIndex = Math.min(newIndex, items.length - 1);
+  pendingSeek = saved.position || 0;
+  audio.preload = 'metadata';                 // sonst kommt kein loadedmetadata
+  playCurrent(false);                         // nie automatisch losspielen
+}
+
+audio.addEventListener('timeupdate', () => {
+  const now = Date.now();
+  if (now - lastSaved > 5000) { lastSaved = now; saveSession(); }
+});
+window.addEventListener('pagehide', saveSession);
+
+// ---------- tabs & search ----------
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    view = t.dataset.view;
+    render();
+  });
+});
+
+let searchTimer;
+$('search').addEventListener('input', () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(applyFilter, 80);
+});
+
+sortMode = restore('sort', 'artist');
+if (!SORTERS[sortMode]) sortMode = 'artist';
+$('sort').value = sortMode;
+$('sort').addEventListener('change', (e) => {
+  sortMode = SORTERS[e.target.value] ? e.target.value : 'artist';
+  store('sort', sortMode);
+  applyFilter();
+});
+
+$('skipped-toggle').addEventListener('click', () => {
+  const panel = $('skipped-panel');
+  const open = panel.hidden;
+  panel.hidden = !open;
+  $('skipped-toggle').setAttribute('aria-expanded', String(open));
+});
+
+// ---------- scan ----------
+$('scan-btn').addEventListener('click', async () => {
+  await fetch('/api/scan', { method: 'POST' });
+  pollScan();
+});
+
+async function pollScan() {
+  try {
+    const r = await fetch('/api/scan/status');
+    const s = await r.json();
+    $('status-dot').classList.toggle('idle', !s.running);
+    if (s.running) {
+      setStatus(s.total > 0 ? `Scanne ${s.progress}/${s.total}` : 'Scanne…');
+      setTimeout(pollScan, 600);
+    } else {
+      if (s.error) {
+        setStatus(s.error, true);
+      } else if (s.skipped) {
+        setStatus(`Bereit — ${s.skipped} Datei(en) übersprungen`, true);
+      } else {
+        setStatus('Bereit');
+      }
+      await loadLibrary();
+    }
+  } catch {
+    setStatus('Verbindung verloren', true);
+  }
+}
+
+// ---------- load ----------
+function renderSkipped() {
+  const files = library.skipped_files || [];
+  const toggle = $('skipped-toggle');
+  const panel = $('skipped-panel');
+  const count = library.skipped_count || 0;
+
+  if (!count) {
+    toggle.hidden = true;
+    panel.hidden = true;
+    return;
+  }
+  toggle.hidden = false;
+  toggle.textContent = `${count} übersprungen`;
+  const list = $('skipped-list');
+  list.innerHTML = '';
+  for (const f of files) {
+    const li = document.createElement('li');
+    li.textContent = f;
+    list.appendChild(li);
+  }
+  if (count > files.length) {
+    const li = document.createElement('li');
+    li.textContent = `… und ${count - files.length} weitere (siehe Container-Log)`;
+    list.appendChild(li);
+  }
+}
+
+async function loadLibrary() {
+  try {
+    const r = await fetch('/api/library');
+    library = await r.json();
+    indexLibrary();
+    renderSkipped();
+    $('album-count').textContent = library.album_count.toLocaleString('de-DE');
+    $('track-count').textContent = library.track_count.toLocaleString('de-DE');
+    if (library.scanned_at) {
+      const d = new Date(library.scanned_at);
+      $('scan-time').textContent = `Stand ${d.toLocaleString('de-DE', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit',
+      })}`;
+    } else {
+      $('scan-time').textContent = '';
+    }
+    applyFilter();
+  } catch (e) {
+    setStatus('Bibliothek konnte nicht geladen werden', true);
+  }
+}
+
+loadLibrary().then(() => { if (qIndex < 0) restoreSession(); });
+fetch('/api/scan/status').then(r => r.json()).then(s => { if (s.running) pollScan(); }).catch(() => {});
+</script>
+</body>
+</html>

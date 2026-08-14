@@ -1,0 +1,2773 @@
+<!doctype html>
+<html lang="de" data-layout="werkstisch">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#EFEFEC">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Musiklib">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23EFEFEC'/%3E%3Ccircle cx='16' cy='16' r='10' fill='%2325251F'/%3E%3Ccircle cx='16' cy='16' r='2.4' fill='%23EFEFEC'/%3E%3C/svg%3E">
+<title>Musiklib · Spieler</title>
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Musiklib — Spieler fuer iPad und PC.
+
+   Ein reiner Spieler, wie mobile.html einer ist: hoeren und finden, sonst
+   nichts. Gescannt wird am Schreibtisch (index.html).
+
+   Anders als die beiden anderen Oberflaechen bringt diese Seite nicht ein
+   Aussehen mit, sondern zwoelf — die engere Wahl aus mockups/player/. Ein
+   Layout ist die ganze Oberflaeche: eigene Palette, eigene Bedienung, eigener
+   Griff zum Spulen. Gemeinsam ist nur der Unterbau (Warteschlange, Ton,
+   Sitzung, Bibliothek) und die Regel, dass jedes Layout Bibliothek und Suche
+   ueber einen Knopf erreichbar macht.
+
+   Ein Layout besteht deshalb aus genau drei Dingen:
+     1. einem Block in diesem <style>, ausschliesslich unter seiner
+        Wurzelklasse (.dp, .sk, .ks, …) — sonst faerbt es die anderen mit;
+     2. einem Eintrag in LAYOUTS mit bau(wurzel, deck);
+     3. nichts weiter. Kein Zustand ausserhalb, keine globale Variable.
+
+   Die Entwuerfe waren fuer feste Geraetemasse gezeichnet (1440 × 900,
+   1194 × 834, 834 × 1194). Hier gibt es keine festen Masse: was gross ist,
+   steht in min()/clamp() ueber Viewporteinheiten, damit dasselbe Layout auf
+   einem iPad hoch, einem iPad quer und einem Schreibtischfenster steht,
+   ohne dass etwas abgeschnitten wird.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{background:#EFEFEC;color:#1A1A16;-webkit-font-smoothing:antialiased;
+  font-family:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  font-size:15px;line-height:1.55}
+button,input{font:inherit;color:inherit;background:none;border:none}
+button{cursor:pointer}
+img{display:block;max-width:100%}
+:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+input[type=search]::-webkit-search-decoration,
+input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
+
+/* Die Buehne ist das ganze Fenster; das Layout fuellt sie aus. Der Ton haengt
+   ausserhalb, deshalb ueberlebt er den Wechsel des Layouts. */
+#buehne{position:fixed;inset:0;overflow:hidden}
+#buehne>*{width:100%;height:100%}
+
+/* ── Wechsler ───────────────────────────────────────────────────────────
+   Der einzige Knopf, den alle zwoelf teilen. Er nimmt seine Farbe vom
+   Layout (--chrome-ink/--chrome-grund werden beim Bauen gesetzt), sonst
+   waere er auf Nachtblau ein weisser Fleck. Nach vier Sekunden ohne
+   Bewegung verblasst er auf ein Viertel — weg ist er nie, ein unsichtbarer
+   Knopf ist kein Knopf. */
+.wechsler{position:fixed;z-index:200;bottom:max(12px,env(safe-area-inset-bottom));
+  right:max(12px,env(safe-area-inset-right));width:34px;height:34px;border-radius:50%;
+  display:grid;place-items:center;color:var(--chrome-ink,#1A1A16);
+  background:var(--chrome-grund,rgba(255,255,255,.72));
+  box-shadow:0 0 0 1px currentColor inset;opacity:.24;transition:opacity .3s}
+.wechsler.wach,.wechsler:hover,.wechsler:focus-visible{opacity:.9}
+.wahl{position:fixed;inset:0;z-index:300;background:rgba(20,18,14,.55);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  display:grid;place-items:center;padding:20px;overflow:auto}
+.wahl[hidden]{display:none}
+.wahlkasten{background:#FBF9F5;color:#241E18;width:min(920px,100%);max-height:calc(100vh - 40px);
+  overflow:auto;border-radius:3px;padding:30px 32px 26px;
+  box-shadow:0 30px 80px rgba(20,18,14,.45)}
+.wahlkasten h2{font-size:22px;font-weight:500;letter-spacing:-.01em}
+.wahlkasten p{margin-top:6px;font-size:13px;color:#6B6155;max-width:62ch}
+.wahlgitter{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.wk{text-align:left;border:1px solid rgba(36,30,24,.16);border-radius:2px;padding:12px 13px 13px;
+  display:block;transition:background .15s}
+.wk:hover{background:rgba(36,30,24,.045)}
+.wk.an{border-color:#241E18;box-shadow:inset 0 0 0 1px #241E18}
+.wk .n{display:block;font-size:15.5px;font-weight:500}
+.wk .g{display:block;margin-top:3px;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:#8A6534}
+.wk .b{display:block;margin-top:7px;font-size:12.5px;color:#6B6155;line-height:1.5}
+.wahlende{margin-top:24px;padding-top:18px;border-top:1px solid rgba(36,30,24,.12)}
+.wahlkap{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#8A6534}
+.wahlreihe{margin-top:10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.wahlfuss{margin-top:22px;padding-top:16px;border-top:1px solid rgba(36,30,24,.12);
+  display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+  font-size:12px;color:#6B6155}
+.wahlfuss a{color:#8A6534}
+.wahlfuss button{border:1px solid rgba(36,30,24,.22);border-radius:2px;padding:7px 14px;font-size:13px}
+
+/* ── Zustaende vor dem ersten Ton ── */
+.hinweis{position:fixed;inset:0;z-index:150;display:grid;place-items:center;text-align:center;
+  padding:30px;background:#EFEFEC;color:#1A1A16}
+.hinweis[hidden]{display:none}
+.hinweis .k{max-width:46ch}
+.hinweis h1{font-size:24px;font-weight:500;letter-spacing:-.01em}
+.hinweis p{margin-top:10px;color:#6E6E66;font-size:14.5px}
+.hinweis a{color:#8A6534}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001s!important;transition-duration:.001s!important}
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LAYOUTS — ab hier gehoert jede Regel genau einer Wurzelklasse.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════════════
+   01/02 · Gerät und Werkstisch — Blatt 06 „Die Platte"
+   Ein Plattenspieler ohne ein einziges Wort: Teller links, Drehtonarm
+   rechts. Der Tonarm IST die Spulleiste — die Nadel steht dort, wo das
+   Stueck steht, und sie zu schwenken ist dasselbe wie zu spulen.
+   ═══════════════════════════════════════════════════════════════════════ */
+.dp{
+  --grund:#EFEFEC; --slab:#F6F6F3; --tief:#25251F;
+  --tinte:#1A1A16; --tinte-2:#6E6E66; --tinte-3:#A5A59C;
+  --linie:rgba(26,26,22,.18);
+  background:var(--grund);color:var(--tinte);height:100%;overflow:hidden;
+  display:flex;flex-direction:column;position:relative}
+.dp .kap{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--tinte-2)}
+
+.dp .slab{position:relative;background:var(--slab);flex:none;
+  box-shadow:inset 0 0 0 1px rgba(26,26,22,.07),0 22px 50px rgba(26,26,22,.10)}
+.dp .marke{position:absolute;left:4%;top:4%;width:52px;height:52px;border-radius:50%;
+  border:1px solid var(--linie);display:grid;place-items:center;font-size:8px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--tinte-3)}
+.dp .seit{position:absolute;left:4%;bottom:4%;font-size:11px;
+  letter-spacing:.42em;text-transform:uppercase;color:var(--tinte-3)}
+.dp .teller{position:absolute;left:var(--tx,42%);top:var(--ty,50%);transform:translate(-50%,-50%);
+  width:var(--td);height:var(--td);border-radius:50%;
+  background:
+    repeating-radial-gradient(circle at 50% 50%,#2A2A26 0 1.4px,#333330 1.4px 2.8px),
+    radial-gradient(circle at 34% 28%,rgba(255,255,255,.12),transparent 52%);
+  box-shadow:0 16px 34px rgba(26,26,22,.22);animation:dpdreh 4.4s linear infinite}
+.dp .teller.halt{animation-play-state:paused}
+@keyframes dpdreh{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.dp .teller .mitte{position:absolute;inset:31%;border-radius:50%;background:var(--slab);
+  display:grid;place-items:center;box-shadow:0 0 0 1px rgba(26,26,22,.12);overflow:hidden}
+.dp .teller .mitte .cov{width:76%;height:76%;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-size:22px;font-weight:600;overflow:hidden}
+.dp .teller .mitte .cov img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.dp .teller .dorn{position:absolute;left:50%;top:50%;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;
+  border-radius:50%;background:var(--tief);z-index:2}
+
+/* Drehtonarm: Lager ausserhalb der Platte, Rohr schraeg darueber, Tonkopf auf
+   der Rille, Gegengewicht hinten. Alles in Bruchteilen von --S, damit der Arm
+   zum Teller passt, egal wie gross das Fenster ist. */
+.dp .tonarm{position:absolute;left:var(--alx,85%);top:var(--aly,14%);width:0;height:0;z-index:3;
+  transform:rotate(var(--aw,26deg));transform-origin:0 0;
+  transition:transform .45s cubic-bezier(.4,0,.2,1)}
+.dp .tonarm.zieht{transition:none}
+.dp .lager{position:absolute;left:calc(var(--lg) / -2);top:calc(var(--lg) / -2);
+  width:var(--lg);height:var(--lg);border-radius:50%;
+  background:radial-gradient(circle at 34% 30%,#FDFDFB,#D6D6CE 58%,#A9A9A0);
+  box-shadow:0 4px 12px rgba(26,26,22,.30),inset 0 0 0 1px rgba(255,255,255,.7)}
+.dp .lager::after{content:'';position:absolute;inset:34%;border-radius:50%;background:var(--tief);
+  opacity:.75}
+.dp .rohr{position:absolute;left:-4px;top:calc(var(--lg) * .3);width:8px;height:var(--arm);
+  border-radius:5px;background:linear-gradient(90deg,#9C9C94,#F4F4F0 42%,#C6C6BE);
+  box-shadow:0 3px 8px rgba(26,26,22,.28)}
+.dp .gegen{position:absolute;left:-9px;top:calc(var(--lg) * -.85);width:18px;height:34px;border-radius:9px;
+  background:linear-gradient(150deg,#3C3C36,#17170F);box-shadow:0 2px 6px rgba(26,26,22,.35)}
+.dp .kopf{position:absolute;left:-13px;top:calc(var(--arm) + 12px);width:26px;height:34px;
+  border-radius:3px 3px 5px 5px;transform:rotate(22deg);transform-origin:50% 0;
+  background:linear-gradient(150deg,#FBFBF7,#BFBFB6);
+  box-shadow:0 3px 9px rgba(0,0,0,.42),inset 0 0 0 1px rgba(26,26,22,.16)}
+.dp .kopf::before{content:'';position:absolute;left:5px;right:5px;top:8px;height:1.5px;
+  background:rgba(26,26,22,.30)}
+.dp .kopf::after{content:'';position:absolute;left:50%;bottom:-6px;width:2px;height:7px;margin-left:-1px;
+  border-radius:1px;background:var(--tief)}
+/* unsichtbarer Streifen entlang des Rohrs — sonst trifft niemand 8 px */
+.dp .griffzone{position:absolute;left:-26px;top:0;width:52px;height:calc(var(--arm) + 60px);
+  cursor:grab;touch-action:none}
+.dp .griffzone:active{cursor:grabbing}
+
+.dp .skalen{position:absolute;left:var(--sx,92%);top:50%;transform:translate(-50%,-50%);display:flex;
+  flex-direction:column;align-items:center;gap:clamp(30px,5vh,52px)}
+.dp .skala{width:64px;height:64px;border-radius:50%;border:1px solid var(--linie);position:relative;
+  display:grid;place-items:center;cursor:pointer;touch-action:none}
+.dp .skala i{width:1.5px;height:22px;background:var(--tinte);display:block;transform-origin:50% 100%;
+  position:absolute;top:10px;left:50%;margin-left:-.75px}
+.dp .skala span{position:absolute;left:50%;bottom:-17px;transform:translateX(-50%);font-size:8px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--tinte-3)}
+/* der Bibliotheksknopf ist eine Skala wie die anderen: heller Grund,
+   feine Kontur, dunkles Zeichen — geoeffnet zieht die Kontur nur an */
+.dp .skala.knopf{background:var(--slab);color:var(--tinte);cursor:pointer}
+.dp .skala.knopf.an{border-color:var(--tief);box-shadow:inset 0 0 0 1px var(--tief)}
+
+.dp .text{padding:var(--tp,28px) 42px 0;display:flex;align-items:flex-start;justify-content:space-between;
+  gap:30px}
+.dp .text h1{font-size:var(--tg,22px);font-weight:500;letter-spacing:-.01em;line-height:1.2}
+.dp .text .ar{margin-top:6px;font-size:13px;color:var(--tinte-2)}
+.dp .text .zeit{font-size:13px;color:var(--tinte-2);font-variant-numeric:tabular-nums;text-align:right;
+  white-space:nowrap}
+.dp .transport{display:flex;gap:26px;align-items:center;justify-content:center;padding:var(--trp,22px) 0 0}
+.dp .transport button{color:var(--tinte-2)}
+.dp .transport .pp{width:52px;height:52px;border-radius:50%;background:var(--tief);color:var(--slab);
+  display:grid;place-items:center}
+
+.dp .bib{position:absolute;inset:0;z-index:60;background:var(--slab);padding:40px 46px 34px;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.dp .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.dp .bib .bkopf{display:flex;align-items:center;gap:26px;border-bottom:1px solid var(--linie);
+  padding-bottom:16px;margin-bottom:10px}
+.dp .bib h2{font-size:22px;font-weight:500;letter-spacing:-.01em;flex:none}
+.dp .suchzeile{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+.dp .suchzeile svg{color:var(--tinte-3);flex:none}
+.dp .suchzeile input{flex:1;min-width:0;background:none;border:none;outline:none;font-size:16px;
+  color:var(--tinte)}
+.dp .suchzeile input::placeholder{color:var(--tinte-3)}
+.dp .bib .zu{width:44px;height:44px;border-radius:50%;border:1px solid var(--linie);flex:none;
+  display:grid;place-items:center;color:var(--tinte-2)}
+.dp .bib .bliste{flex:1;min-height:0;overflow:auto}
+.dp .bz{display:flex;align-items:center;gap:16px;padding:13px 4px;cursor:pointer;
+  border-bottom:1px solid rgba(26,26,22,.08)}
+.dp .bz:hover{background:rgba(26,26,22,.035)}
+.dp .bz .pl{width:34px;height:34px;border-radius:50%;flex:none;display:grid;place-items:center;
+  color:#fff;font-size:13px;font-weight:600;overflow:hidden}
+.dp .bz .pl img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.dp .bz .m{flex:1;min-width:0}
+.dp .bz .m>span{display:block}
+.dp .bz .t{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dp .bz .s{font-size:12px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dp .bz .n{font-size:12px;color:var(--tinte-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.dp .bz.an .t{font-weight:600}
+.dp .bib .bfuss{flex:none;padding-top:14px}
+
+.dp .liste{flex:1;min-width:0;padding:44px 46px 0;overflow:hidden;display:flex;flex-direction:column}
+.dp .liste .kopfz{flex:none;display:flex;justify-content:space-between;align-items:baseline;
+  border-bottom:1px solid var(--linie);padding-bottom:12px;margin-bottom:6px}
+.dp .liste>label{flex:none}
+.dp .liste .rollen{flex:1;min-height:0;overflow:auto;padding-bottom:20px}
+.dp .lz{display:flex;align-items:baseline;gap:20px;padding:11px 4px;border-bottom:1px solid rgba(26,26,22,.07);
+  cursor:pointer;font-size:15px}
+.dp .lz:hover{background:rgba(26,26,22,.035)}
+.dp .lz .nr{width:24px;font-size:11px;color:var(--tinte-3);font-variant-numeric:tabular-nums}
+.dp .lz .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--tinte-2)}
+.dp .lz .ar{font-size:12px;color:var(--tinte-3);white-space:nowrap;max-width:26%;overflow:hidden;
+  text-overflow:ellipsis}
+.dp .lz .d{font-size:12px;color:var(--tinte-3);font-variant-numeric:tabular-nums;width:44px;text-align:right}
+.dp .lz.an .t{color:var(--tinte);font-weight:600}
+.dp .lz.an .nr{color:var(--tinte)}
+
+/* Variante „Gerät": das Laufwerk ist quadratisch und nimmt die volle Breite,
+   darunter stehen Titel, Zeit und genau drei Tasten. */
+.dp.voll{background:var(--slab);--S:min(94vw,66vh)}
+.dp.voll .slab{background:transparent;box-shadow:none;padding:0;display:flex;justify-content:center}
+.dp.voll .geraet{position:relative;width:var(--S);height:var(--S);flex:none;
+  --td:calc(var(--S) * .66);--arm:calc(var(--S) * .38);--lg:calc(var(--S) * .065);
+  --tx:41%;--ty:50%;--sx:93%;--alx:85%;--aly:13%}
+.dp.voll .unten{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;
+  padding:0 clamp(20px,5vw,46px) 30px}
+.dp.voll .text{padding:0;--tg:clamp(20px,3.2vh,28px)}
+.dp.voll .transport{padding-top:26px}
+
+/* Variante „Werkstisch": das Geraet bleibt links, rechts liegt die Sammlung
+   als reine Textliste offen daneben. */
+.dp.quer{flex-direction:row;--S:min(46vw,76vh)}
+.dp.quer .linke{width:calc(var(--S) * 1.1);flex:none;display:flex;flex-direction:column}
+.dp.quer .slab{flex:1;min-height:0;
+  --td:calc(var(--S) * .56);--arm:calc(var(--S) * .34);--lg:calc(var(--S) * .085);
+  --tx:41%;--ty:50%;--sx:90%;--alx:84%;--aly:16%}
+.dp.quer .text{--tp:26px;--tg:clamp(18px,2.4vh,22px);padding-left:clamp(20px,3vw,42px);
+  padding-right:clamp(20px,3vw,42px)}
+.dp.quer .transport{--trp:18px;padding-bottom:26px}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   03 · Vollbild — Blatt 07 „Sternkarte"
+   Nachtblau, die Platte nur aus Rillen. Jeder Ring ist ein Stueck der
+   Laufzeit; was gespielt ist, leuchtet. Ein Spieler, den man aus zwei
+   Metern sieht und aus einem bedient.
+   ═══════════════════════════════════════════════════════════════════════ */
+.sk{
+  --nacht:#0A0C14; --linie:rgba(190,206,255,.22); --linie-2:rgba(190,206,255,.09);
+  --hell:#E8ECF8; --hell-2:#9AA4C2; --hell-3:#5A6485; --leucht:#CBD7FF;
+  --pd:min(52vw,46vh); --pt:36%; --st:63%;
+  background:radial-gradient(120% 90% at 50% 40%,#141829 0%,var(--nacht) 62%);
+  color:var(--hell);height:100%;overflow:hidden;position:relative}
+.sk .kap{font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--hell-3)}
+.sk .kz{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;
+  align-items:center;padding:26px 34px;z-index:5}
+.sk .kz button{color:var(--hell-2)}
+.sk .kz button.an{color:var(--leucht)}
+
+.sk .bib{position:absolute;inset:0;z-index:60;padding:56px 64px 44px;display:flex;flex-direction:column;
+  background:rgba(8,10,17,.96);
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.sk .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.sk .bib .bkopf{display:flex;align-items:baseline;gap:34px;border-bottom:1px solid var(--linie);
+  padding-bottom:16px;margin-bottom:10px}
+.sk .bib h2{font-size:15px;font-weight:300;letter-spacing:.34em;text-transform:uppercase;flex:none}
+.sk .bib .suchfeld{flex:1;min-width:0;display:flex;align-items:center;gap:12px}
+.sk .bib .suchfeld svg{color:var(--hell-3);flex:none}
+.sk .bib .suchfeld input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--hell);
+  font-size:17px;letter-spacing:.06em}
+.sk .bib .suchfeld input::placeholder{color:var(--hell-3);letter-spacing:.1em}
+.sk .bib .zu{color:var(--hell-2);flex:none}
+.sk .bib .bliste{flex:1;min-height:0;overflow:auto;display:grid;grid-template-columns:1fr 1fr;
+  gap:0 54px;align-content:start}
+.sk .bib .bz{display:flex;align-items:baseline;gap:16px;padding:12px 0;
+  border-bottom:1px solid var(--linie-2);cursor:pointer;color:var(--hell-3);font-size:14px;
+  letter-spacing:.04em}
+.sk .bib .bz:hover{color:var(--hell-2)}
+.sk .bib .bz .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sk .bib .bz .n{font-size:11px;white-space:nowrap}
+.sk .bib .bz.an{color:var(--leucht)}
+.sk .bib .bfuss{flex:none;padding-top:16px;font-size:10px;letter-spacing:.34em;text-transform:uppercase;
+  color:var(--hell-3)}
+
+.sk .platte{position:absolute;left:50%;top:var(--pt);transform:translate(-50%,-50%);
+  width:var(--pd);height:var(--pd);cursor:pointer;touch-action:none}
+.sk .platte svg{width:100%;height:100%;overflow:visible}
+.sk .platte circle.rille{fill:none;stroke:var(--linie);stroke-width:1;transition:stroke .3s,opacity .3s}
+.sk .platte circle.rille.war{stroke:var(--leucht);opacity:.95}
+.sk .platte circle.loch{fill:var(--hell)}
+.sk .arm{position:absolute;left:84%;top:2%;width:2px;height:calc(var(--pd) * .48);background:
+  linear-gradient(180deg,rgba(232,236,248,.85),rgba(232,236,248,.3));transform-origin:50% 0;
+  pointer-events:none;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.sk .arm::after{content:'';position:absolute;left:50%;top:-13px;width:26px;height:26px;margin-left:-13px;
+  border-radius:50%;border:1.5px solid rgba(232,236,248,.8)}
+.sk .glanz{position:absolute;left:50%;top:calc(var(--pt) + var(--pd)/2 + 40px);
+  transform:translateX(-50%);width:var(--pd);height:24px;
+  background:radial-gradient(ellipse at 50% 50%,rgba(203,215,255,.55),transparent 68%);
+  filter:blur(6px);pointer-events:none;opacity:.7}
+
+.sk .schrift{position:absolute;left:0;right:0;top:var(--st);text-align:center;padding:0 40px}
+.sk .schrift h1{font-size:clamp(22px,3.9vh,42px);font-weight:300;letter-spacing:.28em;
+  text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-indent:.28em}
+.sk .schrift .zeilen{margin-top:clamp(12px,2.4vh,26px);display:flex;flex-direction:column;gap:9px;
+  align-items:center}
+.sk .schrift .z1{font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--hell-2)}
+.sk .schrift .z2{font-size:19px;letter-spacing:.14em;text-transform:uppercase}
+.sk .schrift .z3{font-size:12px;letter-spacing:.16em;color:var(--hell-3)}
+
+.sk .leiste{position:absolute;left:50%;transform:translateX(-50%);bottom:clamp(22px,5vh,54px);
+  display:flex;align-items:center;gap:30px}
+.sk .leiste button{color:var(--hell-2)}
+.sk .leiste .pp{width:56px;height:56px;border-radius:50%;border:1px solid var(--linie);color:var(--hell);
+  display:grid;place-items:center}
+.sk .leiste .uhr{font-size:12px;letter-spacing:.14em;color:var(--hell-3);font-variant-numeric:tabular-nums;
+  min-width:52px;text-align:center}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   04/05 · Deck und Handgerät — Blatt 08 „Kassette"
+   Links waechst der Wickel, rechts wird er duenner: die ehrlichste
+   Fortschrittsanzeige, die es gibt, und sie braucht keine Zahl. Das Geraet
+   ist von 1985, die Bedienung nicht.
+
+   Gegenueber dem Blatt umbenannt: das Zaehlwerk heisst .zwerk. Im Entwurf
+   hiessen Zaehlwerk und Kassettenfach beide .fach — die Regeln der Blende
+   (position:absolute;opacity:0) trafen damit auch die Ziffernanzeige.
+   ═══════════════════════════════════════════════════════════════════════ */
+.ks{
+  --grund:#232327; --kante:rgba(236,240,248,.30);
+  --hell:#EEF0F4; --hell-2:#A8ACB6; --hell-3:#6E7280;
+  --orange:#E2652B; --band:#2A211C;
+  --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
+  --kw:min(660px,52vw,58vh); --bg:26px; --tw:92px; --th:56px; --etg:18px; --zg:30px;
+  background:radial-gradient(90% 70% at 50% 30%,#2E2E34,var(--grund) 70%);
+  color:var(--hell);height:100%;overflow:hidden;display:flex;position:relative}
+.ks .kap{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--hell-3)}
+.ks .mitte{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:var(--bg);padding:30px}
+
+.ks .kass{position:relative;width:var(--kw);height:calc(var(--kw) * .625);flex:none;
+  border-radius:10px;background:linear-gradient(150deg,rgba(240,244,252,.18),rgba(200,206,220,.07));
+  box-shadow:inset 0 0 0 1px var(--kante),inset 0 2px 0 rgba(255,255,255,.22),
+    0 26px 60px rgba(0,0,0,.55);backdrop-filter:blur(2px)}
+.ks .kass .schraube{position:absolute;width:12px;height:12px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#4A4A52,#1A1A1E);box-shadow:0 0 0 1px rgba(255,255,255,.10)}
+.ks .kass .fenster{position:absolute;left:14%;right:14%;top:22%;bottom:26%;border-radius:6px;
+  background:rgba(10,10,14,.30);box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)}
+.ks .wickel{position:absolute;top:50%;border-radius:50%;transform:translate(-50%,-50%);
+  background:repeating-radial-gradient(circle at 50% 50%,#241C18 0 1.5px,#332821 1.5px 3px);
+  box-shadow:0 2px 8px rgba(0,0,0,.5);transition:width .3s linear,height .3s linear}
+.ks .nabe{position:absolute;top:50%;width:calc(var(--kw) * .112);height:calc(var(--kw) * .112);
+  border-radius:50%;transform:translate(-50%,-50%);
+  background:#EDEFF3;box-shadow:0 0 0 1px rgba(0,0,0,.25),inset 0 0 0 8px rgba(0,0,0,.06);
+  animation:ksdreh 2.4s linear infinite}
+.ks .nabe.halt{animation-play-state:paused}
+@keyframes ksdreh{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.ks .nabe::before{content:'';position:absolute;inset:22%;border-radius:50%;background:#1F1F24}
+.ks .nabe i{position:absolute;left:50%;top:8%;width:5px;height:20%;margin-left:-2.5px;background:#1F1F24;
+  border-radius:2px;transform-origin:50% 100%}
+.ks .nabe i:nth-child(2){transform:rotate(60deg)}
+.ks .nabe i:nth-child(3){transform:rotate(120deg)}
+.ks .nabe i:nth-child(4){transform:rotate(180deg)}
+.ks .nabe i:nth-child(5){transform:rotate(240deg)}
+.ks .nabe i:nth-child(6){transform:rotate(300deg)}
+.ks .bandlinie{position:absolute;top:50%;height:calc(var(--kw) * .052);background:var(--band);
+  transform:translateY(-50%);box-shadow:0 0 0 1px rgba(0,0,0,.3)}
+
+.ks .etikett{position:absolute;left:9%;right:9%;top:7%;height:26%;border-radius:3px;
+  background:linear-gradient(180deg,#F4F4F0,#E4E4DE);color:#1A1A1E;padding:8px 14px;
+  display:flex;align-items:center;gap:14px;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.ks .etikett .streifen{width:8px;align-self:stretch;border-radius:2px;flex:none;
+  background:linear-gradient(180deg,var(--orange) 0 33%,#E5B23A 33% 66%,#3E7D5A 66%)}
+.ks .etikett .zeilen{flex:1;min-width:0}
+.ks .etikett .t{font-size:var(--etg);font-weight:700;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;letter-spacing:-.01em}
+.ks .etikett .s{font-size:11.5px;color:#55555E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  margin-top:2px}
+.ks .etikett .typ{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:#55555E;text-align:right;
+  line-height:1.5;white-space:nowrap}
+.ks .seite{position:absolute;left:9%;bottom:6%;font-family:var(--mono);font-size:11px;letter-spacing:.2em;
+  color:var(--hell-2)}
+.ks .laufwerk{position:absolute;right:9%;bottom:6%;font-family:var(--mono);font-size:11px;
+  letter-spacing:.14em;color:var(--hell-2);font-variant-numeric:tabular-nums}
+
+.ks .zaehler{display:flex;align-items:center;gap:18px}
+.ks .zwerk{font-family:var(--mono);font-size:var(--zg);letter-spacing:.06em;
+  background:#15151A;border-radius:4px;padding:6px 16px;box-shadow:inset 0 2px 6px rgba(0,0,0,.7);
+  color:var(--orange);font-variant-numeric:tabular-nums}
+.ks .band{width:var(--kw);height:34px;display:flex;align-items:center;cursor:pointer;
+  touch-action:none;position:relative}
+.ks .band .schiene{position:absolute;left:0;right:0;height:3px;background:rgba(255,255,255,.14)}
+.ks .band .voll{position:absolute;left:0;height:3px;background:var(--orange)}
+.ks .band .griff{position:absolute;width:14px;height:22px;border-radius:3px;background:var(--hell);
+  margin-left:-7px;box-shadow:0 2px 6px rgba(0,0,0,.5);transition:left .18s linear}
+
+.ks .tasten{display:flex;gap:6px}
+.ks .tasten button{width:var(--tw);height:var(--th);border-radius:4px;color:#22222A;
+  background:linear-gradient(180deg,#DDE0E6,#B4B8C2);display:grid;place-items:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 3px 0 #6E727C,0 6px 12px rgba(0,0,0,.45);
+  transform:translateY(0);transition:transform .08s,box-shadow .08s}
+.ks .tasten button:active,.ks .tasten button.gedrueckt{transform:translateY(3px);
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.4),0 0 0 #6E727C}
+.ks .tasten button.rot{background:linear-gradient(180deg,#EE8A54,var(--orange));color:#25150C;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 3px 0 #8E3A14,0 6px 12px rgba(0,0,0,.45)}
+
+/* Das Kassettenfach: die Bibliothek hinter der Auswurftaste */
+.ks .fach{position:absolute;inset:0;z-index:30;padding:34px 40px;display:flex;flex-direction:column;
+  background:rgba(12,12,16,.86);backdrop-filter:blur(4px);
+  opacity:0;pointer-events:none;transform:translateY(16px);transition:opacity .22s,transform .22s}
+.ks .fach.auf{opacity:1;pointer-events:auto;transform:none}
+.ks .fach .fkopf{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:20px}
+.ks .fach h2{font-size:21px;font-weight:600;letter-spacing:-.01em;flex:none}
+.ks .fach h2 span{display:block;margin-top:4px}
+.ks .fach .zu{width:52px;height:44px;border-radius:4px;color:#22222A;display:grid;place-items:center;
+  background:linear-gradient(180deg,#DDE0E6,#B4B8C2);flex:none;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 3px 0 #6E727C}
+.ks .fach .raster{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;overflow:auto;flex:1;
+  align-content:start}
+.ks .fach .spine{margin:0}
+
+.ks .suchfeld{display:flex;align-items:center;gap:10px;height:42px;padding:0 14px;border-radius:4px;
+  background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(236,240,248,.16);margin-bottom:14px}
+.ks .suchfeld svg{color:var(--hell-3);flex:none}
+.ks .suchfeld input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:var(--hell);font-size:14px}
+.ks .suchfeld input::placeholder{color:var(--hell-3)}
+.ks .fach .suchfeld{flex:1;margin:0;height:48px}
+.ks .treffer{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--hell-3);
+  padding-top:12px;flex:none}
+
+.ks .regal{width:min(320px,26vw);flex:none;border-left:1px solid rgba(255,255,255,.09);
+  padding:30px 26px;overflow:hidden;background:rgba(0,0,0,.16);display:flex;flex-direction:column}
+.ks .regal .kap{display:block;margin-bottom:18px;flex:none}
+.ks .regal label{flex:none}
+.ks .regal .rollen{flex:1;min-height:0;overflow:auto}
+.ks .spine{height:60px;border-radius:4px;margin-bottom:9px;padding:0 14px;display:flex;align-items:center;
+  gap:12px;cursor:pointer;background:linear-gradient(150deg,rgba(240,244,252,.16),rgba(200,206,220,.06));
+  box-shadow:inset 0 0 0 1px rgba(236,240,248,.18)}
+.ks .spine:hover{background:linear-gradient(150deg,rgba(240,244,252,.24),rgba(200,206,220,.1))}
+.ks .spine .farbe{width:6px;align-self:stretch;margin:10px 0;border-radius:2px;flex:none}
+.ks .spine .m{flex:1;min-width:0}
+.ks .spine .t{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ks .spine .s{font-size:11px;color:var(--hell-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ks .spine.an{box-shadow:inset 0 0 0 1px var(--orange)}
+.ks .spine.an .t{color:var(--orange)}
+
+/* Handgeraet: dieselbe Kassette, nur gross genug fuer Daumen. */
+.ks.hand{--kw:min(900px,88vw,66vh);--bg:34px;--tw:min(128px,13vw);--th:72px;--etg:24px;--zg:38px}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   06/07 · Aufgeschlagen und Register — Blatt 10 „Weißraum"
+   Eine Platte auf weissem Grund, sonst nichts. Alles, was hier steht,
+   musste sich den Platz verdienen; die Platte haengt ueber den Rand
+   hinaus, damit sie gross sein darf, ohne den Rest zu verdraengen.
+   ═══════════════════════════════════════════════════════════════════════ */
+.wr{
+  --papier:#FCFCFB; --tinte:#141414; --tinte-2:#6C6C6C; --tinte-3:#ADADAD;
+  --linie:rgba(20,20,20,.12);
+  --pd:min(700px,86vh); --px:calc(var(--pd) * -.21); --ax:40%; --ay:6%;
+  --sr:clamp(24px,6vw,70px); --sw:min(420px,42vw); --tg:clamp(26px,4.6vh,44px);
+  background:var(--papier);color:var(--tinte);height:100%;overflow:hidden;position:relative}
+.wr .kap{font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--tinte-3)}
+
+.wr .platte{position:absolute;width:var(--pd);height:var(--pd);border-radius:50%;
+  left:var(--px);top:50%;margin-top:calc(var(--pd) / -2);
+  background:
+    repeating-radial-gradient(circle at 50% 50%,#050505 0 1.3px,#131313 1.3px 2.6px),
+    radial-gradient(circle at 30% 22%,rgba(255,255,255,.16),transparent 40%),
+    radial-gradient(circle at 72% 78%,rgba(255,255,255,.10),transparent 38%);
+  box-shadow:0 30px 70px rgba(20,20,20,.22);animation:wrdreh 5.4s linear infinite}
+.wr .platte.halt{animation-play-state:paused}
+@keyframes wrdreh{to{transform:rotate(360deg)}}
+.wr .platte .label{position:absolute;inset:35%;border-radius:50%;display:grid;place-items:center;
+  color:#fff;font-size:calc(var(--pd) / 22);font-weight:500;letter-spacing:.02em;text-align:center;
+  padding:14%;overflow:hidden;box-shadow:0 0 0 1px rgba(0,0,0,.4)}
+/* absolut statt im Raster: ein Rasterfeld mit place-items:center gibt dem
+   Bild seine Eigengroesse, ein 1-px-Cover bliebe ein Punkt */
+.wr .platte .label img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  border-radius:50%}
+.wr .platte .loch{position:absolute;left:50%;top:50%;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;
+  border-radius:50%;background:var(--papier);z-index:3}
+
+.wr .arm{position:absolute;left:var(--ax);top:var(--ay);width:9px;height:calc(var(--pd) * .43);
+  transform-origin:50% 22px;transition:transform .5s cubic-bezier(.4,0,.2,1);pointer-events:none}
+.wr .arm .rohr{position:absolute;left:0;right:0;top:22px;bottom:34px;border-radius:5px;
+  background:linear-gradient(90deg,#8E8E92,#F2F2F4 40%,#C8C8CC 62%,#7C7C82);
+  box-shadow:0 2px 6px rgba(20,20,20,.28)}
+.wr .arm .lager{position:absolute;left:50%;top:0;width:44px;height:44px;margin-left:-22px;border-radius:50%;
+  background:radial-gradient(circle at 34% 28%,#FDFDFD,#C4C4C8 58%,#8A8A90);
+  box-shadow:0 4px 12px rgba(20,20,20,.3)}
+.wr .arm .kopf{position:absolute;left:50%;bottom:0;width:26px;height:40px;margin-left:-13px;border-radius:4px;
+  background:linear-gradient(120deg,#F4F4F6,#A8A8AE);box-shadow:0 3px 8px rgba(20,20,20,.3);
+  transform:rotate(-14deg)}
+
+.wr .spalte{position:absolute;right:var(--sr);top:50%;transform:translateY(-50%);width:var(--sw)}
+.wr .spalte .kap{display:block;margin-bottom:20px}
+.wr .spalte h1{font-size:var(--tg);font-weight:400;letter-spacing:-.025em;line-height:1.08;
+  text-wrap:balance}
+.wr .spalte .ar{margin-top:14px;font-size:17px;color:var(--tinte-2)}
+.wr .spalte .alb{margin-top:3px;font-size:14px;color:var(--tinte-3)}
+.wr .faden{margin-top:34px;position:relative;height:22px;display:flex;align-items:center;cursor:pointer;
+  touch-action:none}
+.wr .faden .linie{position:absolute;left:0;right:0;height:1px;background:var(--linie)}
+.wr .faden .voll{position:absolute;left:0;height:1px;background:var(--tinte)}
+.wr .faden .punkt{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--tinte);
+  margin-left:-4.5px;transition:left .18s linear}
+.wr .zeiten{display:flex;justify-content:space-between;font-size:11.5px;color:var(--tinte-3);
+  font-variant-numeric:tabular-nums;margin-top:4px}
+.wr .knoepfe{display:flex;align-items:center;gap:26px;margin-top:30px}
+.wr .knoepfe button{color:var(--tinte-2)}
+.wr .knoepfe button.an{color:var(--tinte)}
+.wr .knoepfe .pp{width:54px;height:54px;border-radius:50%;border:1px solid var(--linie);color:var(--tinte);
+  display:grid;place-items:center}
+
+.wr .register{position:absolute;left:clamp(24px,5vw,70px);top:50%;transform:translateY(-50%);
+  width:min(300px,24vw);max-height:76vh;overflow:auto}
+.wr .register .kap{display:block;margin-bottom:14px}
+.wr .rz{display:flex;align-items:baseline;gap:14px;padding:9px 0;border-bottom:1px solid var(--linie);
+  cursor:pointer;font-size:14px;color:var(--tinte-3)}
+.wr .rz:hover{color:var(--tinte-2)}
+.wr .rz .nr{font-size:10px;letter-spacing:.1em;width:16px}
+.wr .rz .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wr .rz.an{color:var(--tinte)}
+
+.wr .bib{position:absolute;inset:0;z-index:40;background:rgba(252,252,251,.97);padding:56px 74px;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.wr .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.wr .bib .bkopf{display:flex;align-items:flex-end;gap:34px;
+  border-bottom:1px solid var(--linie);padding-bottom:16px;margin-bottom:8px}
+.wr .bib h2{font-size:30px;font-weight:400;letter-spacing:-.02em;flex:none}
+/* Suche im Ton des Entwurfs: eine Zeile, keine Kiste */
+.wr .bib .suchfeld{flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding-bottom:6px}
+.wr .bib .suchfeld svg{color:var(--tinte-3);flex:none}
+.wr .bib .suchfeld input{flex:1;min-width:0;font-size:19px;font-weight:400;color:var(--tinte);
+  background:none;border:none;outline:none;letter-spacing:-.01em}
+.wr .bib .suchfeld input::placeholder{color:var(--tinte-3)}
+.wr .bib .bfuss{flex:none;padding-top:16px;font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--tinte-3)}
+.wr .bib .zu{width:46px;height:46px;border-radius:50%;border:1px solid var(--linie);display:grid;
+  place-items:center;color:var(--tinte-2);flex:none}
+/* zwei Spalten als Raster statt als Mehrspaltensatz: so rollt die Liste
+   nach unten weiter und nicht seitwaerts aus dem Bild */
+.wr .bib .spalten{flex:1;min-height:0;overflow:auto;display:grid;grid-template-columns:1fr 1fr;
+  gap:0 60px;align-content:start}
+.wr .bib .bz{display:flex;align-items:baseline;gap:16px;padding:13px 0;
+  border-bottom:1px solid var(--linie);cursor:pointer;font-size:15px}
+.wr .bib .bz:hover .t{color:var(--tinte)}
+.wr .bib .bz .pkt{width:9px;height:9px;border-radius:50%;flex:none;align-self:center}
+.wr .bib .bz .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  color:var(--tinte-2)}
+.wr .bib .bz .n{font-size:12px;color:var(--tinte-3);white-space:nowrap}
+.wr .bib .bz.an .t{color:var(--tinte)}
+
+.wr .ecke{position:absolute;left:34px;top:28px}
+.wr .ecke2{position:absolute;right:34px;top:28px}
+
+/* Register: die Platte rueckt nach rechts ueber den Rand, links steht die
+   Warteschlange in Haarlinien. */
+.wr.reg{--pd:min(720px,84vh);--px:66%;--ax:92%;--ay:4%;--sr:36%;--sw:min(380px,28vw);
+  --tg:clamp(24px,4.2vh,40px)}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   08/09 · Bedienteil und Konsole — Blatt 11 „Rack"
+   Ein Geraet, kein Fenster: gebuerstetes Metall, ein Rad zum Spulen, ein
+   oranger Hebel fuer die Lautstaerke. Die Cover sind Leuchtflaechen im
+   Rahmen — nur das laufende Album ist hell.
+   ═══════════════════════════════════════════════════════════════════════ */
+.rk{
+  --nacht:#0C0C0E; --hell:#F0F1F3; --hell-2:#9DA0A8; --hell-3:#61646C;
+  --orange:#E8722C;
+  --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
+  --pad:34px; --gap:30px; --rh:min(430px,44vh); --rd:min(180px,21vh); --tg:26px;
+  --hw:160px; --bsp:3; --pg:40px; --pp:40px; --tb:50px;
+  background:radial-gradient(80% 60% at 50% 0%,#1B1B1F,var(--nacht) 70%);
+  color:var(--hell);height:100%;overflow:hidden;
+  display:flex;flex-direction:column;padding:var(--pad);gap:var(--gap);position:relative}
+.rk .kap{font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--hell-3)}
+.rk .metallflaeche{
+  background:
+    repeating-linear-gradient(92deg,rgba(255,255,255,.05) 0 1px,rgba(0,0,0,.05) 1px 3px),
+    linear-gradient(160deg,#3A3B40,#232428 42%,#42434A 62%,#1D1E22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(0,0,0,.6),
+    0 18px 40px rgba(0,0,0,.55)}
+
+.rk .reihe{flex:none;height:var(--rh);border-radius:8px;padding:12px;display:flex;gap:12px}
+.rk .schirmchen{flex:1;min-width:0;border-radius:4px;position:relative;overflow:hidden;cursor:pointer;
+  background:#0A0A0C;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)}
+.rk .schirmchen .bild{position:absolute;inset:0;display:grid;place-items:center;color:#fff;
+  font-size:56px;font-weight:600;filter:saturate(.85) brightness(.9)}
+.rk .schirmchen .bild img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.rk .schirmchen .glas{position:absolute;inset:0;
+  background:linear-gradient(118deg,rgba(255,255,255,.18) 0 22%,transparent 46%)}
+.rk .schirmchen .unter{position:absolute;left:0;right:0;bottom:0;padding:14px 16px;
+  background:linear-gradient(180deg,transparent,rgba(0,0,0,.82));display:flex;
+  justify-content:space-between;align-items:flex-end;gap:12px}
+.rk .schirmchen .t{font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.rk .schirmchen .s{font-size:11.5px;color:var(--hell-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.rk .schirmchen.an{box-shadow:inset 0 0 0 2px var(--orange)}
+.rk .schirmchen.an .bild{filter:none}
+.rk .schirmchen .laeuft{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--orange);
+  white-space:nowrap;opacity:0}
+.rk .schirmchen.an .laeuft{opacity:1}
+
+.rk .pult{flex:1;min-height:0;border-radius:8px;display:flex;align-items:center;gap:var(--pg);
+  padding:0 var(--pp)}
+.rk .anzeige{flex:1;min-width:0}
+.rk .anzeige .titel{font-size:var(--tg);font-weight:600;letter-spacing:-.01em;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.rk .anzeige .unter2{margin-top:6px;font-size:13.5px;color:var(--hell-2);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.rk .anzeige .uhr{margin-top:16px;font-family:var(--mono);font-size:12px;letter-spacing:.12em;
+  color:var(--orange);font-variant-numeric:tabular-nums}
+.rk .anzeige .balken{margin-top:8px;height:4px;border-radius:2px;background:rgba(255,255,255,.12);
+  position:relative;overflow:hidden}
+.rk .anzeige .balken i{position:absolute;left:0;top:0;bottom:0;background:var(--orange);border-radius:2px}
+
+.rk .rad{width:var(--rd);height:var(--rd);flex:none;border-radius:50%;position:relative;
+  cursor:grab;touch-action:none;
+  background:
+    conic-gradient(from 0deg,#5A5C63,#2A2B30 12%,#6E7076 26%,#26272B 42%,#5A5C63 58%,#232428 74%,
+      #63656B 88%,#5A5C63),
+    #3A3B40;
+  box-shadow:0 0 0 1px rgba(255,255,255,.14),0 14px 30px rgba(0,0,0,.6)}
+.rk .rad:active{cursor:grabbing}
+.rk .rad::after{content:'';position:absolute;inset:24%;border-radius:50%;background:var(--nacht);
+  box-shadow:inset 0 2px 10px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.10)}
+.rk .rad .kerbe{position:absolute;left:50%;top:6px;width:4px;height:16px;margin-left:-2px;border-radius:2px;
+  background:var(--hell);transform-origin:50% calc(var(--rd) / 2 - 6px)}
+.rk .rad .mitte{position:absolute;inset:0;display:grid;place-items:center;z-index:2;color:var(--hell-2);
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;pointer-events:none}
+.rk .radbeschriftung{display:flex;flex-direction:column;align-items:center;gap:10px;flex:none}
+.rk .radbeschriftung .pfeile{display:flex;gap:16px;color:var(--hell-2)}
+
+.rk .hebel{flex:none;display:flex;flex-direction:column;gap:14px}
+.rk .hebelbahn{display:flex;align-items:center;gap:12px}
+.rk .hebelbahn .kap{width:34px;text-align:right}
+.rk .schiene{width:var(--hw);height:26px;border-radius:4px;position:relative;cursor:pointer;
+  touch-action:none;background:linear-gradient(180deg,#141416,#1E1F22);
+  box-shadow:inset 0 1px 4px rgba(0,0,0,.8),inset 0 0 0 1px rgba(255,255,255,.07)}
+.rk .schieber{position:absolute;top:-4px;width:22px;height:34px;border-radius:3px;margin-left:-11px;
+  background:linear-gradient(180deg,#F09053,var(--orange));box-shadow:0 3px 8px rgba(0,0,0,.6),
+    inset 0 1px 0 rgba(255,255,255,.4);transition:left .12s}
+.rk .quellen{display:flex;flex-direction:column;gap:9px}
+.rk .quelle{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:10px;
+  letter-spacing:.14em;color:var(--hell-3);cursor:pointer}
+.rk .quelle i{width:16px;height:2px;background:var(--hell-3);border-radius:1px}
+.rk .quelle.an{color:var(--orange)}
+.rk .quelle.an i{background:var(--orange);width:26px}
+
+.rk .transport{display:flex;gap:12px;align-items:center;flex:none}
+.rk .transport button{width:var(--tb);height:var(--tb);border-radius:4px;color:var(--hell-2);
+  display:grid;place-items:center;background:linear-gradient(180deg,#333438,#212226);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 4px 10px rgba(0,0,0,.5)}
+.rk .transport button.pp{color:var(--orange)}
+.rk .transport button.an{color:var(--orange);background:linear-gradient(180deg,#212226,#333438)}
+
+.rk .bib{position:absolute;inset:0;z-index:60;padding:34px 40px;display:flex;flex-direction:column;
+  background:rgba(10,10,13,.94);backdrop-filter:blur(4px);
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.rk .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.rk .bib .bkopf{display:flex;align-items:center;gap:24px;margin-bottom:20px}
+.rk .bib h2{font-size:22px;font-weight:600;letter-spacing:-.01em;flex:none}
+.rk .bib .suchfeld{flex:1;min-width:0;display:flex;align-items:center;gap:10px;height:46px;padding:0 16px;
+  border-radius:4px;background:linear-gradient(180deg,#141416,#1E1F22);
+  box-shadow:inset 0 1px 4px rgba(0,0,0,.8),inset 0 0 0 1px rgba(255,255,255,.08)}
+.rk .bib .suchfeld svg{color:var(--hell-3);flex:none}
+.rk .bib .suchfeld input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:var(--hell);font-size:15px}
+.rk .bib .suchfeld input::placeholder{color:var(--hell-3)}
+.rk .bib .zu{width:46px;height:46px;border-radius:4px;flex:none;display:grid;place-items:center;
+  color:var(--hell-2);background:linear-gradient(180deg,#333438,#212226);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 4px 10px rgba(0,0,0,.5)}
+.rk .bib .bliste{flex:1;min-height:0;overflow:auto;display:grid;
+  grid-template-columns:repeat(var(--bsp),1fr);gap:10px 14px;align-content:start}
+.rk .bib .bz{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:4px;cursor:pointer;
+  background:linear-gradient(160deg,#26272B,#1A1B1E);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 4px 10px rgba(0,0,0,.4)}
+.rk .bib .bz:hover{background:linear-gradient(160deg,#2E2F34,#202126)}
+.rk .bib .bz .pl{width:44px;height:44px;border-radius:3px;flex:none;display:grid;place-items:center;
+  color:#fff;font-size:16px;font-weight:600;position:relative;overflow:hidden}
+.rk .bib .bz .pl img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.rk .bib .bz .m{flex:1;min-width:0}
+.rk .bib .bz .m>span{display:block}
+.rk .bib .bz .t{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk .bib .bz .s{font-size:11.5px;color:var(--hell-3);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.rk .bib .bz.an{box-shadow:inset 0 0 0 1.5px var(--orange)}
+.rk .bib .bz.an .t{color:var(--orange)}
+.rk .bib .bfuss{flex:none;padding-top:14px;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--hell-3)}
+
+/* Konsole: dasselbe Geraet, zwei Leuchtflaechen statt drei, groesseres Rad. */
+.rk.kons{--rh:min(380px,42vh);--rd:min(220px,26vh);--tg:28px;--hw:150px;--pad:30px;--pg:34px;--pp:34px;
+  --tb:56px;--bsp:2}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   10 · Pult — Blatt 12 „Studiogerät"
+   Links das Werkzeug, rechts der Klang: der Lautstaerkeregler ueber die
+   volle Hoehe, darunter in derselben Flucht der Schalter zur Bibliothek,
+   daneben die Titelanzeige. Keine Klangregler — die App regelt keinen Klang.
+   Cover kommen hier nicht vor: der Aufkleber ist Schrift.
+   ═══════════════════════════════════════════════════════════════════════ */
+.sg{
+  --grund:#E4E4D5; --tinte:#22221C; --tinte-2:#63635A; --tinte-3:#9A9A8E;
+  --terra:#D4784E;
+  --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
+  --ww:min(620px,46vw); --wp:44px 46px; --w1g:40px; --sd:84px;
+  --td:min(400px,44vh,30vw); --al:calc(var(--td) * .76); --bw:min(400px,28vw);
+  --tz:26px; --tg:24px;
+  background:var(--grund);color:var(--tinte);height:100%;overflow:hidden;
+  position:relative;display:flex}
+.sg .kap{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--tinte-2)}
+
+.sg .werkzeug{width:var(--ww);flex:none;padding:var(--wp);position:relative;z-index:2;
+  display:flex;flex-direction:row;align-items:stretch;gap:var(--w1g)}
+.sg .schieber{width:34px;position:relative;cursor:pointer;touch-action:none}
+.sg .schieber .stange{position:absolute;left:50%;top:0;bottom:0;width:2px;margin-left:-1px;
+  background:var(--tinte)}
+.sg .schieber .griff{position:absolute;left:0;right:0;height:26px;border-radius:4px;margin-top:-13px;
+  background:linear-gradient(180deg,#F2F2EC,#B9B9AE);box-shadow:0 3px 7px rgba(34,34,28,.32),
+    inset 0 1px 0 rgba(255,255,255,.9);transition:top .12s}
+.sg .schieber .griff::after{content:'';position:absolute;left:4px;right:4px;top:50%;height:1px;
+  background:rgba(34,34,28,.35)}
+.sg .fenster{border-radius:5px;padding:10px 14px;
+  background:linear-gradient(180deg,rgba(255,255,255,.42),rgba(255,255,255,.16));
+  box-shadow:inset 0 0 0 1px rgba(34,34,28,.16),inset 0 1px 0 rgba(255,255,255,.5)}
+.sg .fenster .z{font-family:var(--mono);font-size:15px;color:var(--tinte-3);text-align:center;
+  line-height:1.7;font-variant-numeric:tabular-nums;cursor:pointer}
+.sg .fenster .z.an{color:var(--terra);font-weight:700}
+/* die Zeilen trennen Haarlinien, nicht Farbe — die Anzeige soll Teil der
+   Frontplatte bleiben und nicht wie ein aufgeklebtes Display wirken */
+.sg .fenster.breit .z + .z{border-top:1px solid rgba(34,34,28,.10)}
+.sg .langfeld{display:flex;flex-direction:column;align-items:center;gap:12px;flex:none;width:96px}
+.sg .schieber.lang{height:auto;flex:1;width:40px}
+.sg .langfeld .schalter{margin-top:10px}
+.sg .anzeigefeld{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:12px;min-height:0}
+.sg .fenster.breit{width:100%;max-height:100%;overflow:auto;padding:14px 16px;display:flex;
+  flex-direction:column;gap:2px}
+.sg .fenster.breit .z{display:flex;align-items:baseline;gap:12px;text-align:left;padding:4px 6px;
+  border-radius:3px;white-space:nowrap;overflow:hidden;flex:none}
+.sg .fenster.breit .z b{font-weight:400;color:var(--tinte-3);font-variant-numeric:tabular-nums}
+.sg .fenster.breit .z span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:13.5px}
+.sg .fenster.breit .z .d{flex:none;font-size:11.5px;color:var(--tinte-3);font-variant-numeric:tabular-nums}
+.sg .fenster.breit .z.an{background:rgba(212,120,78,.14);box-shadow:inset 2px 0 0 var(--terra)}
+.sg .fenster.breit .z.an b,.sg .fenster.breit .z.an span{color:var(--terra)}
+.sg .schalter{width:var(--sd);height:var(--sd);border-radius:50%;flex:none;cursor:pointer;
+  background:#F6F6F0;border:1.5px solid var(--tinte);display:grid;place-items:center;
+  box-shadow:0 4px 10px rgba(34,34,28,.18)}
+.sg .schalter i{width:24px;height:24px;border-radius:50%;background:rgba(34,34,28,.16);display:block;
+  transition:background .18s,box-shadow .18s}
+.sg .schalter.an i{background:var(--terra);box-shadow:0 0 14px rgba(212,120,78,.75)}
+
+.sg .bib{position:absolute;inset:0;z-index:50;background:rgba(228,228,213,.97);padding:34px 44px;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .22s,transform .22s}
+.sg .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.sg .bib .bkopf{display:flex;align-items:center;gap:26px;
+  border-bottom:1.5px solid var(--tinte);padding-bottom:16px;margin-bottom:16px}
+.sg .bib h2{font-size:26px;font-weight:800;letter-spacing:-.02em;flex:none}
+.sg .bib .suchfeld{flex:1;min-width:0;display:flex;align-items:center;gap:12px;background:#F6F6F0;
+  border-radius:4px;padding:0 16px;height:48px;box-shadow:inset 0 0 0 1px rgba(34,34,28,.22)}
+.sg .bib .suchfeld svg{color:var(--tinte-3);flex:none}
+.sg .bib .suchfeld input{flex:1;min-width:0;height:100%;font-size:16px;color:var(--tinte);
+  background:none;border:none;outline:none}
+.sg .bib .suchfeld input::placeholder{color:var(--tinte-3)}
+.sg .bib .bliste{flex:1;min-height:0;overflow:auto;display:grid;grid-template-columns:1fr 1fr;
+  gap:2px 30px;align-content:start}
+.sg .bib .bz{display:flex;align-items:center;gap:14px;padding:9px 8px;border-radius:4px;cursor:pointer;
+  border-bottom:1px solid rgba(34,34,28,.10)}
+.sg .bib .bz:hover{background:rgba(34,34,28,.05)}
+.sg .bib .bz .pl{width:34px;height:34px;border-radius:50%;flex:none;display:grid;place-items:center;
+  background:repeating-radial-gradient(circle at 50% 50%,#161612 0 1.2px,#22221D 1.2px 2.4px)}
+.sg .bib .bz .pl i{width:46%;height:46%;border-radius:50%;background:var(--terra);display:grid;
+  place-items:center;color:#2A1409;font-size:9px;font-weight:800}
+.sg .bib .bz .m{flex:1;min-width:0}
+.sg .bib .bz .m>span{display:block}
+.sg .bib .bz .t{font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.sg .bib .bz .s{font-size:12px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.sg .bib .bz .n{font-size:11.5px;color:var(--tinte-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.sg .bib .bz.an .t{color:var(--terra)}
+.sg .bib .bfuss{flex:none;padding-top:14px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--tinte-3)}
+
+.sg .quelle{flex:1;min-width:0;position:relative;z-index:2;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:24px 30px}
+.sg .teller{position:relative;width:var(--td);height:var(--td);border-radius:50%;
+  background:
+    repeating-radial-gradient(circle at 50% 50%,#161612 0 1.5px,#22221D 1.5px 3px),
+    radial-gradient(circle at 30% 24%,rgba(255,255,255,.10),transparent 46%);
+  box-shadow:0 20px 44px rgba(34,34,28,.30);cursor:pointer;touch-action:none;
+  animation:sgdreh 4.8s linear infinite}
+.sg .teller.halt{animation-play-state:paused}
+@keyframes sgdreh{to{transform:rotate(360deg)}}
+.sg .teller .label{position:absolute;inset:31%;border-radius:50%;background:var(--terra);
+  display:grid;place-items:center;text-align:center;padding:12%;color:#2A1409;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(0,0,0,.25)}
+.sg .teller .label b{font-size:calc(var(--td) / 22);font-weight:700;letter-spacing:-.01em;
+  display:block;transform:rotate(-24deg)}
+.sg .teller .label span{font-family:var(--mono);font-size:9px;letter-spacing:.08em;opacity:.75;
+  display:block;margin-top:6px;transform:rotate(-24deg)}
+.sg .teller .dorn{position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;
+  border-radius:50%;background:#C9C9BC;box-shadow:0 0 0 1px rgba(0,0,0,.4);z-index:3}
+.sg .arm{position:absolute;right:-4%;top:-6%;width:24px;height:var(--al);
+  transform-origin:50% 26px;transition:transform .5s cubic-bezier(.4,0,.2,1);pointer-events:none}
+.sg .arm .rohr{position:absolute;left:7px;right:7px;top:26px;bottom:40px;border-radius:6px;
+  background:linear-gradient(90deg,#D8D8D0,#FBFBF6 45%,#CFCFC6);
+  box-shadow:0 3px 8px rgba(34,34,28,.3)}
+.sg .arm .lager{position:absolute;left:50%;top:0;width:52px;height:52px;margin-left:-26px;
+  border-radius:50%;background:radial-gradient(circle at 34% 28%,#FFF,#DCDCD4 60%,#B4B4AA);
+  box-shadow:0 4px 12px rgba(34,34,28,.28)}
+.sg .arm .kopf{position:absolute;left:50%;bottom:0;width:30px;height:46px;margin-left:-15px;
+  border-radius:5px;background:linear-gradient(150deg,#FBFBF6,#C6C6BC);
+  box-shadow:0 3px 8px rgba(34,34,28,.3);transform:rotate(-18deg)}
+.sg .plattenfeld{position:relative;flex:none}
+
+.sg .textzeile{margin-top:var(--tz);text-align:center;max-width:520px}
+.sg .textzeile h1{font-size:var(--tg);font-weight:700;letter-spacing:-.01em;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.sg .textzeile .ar{margin-top:5px;font-size:14px;color:var(--tinte-2)}
+.sg .transport{display:flex;gap:20px;align-items:center;justify-content:center;margin-top:20px}
+.sg .transport button{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--tinte);
+  display:grid;place-items:center;color:var(--tinte)}
+.sg .transport button.pp{background:var(--tinte);color:var(--grund);width:56px;height:56px}
+.sg .band{margin-top:20px;width:var(--bw);height:22px;position:relative;display:flex;
+  align-items:center;cursor:pointer;touch-action:none}
+.sg .band .schiene{position:absolute;left:0;right:0;height:2px;background:rgba(34,34,28,.22)}
+.sg .band .voll{position:absolute;left:0;height:2px;background:var(--terra)}
+.sg .band .griff{position:absolute;width:12px;height:12px;border-radius:50%;background:var(--terra);
+  margin-left:-6px;transition:left .18s linear}
+.sg .zeiten{display:flex;justify-content:space-between;width:var(--bw);font-family:var(--mono);
+  font-size:11px;color:var(--tinte-3);font-variant-numeric:tabular-nums;margin-top:2px}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   11/12 · Turm und Vollverstärker — Blatt 13 „Nussbaum & Champagner"
+   Kein Bildschirmentwurf, sondern ein Moebel: Holzzargen, champagnerfarbene
+   Frontplatten, zwei beleuchtete Zeigerinstrumente. Die Zeiger schlagen nur
+   aus, solange Ton laeuft — die eine Anzeige, die ein Spieler ohne Ton
+   nicht faelschen darf.
+   ═══════════════════════════════════════════════════════════════════════ */
+.nc{
+  --holz-1:#5A2E1C; --holz-2:#3A1B0F; --front:#E6E0CE; --front-2:#D3CCB6;
+  --tinte:#2A241A; --tinte-2:#6B6250; --tinte-3:#9C947F;
+  --gravur:rgba(42,36,26,.55); --glas:#F0E4B8; --zeiger:#7A1E12; --gold:#8A6534;
+  --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+  --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
+  --gap:26px; --pad:30px; --zarge:14px; --fp:24px; --fpx:30px; --mg:14px;
+  --imax:min(360px,26vw); --ih:min(120px,15vh); --dk:min(104px,13vh); --tg:20px;
+  --bg:32px; --tb:52px;
+  background:radial-gradient(80% 70% at 50% 20%,#241812,#150D09 75%);
+  color:var(--tinte);height:100%;overflow:hidden;position:relative;
+  display:flex;flex-direction:column;gap:var(--gap);padding:var(--pad);justify-content:center}
+.nc .kap{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--tinte-2)}
+
+.nc .geraet{border-radius:6px;padding:var(--zarge);flex:none;
+  background:linear-gradient(150deg,var(--holz-1),var(--holz-2) 60%,#2A130A);
+  box-shadow:0 24px 50px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.14)}
+.nc .front{border-radius:3px;padding:var(--fp) var(--fpx);position:relative;
+  background:
+    repeating-linear-gradient(93deg,rgba(255,255,255,.35) 0 1px,rgba(140,130,105,.10) 1px 3px),
+    linear-gradient(178deg,#F0EBDB,var(--front) 40%,var(--front-2));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.5),inset 0 0 0 2px rgba(42,36,26,.18),
+    0 2px 6px rgba(0,0,0,.4)}
+.nc .marke{position:absolute;left:var(--fpx);bottom:10px;font-family:var(--serif);font-size:15px;
+  letter-spacing:.06em;color:var(--gravur);text-shadow:0 1px 0 rgba(255,255,255,.6)}
+.nc .marke em{font-style:italic;font-size:19px;color:var(--gold)}
+.nc .typ{position:absolute;right:var(--fpx);bottom:12px;font-family:var(--mono);font-size:9px;
+  letter-spacing:.14em;color:var(--tinte-3)}
+
+.nc .messwerk{display:flex;gap:var(--mg);justify-content:center;align-items:stretch}
+.nc .instrument{flex:1;max-width:var(--imax);border-radius:3px;padding:10px 12px 6px;
+  background:linear-gradient(180deg,#F6EDC4,var(--glas) 60%,#E2D3A0);
+  box-shadow:inset 0 0 0 1px rgba(42,36,26,.4),inset 0 6px 14px rgba(180,150,70,.35),
+    0 2px 4px rgba(0,0,0,.3);position:relative}
+.nc .instrument svg{width:100%;height:var(--ih);display:block}
+.nc .instrument .skalatext{position:absolute;left:0;right:0;bottom:6px;text-align:center;font-size:8px;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gravur)}
+.nc .instrument .kanal{position:absolute;left:10px;top:8px;font-family:var(--mono);font-size:8px;
+  letter-spacing:.1em;color:var(--gravur)}
+.nc .zwischen{width:34px;flex:none;border-radius:3px;background:linear-gradient(180deg,#241C12,#0E0A06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+
+.nc .display{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:16px;
+  padding-top:14px;border-top:1px solid rgba(42,36,26,.18)}
+.nc .display .titel{font-size:var(--tg);font-weight:600;letter-spacing:-.01em;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.nc .display .unter{font-size:12.5px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;margin-top:3px}
+.nc .display .uhr{font-family:var(--mono);font-size:12px;color:var(--tinte-2);white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+
+.nc .platte{display:flex;align-items:center;gap:var(--bg)}
+.nc .drehknopf{width:var(--dk);height:var(--dk);border-radius:50%;position:relative;flex:none;
+  cursor:pointer;touch-action:none;
+  background:
+    conic-gradient(from 0deg,#EDE7D6,#C4BCA4 8%,#F2ECDC 16%,#C8C0A8 24%,#EDE7D6 32%,#C4BCA4 40%,
+      #F2ECDC 48%,#C8C0A8 56%,#EDE7D6 64%,#C4BCA4 72%,#F2ECDC 80%,#C8C0A8 88%,#EDE7D6),
+    #DDD6C2;
+  box-shadow:0 4px 10px rgba(0,0,0,.4),inset 0 0 0 1px rgba(255,255,255,.5)}
+.nc .drehknopf::after{content:'';position:absolute;inset:22%;border-radius:50%;
+  background:radial-gradient(circle at 36% 30%,#F6F2E6,#CFC7B0);
+  box-shadow:inset 0 0 0 1px rgba(42,36,26,.18)}
+.nc .drehknopf i{position:absolute;left:50%;top:9%;width:3px;height:26%;margin-left:-1.5px;
+  background:var(--tinte);border-radius:2px;transform-origin:50% calc(var(--dk) * .41);z-index:2}
+.nc .knopffeld{display:flex;flex-direction:column;align-items:center;gap:8px}
+.nc .kippschalter{width:26px;height:52px;border-radius:3px;position:relative;flex:none;cursor:pointer;
+  background:linear-gradient(180deg,#CFC7B0,#B0A78E);box-shadow:inset 0 0 0 1px rgba(42,36,26,.3)}
+.nc .kippschalter i{position:absolute;left:50%;width:8px;height:22px;margin-left:-4px;border-radius:3px;
+  background:linear-gradient(180deg,#3A3227,#191510);transition:top .12s;top:4px}
+.nc .kippschalter.an i{top:26px}
+.nc .waehler{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.nc .wz{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--tinte-2);cursor:pointer;
+  padding:4px 8px;border-radius:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nc .wz i{width:8px;height:8px;border-radius:50%;flex:none;background:rgba(42,36,26,.22)}
+.nc .wz.an{color:var(--tinte);font-weight:600;background:rgba(42,36,26,.06)}
+.nc .wz.an i{background:var(--zeiger);box-shadow:0 0 6px rgba(122,30,18,.6)}
+.nc .tasten{display:flex;gap:10px;flex:none}
+.nc .tasten button{width:var(--tb);height:var(--tb);border-radius:3px;color:var(--tinte);
+  display:grid;place-items:center;background:linear-gradient(180deg,#EDE7D6,#C8C0A8);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 2px 4px rgba(0,0,0,.35)}
+.nc .tasten button:active{background:linear-gradient(180deg,#C8C0A8,#EDE7D6)}
+.nc .tasten button.an{background:linear-gradient(180deg,#C8C0A8,#EDE7D6);color:var(--zeiger)}
+.nc .band{flex:1;min-width:120px;height:22px;position:relative;display:flex;align-items:center;
+  cursor:pointer;touch-action:none}
+.nc .band .schiene{position:absolute;left:0;right:0;height:4px;border-radius:2px;
+  background:rgba(42,36,26,.22);box-shadow:inset 0 1px 2px rgba(0,0,0,.3)}
+.nc .band .voll{position:absolute;left:0;height:4px;border-radius:2px;background:var(--zeiger)}
+.nc .band .griff{position:absolute;width:14px;height:20px;border-radius:2px;margin-left:-7px;
+  background:linear-gradient(180deg,#F2ECDC,#B0A78E);box-shadow:0 2px 4px rgba(0,0,0,.4);
+  transition:left .18s linear}
+
+.nc .bib{position:absolute;inset:0;z-index:60;padding:30px 38px;display:flex;flex-direction:column;
+  background:linear-gradient(178deg,#F0EBDB,var(--front) 40%,var(--front-2));
+  box-shadow:inset 0 0 0 2px rgba(42,36,26,.18);
+  opacity:0;pointer-events:none;transform:translateY(12px);transition:opacity .22s,transform .22s}
+.nc .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.nc .bib .bkopf{display:flex;align-items:center;gap:24px;border-bottom:1px solid rgba(42,36,26,.28);
+  padding-bottom:14px;margin-bottom:14px}
+.nc .bib h2{font-family:var(--serif);font-size:24px;font-weight:400;letter-spacing:.02em;flex:none;
+  color:var(--gravur);text-shadow:0 1px 0 rgba(255,255,255,.6)}
+.nc .bib .suchfeld{flex:1;min-width:0;display:flex;align-items:center;gap:10px;height:44px;padding:0 14px;
+  border-radius:3px;background:rgba(42,36,26,.06);box-shadow:inset 0 1px 3px rgba(42,36,26,.25)}
+.nc .bib .suchfeld svg{color:var(--tinte-3);flex:none}
+.nc .bib .suchfeld input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:var(--tinte);font-size:15px}
+.nc .bib .suchfeld input::placeholder{color:var(--tinte-3)}
+.nc .bib .bliste{flex:1;min-height:0;overflow:auto;display:grid;grid-template-columns:1fr 1fr;
+  gap:0 28px;align-content:start}
+.nc .bib .bz{display:flex;align-items:center;gap:14px;padding:9px 6px;cursor:pointer;
+  border-bottom:1px solid rgba(42,36,26,.14)}
+.nc .bib .bz:hover{background:rgba(42,36,26,.05)}
+.nc .bib .bz .pl{width:12px;height:12px;border-radius:50%;flex:none;
+  box-shadow:inset 0 0 0 1px rgba(42,36,26,.35)}
+.nc .bib .bz .m{flex:1;min-width:0}
+.nc .bib .bz .m>span{display:block}
+.nc .bib .bz .t{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nc .bib .bz .s{font-size:11.5px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.nc .bib .bz .n{font-size:11px;color:var(--tinte-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.nc .bib .bz.an .t{color:var(--zeiger)}
+.nc .bib .bfuss{flex:none;padding-top:12px;font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--tinte-3)}
+
+/* Vollverstaerker: ein Geraet statt zwei, alles auf einer Frontplatte. */
+.nc.voll1{--imax:min(420px,32vw);--ih:min(150px,18vh);--dk:min(112px,14vh);--tg:22px;--fp:26px;
+  --fpx:34px;--zarge:16px;--pad:26px;--tb:56px}
+</style>
+</head>
+<body>
+
+<audio id="ton" preload="metadata"></audio>
+<div id="buehne"></div>
+
+<button class="wechsler" id="wechsler" type="button" title="Ansicht wechseln (Taste L)"
+  aria-label="Ansicht wechseln"></button>
+
+<div class="wahl" id="wahl" hidden>
+  <div class="wahlkasten" role="dialog" aria-modal="true" aria-label="Ansicht wählen">
+    <h2>Ansicht</h2>
+    <p>Zwölf Oberflächen für dieselbe Sammlung. Was gespielt wird, läuft beim Wechsel weiter —
+    nur das Gerät drumherum ist ein anderes.</p>
+    <div class="wahlgitter" id="wahlgitter"></div>
+    <div class="wahlende">
+      <span class="wahlkap">Am Ende der Warteschlange</span>
+      <div class="wahlreihe" id="wahlende"></div>
+    </div>
+    <div class="wahlende">
+      <span class="wahlkap">Bildschirm</span>
+      <div class="wahlreihe" id="wahlwach"></div>
+    </div>
+    <div class="wahlfuss">
+      <span>Taste <b>L</b> öffnet diese Liste · <a href="/">Schreibtisch</a> · <a href="/mobil">Handy</a></span>
+      <button type="button" id="wahlzu">Schließen</button>
+    </div>
+  </div>
+</div>
+
+<div class="hinweis" id="hinweis"><div class="k">
+  <h1 id="hinweis-titel">Sammlung wird geladen …</h1>
+  <p id="hinweis-text"></p>
+</div></div>
+
+<script>
+'use strict';
+/* ══════════════════════════════════════════════════════════════════════════
+   Unterbau — was allen zwoelf Layouts gemeinsam ist.
+
+   Die Form der Daten ist absichtlich dieselbe, die die Entwuerfe in
+   mockups/player/_demo.js benutzt haben (a.t, a.ar, a.tr, TRACKS[id].d …).
+   Dadurch ist jedes Layout eine Portierung des Blattes und keine Neuschrift,
+   und ein neues Blatt laesst sich mit denselben Handgriffen herholen.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Sitzung ────────────────────────────────────────────────────────────
+   Dieselben Schluessel wie index.html und mobile.html, in derselben Form:
+   auf einem Geraet laeuft die Sitzung zwischen den drei Oberflaechen weiter.
+   localStorage ist Beiwerk — faellt es aus, laeuft die Seite unveraendert. */
+const STORE = 'musiklib:';
+function store(key, value){ try{ localStorage.setItem(STORE+key, JSON.stringify(value)); }catch{} }
+function restore(key, fallback){
+  try{ const raw = localStorage.getItem(STORE+key); return raw === null ? fallback : JSON.parse(raw); }
+  catch{ return fallback; }
+}
+
+/* ── kleine Helfer ── */
+const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
+const esc = s => (s == null ? '' : String(s)).replace(/[&<>"']/g,
+  c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = s => { s = Math.max(0, Math.round(s||0));
+  return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
+const fmtLang = s => { s = Math.round(s||0); const h = Math.floor(s/3600), m = Math.round(s%3600/60);
+  return h ? `${h} Std ${m} Min` : `${m} Min`; };
+const $ = (s,w) => (w||document).querySelector(s);
+const $$ = (s,w) => [...(w||document).querySelectorAll(s)];
+
+/* ── Zeichen ── */
+const sv = (w, inner, sw=1.6) => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none"
+  stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+const I = {
+  play:  w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`,
+  pause: w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M6.5 4h3.6v16H6.5zM13.9 4h3.6v16h-3.6z"/></svg>`,
+  prev:  w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M19 20L9 12l10-8v16zM5 4h2.2v16H5z"/></svg>`,
+  next:  w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M5 4l10 8-10 8V4zm13.8 0H21v16h-2.2z"/></svg>`,
+  shuffle: w => sv(w,'<polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/>'),
+  search:  w => sv(w,'<circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.7" y2="16.7"/>'),
+  x:       w => sv(w,'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'),
+  list:    w => sv(w,'<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r=".9" fill="currentColor"/><circle cx="4" cy="12" r=".9" fill="currentColor"/><circle cx="4" cy="18" r=".9" fill="currentColor"/>'),
+  grid:    w => sv(w,'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'),
+  back:    w => sv(w,'<polyline points="15 18 9 12 15 6"/>'),
+  fwd:     w => sv(w,'<polyline points="9 18 15 12 9 6"/>'),
+};
+
+/* ══ Sammlung ══════════════════════════════════════════════════════════════
+   /api/library kommt flach und unveraendert aus library.json. Hier wird sie
+   einmal in die Form gebracht, mit der die Entwuerfe gezeichnet wurden —
+   danach fasst kein Layout die Rohdaten mehr an.                          */
+const ALBUMS = [], TLIST = [], TRACKS = Object.create(null);
+
+/* Zwei Toene je Album, aus der Album-Kennung — ein Album ohne Bild sieht
+   damit immer gleich aus, ohne dass irgendwo eine Farbe gespeichert wird. */
+function farben(id){
+  let h = 0; for (const ch of String(id)) h = (h*31 + ch.charCodeAt(0)) >>> 0;
+  const t = h % 360;
+  return [`hsl(${t} 24% 62%)`, `hsl(${(t+26)%360} 26% 40%)`];
+}
+const grad = a => `linear-gradient(150deg,${a.c[0]},${a.c[1]})`;
+const ini  = a => ((a.t || '?').trim().charAt(0) || '?').toUpperCase();
+const albDur = a => a.tr.reduce((n,t) => n + t[1], 0);
+const albOf = t => ALBUMS.find(a => a.id === (t && t.al));
+const coverURL = a => a && a.cover ? `/api/cover/${encodeURIComponent(a.cover)}` : null;
+
+function uebernimm(daten){
+  ALBUMS.length = 0; TLIST.length = 0;
+  for (const k in TRACKS) delete TRACKS[k];
+  const alben = (daten && daten.albums) || [];
+  alben.forEach(al => {
+    const a = {
+      id: al.id, t: al.title || 'Unbekanntes Album', ar: al.artist || 'Unbekannter Interpret',
+      y: al.year || '', cover: al.cover || null, added: al.added_at || 0,
+      c: farben(al.id), tr: [], ids: [],
+    };
+    (al.tracks || []).forEach((t,i) => {
+      const o = {id: t.id, t: t.title || 'Ohne Titel', d: Number(t.duration) || 0,
+        al: a.id, no: i+1, ar: t.artist || a.ar};
+      a.tr.push([o.t, o.d]); a.ids.push(o.id);
+      TRACKS[o.id] = o; TLIST.push(o);
+    });
+    if (!a.tr.length) return;
+    a._q = (a.t+' '+a.ar+' '+a.y+' '+a.tr.map(x => x[0]).join(' ')).toLowerCase();
+    ALBUMS.push(a);
+  });
+  /* Ein Titel ohne Laenge wuerde jede Achse einreissen, die nach Zeit
+     verteilt — er bekommt die mittlere Laenge der Sammlung. */
+  const echte = TLIST.filter(t => t.d > 0);
+  const mittel = echte.length ? echte.reduce((s,t) => s+t.d, 0) / echte.length : 240;
+  TLIST.forEach(t => { if (!(t.d > 0)){ t.d = Math.round(mittel);
+    const a = albOf(t); if (a) a.tr[t.no-1][1] = t.d; } });
+  ALBUMS.sort((x,y) => x.ar.localeCompare(y.ar,'de') || String(x.y).localeCompare(String(y.y))
+    || x.t.localeCompare(y.t,'de'));
+}
+
+/* Gesucht wird im Blob aus Albumtitel, Interpret, Jahr und allen Titelnamen —
+   ein includes() je Album, genau wie a._q in index.html. */
+const suche = text => {
+  const q = String(text || '').trim().toLowerCase();
+  return q ? ALBUMS.filter(a => a._q.includes(q)) : ALBUMS.slice();
+};
+
+/* Cover: das Bild, wenn es eines gibt, sonst der Verlauf mit Initial. Beide
+   Faelle fuellen denselben Kasten, damit kein Layout zwei Groessen kennt. */
+function coverHTML(a, cls = 'cov', extra = ''){
+  const url = coverURL(a);
+  return url
+    ? `<div class="${cls}" style="background:${grad(a)}"${extra}><img src="${url}" alt=""></div>`
+    : `<div class="${cls}" style="background:${grad(a)}"${extra}><span class="ini">${esc(ini(a))}</span></div>`;
+}
+/* Fuer Stellen, die nur die Flaeche eines vorhandenen Kastens fuellen. */
+function coverFuellung(el, a){
+  if (!el) return;
+  const url = coverURL(a);
+  el.style.background = grad(a);
+  el.innerHTML = url ? `<img src="${url}" alt="">` : `<span class="ini">${esc(ini(a))}</span>`;
+}
+
+/* ══ Laufwerk ══════════════════════════════════════════════════════════════
+   Dieselbe Schnittstelle wie die Attrappe in _demo.js — nur haengt sie jetzt
+   an einem <audio>. Die Layouts sehen keinen Unterschied.
+
+   Wichtig, aus index.html uebernommen: der Abspielzustand kommt aus den
+   Ereignissen des Elements, nie aus einer Annahme neben dem Aufruf. Sonst
+   laeuft die Anzeige auseinander, sobald von aussen gesteuert wird
+   (Sperrbildschirm, Medientasten, blockiertes Autoplay).                   */
+class Deck {
+  constructor(audio){
+    this.audio = audio;
+    this.queue = [];          // Titelkennungen
+    this.qi = -1;
+    this.shuffle = restore('shuffle', false);
+    this.onRender = () => {};
+    this._ziel = null;        // Ziel eines laufenden Zugs am Spulgriff
+    this._zielFrist = 0;
+    this._pending = 0;        // Position aus der Sitzung, sobald die Dauer da ist
+    this._rahmen = 0;
+    this.fehler = '';
+  }
+  get track(){ return TRACKS[this.queue[this.qi]] || null; }
+  get album(){ return albOf(this.track) || null; }
+  get dur(){
+    const d = this.audio.duration;
+    if (isFinite(d) && d > 0) return d;
+    const t = this.track; return t ? t.d : 0;
+  }
+  get pos(){
+    if (this._ziel != null && performance.now() < this._zielFrist) return this._ziel;
+    return this.audio.currentTime || 0;
+  }
+  get playing(){ return !!this.audio.src && !this.audio.paused && !this.audio.ended; }
+  get vol(){ return this.audio.muted ? 0 : this.audio.volume; }
+  get frac(){ const d = this.dur; return d ? clamp(this.pos / d, 0, 1) : 0; }
+  get rest(){ return Math.max(0, this.dur - this.pos); }
+  get offs(){ let o = [], s = 0; for (const id of this.queue){ o.push(s); s += (TRACKS[id] || {d:0}).d; } return o; }
+  get total(){ return this.queue.reduce((s,id) => s + (TRACKS[id] || {d:0}).d, 0); }
+  get gpos(){ return (this.offs[this.qi] || 0) + this.pos; }
+
+  render(){ try{ this.onRender(this); }catch(e){ console.error(e); } }
+
+  /* Was gespielt wird, aendert genau diese eine Stelle — wie playCurrent()
+     in index.html. Sie frischt auch die Medienangaben auf, damit der
+     Sperrbildschirm dieselbe Warteschlange bedient. */
+  spiele(autoplay = true, ab = 0){
+    const t = this.track, a = this.album;
+    if (!t){ this.render(); return; }
+    this.fehler = '';
+    this._ziel = null;
+    this._pending = ab || 0;
+    this.audio.src = `/api/stream/${encodeURIComponent(t.id)}`;
+    heilungAbsagen();
+    if (autoplay){
+      /* blockiertes Autoplay: der Knopf bleibt korrekt, und nachdruck()
+         fragt nach — im Hintergrund weist iOS den ersten Versuch oft ab. */
+      tonGewuenscht = true; nachVersuche = 0;
+      this.audio.play().catch(() => {});
+      nachdruck();
+    }
+    if ('mediaSession' in navigator){
+      try{
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: t.t, artist: a ? a.ar : '', album: a ? a.t : '',
+          artwork: a && a.cover ? [{src: coverURL(a), sizes:'512x512'}] : [],
+        });
+      }catch{}
+    }
+    this.render();
+    sitzungSichern();
+  }
+  ladeAlbum(a, i = 0){
+    if (!a || !a.ids.length) return;
+    let ids = a.ids.slice();
+    if (this.shuffle){
+      const kopf = ids[i], rest = ids.filter((_,k) => k !== i);
+      for (let k = rest.length-1; k > 0; k--){ const j = Math.floor(Math.random()*(k+1));
+        [rest[k], rest[j]] = [rest[j], rest[k]]; }
+      ids = [kopf].concat(rest); i = 0;
+    }
+    this.queue = ids; this.qi = clamp(i, 0, ids.length-1);
+    this.spiele(true);
+  }
+  toggle(){
+    if (!this.audio.src){ if (this.track) this.spiele(true); return; }
+    if (this.audio.paused) this.play();
+    else { nachdruckEnde(); heilungAbsagen(); this.audio.pause(); }
+  }
+  play(){
+    if (!this.audio.src){ this.spiele(true); return; }
+    tonGewuenscht = true; nachVersuche = 0;
+    this.audio.play().catch(() => {});
+    nachdruck();
+  }
+  step(n){
+    if (!this.queue.length) return;
+    this.qi = (this.qi + n + this.queue.length) % this.queue.length;
+    this.spiele(true);
+  }
+  next(){ this.step(1); }
+  prev(){ if (this.pos > 3){ this.setzePos(0); return; } this.step(-1); }
+  jump(i){ this.qi = clamp(i, 0, this.queue.length-1); this.spiele(true); }
+
+  /* Waehrend am Griff gezogen wird, darf die Anzeige nicht auf die Uhr
+     zurueckspringen: das Ziel gilt, bis das Element gemeldet hat, dass es
+     dort ist (Ereignis „seeked") — laengstens eine Sekunde. */
+  setzePos(v){
+    const d = this.dur;
+    this._ziel = clamp(v, 0, d ? d - .25 : 0);
+    this._zielFrist = performance.now() + 1000;
+    if (!this._rahmen) this._rahmen = requestAnimationFrame(() => {
+      this._rahmen = 0;
+      if (this._ziel != null && this.audio.src){ try{ this.audio.currentTime = this._ziel; }catch{} }
+    });
+    this.render();
+  }
+  seek(f){ this.setzePos(clamp(f,0,1) * this.dur); }
+  seekGlobal(v){
+    if (!this.queue.length) return;
+    v = clamp(v, 0, Math.max(0, this.total - .5));
+    const o = this.offs;
+    let i = 0; for (let k = o.length-1; k >= 0; k--) if (v >= o[k]){ i = k; break; }
+    if (i === this.qi){ this.setzePos(v - o[i]); return; }
+    this.qi = i; this.spiele(true, v - o[i]);
+  }
+  setVol(v){
+    v = clamp(v, 0, 1);
+    this.audio.muted = false;
+    this.audio.volume = v;
+    store('volume', v); store('muted', false);
+    this.render();
+  }
+  toggleShuffle(){ this.shuffle = !this.shuffle; store('shuffle', this.shuffle); this.render(); }
+}
+
+const ton = document.getElementById('ton');
+const deck = new Deck(ton);
+
+ton.volume = clamp(restore('volume', 1), 0, 1);
+ton.muted = restore('muted', false);
+
+ton.addEventListener('play',  () => {
+  deck.render(); wachHalten();
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+});
+ton.addEventListener('pause', () => {
+  deck.render(); sitzungSichern(); wachHalten();
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+});
+ton.addEventListener('seeked', () => { deck._ziel = null; deck.render(); });
+ton.addEventListener('loadedmetadata', () => {
+  if (deck._pending > 0 && isFinite(ton.duration)){
+    try{ ton.currentTime = Math.min(deck._pending, ton.duration - 1); }catch{}
+  }
+  deck._pending = 0;
+  deck.render();
+});
+ton.addEventListener('ended', () => {
+  if (deck.qi < deck.queue.length - 1){ deck.qi++; deck.spiele(true); }
+  else amEnde();
+});
+
+/* ══ Am Ende der Warteschlange ═════════════════════════════════════════════
+   Eine Warteschlange ist ein Album. Was danach geschieht, steht in
+   `musiklib:fortsetzung` — demselben Schluessel, den index.html und
+   mobile.html lesen, mit denselben drei Werten. Voreinstellung ist
+   „weiter": ein Spieler, der am Kuechentisch nach vierzig Minuten von
+   selbst verstummt, wird als Fehler erlebt, nicht als Absicht.          */
+const FORTSETZUNGEN = [
+  {id:'weiter',      name:'Nächstes Album', text:'Am Ende der Warteschlange läuft das nächste Album der Sammlung.'},
+  {id:'wiederholen', name:'Wiederholen',    text:'Dieselbe Warteschlange beginnt von vorn.'},
+  {id:'halt',        name:'Anhalten',       text:'Nach dem letzten Titel ist Schluss.'},
+];
+let fortsetzung = FORTSETZUNGEN.some(f => f.id === restore('fortsetzung', null))
+  ? restore('fortsetzung', null) : 'weiter';
+function setzeFortsetzung(v){
+  fortsetzung = v; store('fortsetzung', v);
+  deck.render(); zeichneWahl();
+}
+function naechstesAlbum(){
+  const a = deck.album;
+  if (!a || !ALBUMS.length) return null;
+  const i = ALBUMS.findIndex(x => x.id === a.id);
+  return ALBUMS[(i + 1) % ALBUMS.length] || null;
+}
+function amEnde(){
+  if (fortsetzung === 'wiederholen' && deck.queue.length){ deck.qi = 0; deck.spiele(true); return; }
+  if (fortsetzung === 'weiter'){
+    const a = naechstesAlbum();
+    if (a){ deck.ladeAlbum(a, 0); return; }
+  }
+  nachdruckEnde();
+  deck.render();
+}
+
+/* ══ Nachdruck beim Titelwechsel ═══════════════════════════════════════════
+   Der wichtigste Fall auf einem Telefon oder iPad: Am Ende eines Titels
+   bekommt das Element eine neue Quelle — und iOS weist play() im Hintergrund
+   ab, weil das als neuer Start gilt und nicht als Fortsetzung. Die
+   Zurueckweisung kam bisher als still abgefangener Fehler zurueck, und die
+   Musik war aus.
+
+   Also nachfragen, solange Ton gewuenscht ist und keiner laeuft — und beim
+   Zurueckkommen in den Vordergrund noch einmal von vorn. `tonGewuenscht`
+   unterscheidet die abgewiesene Wiedergabe von einer gewollten Pause.     */
+let tonGewuenscht = false;
+let NACH_VERZUG = 1200;        // veraenderlich, damit der Test nicht wartet
+const NACH_MAX = 8;
+let nachTimer = 0, nachVersuche = 0;
+
+function nachdruck(){
+  clearTimeout(nachTimer);
+  if (!tonGewuenscht) return;
+  nachTimer = setTimeout(() => {
+    nachTimer = 0;
+    if (!tonGewuenscht || !ton.src || !ton.paused) return;
+    if (++nachVersuche > NACH_MAX) return;
+    ton.play().catch(() => {});
+    nachdruck();
+  }, NACH_VERZUG);
+}
+function nachdruckEnde(){ tonGewuenscht = false; clearTimeout(nachTimer); nachTimer = 0; }
+
+/* ══ Bildschirm anlassen ═══════════════════════════════════════════════════
+   Solange Ton laeuft und die Einstellung es erlaubt, bleibt der Bildschirm
+   an — damit iOS bei dunklem Schirm nicht das WLAN drosselt. Die Sperre wird
+   beim Ausblenden von selbst frei und beim Zurueckkommen neu angefordert. */
+let wachSchloss = null;
+let wach = restore('wach', false) === true;
+function wachGewuenscht(){ return wach && !ton.paused && !!ton.src; }
+async function wachHalten(){
+  try{
+    if (wachGewuenscht()){
+      if (!wachSchloss && 'wakeLock' in navigator && document.visibilityState === 'visible'){
+        wachSchloss = await navigator.wakeLock.request('screen');
+        wachSchloss.addEventListener('release', () => { wachSchloss = null; });
+      }
+    } else if (wachSchloss){
+      const s = wachSchloss; wachSchloss = null; await s.release();
+    }
+  }catch{ wachSchloss = null; }
+}
+function setzeWach(v){ wach = !!v; store('wach', wach); wachHalten(); zeichneWahl(); }
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') return;
+  wachHalten();
+  nachVersuche = 0;            // ein im Hintergrund abgewiesener Wechsel
+  nachdruck();                 // bekommt jetzt seine Gelegenheit
+});
+
+/* ══ Wiederanlauf ══════════════════════════════════════════════════════════
+   Ein Stream ueber WLAN reisst irgendwann ab: das Telefon drosselt bei
+   dunklem Bildschirm den Funk, die Platte im NAS schlaeft ein, das Netz
+   hustet. Das Element meldet dann „waiting" oder „stalled" und bleibt
+   stehen — ohne diesen Abschnitt fuer immer.
+
+   Angefasst wird nur, was wirklich haengt: der Zeitgeber wird von jedem
+   Fortschritt wieder abgesagt. Ein Titel, dessen Datei verschwunden ist,
+   ist kein Netzproblem und wird gemeldet statt endlos neu geladen.      */
+let HEIL_VERZUG = 6000;        // veraenderlich, damit der Test nicht wartet
+const HEIL_MAX = 5;
+let heilTimer = 0, heilVersuche = 0;
+
+function heilungPlanen(ms){
+  clearTimeout(heilTimer);
+  heilTimer = setTimeout(versucheWeiter, ms || HEIL_VERZUG);
+}
+function heilungAbsagen(){
+  clearTimeout(heilTimer); heilTimer = 0; heilVersuche = 0;
+}
+function versucheWeiter(){
+  heilTimer = 0;
+  if (!ton.src || !deck.track) return;
+  if (heilVersuche >= HEIL_MAX){
+    deck.fehler = 'Verbindung zum Server abgerissen — neu laden';
+    deck.render();
+    return;
+  }
+  heilVersuche++;
+  deck._pending = ton.currentTime || 0;   // an derselben Stelle weiter
+  deck._ziel = null;
+  try{ ton.load(); }catch{}
+  ton.play().catch(() => {});
+  heilungPlanen();                        // haengt es wieder, kommt der naechste Versuch
+}
+ton.addEventListener('waiting', () => heilungPlanen());
+ton.addEventListener('stalled', () => heilungPlanen());
+ton.addEventListener('playing', () => { heilungAbsagen(); nachVersuche = 0; });
+/* Ein Titel, dessen Datei seit dem letzten Scan verschoben wurde, liefert
+   404 — dann hilft kein neuer Versuch. Ein Netzfehler dagegen schon. */
+ton.addEventListener('error', () => {
+  if (!ton.src) return;
+  const code = ton.error && ton.error.code;
+  if (code === 2 || code === 3){ heilungPlanen(1500); return; }
+  heilungAbsagen();
+  deck.fehler = 'Titel nicht abspielbar — bitte am Schreibtisch neu scannen';
+  deck.render();
+});
+
+/* ══ Vorladen ══════════════════════════════════════════════════════════════
+   Kurz vor dem Ende eines Titels den Anfang des naechsten holen: das weckt
+   die Platte im NAS und haelt die Verbindung warm. Der Koerper wird nicht
+   gebraucht — es geht nur darum, dass die ersten Sekunden schon da sind,
+   wenn der Wechsel kommt. (preload am Element hilft nicht: iOS ignoriert
+   es.) */
+const VORLAUF = 25;            // Sekunden vor dem Ende
+let vorgeladen = null;
+function ladeVor(){
+  let naechst = deck.queue[deck.qi + 1];
+  if (!naechst && fortsetzung === 'weiter'){
+    const a = naechstesAlbum();            // der Wechsel auf das naechste Album
+    naechst = a && a.ids[0];               // ist die laengste Pause von allen
+  }
+  if (!naechst && fortsetzung === 'wiederholen') naechst = deck.queue[0];
+  if (!naechst || vorgeladen === naechst) return;
+  vorgeladen = naechst;
+  fetch(`/api/stream/${encodeURIComponent(naechst)}`, {headers:{Range:'bytes=0-262143'}})
+    .then(r => r.arrayBuffer()).catch(() => {});
+}
+
+ton.addEventListener('timeupdate', () => {
+  heilungAbsagen();                        // Fortschritt heisst: alles in Ordnung
+  const d = deck.dur;
+  if (d && d - deck.pos < VORLAUF) ladeVor();
+  deck.render();
+});
+setInterval(() => { if (deck.playing) deck.render(); }, 250);
+setInterval(sitzungSichern, 5000);
+addEventListener('pagehide', sitzungSichern);
+
+if ('mediaSession' in navigator){
+  const griffe = {
+    play: () => deck.play(), pause: () => { nachdruckEnde(); ton.pause(); },
+    previoustrack: () => deck.prev(), nexttrack: () => deck.next(),
+  };
+  for (const [was, fn] of Object.entries(griffe)){
+    try{ navigator.mediaSession.setActionHandler(was, fn); }catch{}
+  }
+}
+
+function sitzungSichern(){
+  if (deck.qi < 0 || !deck.queue.length) return;
+  const stuecke = deck.queue.map(id => {
+    const t = TRACKS[id]; return t ? [t.al, t.id] : null;
+  }).filter(Boolean);
+  if (!stuecke.length) return;
+  store('session', {items: stuecke, qIndex: deck.qi, position: Math.floor(deck.pos || 0)});
+}
+
+/* Die Sitzung wird nur wiederhergestellt, nie fortgesetzt: losgespielt wird
+   erst, wenn jemand drueckt. Titel, die es nicht mehr gibt, fallen still
+   heraus — track_id haengt am Pfad, ein verschobenes Stueck ist ein neues. */
+function sitzungHolen(){
+  const s = restore('session', null);
+  if (!s || !Array.isArray(s.items) || !s.items.length) return false;
+  const ids = [];
+  let neu = 0;
+  s.items.forEach(([albumId, trackId], i) => {
+    const t = TRACKS[trackId];
+    if (!t || t.al !== albumId) return;
+    if (i === s.qIndex) neu = ids.length;
+    ids.push(trackId);
+  });
+  if (!ids.length) return false;
+  deck.queue = ids;
+  deck.qi = Math.min(neu, ids.length-1);
+  deck._pending = s.position || 0;
+  ton.preload = 'metadata';
+  deck.spiele(false, s.position || 0);
+  return true;
+}
+
+/* ══ Bedienhilfen fuer die Layouts ═════════════════════════════════════════ */
+
+/* Ziehen auf einer Leiste: liefert 0…1 bei Klick, Zug und Abbruch.
+   opts.achse 'x' | 'y', opts.schwelle: erst ab n Pixeln gilt es als Zug. */
+function bindDrag(el, cb, opts = {}){
+  const achse = opts.achse || 'x';
+  const schwelle = opts.schwelle || 0;
+  let ziehend = false, start = 0, gezogen = false;
+  const wert = ev => {
+    const r = el.getBoundingClientRect();
+    const f = achse === 'x' ? (ev.clientX - r.left) / r.width : (ev.clientY - r.top) / r.height;
+    return clamp(opts.umgekehrt ? 1 - f : f, 0, 1);
+  };
+  el.addEventListener('pointerdown', ev => {
+    ziehend = true; gezogen = schwelle === 0;
+    start = achse === 'x' ? ev.clientX : ev.clientY;
+    try{ el.setPointerCapture(ev.pointerId); }catch{}
+    if (gezogen) cb(wert(ev), 'start');
+    ev.preventDefault();
+  });
+  el.addEventListener('pointermove', ev => {
+    if (!ziehend) return;
+    if (!gezogen){
+      const d = Math.abs((achse === 'x' ? ev.clientX : ev.clientY) - start);
+      if (d < schwelle) return;
+      gezogen = true;
+    }
+    cb(wert(ev), 'move');
+  });
+  const ende = ev => {
+    if (!ziehend) return;
+    ziehend = false;
+    cb(wert(ev), gezogen ? 'end' : 'tap');
+  };
+  el.addEventListener('pointerup', ende);
+  el.addEventListener('pointercancel', ende);
+}
+
+/* Bibliothek — jedes Layout bringt sein eigenes Aussehen mit (eine Blende,
+   ein Suchfeld, eine Liste, ein Knopf). Filtern, Zeichnen, Markieren und
+   Oeffnen ist ueberall dasselbe und steht deshalb hier.
+
+   o = {knopf, zu, blende, feld, liste, treffer, deck, zeile(album), leer} */
+function bindBibliothek(o){
+  const markiere = () => [...o.liste.children].forEach(el =>
+    el.classList.toggle('an', !!o.deck.album && el.dataset.alb === o.deck.album.id));
+
+  const zeichne = () => {
+    const treffer = suche(o.feld.value);
+    o.liste.innerHTML = treffer.map(o.zeile).join('') || (o.leer || '');
+    if (o.treffer) o.treffer.textContent = o.feld.value.trim()
+      ? `${treffer.length} von ${ALBUMS.length} Alben` : `${ALBUMS.length} Alben`;
+    [...o.liste.children].forEach(el => el.dataset.alb && (el.onclick = () => {
+      const a = ALBUMS.find(x => x.id === el.dataset.alb);
+      if (a) o.deck.ladeAlbum(a, 0);
+      zeige(false);
+    }));
+    markiere();
+  };
+
+  const zeige = auf => {
+    o.blende.classList.toggle('auf', auf);
+    if (o.knopf) o.knopf.classList.toggle('an', auf);
+    if (auf) setTimeout(() => o.feld.focus(), 60);   // erst sichtbar, dann Fokus
+  };
+
+  if (o.knopf) o.knopf.onclick = () => zeige(!o.blende.classList.contains('auf'));
+  if (o.zu)    o.zu.onclick    = () => zeige(false);
+  o.feld.oninput = zeichne;
+  o.feld.addEventListener('keydown', ev => { if (ev.key === 'Escape') zeige(false); });
+  zeichne();
+  offeneBlenden.push(() => zeige(false));
+  return {zeichne, markiere, zeige};
+}
+let offeneBlenden = [];
+
+/* ══ Layouts ═══════════════════════════════════════════════════════════════
+   Jeder Eintrag: id, name, geraet (nur ein Hinweis, keine Weiche), klasse
+   (die Wurzelklasse im Regelwerk), chrome (Farbe des Wechslers) und bau().  */
+const LAYOUTS = [];
+const layout = o => LAYOUTS.push(o);
+
+/* ── 01/02 · Die Platte ───────────────────────────────────────────────── */
+(() => {
+const inhalt = bibKnopf => `
+  <div class="marke">Musiklib</div>
+  <div class="seit">Seite A</div>
+  <div class="teller" data-teller>
+    <div class="mitte"><div class="cov" data-cov></div></div><span class="dorn"></span>
+  </div>
+  <div class="tonarm" data-arm>
+    <span class="lager"></span><span class="gegen"></span>
+    <span class="rohr"></span><span class="kopf"></span>
+    <span class="griffzone" data-griff></span>
+  </div>
+  <div class="skalen">
+    <div class="skala" data-vol><i data-volz></i><span>Vol</span></div>
+    <div class="skala"><i style="transform:rotate(12deg)"></i><span>Bal</span></div>
+    ${bibKnopf ? `<button class="skala knopf" data-bib title="Bibliothek">${I.list(19)}</button>` : ''}
+  </div>`;
+
+const textHTML = `
+  <div class="text">
+    <div><h1 data-titel></h1><div class="ar" data-ar></div></div>
+    <div class="zeit"><span data-jetzt></span> / <span data-ende></span></div>
+  </div>
+  <div class="transport">
+    <button data-prev aria-label="Zurück">${I.prev(22)}</button>
+    <button class="pp" data-pp aria-label="Abspielen">${I.pause(20)}</button>
+    <button data-next aria-label="Weiter">${I.next(22)}</button>
+  </div>`;
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Bibliothek</h2>
+      <label class="suchzeile">${I.search(18)}
+        <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
+      <button class="zu" data-bib-zu aria-label="Schließen">${I.x(18)}</button>
+    </div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss kap" data-btreffer></div>
+  </div>`;
+
+/* Der Arm schwenkt zwischen AUSSEN (Anfang) und INNEN (Ende); gespult wird
+   ueber den Winkel um das Lager, also mit derselben Bewegung wie am Geraet. */
+function verdrahte(wurzel, deck){
+  const q = s => wurzel.querySelector(s);
+  q('[data-pp]').onclick   = () => deck.toggle();
+  q('[data-next]').onclick = () => deck.next();
+  q('[data-prev]').onclick = () => deck.prev();
+
+  const AUSSEN = 26, INNEN = 47;
+  const arm = q('[data-arm]');
+  const setzeWinkel = f => arm.style.setProperty('--aw',
+    (AUSSEN + clamp(f,0,1) * (INNEN - AUSSEN)).toFixed(2) + 'deg');
+  let zieht = false, lager = null;
+  const winkelWert = ev => {
+    const g = Math.atan2(ev.clientY - lager.y, ev.clientX - lager.x) * 180/Math.PI;  // 0° = rechts
+    return clamp(((g - 90) - AUSSEN) / (INNEN - AUSSEN), 0, 1);   // senkrecht nach unten = 0°
+  };
+  const griff = q('[data-griff]');
+  griff.addEventListener('pointerdown', ev => {
+    const r = arm.getBoundingClientRect();          // Breite 0 → das ist das Lager
+    lager = {x:r.left, y:r.top};
+    zieht = true; arm.classList.add('zieht');
+    try{ griff.setPointerCapture(ev.pointerId); }catch{}
+    deck.seek(winkelWert(ev)); ev.preventDefault();
+  });
+  griff.addEventListener('pointermove', ev => { if (zieht) deck.seek(winkelWert(ev)); });
+  const losLassen = () => { zieht = false; arm.classList.remove('zieht'); };
+  griff.addEventListener('pointerup', losLassen);
+  griff.addEventListener('pointercancel', losLassen);
+  bindDrag(q('[data-vol]'), f => deck.setVol(1 - f), {achse:'y'});
+
+  /* Werkstisch: die Sammlung liegt offen daneben — dort ist die Suche eine
+     Zeile ueber der Liste, kein Knopf: was schon sichtbar ist, muss man
+     nicht erst aufrufen. „Gerät" hat dafuer die Blende. */
+  const liste = q('[data-liste]'), feldListe = liste && wurzel.querySelector('[data-suche]');
+  const markiereListe = () => liste && $$('[data-t]', wurzel)
+    .forEach(el => el.classList.toggle('an', el.dataset.t === deck.queue[deck.qi]));
+  function zeichneTextliste(){
+    const alben = suche(feldListe.value);
+    const zeilen = alben.flatMap(a => a.ids.map(id => TRACKS[id])).slice(0, 300);
+    liste.innerHTML = zeilen.map((t,i) => `
+      <div class="lz" data-t="${esc(t.id)}"><span class="nr">${String(i+1).padStart(2,'0')}</span>
+        <span class="t">${esc(t.t)}</span><span class="ar">${esc(t.ar)}</span>
+        <span class="d">${fmt(t.d)}</span></div>`).join('') ||
+      '<div class="lz" style="border:none"><span class="t">Nichts gefunden.</span></div>';
+    q('[data-anz]').textContent = feldListe.value.trim()
+      ? `${alben.length} von ${ALBUMS.length} Alben` : `${zeilen.length} von ${TLIST.length} Titeln`;
+    $$('[data-t]', wurzel).forEach(el => el.onclick = () => {
+      const t = TRACKS[el.dataset.t], a = albOf(t);
+      if (a) deck.ladeAlbum(a, t.no - 1);
+    });
+    markiereListe();
+  }
+  if (liste){ feldListe.oninput = zeichneTextliste; zeichneTextliste(); }
+
+  const blende = q('[data-bib-blende]');
+  const bib = blende && bindBibliothek({
+    knopf: q('[data-bib]'), zu: q('[data-bib-zu]'), blende,
+    feld: q('[data-suche]'), liste: q('[data-bibliothek]'), treffer: q('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${esc(a.id)}">
+        ${coverHTML(a, 'pl')}
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)}${a.y ? ' · ' + esc(a.y) : ''}</span></span>
+        <span class="n">${a.tr.length} · ${fmtLang(albDur(a))}</span></div>`,
+    leer: '<div class="bz" style="border:none"><span class="m"><span class="t">Nichts gefunden.</span></span></div>',
+  });
+
+  let letzter = null;
+  deck.onRender = d => {
+    const t = d.track, a = d.album;
+    if (!t) return;
+    if (letzter !== t.id){
+      letzter = t.id;
+      q('[data-titel]').textContent = t.t;
+      q('[data-ar]').textContent = [a && a.ar, a && a.t, a && a.y].filter(Boolean).join(' · ');
+      coverFuellung(q('[data-cov]'), a);
+      markiereListe(); if (bib) bib.markiere();
+    }
+    if (d.fehler) q('[data-ar]').textContent = d.fehler;
+    setzeWinkel(d.frac);
+    q('[data-jetzt]').textContent = fmt(d.pos);
+    q('[data-ende]').textContent  = fmt(d.dur);
+    q('[data-pp]').innerHTML = d.playing ? I.pause(20) : I.play(20);
+    q('[data-teller]').classList.toggle('halt', !d.playing);
+    q('[data-volz]').style.transform = `rotate(${(-140 + d.vol*280).toFixed(1)}deg)`;
+  };
+}
+
+layout({
+  id:'geraet', name:'Gerät', geraet:'iPad hoch', klasse:'dp voll',
+  chrome:['#1A1A16','rgba(255,255,255,.6)'],
+  text:'Ein Laufwerk ohne ein Wort, quadratisch über die volle Breite. Der Tonarm ist die Spulleiste.',
+  bau(w, deck){
+    w.innerHTML = `<div class="slab"><div class="geraet">${inhalt(true)}</div></div>
+      <div class="unten">${textHTML}</div>` + bibHTML;
+    verdrahte(w, deck);
+  },
+});
+
+layout({
+  id:'werkstisch', name:'Werkstisch', geraet:'PC', klasse:'dp quer',
+  chrome:['#1A1A16','rgba(255,255,255,.6)'],
+  text:'Dasselbe Laufwerk links, rechts die Sammlung als reine Textliste mit Suchzeile.',
+  bau(w, deck){
+    w.innerHTML = `
+      <div class="linke">
+        <div class="slab">${inhalt(false)}</div>
+        ${textHTML}
+      </div>
+      <div class="liste">
+        <div class="kopfz"><span class="kap">Sammlung</span><span class="kap" data-anz></span></div>
+        <label class="suchzeile" style="border-bottom:1px solid var(--linie);padding:10px 0 12px">
+          ${I.search(17)}
+          <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
+        <div class="rollen"><div data-liste></div></div>
+      </div>`;
+    verdrahte(w, deck);
+  },
+});
+})();
+
+/* ── 03 · Vollbild ────────────────────────────────────────────────────── */
+(() => {
+const RINGE = 18;
+
+layout({
+  id:'vollbild', name:'Vollbild', geraet:'iPad quer', klasse:'sk',
+  chrome:['#E8ECF8','rgba(10,12,20,.7)','#0A0C14'],
+  text:'Nachtblau, die Platte nur aus Rillen — gespielte Ringe leuchten. Gezogen wird am Ring.',
+  bau(w, deck){
+    w.innerHTML = `
+      <div class="kz"><span class="kap">Musiklib</span>
+        <button data-bib title="Bibliothek" aria-label="Bibliothek">${I.list(20)}</button></div>
+      <div class="platte" data-platte>
+        <svg viewBox="0 0 100 100">
+          ${Array.from({length:RINGE}, (_,i) =>
+            `<circle class="rille" data-r="${i}" cx="50" cy="50" r="${(48 - i*2.5).toFixed(2)}"></circle>`).join('')}
+          <circle class="loch" cx="50" cy="50" r="1.6"></circle>
+        </svg>
+        <div class="arm" data-arm></div>
+      </div>
+      <div class="glanz"></div>
+      <div class="schrift">
+        <h1 data-titel></h1>
+        <div class="zeilen">
+          <div class="z1" data-alb></div>
+          <div class="z2" data-ar></div>
+          <div class="z3" data-meta></div>
+        </div>
+      </div>
+      <div class="leiste">
+        <button data-prev aria-label="Zurück">${I.prev(20)}</button>
+        <span class="uhr" data-jetzt></span>
+        <button class="pp" data-pp aria-label="Abspielen">${I.pause(20)}</button>
+        <span class="uhr" data-ende></span>
+        <button data-next aria-label="Weiter">${I.next(20)}</button>
+      </div>
+      <div class="bib" data-bib-blende>
+        <div class="bkopf">
+          <h2>Bibliothek</h2>
+          <label class="suchfeld">${I.search(17)}
+            <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
+          <button class="zu" data-bib-zu aria-label="Schließen">${I.x(19)}</button>
+        </div>
+        <div class="bliste" data-bibliothek></div>
+        <div class="bfuss" data-btreffer></div>
+      </div>`;
+
+    const q = s => w.querySelector(s);
+    const rillen = $$('.rille', w);
+    q('[data-pp]').onclick   = () => deck.toggle();
+    q('[data-next]').onclick = () => deck.next();
+    q('[data-prev]').onclick = () => deck.prev();
+
+    /* Klick in die Rillen: der Abstand zur Mitte bestimmt die Position.
+       Aussen ist Anfang, innen ist Ende — wie bei einer echten Platte. */
+    const platte = q('[data-platte]');
+    const wert = ev => {
+      const r = platte.getBoundingClientRect();
+      const dx = ev.clientX - (r.left + r.width/2), dy = ev.clientY - (r.top + r.height/2);
+      const d = Math.hypot(dx, dy) / (r.width/2);            // 0 = Mitte, 1 = Rand
+      return clamp((0.96 - d) / (0.96 - 0.10), 0, 1);
+    };
+    let zieht = false;
+    platte.addEventListener('pointerdown', ev => {
+      zieht = true; try{ platte.setPointerCapture(ev.pointerId); }catch{}
+      deck.seek(wert(ev)); ev.preventDefault(); });
+    platte.addEventListener('pointermove', ev => { if (zieht) deck.seek(wert(ev)); });
+    platte.addEventListener('pointerup',     () => zieht = false);
+    platte.addEventListener('pointercancel', () => zieht = false);
+
+    const bib = bindBibliothek({
+      knopf: q('[data-bib]'), zu: q('[data-bib-zu]'), blende: q('[data-bib-blende]'),
+      feld: q('[data-suche]'), liste: q('[data-bibliothek]'), treffer: q('[data-btreffer]'), deck,
+      zeile: a => `<div class="bz" data-alb="${esc(a.id)}">
+          <span class="t">${esc(a.t)} — ${esc(a.ar)}</span>
+          <span class="n">${esc(a.y)} · ${fmtLang(albDur(a))}</span></div>`,
+      leer: '<div class="bz" style="border:none"><span class="t">Nichts gefunden.</span></div>',
+    });
+
+    let letzter = null;
+    deck.onRender = d => {
+      const t = d.track, a = d.album;
+      if (!t) return;
+      if (letzter !== t.id){
+        letzter = t.id;
+        bib.markiere();
+        q('[data-titel]').textContent = t.t;
+        q('[data-alb]').textContent = a ? a.t : '';
+        q('[data-ar]').textContent = a ? a.ar : '';
+        q('[data-meta]').textContent =
+          [a && a.y, 'Titel ' + (d.qi+1) + ' von ' + d.queue.length].filter(Boolean).join(' · ');
+      }
+      if (d.fehler) q('[data-meta]').textContent = d.fehler;
+      const f = d.frac;
+      rillen.forEach((c,i) => c.classList.toggle('war', i/RINGE <= f));
+      q('[data-jetzt]').textContent = fmt(d.pos);
+      q('[data-ende]').textContent  = '−' + fmt(d.rest);
+      q('[data-pp]').innerHTML = d.playing ? I.pause(20) : I.play(20);
+      q('[data-arm]').style.transform = `rotate(${(33 + 17*f).toFixed(1)}deg)`;
+    };
+  },
+});
+})();
+
+/* ── 04/05 · Deck und Handgerät ───────────────────────────────────────── */
+(() => {
+const kassHTML = `
+  <div class="kass" data-kass>
+    <span class="schraube" style="left:12px;top:12px"></span>
+    <span class="schraube" style="right:12px;top:12px"></span>
+    <span class="schraube" style="left:12px;bottom:12px"></span>
+    <span class="schraube" style="right:12px;bottom:12px"></span>
+    <div class="etikett">
+      <span class="streifen"></span>
+      <div class="zeilen"><div class="t" data-etalb></div><div class="s" data-ar></div></div>
+      <div class="typ">TYPE I<br>NORMAL POSITION<br>120 µs EQ</div>
+    </div>
+    <div class="fenster">
+      <span class="bandlinie" data-bandl></span>
+      <span class="wickel" data-wl></span>
+      <span class="wickel" data-wr></span>
+      <span class="nabe" data-nl><i></i><i></i><i></i><i></i><i></i><i></i></span>
+      <span class="nabe" data-nr><i></i><i></i><i></i><i></i><i></i><i></i></span>
+    </div>
+    <span class="seite">SEITE A</span>
+    <span class="laufwerk" data-lauf></span>
+  </div>`;
+
+/* Auswurf: dieselbe Taste wie die anderen, nur mit dem Zeichen von 1985 */
+const AUSWURF = `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M12 5.4l7.4 9.2H4.6z"/><rect x="4.6" y="16.4" width="14.8" height="2.6" rx="1.1"/></svg>`;
+
+const bedienHTML = auswurf => `
+  <div class="zaehler">
+    <span class="kap">Zählwerk</span>
+    <span class="zwerk" data-zaehler></span>
+    <span class="kap" data-rest></span>
+  </div>
+  <div class="band" data-band>
+    <span class="schiene"></span><span class="voll" data-voll></span><span class="griff" data-griff></span>
+  </div>
+  <div class="tasten">
+    <button data-prev aria-label="Voriger Titel">${I.prev(20)}</button>
+    <button data-zurueck aria-label="30 Sekunden zurück">${I.back(20)}</button>
+    <button class="rot" data-pp aria-label="Abspielen">${I.play(20)}</button>
+    <button data-vor aria-label="30 Sekunden vor">${I.fwd(20)}</button>
+    <button data-next aria-label="Nächster Titel">${I.next(20)}</button>
+    ${auswurf ? `<button data-auswurf title="Kassettenfach" aria-label="Bibliothek">${AUSWURF}</button>` : ''}
+  </div>`;
+
+function verdrahte(w, deck){
+  const q = s => w.querySelector(s);
+  q('[data-pp]').onclick   = () => deck.toggle();
+  q('[data-next]').onclick = () => deck.next();
+  q('[data-prev]').onclick = () => deck.prev();
+  q('[data-vor]').onclick      = () => deck.seekGlobal(deck.gpos + 30);
+  q('[data-zurueck]').onclick  = () => deck.seekGlobal(deck.gpos - 30);
+  bindDrag(q('[data-band]'), f => deck.seekGlobal(f * deck.total));
+
+  const fach = q('[data-fach]');
+  if (fach){
+    const auf = zu => fach.classList.toggle('auf', zu);
+    q('[data-auswurf]').onclick = () => {
+      const offen = !fach.classList.contains('auf');
+      auf(offen);
+      if (offen) setTimeout(() => q('[data-suche]').focus(), 60);
+    };
+    q('[data-zu]').onclick = () => auf(false);
+    offeneBlenden.push(() => auf(false));
+  }
+
+  const regal = q('[data-regal]'), feld = q('[data-suche]');
+  const markiereRegal = () => $$('.spine', w)
+    .forEach(el => el.classList.toggle('an', !!deck.album && el.dataset.alb === deck.album.id));
+  function zeichneRegal(){
+    const treffer = suche(feld.value);
+    regal.innerHTML = treffer.map(a => `
+      <div class="spine" data-alb="${esc(a.id)}">
+        <span class="farbe" style="background:${grad(a)}"></span>
+        <div class="m"><div class="t">${esc(a.t)}</div>
+          <div class="s">${esc(a.ar)} · ${fmtLang(albDur(a))}</div></div></div>`).join('') ||
+      '<div class="spine" style="box-shadow:none"><div class="m"><div class="s">Nichts gefunden.</div></div></div>';
+    q('[data-treffer]').textContent = feld.value.trim()
+      ? `${treffer.length} von ${ALBUMS.length} Kassetten` : `${ALBUMS.length} Kassetten`;
+    $$('.spine', w).forEach(el => el.dataset.alb && (el.onclick = () => {
+      const a = ALBUMS.find(x => x.id === el.dataset.alb);
+      if (a) deck.ladeAlbum(a, 0);
+      if (fach) fach.classList.remove('auf');       // eingelegt heisst: Fach zu
+    }));
+    markiereRegal();
+  }
+  feld.oninput = zeichneRegal;
+  zeichneRegal();
+
+  /* Wickelradius ueber die Flaeche, nicht ueber den Radius: Bandlaenge waechst
+     mit der Flaeche, also geht der Radius mit der Wurzel. Linear sieht am
+     Anfang zu schnell und am Ende zu langsam aus. */
+  const kass = q('[data-kass]');
+  const radius = (f, kw) => {
+    const rNabe = kw * .062, rVoll = kw * .155;
+    return Math.sqrt(rNabe*rNabe + (rVoll*rVoll - rNabe*rNabe) * clamp(f,0,1));
+  };
+
+  let letztesAlbum = null;
+  deck.onRender = d => {
+    const a = d.album;
+    if (!d.track) return;
+    if (letztesAlbum !== (a && a.id)){
+      letztesAlbum = a && a.id;
+      q('[data-etalb]').textContent = a ? a.t : '';
+      q('[data-ar]').textContent = a ? `${a.ar} · ${a.tr.length} Titel` : '';
+      markiereRegal();
+    }
+    const kw = kass.offsetWidth || 620;
+    const f  = d.total ? d.gpos / d.total : 0;
+    const linksX = 22, rechtsX = 78;                          // in Prozent des Fensters
+    const rl = radius(f, kw), rr = radius(1 - f, kw);
+    const setz = (el, x, r) => {
+      el.style.left = x + '%'; el.style.width = (r*2) + 'px'; el.style.height = (r*2) + 'px'; };
+    setz(q('[data-wl]'), linksX,  rl);
+    setz(q('[data-wr]'), rechtsX, rr);
+    q('[data-nl]').style.left = linksX + '%';
+    q('[data-nr]').style.left = rechtsX + '%';
+    q('[data-bandl]').style.left  = linksX + '%';
+    q('[data-bandl]').style.width = (rechtsX - linksX) + '%';
+    q('[data-nl]').classList.toggle('halt', !d.playing);
+    q('[data-nr]').classList.toggle('halt', !d.playing);
+    q('[data-voll]').style.width = (f*100).toFixed(2) + '%';
+    q('[data-griff]').style.left = (f*100).toFixed(2) + '%';
+    q('[data-zaehler]').textContent = String(Math.floor(d.gpos/6)).padStart(4,'0');
+    q('[data-rest]').textContent = d.fehler || 'Rest ' + fmtLang(d.total - d.gpos);
+    q('[data-lauf]').textContent = `${String(d.qi+1).padStart(2,'0')} · ${fmt(d.pos)} / ${fmt(d.dur)}`;
+    q('[data-pp]').innerHTML = d.playing ? I.pause(20) : I.play(20);
+    q('[data-pp]').classList.toggle('gedrueckt', d.playing);
+  };
+}
+
+layout({
+  id:'deck', name:'Deck', geraet:'PC', klasse:'ks',
+  chrome:['#EEF0F4','rgba(35,35,39,.72)','#232327'],
+  text:'Die Kassette in der Mitte, Tasten mit Druckpunkt, rechts die Sammlung als Regal mit Suche.',
+  bau(w, deck){
+    w.innerHTML = `
+      <div class="mitte">${kassHTML}${bedienHTML(false)}</div>
+      <div class="regal"><span class="kap">Regal</span>
+        <label class="suchfeld">${I.search(16)}
+          <input type="search" placeholder="Suchen …" data-suche></label>
+        <div class="rollen"><div data-regal></div></div>
+        <div class="treffer" data-treffer></div>
+      </div>`;
+    verdrahte(w, deck);
+  },
+});
+
+layout({
+  id:'handgeraet', name:'Handgerät', geraet:'iPad quer', klasse:'ks hand',
+  chrome:['#EEF0F4','rgba(35,35,39,.72)','#232327'],
+  text:'Dieselbe Kassette, fast randlos, Tasten so breit wie Daumen. Die Auswurftaste öffnet das Regal.',
+  bau(w, deck){
+    w.innerHTML = `
+      <div class="mitte">${kassHTML}${bedienHTML(true)}</div>
+      <div class="fach" data-fach>
+        <div class="fkopf">
+          <h2><span class="kap">Kassettenfach</span>Regal</h2>
+          <label class="suchfeld">${I.search(17)}
+            <input type="search" placeholder="Album, Interpret oder Titel suchen …" data-suche></label>
+          <button class="zu" data-zu aria-label="Schließen">${AUSWURF}</button>
+        </div>
+        <div class="raster" data-regal></div>
+        <div class="treffer" data-treffer></div>
+      </div>`;
+    verdrahte(w, deck);
+  },
+});
+})();
+
+/* ── 06/07 · Aufgeschlagen und Register ───────────────────────────────── */
+(() => {
+const platteHTML = `
+  <div class="platte" data-platte>
+    <div class="label" data-label></div><span class="loch"></span>
+  </div>
+  <div class="arm" data-arm><span class="lager"></span><span class="rohr"></span><span class="kopf"></span></div>`;
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Sammlung</h2>
+      <label class="suchfeld">${I.search(18)}
+        <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
+      <button class="zu" data-bib-zu aria-label="Schließen">${I.x(19)}</button>
+    </div>
+    <div class="spalten" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
+/* Der letzte Knopf der Zeile ist nicht die Lautstaerke, sondern die
+   Sammlung: Lautstaerke regelt man am Geraet, ein Album findet man nur hier. */
+const spalteHTML = `
+  <div class="spalte">
+    <span class="kap">Jetzt läuft</span>
+    <h1 data-titel></h1>
+    <div class="ar" data-ar></div>
+    <div class="alb" data-alb></div>
+    <div class="faden" data-faden>
+      <span class="linie"></span><span class="voll" data-voll></span><span class="punkt" data-punkt></span>
+    </div>
+    <div class="zeiten"><span data-jetzt></span><span data-ende></span></div>
+    <div class="knoepfe">
+      <button data-prev aria-label="Zurück">${I.prev(20)}</button>
+      <button class="pp" data-pp aria-label="Abspielen">${I.pause(20)}</button>
+      <button data-next aria-label="Weiter">${I.next(20)}</button>
+      <span style="flex:1"></span>
+      <button data-mix aria-label="Zufall">${I.shuffle(18)}</button>
+      <button data-bib title="Sammlung" aria-label="Sammlung">${I.grid(18)}</button>
+    </div>
+  </div>`;
+
+function verdrahte(w, deck){
+  const q = s => w.querySelector(s);
+  q('[data-pp]').onclick   = () => deck.toggle();
+  q('[data-next]').onclick = () => deck.next();
+  q('[data-prev]').onclick = () => deck.prev();
+  q('[data-mix]').onclick  = () => deck.toggleShuffle();
+  bindDrag(q('[data-faden]'), f => deck.seek(f));
+
+  const bib = bindBibliothek({
+    knopf: q('[data-bib]'), zu: q('[data-bib-zu]'), blende: q('[data-bib-blende]'),
+    feld: q('[data-suche]'), liste: q('[data-bibliothek]'), treffer: q('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${esc(a.id)}">
+        <span class="pkt" style="background:${grad(a)}"></span>
+        <span class="t">${esc(a.t)} — ${esc(a.ar)}</span>
+        <span class="n">${a.tr.length} · ${fmtLang(albDur(a))}</span></div>`,
+    leer: '<div class="bz" style="border:none"><span class="t">Nichts gefunden.</span></div>',
+  });
+
+  const qKasten = q('[data-queue]');
+  let letzteQ = null, letzter = null;
+  deck.onRender = d => {
+    const t = d.track, a = d.album;
+    if (!t) return;
+    if (qKasten && letzteQ !== d.queue.join()){
+      letzteQ = d.queue.join();
+      qKasten.innerHTML = d.queue.map((id,i) => `
+        <div class="rz" data-q="${i}"><span class="nr">${String(i+1).padStart(2,'0')}</span>
+          <span class="t">${esc(TRACKS[id].t)}</span><span>${fmt(TRACKS[id].d)}</span></div>`).join('');
+      [...qKasten.children].forEach(el => el.onclick = () => d.jump(+el.dataset.q));
+    }
+    if (qKasten) [...qKasten.children].forEach((el,i) => el.classList.toggle('an', i === d.qi));
+    if (letzter !== t.id){
+      letzter = t.id;
+      bib.markiere();
+      q('[data-titel]').textContent = t.t;
+      q('[data-ar]').textContent = a ? a.ar : '';
+      q('[data-alb]').textContent = a ? [a.t, a.y].filter(Boolean).join(' · ') : '';
+      const label = q('[data-label]');
+      label.style.background = a ? grad(a) : '';
+      label.innerHTML = a && a.cover ? `<img src="${coverURL(a)}" alt="">` : esc(a ? a.t : '');
+    }
+    if (d.fehler) q('[data-alb]').textContent = d.fehler;
+    const f = d.frac;
+    q('[data-voll]').style.width = (f*100).toFixed(2) + '%';
+    q('[data-punkt]').style.left = (f*100).toFixed(2) + '%';
+    q('[data-jetzt]').textContent = fmt(d.pos);
+    q('[data-ende]').textContent  = '−' + fmt(d.rest);
+    q('[data-pp]').innerHTML = d.playing ? I.pause(20) : I.play(20);
+    q('[data-mix]').classList.toggle('an', d.shuffle);
+    q('[data-platte]').classList.toggle('halt', !d.playing);
+    q('[data-arm]').style.transform = `rotate(${(26 + 17*f).toFixed(1)}deg)`;
+  };
+}
+
+layout({
+  id:'aufgeschlagen', name:'Aufgeschlagen', geraet:'iPad quer', klasse:'wr',
+  chrome:['#141414','rgba(252,252,251,.7)','#FCFCFB'],
+  text:'Links die Platte, rechts der Satz. Eine Haarlinie ist die Position, mehr steht nicht da.',
+  bau(w, deck){
+    w.innerHTML = `<span class="kap ecke">Musiklib</span><span class="kap ecke2">Seite A</span>`
+      + platteHTML + spalteHTML + bibHTML;
+    verdrahte(w, deck);
+  },
+});
+
+layout({
+  id:'register', name:'Register', geraet:'PC', klasse:'wr reg',
+  chrome:['#141414','rgba(252,252,251,.7)','#FCFCFB'],
+  text:'Dieselbe Ruhe, aber die Platte rückt nach rechts: links steht die Warteschlange in Haarlinien.',
+  bau(w, deck){
+    w.innerHTML = `<span class="kap ecke">Musiklib</span>` + platteHTML + spalteHTML
+      + `<div class="register"><span class="kap">Warteschlange</span><div data-queue></div></div>`
+      + bibHTML;
+    verdrahte(w, deck);
+  },
+});
+})();
+
+/* ── 08/09 · Bedienteil und Konsole ───────────────────────────────────── */
+(() => {
+/* Auswurf oeffnet die Bibliothek — dieselbe Taste wie der Transport daneben */
+const AUSWURF = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M12 5.4l7.4 9.2H4.6z"/><rect x="4.6" y="16.4" width="14.8" height="2.6" rx="1.1"/></svg>`;
+
+const pultHTML = `
+  <div class="reihe metallflaeche" data-reihe></div>
+  <div class="pult metallflaeche">
+    <div class="anzeige">
+      <div class="kap">Läuft</div>
+      <div class="titel" data-titel></div>
+      <div class="unter2" data-unter></div>
+      <div class="uhr"><span data-jetzt></span> · <span data-ende></span></div>
+      <div class="balken"><i data-balken></i></div>
+    </div>
+    <div class="radbeschriftung">
+      <div class="rad" data-rad>
+        <span class="kerbe" data-kerbe></span>
+        <span class="mitte">Spulen</span>
+      </div>
+      <div class="pfeile">${I.prev(16)} ${I.next(16)}</div>
+    </div>
+    <div class="hebel">
+      <div class="hebelbahn"><span class="kap">Vol</span>
+        <div class="schiene" data-vol><span class="schieber" data-volgriff></span></div></div>
+      <div class="quellen">
+        <div class="quelle" data-folge="album"><i></i> Album</div>
+        <div class="quelle" data-folge="zufall"><i></i> Zufall</div>
+      </div>
+    </div>
+    <div class="transport">
+      <button data-prev aria-label="Zurück">${I.prev(18)}</button>
+      <button class="pp" data-pp aria-label="Abspielen">${I.pause(20)}</button>
+      <button data-next aria-label="Weiter">${I.next(18)}</button>
+      <button data-bib title="Bibliothek" aria-label="Bibliothek">${AUSWURF}</button>
+    </div>
+  </div>
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Bibliothek</h2>
+      <label class="suchfeld">${I.search(18)}
+        <input type="search" placeholder="Album, Interpret oder Titel suchen …" data-suche></label>
+      <button class="zu" data-bib-zu aria-label="Schließen">${I.x(18)}</button>
+    </div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
+function verdrahte(w, deck, anzahl){
+  const q = s => w.querySelector(s);
+  q('[data-pp]').onclick = () => deck.toggle();
+  $$('[data-next]', w).forEach(b => b.onclick = () => deck.next());
+  $$('[data-prev]', w).forEach(b => b.onclick = () => deck.prev());
+  bindDrag(q('[data-vol]'), f => deck.setVol(f));
+
+  /* Die drei „Quellen" des Entwurfs waren Zierrat; hier sind es zwei, die
+     etwas tun: die Reihenfolge der Warteschlange. */
+  const folgen = $$('.quelle', w);
+  const zeigeFolge = () => folgen.forEach(el =>
+    el.classList.toggle('an', (el.dataset.folge === 'zufall') === !!deck.shuffle));
+  folgen.forEach(el => el.onclick = () => {
+    if ((el.dataset.folge === 'zufall') !== !!deck.shuffle) deck.toggleShuffle();
+    zeigeFolge();
+  });
+
+  /* Rad: Winkeldifferenz zwischen zwei Zeigerpunkten, 60 s je Umdrehung */
+  const rad = q('[data-rad]');
+  let letzterWinkel = null;
+  const winkel = ev => {
+    const r = rad.getBoundingClientRect();
+    return Math.atan2(ev.clientY - (r.top + r.height/2), ev.clientX - (r.left + r.width/2)) * 180/Math.PI;
+  };
+  rad.addEventListener('pointerdown', ev => {
+    letzterWinkel = winkel(ev); try{ rad.setPointerCapture(ev.pointerId); }catch{} ev.preventDefault(); });
+  rad.addEventListener('pointermove', ev => {
+    if (letzterWinkel === null) return;
+    const wk = winkel(ev);
+    let d = wk - letzterWinkel;
+    if (d > 180) d -= 360; if (d < -180) d += 360;   // Sprung bei 360° abfangen
+    letzterWinkel = wk;
+    deck.seekGlobal(deck.gpos + d/360 * 60);
+  });
+  const los = () => letzterWinkel = null;
+  rad.addEventListener('pointerup', los);
+  rad.addEventListener('pointercancel', los);
+
+  const bib = bindBibliothek({
+    knopf: q('[data-bib]'), zu: q('[data-bib-zu]'), blende: q('[data-bib-blende]'),
+    feld: q('[data-suche]'), liste: q('[data-bibliothek]'), treffer: q('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${esc(a.id)}">
+        ${coverHTML(a, 'pl')}
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${[esc(a.ar), esc(a.y), fmtLang(albDur(a))].filter(Boolean).join(' · ')}</span></span></div>`,
+    leer: '<div class="bz" style="box-shadow:none;background:none"><span class="s">Nichts gefunden.</span></div>',
+  });
+
+  /* Die Leuchtflaechen zeigen das laufende Album und seine Nachbarn im
+     Regal — keine Kacheln, sondern das, was gerade daneben steht. */
+  function zeigeReihe(d){
+    const start = Math.max(0, ALBUMS.findIndex(a => d.album && a.id === d.album.id));
+    const um = Array.from({length:Math.min(anzahl, ALBUMS.length)},
+      (_,k) => ALBUMS[(start + k) % ALBUMS.length]);
+    q('[data-reihe]').innerHTML = um.map((a,k) => `
+      <div class="schirmchen${k===0?' an':''}" data-alb="${esc(a.id)}">
+        ${coverHTML(a, 'bild')}
+        <div class="glas"></div>
+        <div class="unter"><div style="min-width:0">
+          <div class="t">${esc(a.t)}</div><div class="s">${[esc(a.ar), esc(a.y)].filter(Boolean).join(' · ')}</div></div>
+          <span class="laeuft">▶ läuft</span></div>
+      </div>`).join('');
+    $$('.schirmchen', w).forEach(el => el.onclick = () => {
+      const a = ALBUMS.find(x => x.id === el.dataset.alb);
+      if (a) deck.ladeAlbum(a, 0);
+    });
+  }
+
+  let letztesAlbum = null, letzter = null;
+  deck.onRender = d => {
+    const t = d.track, a = d.album;
+    if (!t) return;
+    if (letztesAlbum !== (a && a.id)){ letztesAlbum = a && a.id; zeigeReihe(d); bib.markiere(); }
+    if (letzter !== t.id){
+      letzter = t.id;
+      q('[data-titel]').textContent = t.t;
+      q('[data-unter]').textContent = a
+        ? `${a.ar} — ${a.t} · Titel ${d.qi+1}/${d.queue.length}` : '';
+    }
+    if (d.fehler) q('[data-unter]').textContent = d.fehler;
+    q('[data-jetzt]').textContent = fmt(d.pos);
+    q('[data-ende]').textContent  = '−' + fmt(d.rest);
+    q('[data-balken]').style.width = (d.frac*100).toFixed(2) + '%';
+    q('[data-pp]').innerHTML = d.playing ? I.pause(20) : I.play(20);
+    q('[data-volgriff]').style.left = (8 + d.vol*84) + '%';
+    q('[data-kerbe]').style.transform = `rotate(${(d.gpos/60*360 % 360).toFixed(1)}deg)`;
+    zeigeFolge();
+  };
+}
+
+layout({
+  id:'bedienteil', name:'Bedienteil', geraet:'PC', klasse:'rk',
+  chrome:['#F0F1F3','rgba(12,12,14,.72)','#0C0C0E'],
+  text:'Gebürstetes Metall, drei Cover als Leuchtflächen, ein Metallrad zum Spulen.',
+  bau(w, deck){ w.innerHTML = pultHTML; verdrahte(w, deck, 3); },
+});
+
+layout({
+  id:'konsole', name:'Konsole', geraet:'iPad quer', klasse:'rk kons',
+  chrome:['#F0F1F3','rgba(12,12,14,.72)','#0C0C0E'],
+  text:'Dasselbe Gerät für die Hand: zwei Leuchtflächen, größeres Rad, breitere Tasten.',
+  bau(w, deck){ w.innerHTML = pultHTML; verdrahte(w, deck, 2); },
+});
+})();
+
+/* ── 10 · Pult ────────────────────────────────────────────────────────── */
+layout({
+  id:'pult', name:'Pult', geraet:'PC', klasse:'sg',
+  chrome:['#22221C','rgba(228,228,213,.72)','#E4E4D5'],
+  text:'Salbei und Terracotta: links ein langer Regler und die Titelliste, rechts die Platte.',
+  bau(w, deck){
+    w.innerHTML = `
+      <div class="werkzeug">
+        <div class="langfeld">
+          <div class="schieber lang" data-vol><span class="stange"></span>
+            <span class="griff" data-volgriff></span></div>
+          <span class="kap">Lautstärke</span>
+          <button class="schalter" data-bib aria-label="Bibliothek"><i></i></button>
+          <span class="kap">Bibliothek</span>
+        </div>
+        <div class="anzeigefeld">
+          <div class="fenster breit" data-fenster></div>
+          <span class="kap">Titel</span>
+        </div>
+      </div>
+      <div class="quelle">
+        <div class="plattenfeld">
+          <div class="teller" data-teller>
+            <div class="label"><div><b data-lab></b><span data-lab2></span></div></div>
+            <span class="dorn"></span>
+          </div>
+          <div class="arm" data-arm><span class="lager"></span><span class="rohr"></span><span class="kopf"></span></div>
+        </div>
+        <div class="textzeile"><h1 data-titel></h1><div class="ar" data-ar></div></div>
+        <div class="band" data-band>
+          <span class="schiene"></span><span class="voll" data-voll></span><span class="griff" data-griff></span>
+        </div>
+        <div class="zeiten"><span data-jetzt></span><span data-ende></span></div>
+        <div class="transport">
+          <button data-prev aria-label="Zurück">${I.prev(18)}</button>
+          <button class="pp" data-pp aria-label="Abspielen">${I.pause(20)}</button>
+          <button data-next aria-label="Weiter">${I.next(18)}</button>
+        </div>
+      </div>
+      <div class="bib" data-bib-blende>
+        <div class="bkopf">
+          <h2>Bibliothek</h2>
+          <label class="suchfeld">${I.search(19)}
+            <input type="search" placeholder="Album, Interpret oder Titel suchen …" data-suche>
+          </label>
+          <button class="schalter" data-bib-zu style="--sd:56px" aria-label="Schließen"><i></i></button>
+        </div>
+        <div class="bliste" data-bibliothek></div>
+        <div class="bfuss" data-btreffer></div>
+      </div>`;
+
+    const q = s => w.querySelector(s);
+    q('[data-pp]').onclick   = () => deck.toggle();
+    q('[data-next]').onclick = () => deck.next();
+    q('[data-prev]').onclick = () => deck.prev();
+    bindDrag(q('[data-band]'), f => deck.seek(f));
+    bindDrag(q('[data-vol]'), f => deck.setVol(1-f), {achse:'y'});   // oben ist laut
+
+    const bib = bindBibliothek({
+      knopf: q('[data-bib]'), zu: q('[data-bib-zu]'), blende: q('[data-bib-blende]'),
+      feld: q('[data-suche]'), liste: q('[data-bibliothek]'), treffer: q('[data-btreffer]'), deck,
+      zeile: a => `<div class="bz" data-alb="${esc(a.id)}">
+          <span class="pl"><i>${esc(ini(a))}</i></span>
+          <span class="m"><span class="t">${esc(a.t)}</span>
+            <span class="s">${[esc(a.ar), esc(a.y)].filter(Boolean).join(' · ')}</span></span>
+          <span class="n">${a.tr.length} · ${fmtLang(albDur(a))}</span>
+        </div>`,
+      leer: '<div class="bz" style="border:none;cursor:default"><span class="s">Nichts gefunden.</span></div>',
+    });
+
+    const fenster = q('[data-fenster]');
+    let letzteQ = null, letzter = null;
+    deck.onRender = d => {
+      const t = d.track, a = d.album;
+      if (!t) return;
+      if (letzteQ !== d.queue.join()){
+        letzteQ = d.queue.join();
+        fenster.innerHTML = d.queue.map((id,i) =>
+          `<div class="z" data-q="${i}"><b>${String(i+1).padStart(2,'0')}</b>
+             <span>${esc(TRACKS[id].t)}</span>
+             <span class="d">${fmt(TRACKS[id].d)}</span></div>`).join('');
+        [...fenster.children].forEach(el => el.onclick = () => d.jump(+el.dataset.q));
+        q('[data-lab]').textContent  = a ? a.t : '';
+        q('[data-lab2]').textContent = a ? [a.ar, a.y].filter(Boolean).join(' · ') : '';
+        bib.markiere();
+      }
+      [...fenster.children].forEach((el,i) => el.classList.toggle('an', i === d.qi));
+      if (letzter !== t.id){
+        letzter = t.id;
+        q('[data-titel]').textContent = t.t;
+        q('[data-ar]').textContent = a ? `${a.ar} — ${a.t}` : '';
+      }
+      if (d.fehler) q('[data-ar]').textContent = d.fehler;
+      const f = d.frac;
+      q('[data-voll]').style.width = (f*100).toFixed(2) + '%';
+      q('[data-griff]').style.left = (f*100).toFixed(2) + '%';
+      q('[data-jetzt]').textContent = fmt(d.pos);
+      q('[data-ende]').textContent  = fmt(d.dur);
+      q('[data-pp]').innerHTML = d.playing ? I.pause(20) : I.play(20);
+      q('[data-teller]').classList.toggle('halt', !d.playing);
+      q('[data-arm]').style.transform = `rotate(${(28 + 16*f).toFixed(1)}deg)`;
+      q('[data-volgriff]').style.top = ((1-d.vol)*100).toFixed(1) + '%';
+    };
+  },
+});
+
+/* ── 11/12 · Turm und Vollverstärker ──────────────────────────────────── */
+(() => {
+/* Auswurf — dasselbe Zeichen wie am Kassettendeck, dieselbe Taste wie die
+   drei daneben: sie oeffnet die Bibliothek in der Frontplatte. */
+const AUSWURF = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M12 5.4l7.4 9.2H4.6z"/><rect x="4.6" y="16.4" width="14.8" height="2.6" rx="1.1"/></svg>`;
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Bibliothek</h2>
+      <label class="suchfeld">${I.search(17)}
+        <input type="search" placeholder="Album, Interpret oder Titel suchen …" data-suche></label>
+      <button class="zu" data-bib-zu aria-label="Schließen" style="width:44px;height:44px;
+        border-radius:3px;background:linear-gradient(180deg,#EDE7D6,#C8C0A8);
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 2px 4px rgba(0,0,0,.3);
+        display:grid;place-items:center">${I.x(18)}</button>
+    </div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
+/* Zeigerinstrument: Skala als Bogen, Zeiger als Linie */
+const instrumentHTML = kanal => `
+  <div class="instrument">
+    <span class="kanal">${kanal}</span>
+    <svg viewBox="0 0 200 100">
+      <path d="M 24 88 A 88 88 0 0 1 176 88" fill="none" stroke="rgba(42,36,26,.45)" stroke-width="1.2"/>
+      <path d="M 130 33 A 88 88 0 0 1 176 88" fill="none" stroke="#7A1E12" stroke-width="2.4"/>
+      ${Array.from({length:11}, (_,i) => {
+        const wk = Math.PI * (1 - i/10);
+        const x1 = 100 + Math.cos(wk)*80,  y1 = 88 - Math.sin(wk)*80;
+        const x2 = 100 + Math.cos(wk)*88,  y2 = 88 - Math.sin(wk)*88;
+        return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"
+          stroke="rgba(42,36,26,.5)" stroke-width="${i%5===0?1.6:.9}"/>`;
+      }).join('')}
+      <text x="34" y="80" font-size="8" fill="rgba(42,36,26,.6)">−20</text>
+      <text x="96" y="18" font-size="8" fill="rgba(42,36,26,.6)">0</text>
+      <text x="160" y="80" font-size="8" fill="rgba(42,36,26,.6)">+3</text>
+      <line class="nadel" x1="100" y1="88" x2="100" y2="14" stroke="#7A1E12" stroke-width="1.6"
+        stroke-linecap="round"/>
+      <circle cx="100" cy="88" r="5" fill="#2A241A"/>
+    </svg>
+    <span class="skalatext">VU · dB</span>
+  </div>`;
+
+const messwerkHTML = `
+  <div class="messwerk">
+    ${instrumentHTML('L')}<span class="zwischen"></span>${instrumentHTML('R')}
+  </div>
+  <div class="display">
+    <div style="min-width:0">
+      <div class="titel" data-titel></div>
+      <div class="unter" data-unter></div>
+    </div>
+    <div class="uhr"><span data-jetzt></span> / <span data-ende></span></div>
+  </div>`;
+
+const platteHTML = `
+  <div class="platte">
+    <div class="knopffeld">
+      <div class="drehknopf" data-vol><i data-volz></i></div>
+      <span class="kap">Lautstärke</span>
+    </div>
+    <div class="knopffeld">
+      <div class="kippschalter" data-shuffle><i></i></div><span class="kap">Zufall</span>
+    </div>
+    <div class="knopffeld">
+      <div class="kippschalter" data-repeat><i></i></div><span class="kap">Wiederholen</span>
+    </div>
+    <div style="flex:1;min-width:0">
+      <span class="kap">Titelwahl</span>
+      <div class="waehler" data-waehler style="margin-top:8px"></div>
+    </div>
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div class="band" data-band>
+        <span class="schiene"></span><span class="voll" data-voll></span><span class="griff" data-griff></span>
+      </div>
+      <div class="tasten">
+        <button data-prev aria-label="Zurück">${I.prev(18)}</button>
+        <button data-pp aria-label="Abspielen">${I.pause(18)}</button>
+        <button data-next aria-label="Weiter">${I.next(18)}</button>
+        <button data-bib title="Bibliothek" aria-label="Bibliothek">${AUSWURF}</button>
+      </div>
+    </div>
+  </div>`;
+
+function verdrahte(w, deck){
+  const q = s => w.querySelector(s);
+  q('[data-pp]').onclick   = () => deck.toggle();
+  q('[data-next]').onclick = () => deck.next();
+  q('[data-prev]').onclick = () => deck.prev();
+  q('[data-shuffle]').onclick = () => deck.toggleShuffle();
+  /* Der Kippschalter am Geraet ist derselbe Schalter wie im Ansichtsblatt:
+     er steht zwischen „Wiederholen" und dem, was sonst gilt. */
+  q('[data-repeat]').onclick  = () =>
+    setzeFortsetzung(fortsetzung === 'wiederholen' ? 'weiter' : 'wiederholen');
+  bindDrag(q('[data-band]'), f => deck.seek(f));
+  bindDrag(q('[data-vol]'), f => deck.setVol(1-f), {achse:'y'});
+
+  /* Zeiger: gedaempfter Zufallsgang, faellt bei Pause zurueck. Ein echter
+     Pegel kaeme aus einem AnalyserNode — der haengt das Element aber in den
+     Audiographen, und ein noch nicht freigegebener AudioContext macht es
+     dann stumm. Das ist der Anzeige den Preis nicht wert. */
+  const nadeln = $$('.nadel', w);
+  const stand = nadeln.map(() => 0);
+  const ziel = nadeln.map(() => 0);
+  const uhr = setInterval(() => {
+    if (!w.isConnected){ clearInterval(uhr); return; }
+    nadeln.forEach((n,i) => {
+      if (deck.playing){
+        if (Math.random() < .4) ziel[i] = .32 + Math.random() * .58 * deck.vol + .1;
+      } else ziel[i] = 0;
+      stand[i] += (ziel[i] - stand[i]) * .25;                 // Traegheit
+      const wk = -52 + clamp(stand[i],0,1) * 104;             // −52° … +52°
+      n.setAttribute('transform', `rotate(${wk.toFixed(1)} 100 88)`);
+    });
+  }, 90);
+
+  const bib = bindBibliothek({
+    knopf: q('[data-bib]'), zu: q('[data-bib-zu]'), blende: q('[data-bib-blende]'),
+    feld: q('[data-suche]'), liste: q('[data-bibliothek]'), treffer: q('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${esc(a.id)}">
+        <span class="pl" style="background:${grad(a)}"></span>
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${[esc(a.ar), esc(a.y)].filter(Boolean).join(' · ')}</span></span>
+        <span class="n">${a.tr.length} · ${fmtLang(albDur(a))}</span></div>`,
+    leer: '<div class="bz" style="border:none;cursor:default"><span class="s">Nichts gefunden.</span></div>',
+  });
+
+  /* Vier Titel zur Wahl — als Fenster um den laufenden herum, nicht die
+     ersten vier: sonst waere ab Titel fuenf nichts mehr zu waehlen. */
+  const waehler = q('[data-waehler]');
+  let letztesFenster = null, letzter = null;
+  deck.onRender = d => {
+    const t = d.track, a = d.album;
+    if (!t) return;
+    const start = clamp(d.qi - 1, 0, Math.max(0, d.queue.length - 4));
+    const kennung = d.queue.slice(start, start+4).join();
+    if (letztesFenster !== kennung){
+      letztesFenster = kennung;
+      waehler.innerHTML = d.queue.slice(start, start+4).map((id,k) =>
+        `<div class="wz" data-q="${start+k}"><i></i>${String(start+k+1).padStart(2,'0')} · ${esc(TRACKS[id].t)}</div>`).join('');
+      [...waehler.children].forEach(el => el.onclick = () => d.jump(+el.dataset.q));
+    }
+    [...waehler.children].forEach(el => el.classList.toggle('an', +el.dataset.q === d.qi));
+    if (letzter !== t.id){
+      letzter = t.id;
+      q('[data-titel]').textContent = t.t;
+      q('[data-unter]').textContent = a ? [a.ar + ' — ' + a.t, a.y].filter(Boolean).join(' · ') : '';
+      bib.markiere();
+    }
+    if (d.fehler) q('[data-unter]').textContent = d.fehler;
+    q('[data-voll]').style.width  = (d.frac*100).toFixed(2) + '%';
+    q('[data-griff]').style.left  = (d.frac*100).toFixed(2) + '%';
+    q('[data-jetzt]').textContent = fmt(d.pos);
+    q('[data-ende]').textContent  = fmt(d.dur);
+    q('[data-pp]').innerHTML = d.playing ? I.pause(18) : I.play(18);
+    q('[data-volz]').style.transform = `rotate(${(-140 + d.vol*280).toFixed(1)}deg)`;
+    q('[data-shuffle]').classList.toggle('an', !!d.shuffle);
+    q('[data-repeat]').classList.toggle('an', fortsetzung === 'wiederholen');
+  };
+}
+
+layout({
+  id:'turm', name:'Turm', geraet:'PC', klasse:'nc',
+  chrome:['#E6E0CE','rgba(21,13,9,.72)','#150D09'],
+  text:'Holz und Champagner, zwei Geräte übereinander: oben die Zeiger, unten die Bedienplatte.',
+  bau(w, deck){
+    w.innerHTML = bibHTML + `
+      <div class="geraet"><div class="front">${messwerkHTML}
+        <div class="marke">Musiklib <em>M-13</em></div><div class="typ">STEREO · 2 × 40 W</div>
+        <div style="height:22px"></div></div></div>
+      <div class="geraet"><div class="front">${platteHTML}
+        <div class="marke">Musiklib <em>V-13</em></div><div class="typ">VORSTUFE</div>
+        <div style="height:22px"></div></div></div>`;
+    verdrahte(w, deck);
+  },
+});
+
+layout({
+  id:'vollverstaerker', name:'Vollverstärker', geraet:'iPad quer', klasse:'nc voll1',
+  chrome:['#E6E0CE','rgba(21,13,9,.72)','#150D09'],
+  text:'Ein Gerät statt zwei: Zeiger, Anzeige und Bedienung auf einer Frontplatte.',
+  bau(w, deck){
+    w.innerHTML = bibHTML + `
+      <div class="geraet"><div class="front">${messwerkHTML}
+        <div style="height:20px"></div>${platteHTML}
+        <div class="marke">Musiklib <em>M-13</em></div><div class="typ">VOLLVERSTÄRKER</div>
+        <div style="height:22px"></div></div></div>`;
+    verdrahte(w, deck);
+  },
+});
+})();
+
+/* ══ Buehne, Wechsler, Tastatur ════════════════════════════════════════════ */
+const buehne = document.getElementById('buehne');
+const wechsler = document.getElementById('wechsler');
+const wahl = document.getElementById('wahl');
+let aktuell = null;
+
+function zeigeLayout(id){
+  const L = LAYOUTS.find(x => x.id === id) || LAYOUTS[0];
+  aktuell = L;
+  offeneBlenden = [];
+  deck.onRender = () => {};
+  buehne.innerHTML = '';
+  const w = document.createElement('div');
+  w.className = L.klasse;
+  buehne.appendChild(w);
+  document.documentElement.dataset.layout = L.id;
+  wechsler.style.setProperty('--chrome-ink', L.chrome[0]);
+  wechsler.style.setProperty('--chrome-grund', L.chrome[1]);
+  const meta = document.querySelector('meta[name=theme-color]');
+  if (meta && L.chrome[2]) meta.setAttribute('content', L.chrome[2]);
+  L.bau(w, deck);
+  deck.render();
+  store('layout', L.id);
+  zeichneWahl();
+}
+
+function zeichneWahl(){
+  document.getElementById('wahlgitter').innerHTML = LAYOUTS.map(L => `
+    <button class="wk${aktuell && L.id === aktuell.id ? ' an' : ''}" type="button" data-l="${L.id}">
+      <span class="n">${esc(L.name)}</span>
+      <span class="g">${esc(L.geraet)}</span>
+      <span class="b">${esc(L.text)}</span>
+    </button>`).join('');
+  $$('#wahlgitter [data-l]').forEach(el => el.onclick = () => {
+    zeigeWahl(false);
+    zeigeLayout(el.dataset.l);
+  });
+  document.getElementById('wahlende').innerHTML = FORTSETZUNGEN.map(f => `
+    <button class="wk${f.id === fortsetzung ? ' an' : ''}" type="button" data-f="${f.id}">
+      <span class="n">${esc(f.name)}</span>
+      <span class="b">${esc(f.text)}</span>
+    </button>`).join('');
+  $$('#wahlende [data-f]').forEach(el => el.onclick = () => setzeFortsetzung(el.dataset.f));
+
+  const kann = 'wakeLock' in navigator;
+  document.getElementById('wahlwach').innerHTML = [
+    {an:false, name:'Geht aus', text:'Der Bildschirm verhält sich wie gewohnt.'},
+    {an:true,  name:'Bleibt an', text:kann
+      ? 'Solange Musik läuft. Am iPad und iPhone hält das auch das WLAN wach — der häufigste Grund, warum der Ton abreißt. Kostet Akku.'
+      : 'Dieser Browser kennt die Bildschirmsperre nicht (am iPhone ab iOS 16.4); die Wahl bliebe ohne Wirkung.'},
+  ].map(o => `
+    <button class="wk${o.an === wach ? ' an' : ''}" type="button" data-w="${o.an}"
+      ${o.an && !kann ? 'disabled style="opacity:.5"' : ''}>
+      <span class="n">${o.name}</span>
+      <span class="b">${esc(o.text)}</span>
+    </button>`).join('');
+  $$('#wahlwach [data-w]').forEach(el => el.onclick = () => setzeWach(el.dataset.w === 'true'));
+}
+function zeigeWahl(auf){
+  wahl.hidden = !auf;
+  wechsler.classList.toggle('wach', auf);
+  if (auf) zeichneWahl();
+}
+wechsler.innerHTML = I.grid(17);
+wechsler.onclick = () => zeigeWahl(wahl.hidden);
+document.getElementById('wahlzu').onclick = () => zeigeWahl(false);
+wahl.addEventListener('click', ev => { if (ev.target === wahl) zeigeWahl(false); });
+
+/* Der Wechsler zeigt sich, wenn sich etwas bewegt, und verblasst wieder. */
+let wachBis = 0;
+function weckeWechsler(){
+  wechsler.classList.add('wach');
+  wachBis = Date.now() + 4000;
+  setTimeout(() => { if (Date.now() >= wachBis && wahl.hidden) wechsler.classList.remove('wach'); }, 4100);
+}
+addEventListener('pointermove', weckeWechsler, {passive:true});
+addEventListener('pointerdown', weckeWechsler, {passive:true});
+
+addEventListener('keydown', ev => {
+  const imFeld = ev.target && /^(INPUT|TEXTAREA)$/.test(ev.target.tagName);
+  if (ev.key === 'Escape'){
+    if (!wahl.hidden){ zeigeWahl(false); return; }
+    offeneBlenden.forEach(fn => fn());
+    return;
+  }
+  if (imFeld || ev.metaKey || ev.ctrlKey || ev.altKey) return;
+  switch (ev.key){
+    case ' ': ev.preventDefault(); deck.toggle(); break;
+    case 'ArrowRight': deck.setzePos(deck.pos + 5); break;
+    case 'ArrowLeft':  deck.setzePos(deck.pos - 5); break;
+    case 'ArrowUp':    ev.preventDefault(); deck.setVol(deck.vol + .05); break;
+    case 'ArrowDown':  ev.preventDefault(); deck.setVol(deck.vol - .05); break;
+    case 'n': deck.next(); break;
+    case 'p': deck.prev(); break;
+    case 'l': case 'L': zeigeWahl(wahl.hidden); break;
+  }
+});
+
+/* ══ Start ═════════════════════════════════════════════════════════════════ */
+function hinweis(titel, text){
+  const h = document.getElementById('hinweis');
+  if (titel === false){ h.hidden = true; return; }
+  h.hidden = false;
+  document.getElementById('hinweis-titel').textContent = titel;
+  document.getElementById('hinweis-text').innerHTML = text || '';
+}
+
+/* Welches Layout beim ersten Mal? Nach der Form des Fensters: hoch ist ein
+   iPad in der Hand, breit ein Schreibtisch. Danach entscheidet die Wahl. */
+function ersteWahl(){
+  const w = innerWidth, h = innerHeight;
+  if (h > w) return 'geraet';
+  return w >= 1200 ? 'werkstisch' : 'aufgeschlagen';
+}
+
+async function start(){
+  let daten = null;
+  try{
+    const r = await fetch('/api/library', {cache:'no-store'});
+    if (!r.ok) throw new Error(r.status);
+    daten = await r.json();
+  }catch(e){
+    hinweis('Sammlung nicht erreichbar',
+      'Der Server hat nicht geantwortet. Neu laden, oder am <a href="/">Schreibtisch</a> nachsehen.');
+    return;
+  }
+  uebernimm(daten);
+  if (!ALBUMS.length){
+    hinweis('Noch keine Alben',
+      'Diese Seite spielt nur ab. Gescannt wird am <a href="/">Schreibtisch</a>.');
+    return;
+  }
+  hinweis(false);
+  const gespeichert = restore('layout', null);
+  zeigeLayout(LAYOUTS.some(L => L.id === gespeichert) ? gespeichert : ersteWahl());
+  if (!sitzungHolen()){
+    deck.queue = ALBUMS[0].ids.slice();
+    deck.qi = 0;
+    deck.render();
+  }
+}
+start();
+</script>
+</body>
+</html>
