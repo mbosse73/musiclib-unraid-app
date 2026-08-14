@@ -117,10 +117,15 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
    Der Dialog ist die einzige Flaeche, die alle Layouts teilen — deshalb
    steht hier, was frueher nur der Schreibtisch konnte: sortieren, die
    Ansicht umstellen, neu einlesen, uebersprungene Dateien nachsehen. */
-.wahlwahlen{margin-top:10px;display:flex;gap:14px;flex-wrap:wrap}
+.wahlwahlen{margin-top:10px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
 .wahlwahlen label{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#6B6155}
-.wahlwahlen select{border:1px solid rgba(36,30,24,.22);border-radius:2px;padding:6px 8px;
-  font-size:13px;color:#241E18;background:#fff}
+.wahlwahlen label[hidden]{display:none}
+.wahlwahlen select,.wahlwahlen input[type=search]{border:1px solid rgba(36,30,24,.22);
+  border-radius:2px;padding:6px 8px;font-size:13px;color:#241E18;background:#fff}
+.wahlwahlen input[type=search]{min-width:min(260px,50vw)}
+.wahlwahlen .schalter{cursor:pointer;max-width:52ch;line-height:1.4}
+.wahlwahlen .schalter input{width:14px;height:14px;flex:none;accent-color:#8A6534;cursor:pointer}
+.wahlnote{margin-top:12px;font-size:12px;color:#6B6155;max-width:62ch}
 .wahlstand{margin-top:12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
   font-size:12.5px;color:#6B6155}
 .wahlstand b{font-weight:600;color:#241E18;font-variant-numeric:tabular-nums}
@@ -1000,7 +1005,11 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
   box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 2px 4px rgba(0,0,0,.35)}
 .nc .tasten button:active{background:linear-gradient(180deg,#C8C0A8,#EDE7D6)}
 .nc .tasten button.an{background:linear-gradient(180deg,#C8C0A8,#EDE7D6);color:var(--zeiger)}
-.nc .band{flex:1;min-width:120px;height:22px;position:relative;display:flex;align-items:center;
+/* flex:none, nicht flex:1 — die Leiste steht in einer Spalte, und dort
+   setzt flex:1 die Basis der *Hoehe* auf 0. Im „Turm" blieb davon eine
+   22 Pixel hohe Leiste mit null Pixeln Hoehe uebrig: sichtbar war nur noch
+   die 4px-Schiene, gegriffen werden konnte nichts. */
+.nc .band{flex:none;min-width:120px;height:22px;position:relative;display:flex;align-items:center;
   cursor:pointer;touch-action:none}
 .nc .band .schiene{position:absolute;left:0;right:0;height:4px;border-radius:2px;
   background:rgba(42,36,26,.22);box-shadow:inset 0 1px 2px rgba(0,0,0,.3)}
@@ -1060,8 +1069,19 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
     <p>Zwölf Oberflächen für dieselbe Sammlung. Was gespielt wird, läuft beim Wechsel weiter —
     nur das Gerät drumherum ist ein anderes.</p>
     <div class="wahlende">
+      <span class="wahlkap">Format</span>
+      <div class="wahlreihe" id="wahlziel"></div>
+    </div>
+    <div class="wahlende">
       <span class="wahlkap">Ansicht</span>
+      <div class="wahlwahlen">
+        <label id="wahlfilterzeile" hidden>Suchen
+          <input type="search" id="wahlfilter" placeholder="Name oder Beschreibung"></label>
+        <label class="schalter"><input type="checkbox" id="wahlalle">
+          Auch Ansichten zeigen, die für dieses Format nicht gezeichnet sind</label>
+      </div>
       <div class="wahlgitter" id="wahlgitter"></div>
+      <p class="wahlnote" id="wahlnote"></p>
     </div>
     <div class="wahlende">
       <span class="wahlkap">Sammlung</span>
@@ -1743,8 +1763,7 @@ function nachScan(){
      erste gelungene Scan zugleich der Start der Seite. */
   if (ALBUMS.length && !aktuell){
     hinweis(false);
-    const gespeichert = restore('layout', null);
-    zeigeLayout(LAYOUTS.some(L => L.id === gespeichert) ? gespeichert : ersteWahl());
+    zeigeLayout(layoutFuerZiel());
   }
   if (deck.qi < 0 && ALBUMS.length){ deck.queue = ALBUMS[0].ids.slice(); deck.qi = 0; }
   zeichneListen();
@@ -1876,9 +1895,111 @@ function bindBibliothek(o){
 }
 let offeneBlenden = [];
 
+/* ══ Ziel ══════════════════════════════════════════════════════════════════
+   Ein Layout ist nicht fuer „ein Geraet" gezeichnet, sondern fuer ein
+   Format. `ziele` sagt, fuer welche. Die Angabe ist nicht geraten: jedes
+   Layout wurde auf Telefon hoch, Tablet hoch, Tablet quer und Schreibtisch
+   nachgemessen (ragt etwas heraus? sind Abspieltaste und Bibliotheksknopf
+   ganz im Bild?), und was dort nicht steht, steht auch nicht in der Liste.
+
+   Zwei Faelle hat erst der Augenschein entschieden, weil nichts herausragte
+   und es trotzdem nicht ging: „Werkstisch" verliert auf dem Telefon die
+   Titel aus seiner Liste (es bleiben Nummer und Dauer), und „Register"
+   schiebt hochkant die Mitte der Platte aus dem Bild.
+
+   Ausgesperrt wird deshalb niemand: `alleZeigen` gibt die ganze Liste
+   wieder frei. Die Filterung ist eine Empfehlung, kein Zaun.            */
+const ZIELE = [
+  {id:'telefon', name:'Telefon',      text:'Hochkant, in einer Hand, mit dem Daumen bedient.'},
+  {id:'tablet',  name:'Tablet',       text:'iPad, hoch oder quer, mit dem Finger bedient.'},
+  {id:'pc',      name:'Schreibtisch', text:'Großes Fenster, Maus und Tastatur.'},
+];
+const istZiel = id => ZIELE.some(z => z.id === id);
+const zielName = id => (ZIELE.find(z => z.id === id) || {}).name || id;
+
+/* Beim ersten Mal entscheidet die Adresse, denn sie ist die Absicht: wer
+   /ipad aufruft, will das Tablet. Nur ein sehr kleiner Bildschirm sticht
+   das — ein Telefon bleibt ein Telefon, gleich welche Adresse man tippt.
+   Danach entscheidet allein die Wahl im Dialog. */
+function erkanntesZiel(){
+  if (Math.min(innerWidth, innerHeight) < 500) return 'telefon';
+  const pfad = location.pathname.replace(/\/+$/, '');
+  if (pfad === '/mobil') return 'telefon';
+  if (pfad === '/ipad')  return 'tablet';
+  if (pfad === '/pc')    return 'pc';
+  return matchMedia('(pointer:coarse)').matches ? 'tablet' : 'pc';
+}
+let ziel = istZiel(restore('ziel', null)) ? restore('ziel', null) : erkanntesZiel();
+let alleZeigen = restore('alleansichten', false) === true;
+
+const passtZumZiel = L => alleZeigen || ((L.ziele || []).includes(ziel));
+const layoutsFuerZiel = () => LAYOUTS.filter(passtZumZiel);
+
+/* Die Wahl des Layouts liegt je Ziel unter demselben einen Schluessel — wie
+   mobile.html seine Einstellungen in einem Objekt haelt, damit spaetere
+   Zusaetze keinen neuen Schluessel brauchen. Sonst aenderte ein Wechsel am
+   Schreibtisch das Aussehen auf dem Tablet, obwohl es dieselbe Datei ist.
+
+   Ein Wert aus der Zeit davor ist eine Zeichenkette. Der gilt dann fuer
+   jedes Ziel, bis zum ersten Schreiben — wer /pc auf „Konsole" stehen
+   hatte, findet sie nach dem Update wieder vor. */
+function gemerktesLayout(z = ziel){
+  const w = restore('layout', null);
+  if (typeof w === 'string') return w;
+  return (w && typeof w === 'object') ? (w[z] || null) : null;
+}
+function merkeLayout(id, z = ziel){
+  const w = restore('layout', null);
+  const o = {};
+  if (typeof w === 'string') for (const y of ZIELE) o[y.id] = w;
+  else if (w && typeof w === 'object') Object.assign(o, w);
+  o[z] = id;
+  store('layout', o);
+}
+
+/* Welches Layout, wenn nichts (mehr) passt? Dieselbe Regel wie bisher, nur
+   auf das Ziel bezogen: hochkant das Laufwerk, im breiten Fenster der
+   Werkstisch, sonst der Satz. */
+function ersteWahl(){
+  const passend = LAYOUTS.filter(L => (L.ziele || []).includes(ziel));
+  const da = id => passend.some(L => L.id === id) && id;
+  if (ziel === 'telefon') return da('geraet') || (passend[0] || LAYOUTS[0]).id;
+  if (ziel === 'tablet')
+    return (innerHeight > innerWidth && da('geraet')) || da('aufgeschlagen')
+        || (passend[0] || LAYOUTS[0]).id;
+  return (innerWidth >= 1200 && da('werkstisch')) || da('aufgeschlagen')
+      || (passend[0] || LAYOUTS[0]).id;
+}
+
+/* Was jetzt gebaut gehoert: das Gemerkte, solange es zum Ziel passt. */
+function layoutFuerZiel(){
+  const L = LAYOUTS.find(x => x.id === gemerktesLayout());
+  return (L && passtZumZiel(L)) ? L.id : ersteWahl();
+}
+
+function setzeZiel(z){
+  if (!istZiel(z) || z === ziel) return;
+  ziel = z; store('ziel', z);
+  zeigeLayout(layoutFuerZiel());     // merkt die Wahl gleich fuer das neue Ziel
+}
+function setzeAlleZeigen(v){
+  alleZeigen = !!v; store('alleansichten', alleZeigen);
+  const id = layoutFuerZiel();
+  if (!aktuell || aktuell.id !== id) zeigeLayout(id);
+  else zeichneWahl();
+}
+
 /* ══ Layouts ═══════════════════════════════════════════════════════════════
-   Jeder Eintrag: id, name, geraet (nur ein Hinweis, keine Weiche), klasse
-   (die Wurzelklasse im Regelwerk), chrome (Farbe des Wechslers) und bau().  */
+   Jeder Eintrag: id, name, geraet (Hinweis in Worten, keine Weiche), ziele
+   (die Formate, fuer die er gezeichnet ist — das ist die Weiche), familie
+   (noch ungenutzt; die Gruppierung der Liste lohnt erst bei mehr Blaettern),
+   klasse (die Wurzelklasse im Regelwerk), chrome (Farbe des Wechslers),
+   und bau().
+
+   Ausserdem traegt jedes Layout genau eine Flaeche mit `data-spulen`: die,
+   auf der gespult wird. Sieben Familien haben sieben sehr verschiedene
+   Griffe (Tonarm, Rille, Bandleiste, Haarlinie, Metallrad) — der Test muss
+   sie nicht alle kennen, er fragt nach der Markierung.                    */
 const LAYOUTS = [];
 const layout = o => LAYOUTS.push(o);
 
@@ -1893,7 +2014,7 @@ const inhalt = bibKnopf => `
   <div class="tonarm" data-arm>
     <span class="lager"></span><span class="gegen"></span>
     <span class="rohr"></span><span class="kopf"></span>
-    <span class="griffzone" data-griff></span>
+    <span class="griffzone" data-griff data-spulen></span>
   </div>
   <div class="skalen">
     <div class="skala" data-vol><i data-volz></i><span>Vol</span></div>
@@ -2038,6 +2159,7 @@ function verdrahte(wurzel, deck){
 
 layout({
   id:'geraet', name:'Gerät', geraet:'iPad hoch', klasse:'dp voll',
+  ziele:['telefon','tablet','pc'], familie:'Die Platte',
   chrome:['#1A1A16','rgba(255,255,255,.6)'],
   text:'Ein Laufwerk ohne ein Wort, quadratisch über die volle Breite. Der Tonarm ist die Spulleiste.',
   bau(w, deck){
@@ -2049,6 +2171,7 @@ layout({
 
 layout({
   id:'werkstisch', name:'Werkstisch', geraet:'PC', klasse:'dp quer',
+  ziele:['tablet','pc'], familie:'Die Platte',
   chrome:['#1A1A16','rgba(255,255,255,.6)'],
   text:'Dasselbe Laufwerk links, rechts die Sammlung als reine Textliste mit Suchzeile.',
   bau(w, deck){
@@ -2075,13 +2198,14 @@ const RINGE = 18;
 
 layout({
   id:'vollbild', name:'Vollbild', geraet:'iPad quer', klasse:'sk',
+  ziele:['tablet','pc'], familie:'Die Platte',
   chrome:['#E8ECF8','rgba(10,12,20,.7)','#0A0C14'],
   text:'Nachtblau, die Platte nur aus Rillen — gespielte Ringe leuchten. Gezogen wird am Ring.',
   bau(w, deck){
     w.innerHTML = `
       <div class="kz"><span class="kap">Musiklib</span>
         <button data-bib title="Bibliothek" aria-label="Bibliothek">${I.list(20)}</button></div>
-      <div class="platte" data-platte>
+      <div class="platte" data-platte data-spulen>
         <svg viewBox="0 0 100 100">
           ${Array.from({length:RINGE}, (_,i) =>
             `<circle class="rille" data-r="${i}" cx="50" cy="50" r="${(48 - i*2.5).toFixed(2)}"></circle>`).join('')}
@@ -2207,7 +2331,7 @@ const bedienHTML = auswurf => `
     <span class="zwerk" data-zaehler></span>
     <span class="kap" data-rest></span>
   </div>
-  <div class="band" data-band>
+  <div class="band" data-band data-spulen>
     <span class="schiene"></span><span class="voll" data-voll></span><span class="griff" data-griff></span>
   </div>
   <div class="tasten">
@@ -2309,6 +2433,7 @@ function verdrahte(w, deck){
 
 layout({
   id:'deck', name:'Deck', geraet:'PC', klasse:'ks',
+  ziele:['tablet','pc'], familie:'Die Kassette',
   chrome:['#EEF0F4','rgba(35,35,39,.72)','#232327'],
   text:'Die Kassette in der Mitte, Tasten mit Druckpunkt, rechts die Sammlung als Regal mit Suche.',
   bau(w, deck){
@@ -2326,6 +2451,7 @@ layout({
 
 layout({
   id:'handgeraet', name:'Handgerät', geraet:'iPad quer', klasse:'ks hand',
+  ziele:['tablet','pc'], familie:'Die Kassette',
   chrome:['#EEF0F4','rgba(35,35,39,.72)','#232327'],
   text:'Dieselbe Kassette, fast randlos, Tasten so breit wie Daumen. Die Auswurftaste öffnet das Regal.',
   bau(w, deck){
@@ -2374,7 +2500,7 @@ const spalteHTML = `
     <h1 data-titel></h1>
     <div class="ar" data-ar></div>
     <div class="alb" data-alb></div>
-    <div class="faden" data-faden>
+    <div class="faden" data-faden data-spulen>
       <span class="linie"></span><span class="voll" data-voll></span><span class="punkt" data-punkt></span>
     </div>
     <div class="zeiten"><span data-jetzt></span><span data-ende></span></div>
@@ -2444,6 +2570,7 @@ function verdrahte(w, deck){
 
 layout({
   id:'aufgeschlagen', name:'Aufgeschlagen', geraet:'iPad quer', klasse:'wr',
+  ziele:['tablet','pc'], familie:'Der Satz',
   chrome:['#141414','rgba(252,252,251,.7)','#FCFCFB'],
   text:'Links die Platte, rechts der Satz. Eine Haarlinie ist die Position, mehr steht nicht da.',
   bau(w, deck){
@@ -2455,6 +2582,7 @@ layout({
 
 layout({
   id:'register', name:'Register', geraet:'PC', klasse:'wr reg',
+  ziele:['pc'], familie:'Der Satz',
   chrome:['#141414','rgba(252,252,251,.7)','#FCFCFB'],
   text:'Dieselbe Ruhe, aber die Platte rückt nach rechts: links steht die Warteschlange in Haarlinien.',
   bau(w, deck){
@@ -2483,7 +2611,7 @@ const pultHTML = `
       <div class="balken"><i data-balken></i></div>
     </div>
     <div class="radbeschriftung">
-      <div class="rad" data-rad>
+      <div class="rad" data-rad data-spulen>
         <span class="kerbe" data-kerbe></span>
         <span class="mitte">Spulen</span>
       </div>
@@ -2607,6 +2735,7 @@ function verdrahte(w, deck, anzahl){
 
 layout({
   id:'bedienteil', name:'Bedienteil', geraet:'PC', klasse:'rk',
+  ziele:['tablet','pc'], familie:'Das Rack',
   chrome:['#F0F1F3','rgba(12,12,14,.72)','#0C0C0E'],
   text:'Gebürstetes Metall, drei Cover als Leuchtflächen, ein Metallrad zum Spulen.',
   bau(w, deck){ w.innerHTML = pultHTML; verdrahte(w, deck, 3); },
@@ -2614,6 +2743,7 @@ layout({
 
 layout({
   id:'konsole', name:'Konsole', geraet:'iPad quer', klasse:'rk kons',
+  ziele:['tablet','pc'], familie:'Das Rack',
   chrome:['#F0F1F3','rgba(12,12,14,.72)','#0C0C0E'],
   text:'Dasselbe Gerät für die Hand: zwei Leuchtflächen, größeres Rad, breitere Tasten.',
   bau(w, deck){ w.innerHTML = pultHTML; verdrahte(w, deck, 2); },
@@ -2623,6 +2753,7 @@ layout({
 /* ── 10 · Pult ────────────────────────────────────────────────────────── */
 layout({
   id:'pult', name:'Pult', geraet:'PC', klasse:'sg',
+  ziele:['tablet','pc'], familie:'Das Pult',
   chrome:['#22221C','rgba(228,228,213,.72)','#E4E4D5'],
   text:'Salbei und Terracotta: links ein langer Regler und die Titelliste, rechts die Platte.',
   bau(w, deck){
@@ -2649,7 +2780,7 @@ layout({
           <div class="arm" data-arm><span class="lager"></span><span class="rohr"></span><span class="kopf"></span></div>
         </div>
         <div class="textzeile"><h1 data-titel></h1><div class="ar" data-ar></div></div>
-        <div class="band" data-band>
+        <div class="band" data-band data-spulen>
           <span class="schiene"></span><span class="voll" data-voll></span><span class="griff" data-griff></span>
         </div>
         <div class="zeiten"><span data-jetzt></span><span data-ende></span></div>
@@ -2801,7 +2932,7 @@ const platteHTML = `
       <div class="waehler" data-waehler style="margin-top:8px"></div>
     </div>
     <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div class="band" data-band>
+      <div class="band" data-band data-spulen>
         <span class="schiene"></span><span class="voll" data-voll></span><span class="griff" data-griff></span>
       </div>
       <div class="tasten">
@@ -2892,6 +3023,7 @@ function verdrahte(w, deck){
 
 layout({
   id:'turm', name:'Turm', geraet:'PC', klasse:'nc',
+  ziele:['tablet','pc'], familie:'Das Möbel',
   chrome:['#E6E0CE','rgba(21,13,9,.72)','#150D09'],
   text:'Holz und Champagner, zwei Geräte übereinander: oben die Zeiger, unten die Bedienplatte.',
   bau(w, deck){
@@ -2908,6 +3040,7 @@ layout({
 
 layout({
   id:'vollverstaerker', name:'Vollverstärker', geraet:'iPad quer', klasse:'nc voll1',
+  ziele:['tablet','pc'], familie:'Das Möbel',
   chrome:['#E6E0CE','rgba(21,13,9,.72)','#150D09'],
   text:'Ein Gerät statt zwei: Zeiger, Anzeige und Bedienung auf einer Frontplatte.',
   bau(w, deck){
@@ -2944,7 +3077,7 @@ function zeigeLayout(id){
   if (meta && L.chrome[2]) meta.setAttribute('content', L.chrome[2]);
   L.bau(w, deck);
   deck.render();
-  store('layout', L.id);
+  merkeLayout(L.id);
   zeichneWahl();
 }
 
@@ -3008,16 +3141,62 @@ function zeichneBestand(){
   liste.innerHTML = zeilen.join('');
 }
 
+/* Die Filterzeile taucht erst auf, wenn sie gebraucht wird. Bei zwoelf
+   Kacheln waere ein Suchfeld darueber Zierrat; ab etwa einem Dutzend faengt
+   das Suchen an, sich zu lohnen. */
+const SICHTGRENZE = 12;
+const feldFilter = document.getElementById('wahlfilter');
+const schalterAlle = document.getElementById('wahlalle');
+feldFilter.oninput = () => zeichneWahl();
+schalterAlle.onchange = () => setzeAlleZeigen(schalterAlle.checked);
+
 function zeichneWahl(){
   feldSort.value = sortierung;
   feldAnsicht.value = ansicht;
   zeichneBestand();
-  document.getElementById('wahlgitter').innerHTML = LAYOUTS.map(L => `
+
+  document.getElementById('wahlziel').innerHTML = ZIELE.map(z => {
+    const n = LAYOUTS.filter(L => (L.ziele || []).includes(z.id)).length;
+    return `<button class="wk${z.id === ziel ? ' an' : ''}" type="button" data-ziel="${z.id}">
+      <span class="n">${esc(z.name)}</span>
+      <span class="g">${n} ${n === 1 ? 'Ansicht' : 'Ansichten'}</span>
+      <span class="b">${esc(z.text)}</span>
+    </button>`;
+  }).join('');
+  $$('#wahlziel [data-ziel]').forEach(el => el.onclick = () => setzeZiel(el.dataset.ziel));
+
+  const fuerZiel = layoutsFuerZiel();
+  const q = feldFilter.value.trim().toLowerCase();
+  const sichtbar = q
+    ? fuerZiel.filter(L => (L.name+' '+L.geraet+' '+L.familie+' '+L.text).toLowerCase().includes(q))
+    : fuerZiel;
+
+  schalterAlle.checked = alleZeigen;
+  document.getElementById('wahlfilterzeile').hidden = fuerZiel.length <= SICHTGRENZE;
+
+  document.getElementById('wahlgitter').innerHTML = sichtbar.map(L => `
     <button class="wk${aktuell && L.id === aktuell.id ? ' an' : ''}" type="button" data-l="${L.id}">
       <span class="n">${esc(L.name)}</span>
       <span class="g">${esc(L.geraet)}</span>
       <span class="b">${esc(L.text)}</span>
-    </button>`).join('');
+    </button>`).join('') || '';
+
+  /* Der Hinweis sagt, was die Liste verschweigt: warum sie kurz ist, und
+     was der Schalter daraus macht. */
+  const note = document.getElementById('wahlnote');
+  if (q && !sichtbar.length){
+    note.textContent = 'Keine Ansicht passt zu dieser Suche.';
+  } else if (alleZeigen){
+    note.textContent = `Alle ${LAYOUTS.length} Ansichten. Was nicht für ${zielName(ziel)} `
+      + 'gezeichnet ist, kann dort abgeschnitten, zu klein oder unbedienbar sein.';
+  } else if (!fuerZiel.length){
+    note.textContent = `Für ${zielName(ziel)} ist noch keine Ansicht gezeichnet.`;
+  } else {
+    note.textContent = `${fuerZiel.length} von ${LAYOUTS.length} Ansichten sind für `
+      + `${zielName(ziel)} gezeichnet und nachgemessen.`
+      + (ziel === 'telefon' ? ' Die eigene Handy-Oberfläche liegt weiterhin unter /mobil.' : '');
+  }
+
   $$('#wahlgitter [data-l]').forEach(el => el.onclick = () => {
     zeigeWahl(false);
     zeigeLayout(el.dataset.l);
@@ -3107,14 +3286,6 @@ function hinweis(titel, text){
   document.getElementById('hinweis-text').innerHTML = text || '';
 }
 
-/* Welches Layout beim ersten Mal? Nach der Form des Fensters: hoch ist ein
-   iPad in der Hand, breit ein Schreibtisch. Danach entscheidet die Wahl. */
-function ersteWahl(){
-  const w = innerWidth, h = innerHeight;
-  if (h > w) return 'geraet';
-  return w >= 1200 ? 'werkstisch' : 'aufgeschlagen';
-}
-
 async function start(){
   let daten = null;
   try{
@@ -3142,8 +3313,7 @@ async function start(){
     return;
   }
   hinweis(false);
-  const gespeichert = restore('layout', null);
-  zeigeLayout(LAYOUTS.some(L => L.id === gespeichert) ? gespeichert : ersteWahl());
+  zeigeLayout(layoutFuerZiel());
   if (!sitzungHolen()){
     deck.queue = ALBUMS[0].ids.slice();
     deck.qi = 0;

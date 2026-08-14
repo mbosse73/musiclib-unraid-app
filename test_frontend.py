@@ -883,7 +883,9 @@ def test_player_search_matches_track_titles_too(player):
 
 def test_player_layout_choice_survives_reload(player, server):
     player.evaluate("zeigeLayout('konsole')")
-    assert player.evaluate("localStorage.getItem('musiklib:layout')") == '"konsole"'
+    # Seit Etappe 2 liegt die Wahl je Ziel unter demselben einen Schluessel.
+    assert json.loads(player.evaluate("localStorage.getItem('musiklib:layout')")) == \
+        {"pc": "konsole"}
     player.reload(wait_until="domcontentloaded")
     player.wait_for_function("typeof aktuell !== 'undefined' && aktuell")
     assert player.evaluate("aktuell.id") == "konsole"
@@ -1050,6 +1052,145 @@ def test_player_settings_dialog_carries_every_group(player):
                     "#wahlende [data-f]", "#wahlzufall [data-z]", "#wahlwach [data-w]"):
         assert player.locator(auswahl).count() >= 1, f"{auswahl} fehlt im Dialog"
     player.evaluate("zeigeWahl(false)")
+
+
+# --------------------------------------------------------------------------
+# Spieler: ein Ziel statt eines Geraets
+#
+# Etappe 2 — jede Ansicht sagt, fuer welche Formate sie gezeichnet ist, die
+# Liste filtert danach, und die Wahl wird je Format gemerkt. Dieselbe Datei,
+# unterschiedliche Auswahl, unterschiedliches Gedaechtnis.
+# --------------------------------------------------------------------------
+
+def test_player_every_layout_declares_a_target(player):
+    """Ohne `ziele` taucht eine Ansicht nirgends auf — das faellt sonst erst
+    dem Benutzer auf, dem sie fehlt."""
+    fehlend = player.evaluate(
+        "LAYOUTS.filter(L => !Array.isArray(L.ziele) || !L.ziele.length).map(L => L.id)")
+    assert fehlend == []
+    unbekannt = player.evaluate(
+        "LAYOUTS.flatMap(L => L.ziele).filter(z => !ZIELE.some(x => x.id === z))")
+    assert unbekannt == []
+    assert player.evaluate("LAYOUTS.every(L => typeof L.familie === 'string' && L.familie)")
+
+
+def test_player_chooser_shows_only_what_fits_and_can_be_unlocked(player):
+    player.evaluate("zeigeWahl(true)")
+    fuer_pc = player.evaluate("LAYOUTS.filter(L => L.ziele.includes('pc')).length")
+    assert player.locator("#wahlgitter [data-l]").count() == fuer_pc
+
+    player.click("#wahlziel [data-ziel='telefon']")
+    fuers_telefon = player.evaluate("LAYOUTS.filter(L => L.ziele.includes('telefon')).length")
+    assert 1 <= fuers_telefon < fuer_pc, "sonst prueft der Test nichts"
+    assert player.locator("#wahlgitter [data-l]").count() == fuers_telefon
+
+    # Der Notausgang: gefiltert wird empfohlen, nicht erzwungen.
+    player.check("#wahlalle")
+    assert player.locator("#wahlgitter [data-l]").count() == len(layout_ids(player))
+    player.uncheck("#wahlalle")
+    assert player.locator("#wahlgitter [data-l]").count() == fuers_telefon
+    player.evaluate("zeigeWahl(false)")
+
+
+def test_player_target_change_leaves_a_layout_that_stands_there(player):
+    """Ein Wechsel aufs Telefon darf keine Ansicht stehen lassen, die dort
+    nicht gezeichnet ist."""
+    player.evaluate("zeigeLayout('register')")     # nur fuer den Schreibtisch
+    assert player.evaluate("aktuell.id") == "register"
+    player.evaluate("setzeZiel('telefon')")
+    player.wait_for_function("aktuell.ziele.includes('telefon')", timeout=5000)
+    assert player.evaluate("aktuell.id") != "register"
+
+
+def test_player_remembers_a_layout_per_target(player, server):
+    """Dieselbe Datei, zwei Formate, zwei Gedaechtnisse — sonst aendert ein
+    Wechsel am Schreibtisch das Aussehen auf dem Tablet."""
+    player.evaluate("setzeZiel('pc'); zeigeLayout('pult')")
+    player.evaluate("setzeZiel('tablet'); zeigeLayout('konsole')")
+    gemerkt = json.loads(player.evaluate("localStorage.getItem('musiklib:layout')"))
+    assert gemerkt["pc"] == "pult" and gemerkt["tablet"] == "konsole"
+
+    player.evaluate("setzeZiel('pc')")
+    assert player.evaluate("aktuell.id") == "pult"
+    player.evaluate("setzeZiel('tablet')")
+    assert player.evaluate("aktuell.id") == "konsole"
+
+    player.reload(wait_until="domcontentloaded")
+    player.wait_for_function("typeof aktuell !== 'undefined' && aktuell")
+    assert player.evaluate("ziel") == "tablet"
+    assert player.evaluate("aktuell.id") == "konsole"
+
+
+def test_player_carries_over_the_old_single_layout_key(player, server):
+    """Wer /pc auf „Konsole" stehen hatte, findet sie nach dem Update wieder
+    vor — der alte Wert war eine Zeichenkette."""
+    player.evaluate("""() => {
+      localStorage.setItem('musiklib:layout', JSON.stringify('konsole'));
+      localStorage.removeItem('musiklib:ziel');
+    }""")
+    player.reload(wait_until="domcontentloaded")
+    player.wait_for_function("typeof aktuell !== 'undefined' && aktuell")
+    assert player.evaluate("aktuell.id") == "konsole"
+    assert json.loads(player.evaluate("localStorage.getItem('musiklib:layout')"))["pc"] \
+        == "konsole"
+
+
+def test_player_address_preselects_the_target(player, server, browser):
+    """Die Adresse ist die Voreinstellung: /ipad meint das Tablet."""
+    ctx = browser.new_context(viewport={"width": 1194, "height": 834})
+    pg = ctx.new_page()
+    pg.goto(server + "/ipad", wait_until="domcontentloaded")
+    pg.wait_for_function("typeof ziel !== 'undefined' && ziel")
+    assert pg.evaluate("ziel") == "tablet"
+    assert pg.evaluate("aktuell.ziele.includes('tablet')")
+    ctx.close()
+
+    # Ein Telefon bleibt ein Telefon, gleich welche Adresse man tippt.
+    ctx = browser.new_context(viewport={"width": 390, "height": 844},
+                              is_mobile=True, has_touch=True, device_scale_factor=2)
+    pg = ctx.new_page()
+    pg.goto(server + "/pc", wait_until="domcontentloaded")
+    pg.wait_for_function("typeof ziel !== 'undefined' && ziel")
+    assert pg.evaluate("ziel") == "telefon"
+    assert pg.evaluate("aktuell.ziele.includes('telefon')")
+    ctx.close()
+
+
+def test_player_every_layout_offers_transport_seeking_and_settings(player):
+    """Der Vertrag, den jede Ansicht erfuellt — in jeder einzelnen geprueft.
+
+    Beim Spulen wird die Flaeche verlangt, nicht der Zug: sieben Familien
+    spulen an Tonarm, Rille, Bandleiste, Haarlinie und Metallrad, und eine
+    davon nachzuahmen prueft die Nachahmung, nicht die App. Dass gespult
+    wird, deckt test_player_seeks_within_the_track fuer die Leisten ab.
+    """
+    player.evaluate("setzeAlleZeigen(true)")
+    for lid in layout_ids(player):
+        player.evaluate("id => zeigeLayout(id)", lid)
+        player.wait_for_selector("#buehne [data-pp]")
+        for was, sel in (("Abspielen", "[data-pp]"), ("Zurück", "[data-prev]"),
+                         ("Weiter", "[data-next]"), ("Spulen", "[data-spulen]")):
+            el = player.locator(f"#buehne {sel}")
+            assert el.count() == 1, f"{lid}: {was} fehlt oder ist mehrdeutig"
+            kasten = el.first.bounding_box()
+            assert kasten and kasten["width"] > 0 and kasten["height"] > 0, \
+                f"{lid}: {was} ist nicht sichtbar"
+
+        # Die Einstellungen erreicht man aus jeder Ansicht — der Wechsler
+        # liegt ueber der Buehne und darf von keinem Layout verdeckt werden.
+        knopf = player.locator("#wechsler")
+        kasten = knopf.bounding_box()
+        obenauf = player.evaluate(
+            """([x, y]) => {
+              const el = document.elementFromPoint(x, y);
+              return !!el && (el.id === 'wechsler' || el.closest('#wechsler') !== null);
+            }""",
+            [kasten["x"] + kasten["width"] / 2, kasten["y"] + kasten["height"] / 2])
+        assert obenauf, f"{lid}: der Wechsler ist verdeckt"
+        knopf.click()
+        assert player.locator("#wahl").is_visible(), f"{lid}: Einstellungen öffnen nicht"
+        player.keyboard.press("Escape")
+    player.evaluate("setzeAlleZeigen(false)")
 
 
 def test_player_shuffle_from_the_dialog_uses_the_shared_key(player):

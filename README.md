@@ -136,7 +136,13 @@ http://<unraid-ip>:8080/ipad      (dieselbe Seite auch unter /pc)
 
 der Spieler. Beide Adressen liefern dieselbe Datei — welche Ansicht passt, entscheidet nicht das Gerät, sondern man selbst. Seit der ersten Etappe der Zusammenlegung kann er alles, was auch die Schreibtischseite kann: sortieren, nach Interpreten gruppieren, neu einlesen und die übersprungenen Dateien nachsehen.
 
-- **Zwölf Ansichten zur Wahl.** Der kleine Knopf unten rechts (oder die Taste **L**) öffnet die **Einstellungen**. Die Wahl bleibt auf diesem Gerät gespeichert; was gerade läuft, läuft beim Wechsel weiter.
+- **Zwölf Ansichten zur Wahl.** Der kleine Knopf unten rechts (oder die Taste **L**) öffnet die **Einstellungen**. Was gerade läuft, läuft beim Wechsel weiter.
+- **Erst das Format, dann die Ansicht.** Ganz oben im Dialog steht *Format*: **Telefon**, **Tablet** oder **Schreibtisch**. Die Liste darunter zeigt nur die Ansichten, die für dieses Format gezeichnet **und nachgemessen** sind — jede wurde auf Telefon hoch, Tablet hoch, Tablet quer und Schreibtisch daraufhin geprüft, ob etwas über den Rand ragt und ob Abspieltaste und Bibliotheksknopf ganz im Bild sind. Zwei Fälle sind nicht an der Messung gescheitert, sondern am Hinsehen: *Werkstisch* verliert am Telefon die Titel aus seiner Liste, *Register* schiebt hochkant die Mitte der Platte aus dem Bild. Beide fehlen dort deshalb.
+- **Die Filterung ist ein Rat, kein Zaun.** Der Schalter *Auch Ansichten zeigen, die für dieses Format nicht gezeichnet sind* gibt die ganze Liste wieder frei.
+- **Jedes Format merkt sich seine eigene Ansicht.** Am Schreibtisch *Pult*, am iPad *Konsole* — dieselbe Datei, zwei Gedächtnisse. Ohne das änderte ein Wechsel am PC das Aussehen auf dem iPad. Eine Wahl aus der Zeit davor wird einmalig übernommen.
+- **Die Adresse ist die Voreinstellung, keine Geräteerkennung.** `/ipad` startet im Format *Tablet*, `/pc` im Format *Schreibtisch*, `/mobil` im Format *Telefon*. Nur ein sehr kleiner Bildschirm sticht das: ein Telefon bleibt ein Telefon, gleich welche Adresse man tippt. Danach entscheidet allein die Wahl im Dialog.
+
+  Fürs Telefon ist bisher eine Ansicht gezeichnet (*Gerät*); die eigene Handy-Oberfläche liegt weiterhin unter `/mobil`.
 
   | Ansicht | Gedacht für | Gespult wird … |
   |---|---|---|
