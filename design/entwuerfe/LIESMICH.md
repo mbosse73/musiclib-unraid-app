@@ -27,6 +27,36 @@ dasselbe Display in zwei Tönen. Statt zwei fast gleicher Blätter bekommt in 44
 das iPhone die schwarze und der Rechner die silberne Fassung — so bleiben beide
 Fotos erhalten.
 
+## 43 Sonnenglas — sechs Fassungen
+
+Von 43 gibt es fünf zusätzliche Fassungen. Sie spielen **zwei Achsen** gegen­
+einander durch: die Farbwelt hinter dem Glas und die Dicke des Glases selbst.
+Dick heisst dabei nicht nur mehr Weichzeichnung, sondern auch mehr Eigenfarbe,
+ein hellerer Rand und ein kräftigerer Innenglanz — echtes Glas wird mit der
+Dicke milchiger, nicht bloss unschärfer.
+
+| Nr | Name | Farbwelt | Glasrezept |
+|---|---|---|---|
+| 43 | Sonnenglas | Abendrot (die Vorlage) | Weichzeichnung 26 px · Eigenfarbe 13 % · Rand 24 % |
+| 43a | Milchglas | dasselbe Abendrot | 64 px · 26 % · Rand 44 % — das Bild dahinter verschwimmt fast ganz |
+| 43b | Blaue Stunde | kühle Dämmerung | 9 px · 6 % · Rand 14 % — kaum mehr als eine Tönung |
+| 43c | Morgenmilch | blasser kalter Morgen | 86 px · 46 % · Rand 72 %, **dunkle Schrift** |
+| 43d | Gewitter | Sturmviolett, grüner Akzent | 22 px · 11 % · Kante 78 % · Glanzlage 34 % — spiegelt statt zu streuen |
+| 43e | Neonnacht | Magenta/Violett, cyan Akzent | 34 px · **cyan eingefärbtes Glas** · Sättigung ×1,5 |
+
+Zwei Erkenntnisse aus der Reihe, die beim Portieren zählen:
+
+- **Ab etwa 40 px Weichzeichnung trägt weisse Schrift auf hellem Grund nicht
+  mehr.** 43c musste deshalb auf dunkle Schrift wechseln — eine Glasdicke ist
+  also keine reine Geschmacksfrage, sie zieht die Schriftfarbe mit.
+- **Eingefärbtes Glas (43e) ersetzt den Akzent nicht, es verstärkt ihn.** Der
+  cyanfarbene Ton im Glas und die cyanfarbene Zufallstaste sind dieselbe
+  Entscheidung, nicht zwei.
+
+Alle sechs liegen in einer Datei (`d43.py`); `FASSUNGEN` hält Himmel, Horizont,
+Glasrezept, Schrift, Akzent und Coverfarben je Fassung. Eine siebte anzulegen
+ist ein Eintrag in diesem Wörterbuch, sonst nichts.
+
 **Ein Foto ist nicht verwertet:** 23.56.39 ist ein 15 KB grosses Vorschaubild,
 auf dem nur eine Ecke mit einem „A" zu erkennen ist. Daraus lässt sich keine
 Bildsprache ableiten.
@@ -53,7 +83,7 @@ Git-Historie stehen sie im Commit „Acht Spieler aus den Fotos in player2".
 
 ```bash
 cd design/entwuerfe/src
-python3 baualle.py          # schreibt alle 8 Dateien nach ../html/
+python3 baualle.py          # schreibt alle 18 Dateien nach ../html/
 ```
 
 `werkzeug.py` hält, was alle vier teilen: das eine Beispielalbum, die Zeichen

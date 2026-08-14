@@ -61,7 +61,9 @@ ist, wird 33 nicht portiert.
 Aus den Fotos in `player2/` sind vier Spieler entstanden — 39 Kippschalter,
 43 Sonnenglas, 44 Gerätezeile, 46 Malerblatt. Vier weitere (40 Neonschild,
 41 Sonntagsblatt, 42 Druckgrafik, 45 Kassettenhaufen) sind auf Wunsch wieder
-verworfen und samt Dateien entfernt. Die verbliebenen liegen unter
+verworfen und samt Dateien entfernt. Von **43 gibt es sechs Fassungen** (Farbwelt
+gegen Glasdicke, siehe LIESMICH); welche davon gilt, ist offen. Die verbliebenen
+liegen unter
 `design/entwuerfe/`, halten dieselben Regeln ein wie das Paket und sind bisher
 **nicht** Teil der Auswahl oben: welche davon gebaut werden, ist noch nicht
 entschieden. Begründung je Entwurf in `design/entwuerfe/LIESMICH.md`.
