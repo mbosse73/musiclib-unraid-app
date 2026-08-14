@@ -33,7 +33,7 @@ Keine Datenbank. Alles, was die App weiß, liegt in `library.json`.
 Der Dienst macht drei Dinge:
 
 1. **Scannen** – `*.mp3` rekursiv unter `/music` finden, ID3-Tags (Titel, Interpret, Album, Coverbild …) per `mutagen` auslesen, in eine flache `library.json` schreiben. Cover landen als separate Dateien in `data/covers/`.
-2. **Ausliefern** – Vier einzelne HTML-Dateien (je das ganze UI in einer Datei: `index.html` am Schreibtisch, `player.html` als Spieler für Handy, iPad und PC, `mobile.html` als bisherige Handy-Oberfläche unter `/mobil-alt`, `tag.html` als Spieler mit einem Knopf) plus JSON-Endpunkt.
+2. **Ausliefern** – Vier einzelne HTML-Dateien (je das ganze UI in einer Datei: `player.html` als *die* Oberfläche unter `/`, `/mobil`, `/ipad` und `/pc`, `index.html` und `mobile.html` als bisherige Seiten unter `/klassisch` und `/mobil-alt`, `tag.html` als Spieler mit einem Knopf) plus JSON-Endpunkt.
 3. **Streamen** – MP3-Dateien per HTTP-Range, damit Vor- und Zurückspulen auf dem Handy flüssig läuft.
 
 ## Installation auf unraid
@@ -99,51 +99,21 @@ Oder im unraid-Dashboard beim `musiklib`-Container auf **WebUI** klicken — das
 
 Beim allerersten Start scannt die App automatisch. Bei einer Sammlung mit ein paar tausend Titeln dauert das ein paar Minuten. Der Punkt oben rechts in der App zeigt den Fortschritt.
 
-## Am Handy: die bisherige Oberfläche
+## Die Oberfläche: der Spieler
 
-> **Seit der dritten Etappe der Zusammenlegung liefert `/mobil` den Spieler**
-> (nächster Abschnitt) — dessen fünf Telefon-Ansichten sind genau die
-> Erscheinungsbilder, die hier beschrieben sind. Die alte Oberfläche bleibt
-> vorerst erreichbar, als Rückweg:
+Die App liegt unter
 
 ```
-http://<unraid-ip>:8080/mobil-alt
+http://<unraid-ip>:8080/          (dieselbe Seite auch unter /pc, /ipad und /mobil)
 ```
 
-eine eigene, hellere Oberfläche fürs Handy. Sie greift auf dieselbe Sammlung zu und **spielt auf dem Gerät selbst** — installiert wird nichts, es ist eine normale Webseite.
-
-- **Wie eine App:** in Safari auf _Teilen → Zum Home-Bildschirm_. Dann liegt ein Symbol auf dem Startbildschirm und die Seite startet ohne Browserleiste. Beim nächsten Öffnen ist automatisch die aktuelle Fassung da — es gibt nichts zu aktualisieren.
-- **Absichtlich keine automatische Weiterleitung:** iPad-Safari meldet sich als Schreibtisch-Browser, eine Erkennung nach Gerät ginge schief. Die Adresse wird also bewusst von Hand aufgerufen (bzw. einmal als Lesezeichen abgelegt).
-- **Drei Reiter:** Sammlung, Suche, Jetzt läuft. Ein Titel startet die Wiedergabe und wechselt in „Jetzt läuft".
-- **Die Achse am rechten Rand** ist die ganze Warteschlange: eine Marke je Titel. Daran ziehen spult — auch über Titelgrenzen hinweg. Kurzes Antippen (oder der Zähler oben rechts) klappt die Titelliste auf.
-- **Einstellungen** über das Zahnrad oben rechts in der Sammlung. Sie gelten nur für dieses Gerät und bleiben gespeichert:
-  - **Thema:** fünf zur Wahl. Ein Thema ist mehr als die Farbe — es bestimmt die ganze Seite „Jetzt läuft"; Sammlung und Suche bleiben, wie sie sind.
-    - _Papier_ (Elfenbein und Messing): die Warteschlange steht als Achse senkrecht im rechten Rand, eine Marke je Titel.
-    - _Desert Rose_ (Sand und Burgunder): das Cover sitzt in einem Passepartout, die Seite steht auf einer Mittelachse, und dieselbe Warteschlange liegt als gravierte Skala waagerecht unter dem Bild. Gespult wird dort durch Ziehen auf der Skala; eine Sprechblase nennt dabei den Titel, in dem man landet.
-    - _Kissen_ (weiches Weiß): ein Laufwerk als Bild, darunter der Ausschlag des Titels als Spulleiste, große gepolsterte Tasten.
-    - _Karte_ (weiße Karte über Schwarz): die verstrichene Zeit ist so groß gesetzt wie der Titel, darunter der Ausschlag in Rot, im Dunkeln die Warteschlange.
-    - _Kiesel_ (Grau in Grau): der Spieler ist die Zeile, die läuft — herausgehoben aus der Liste. Wer den nächsten Titel will, tippt ihn an statt „Weiter".
-    - In den letzten drei stehen oben links die **Sammlung** und oben rechts die **Suche** als Knopf.
-  - **Farbakzent:** färbt Abspielknopf, Achse und Hervorhebungen. Jedes Thema bringt eigene mit — Papier: Messing, Petrol, Grün; Desert Rose: Ton, Rosé; Kissen: Nebel, Flieder; Karte: Zinnober (nur einer — dieses Thema erlaubt genau eine Farbe); Kiesel: Graphit, Stahl.
-  - **Untere Leiste:** _Dauerhaft_ (Voreinstellung) oder _Bei Bedarf_. Bei Bedarf liegt sie unter dem Bildschirmrand, die Sammlung bekommt den freien Platz. Unten in der Mitte bleibt ein kurzer Strich stehen — ein Tippen darauf holt die Leiste hervor, nach der Wahl eines Reiters (oder nach ein paar Sekunden) geht sie von selbst zurück.
-- **Bewusst nicht enthalten:** Scannen, die Liste übersprungener Dateien und die Sortierwahl — das bleibt am Schreibtisch. Ohne WLAN zum NAS gibt es keine Musik; einen Offline-Betrieb kann die Seite über `http://` nicht bieten.
-- Wiedergabe, Pause und Titelwechsel funktionieren auch über Sperrbildschirm und Kopfhörertasten. Öffnet man auf demselben Gerät beide Ansichten, läuft die Sitzung nahtlos weiter.
-
-## Am iPad und am Schreibtisch: der Spieler
-
-Neben Schreibtischseite und Handyseite liegt unter
-
-```
-http://<unraid-ip>:8080/ipad      (dieselbe Seite auch unter /pc und /mobil)
-```
-
-der Spieler. Alle drei Adressen liefern dieselbe Datei — welche Ansicht passt, entscheidet nicht das Gerät, sondern man selbst. Seit der ersten Etappe der Zusammenlegung kann er alles, was auch die Schreibtischseite kann: sortieren, nach Interpreten gruppieren, neu einlesen und die übersprungenen Dateien nachsehen.
+der Spieler — seit der vierten Etappe **die** Oberfläche der App. Alle vier Adressen liefern dieselbe Datei; welche Ansicht passt, entscheidet nicht das Gerät, sondern man selbst. Seit der ersten Etappe der Zusammenlegung kann er alles, was auch die Schreibtischseite kann: sortieren, nach Interpreten gruppieren, neu einlesen und die übersprungenen Dateien nachsehen.
 
 - **Zwölf Ansichten zur Wahl.** Der kleine Knopf unten rechts (oder die Taste **L**) öffnet die **Einstellungen**. Was gerade läuft, läuft beim Wechsel weiter.
 - **Erst das Format, dann die Ansicht.** Ganz oben im Dialog steht *Format*: **Telefon**, **Tablet** oder **Schreibtisch**. Die Liste darunter zeigt nur die Ansichten, die für dieses Format gezeichnet **und nachgemessen** sind — jede wurde auf Telefon hoch, Tablet hoch, Tablet quer und Schreibtisch daraufhin geprüft, ob etwas über den Rand ragt und ob Abspieltaste und Bibliotheksknopf ganz im Bild sind. Zwei Fälle sind nicht an der Messung gescheitert, sondern am Hinsehen: *Werkstisch* verliert am Telefon die Titel aus seiner Liste, *Register* schiebt hochkant die Mitte der Platte aus dem Bild. Beide fehlen dort deshalb.
 - **Die Filterung ist ein Rat, kein Zaun.** Der Schalter *Auch Ansichten zeigen, die für dieses Format nicht gezeichnet sind* gibt die ganze Liste wieder frei.
 - **Jedes Format merkt sich seine eigene Ansicht.** Am Schreibtisch *Pult*, am iPad *Konsole* — dieselbe Datei, zwei Gedächtnisse. Ohne das änderte ein Wechsel am PC das Aussehen auf dem iPad. Eine Wahl aus der Zeit davor wird einmalig übernommen.
-- **Die Adresse ist die Voreinstellung, keine Geräteerkennung.** `/ipad` startet im Format *Tablet*, `/pc` im Format *Schreibtisch*, `/mobil` im Format *Telefon*. Nur ein sehr kleiner Bildschirm sticht das: ein Telefon bleibt ein Telefon, gleich welche Adresse man tippt. Danach entscheidet allein die Wahl im Dialog.
+- **Die Adresse ist die Voreinstellung, keine Geräteerkennung.** `/ipad` startet im Format *Tablet*, `/` und `/pc` im Format *Schreibtisch*, `/mobil` im Format *Telefon*. Nur ein sehr kleiner Bildschirm sticht das: ein Telefon bleibt ein Telefon, gleich welche Adresse man tippt. Danach entscheidet allein die Wahl im Dialog.
 
 - **Fürs Telefon sind es sechs Ansichten.** Seit der dritten Etappe sind die fünf Erscheinungsbilder der alten Handy-Oberfläche ganz normale Ansichten mit Format *Telefon*: **Papier** (Elfenbein und Messing, die Warteschlange als Achse im rechten Rand), **Desert Rose** (Sand und Burgunder, dieselbe Achse waagerecht als Skala), **Kissen**, **Karte** und **Kiesel**. Dazu kommt *Gerät*. `/mobil` liefert deshalb jetzt diese Datei.
 - **Akzentfarben** gehören zur Ansicht, nicht zur Seite: Messing gibt es in *Papier*, Ton und Rosé in *Desert Rose*, und so fort. Sie stehen in den Einstellungen unter der Ansichtsliste — aber nur, wenn die gewählte Ansicht mehr als eine anbietet. *Karte* lässt genau eine Farbe zu und fragt deshalb nicht.
@@ -166,6 +136,7 @@ der Spieler. Alle drei Adressen liefern dieselbe Datei — welche Ansicht passt,
 
 - **Bibliothek und Suche gibt es in jeder Ansicht**, immer hinter *einem* Knopf und immer als Blende über dem Gerät, nie als eigene Seite: Auswurftaste am Kassettendeck, am Rack und am Verstärker, Rasterzeichen im Weißraum, Schalter mit Lampe am Pult, Listenzeichen an den Drehreglern der Platte. Gesucht wird überall über Albumtitel, Interpret, Jahr und alle Titelnamen. Einzige Ausnahme sind **Werkstisch** und **Deck**: dort liegt die Sammlung ohnehin offen daneben, und die Suchzeile steht direkt darüber.
 - **Sortieren und Gruppieren gelten überall.** In den Einstellungen unter *Sammlung*: fünf Ordnungen (Interpret, Albumtitel, Jahr auf- und absteigend, zuletzt hinzugefügt) und die Wahl zwischen *Alben* und *Interpreten*. Beides wirkt sofort in der Liste jeder Ansicht — in der Interpreten-Ansicht steht über jedem Block eine Überschrift mit einem Knopf **Alles**, der alle Alben dieses Interpreten hintereinander spielt (steht etwas im Suchfeld, spielt er genau das, was daneben steht). Die Sortierung teilt sich den Speicherplatz mit der Schreibtischseite: dort eingestellt, hier schon so vorgefunden.
+- **Lautstärke und Stumm** stehen ebenfalls in den Einstellungen. Nur sieben der Ansichten haben einen eigenen Regler am Gerät, die Pfeiltasten sind am iPad keine Antwort, und *stumm* hatte vorher gar keine Stelle. Das Aufheben findet den alten Pegel wieder.
 - **Neu einlesen ohne Umweg über den Schreibtisch.** Ebenfalls unter *Sammlung*: Anzahl der Alben und Titel, Datum des letzten Scans, der Knopf **Neu einlesen** mit Fortschritt, und darunter — falls es welche gab — die Liste der übersprungenen, nicht lesbaren Dateien. Ausgelöst wird ein Scan **nur** über diesen Knopf; das bloße Öffnen der Seite weckt die Platte im NAS nicht. Läuft gerade ein Scan (etwa der beim ersten Containerstart), zeigt der Dialog ihn an und lädt die Sammlung danach von selbst nach. Wer dabei Musik hört, merkt vom Scan nichts.
 - **Tastatur:** **Leertaste** Wiedergabe/Pause, **←/→** 5 Sekunden, **↑/↓** Lautstärke, **n**/**p** Titelwechsel, **L** Einstellungen, **Esc** schließt Bibliothek und Dialog.
 - Sperrbildschirm und Medientasten bedienen dieselbe Warteschlange. Die Sitzung wird mit den beiden anderen Oberflächen geteilt: auf demselben Gerät läuft sie zwischen Schreibtisch, Handy und Spieler weiter.
@@ -199,23 +170,57 @@ Ein Browser, der Musik von einem NAS streamt, hat drei Stellen, an denen es abre
 
 Bleibt es trotzdem stehen, hilft **Bildschirm anlassen** (am Handy wie im Spieler in den Einstellungen): Solange Musik läuft, bleibt der Bildschirm an — und damit auch das WLAN auf voller Leistung. Das kostet Akku und wirkt nur, solange die Seite sichtbar ist; iOS gibt die Sperre frei, sobald du die App verlässt. Braucht iOS 16.4 oder neuer.
 
-## Bedienung
+## Die bisherigen Oberflächen
+
+Beide bleiben ausgeliefert, solange sich die neue Seite beweist. Sie teilen sich mit ihr alle gespeicherten Werte — Sitzung, Lautstärke, Stumm, Zufall, Sortierung und *Am Ende der Warteschlange* —, man kann also mitten im Lied hin- und herwechseln.
+
+### Die alte Handy-Oberfläche
+
+Die fünf Erscheinungsbilder, die hier beschrieben sind, gibt es im Spieler
+als Ansichten mit Format *Telefon*. Diese Seite selbst bleibt erreichbar unter:
+
+```
+http://<unraid-ip>:8080/mobil-alt
+```
+
+eine eigene, hellere Oberfläche fürs Handy. Sie greift auf dieselbe Sammlung zu und **spielt auf dem Gerät selbst** — installiert wird nichts, es ist eine normale Webseite.
+
+- **Wie eine App:** in Safari auf _Teilen → Zum Home-Bildschirm_. Dann liegt ein Symbol auf dem Startbildschirm und die Seite startet ohne Browserleiste. Beim nächsten Öffnen ist automatisch die aktuelle Fassung da — es gibt nichts zu aktualisieren.
+- **Absichtlich keine automatische Weiterleitung:** iPad-Safari meldet sich als Schreibtisch-Browser, eine Erkennung nach Gerät ginge schief. Die Adresse wird also bewusst von Hand aufgerufen (bzw. einmal als Lesezeichen abgelegt).
+- **Drei Reiter:** Sammlung, Suche, Jetzt läuft. Ein Titel startet die Wiedergabe und wechselt in „Jetzt läuft".
+- **Die Achse am rechten Rand** ist die ganze Warteschlange: eine Marke je Titel. Daran ziehen spult — auch über Titelgrenzen hinweg. Kurzes Antippen (oder der Zähler oben rechts) klappt die Titelliste auf.
+- **Einstellungen** über das Zahnrad oben rechts in der Sammlung. Sie gelten nur für dieses Gerät und bleiben gespeichert:
+  - **Thema:** fünf zur Wahl. Ein Thema ist mehr als die Farbe — es bestimmt die ganze Seite „Jetzt läuft"; Sammlung und Suche bleiben, wie sie sind.
+    - _Papier_ (Elfenbein und Messing): die Warteschlange steht als Achse senkrecht im rechten Rand, eine Marke je Titel.
+    - _Desert Rose_ (Sand und Burgunder): das Cover sitzt in einem Passepartout, die Seite steht auf einer Mittelachse, und dieselbe Warteschlange liegt als gravierte Skala waagerecht unter dem Bild. Gespult wird dort durch Ziehen auf der Skala; eine Sprechblase nennt dabei den Titel, in dem man landet.
+    - _Kissen_ (weiches Weiß): ein Laufwerk als Bild, darunter der Ausschlag des Titels als Spulleiste, große gepolsterte Tasten.
+    - _Karte_ (weiße Karte über Schwarz): die verstrichene Zeit ist so groß gesetzt wie der Titel, darunter der Ausschlag in Rot, im Dunkeln die Warteschlange.
+    - _Kiesel_ (Grau in Grau): der Spieler ist die Zeile, die läuft — herausgehoben aus der Liste. Wer den nächsten Titel will, tippt ihn an statt „Weiter".
+    - In den letzten drei stehen oben links die **Sammlung** und oben rechts die **Suche** als Knopf.
+  - **Farbakzent:** färbt Abspielknopf, Achse und Hervorhebungen. Jedes Thema bringt eigene mit — Papier: Messing, Petrol, Grün; Desert Rose: Ton, Rosé; Kissen: Nebel, Flieder; Karte: Zinnober (nur einer — dieses Thema erlaubt genau eine Farbe); Kiesel: Graphit, Stahl.
+  - **Untere Leiste:** _Dauerhaft_ (Voreinstellung) oder _Bei Bedarf_. Bei Bedarf liegt sie unter dem Bildschirmrand, die Sammlung bekommt den freien Platz. Unten in der Mitte bleibt ein kurzer Strich stehen — ein Tippen darauf holt die Leiste hervor, nach der Wahl eines Reiters (oder nach ein paar Sekunden) geht sie von selbst zurück.
+- **Bewusst nicht enthalten:** Scannen, die Liste übersprungener Dateien und die Sortierwahl — das bleibt am Schreibtisch. Ohne WLAN zum NAS gibt es keine Musik; einen Offline-Betrieb kann die Seite über `http://` nicht bieten.
+- Wiedergabe, Pause und Titelwechsel funktionieren auch über Sperrbildschirm und Kopfhörertasten. Öffnet man auf demselben Gerät beide Ansichten, läuft die Sitzung nahtlos weiter.
+
+### Bedienung der alten Schreibtischseite
+
+Erreichbar unter `http://<unraid-ip>:8080/klassisch`.
 
 - Die **Suche** filtert Alben, Interpreten und Titel gleichzeitig in Echtzeit. Wird ein Album wegen eines Titels gefunden, ist dieser Titel beim Öffnen des Albums golden markiert.
 - **Alben** zeigt die Sammlung als Cover-Raster, **Interpreten** eine aufklappbare Liste. Über **Sortierung** rechts lässt sich zwischen Interpret, Albumtitel, Jahr und „Zuletzt hinzugefügt" wechseln; die Wahl bleibt gespeichert.
 - Klick auf ein Album öffnet die Trackliste. Klick auf einen Titel startet die Wiedergabe. Der Rest des Albums hängt automatisch in der Warteschlange. In der Interpreten-Ansicht spielt **„Alles abspielen"** sämtliche Alben eines Interpreten am Stück.
-- Der Player unten bleibt sichtbar, auch beim Stöbern. Er hat Zufallswiedergabe und einen Lautstärkeregler (am Handy ausgeblendet, dort regeln die Hardwaretasten).
+- Der Player unten bleibt sichtbar, auch beim Stöbern. Er hat Zufallswiedergabe und einen Lautstärkeregler.
 - Am PC per Tastatur: **Leertaste** Wiedergabe/Pause, **←/→** 10 Sekunden springen, **n**/**p** nächster/vorheriger Titel, **s** Zufallswiedergabe, **/** springt ins Suchfeld, **Esc** schließt das Album.
 - Beim erneuten Öffnen setzt die App dort fort, wo sie zuletzt war — gleicher Titel, gleiche Position, angehalten. Praktisch am Handy, wo der Tab ständig geschlossen wird.
 - Auf dem Sperrbildschirm bzw. über die Medientasten funktionieren Wiedergabe, Pause und Titelwechsel.
-- Wenn sich die Sammlung ändert: Knopf **„Neu scannen"** oben rechts — oder unter `/ipad` bzw. `/pc` in den Einstellungen (**L**) der Knopf **Neu einlesen**. Der Scan läuft im Hintergrund, das UI bleibt benutzbar. Nur geänderte Dateien werden neu eingelesen, weitere Scans dauern daher meist nur Sekunden.
+- Wenn sich die Sammlung ändert: Knopf **„Neu scannen"** oben rechts — im Spieler ist es der Knopf **Neu einlesen** in den Einstellungen (**L**). Der Scan läuft im Hintergrund, das UI bleibt benutzbar. Nur geänderte Dateien werden neu eingelesen, weitere Scans dauern daher meist nur Sekunden.
 
 ## Updates und Wartung
 
-**Code-Änderungen einfach per SMB einspielen**: `app.py`, `index.html`, `mobile.html`, `player.html` oder `tag.html` in `/mnt/user/appdata/musiklib/` ersetzen, dann:
+**Code-Änderungen einfach per SMB einspielen**: `app.py`, `player.html`, `index.html`, `mobile.html` oder `tag.html` in `/mnt/user/appdata/musiklib/` ersetzen, dann:
 
 - **HTML-Änderung**: nur Browser-Reload, kein Container-Neustart nötig.
-- **Eine Adresse antwortet mit „liegt nicht im Ordner der App"**: genau das steht dann auch da — die genannte Datei fehlt neben `app.py` und wird nachkopiert, mehr ist nicht zu tun. `/` läuft in diesem Fall weiter, weil `index.html` ja da ist. Kommt stattdessen ein nacktes `{"detail":"Not Found"}`, ist die Adresse selbst unbekannt: dann läuft im Container noch ein älteres `app.py`.
+- **Eine Adresse antwortet mit „liegt nicht im Ordner der App"**: genau das steht dann auch da — die genannte Datei fehlt neben `app.py` und wird nachkopiert, mehr ist nicht zu tun. Beim Einspielen deshalb erst die HTML-Dateien kopieren, dann `app.py`, dann neu starten. Kommt stattdessen ein nacktes `{"detail":"Not Found"}`, ist die Adresse selbst unbekannt: dann läuft im Container noch ein älteres `app.py`.
 - **Python-Änderung**: Container neu starten (unraid → musiklib → Restart).
 - **Neue Python-Dependency in `requirements.txt`**: Container **stoppen und neu starten** (nicht nur Restart) — nur dann läuft der `pip install`-Schritt im Command wieder.
 
@@ -228,9 +233,9 @@ Der komplette Katalog liegt unterhalb von `DATA_DIR` (im Compose-File auf `/app/
 ```
 /mnt/user/appdata/musiklib/
 ├── app.py
-├── index.html                 ← /
+├── index.html                 ← /klassisch (bisherige Schreibtischseite)
 ├── mobile.html                ← /mobil-alt (bisherige Handy-Oberfläche)
-├── player.html                ← /mobil, /ipad und /pc
+├── player.html                ← /, /mobil, /ipad und /pc
 ├── tag.html                   ← /tag
 ├── requirements.txt
 └── data/                      ← DATA_DIR, wird beim ersten Start automatisch angelegt

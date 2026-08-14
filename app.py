@@ -546,6 +546,23 @@ def _seite(name: str) -> FileResponse:
 
 @app.get("/")
 def index():
+    """Die Hauptadresse — seit der Zusammenlegung dieselbe Datei wie /pc.
+
+    Vier Adressen, eine Oberflaeche: die Adresse setzt nur das Format vor
+    (/ und /pc Schreibtisch, /ipad Tablet, /mobil Telefon), danach
+    entscheidet die Wahl in den Einstellungen.
+    """
+    return _seite("player.html")
+
+
+@app.get("/klassisch")
+def klassisch():
+    """Die alte Schreibtischseite, solange die neue sich beweisen muss.
+
+    Sie teilt sich alle Schluessel im localStorage mit der neuen (Sitzung,
+    Lautstaerke, Stumm, Zufall, Sortierung, Fortsetzung), man kann also
+    mitten im Lied wechseln. Faellt weg, sobald index.html geht.
+    """
     return _seite("index.html")
 
 

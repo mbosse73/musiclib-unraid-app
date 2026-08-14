@@ -150,7 +150,9 @@ def open_page(ctx, server):
     pg = ctx.new_page()
     pg.errors = []
     pg.on("pageerror", lambda e: pg.errors.append(str(e)))
-    pg.goto(server, wait_until="domcontentloaded")
+    # / zeigt seit Etappe 4 player.html; die alte Schreibtischseite liegt
+    # unter /klassisch und wird geprueft, solange sie ausgeliefert wird.
+    pg.goto(server + "/klassisch", wait_until="domcontentloaded")
     pg.wait_for_selector(".album")
     return pg
 
@@ -716,7 +718,7 @@ def test_mobile_shares_the_session_with_the_desktop_page(phone, server):
     assert gespeichert["qIndex"] == 1
     assert len(gespeichert["items"][0]) == 2, "Form muss [albumId, trackId] bleiben"
 
-    phone.goto(server, wait_until="domcontentloaded")   # dieselbe Herkunft: Schreibtischseite
+    phone.goto(server + "/klassisch", wait_until="domcontentloaded")
     phone.wait_for_selector(".album")
     phone.wait_for_function("document.getElementById('now-title').textContent !== '—'")
     assert phone.inner_text("#now-title") == "Kometenmelodie"
@@ -912,7 +914,7 @@ def test_player_shares_the_session_with_the_desktop_page(player, server):
     assert gespeichert["qIndex"] == 1
     assert len(gespeichert["items"][0]) == 2, "Form muss [albumId, trackId] bleiben"
 
-    player.goto(server, wait_until="domcontentloaded")   # Schreibtischseite
+    player.goto(server + "/klassisch", wait_until="domcontentloaded")
     player.wait_for_selector(".album")
     player.wait_for_function("document.getElementById('now-title').textContent !== '—'")
     assert player.inner_text("#now-title") == "Kometenmelodie"
@@ -957,7 +959,7 @@ def test_player_sorting_reorders_and_is_shared_with_the_desktop(player, server):
     player.reload(wait_until="domcontentloaded")
     player.wait_for_function("typeof sortierung !== 'undefined' && sortierung === 'year-desc'")
 
-    player.goto(server, wait_until="domcontentloaded")      # Schreibtischseite
+    player.goto(server + "/klassisch", wait_until="domcontentloaded")
     player.wait_for_selector(".album")
     assert player.eval_on_selector("#sort", "el => el.value") == "year-desc", \
         "musiklib:sort muss auf beiden Seiten dasselbe bedeuten"
@@ -1384,6 +1386,27 @@ def test_phone_shares_the_session_with_the_old_mobile_page(telefon, server):
     telefon.wait_for_selector(".card")
     telefon.wait_for_function("document.getElementById('np-title').textContent !== 'Nichts ausgewählt'")
     assert telefon.inner_text("#np-title") == "Kometenmelodie"
+
+
+def test_player_volume_and_mute_are_reachable_in_every_layout(player):
+    """Nur sieben der Ansichten tragen einen eigenen Regler, und „stumm"
+    hatte gar keine Stelle — beides sitzt jetzt im Dialog, den alle teilen.
+    Die Schluessel sind die geteilten."""
+    player.evaluate("zeigeWahl(true)")
+    player.fill("#wahllaut", "40")
+    player.dispatch_event("#wahllaut", "input")
+    player.wait_for_function("Math.abs(ton.volume - 0.4) < 0.02", timeout=3000)
+    assert player.evaluate("localStorage.getItem('musiklib:volume')") == "0.4"
+    assert "40%" in player.inner_text("#wahllautwert")
+
+    player.click("#wahlstumm")
+    assert player.evaluate("ton.muted") is True
+    assert player.evaluate("localStorage.getItem('musiklib:muted')") == "true"
+    player.click("#wahlstumm")
+    assert player.evaluate("ton.muted") is False
+    # Der alte Pegel muss das Stummschalten ueberleben.
+    assert abs(player.evaluate("ton.volume") - 0.4) < 0.02
+    player.evaluate("zeigeWahl(false); deck.setVol(1)")
 
 
 def test_player_shuffle_from_the_dialog_uses_the_shared_key(player):

@@ -126,6 +126,13 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
 .wahlwahlen .schalter{cursor:pointer;max-width:52ch;line-height:1.4}
 .wahlwahlen .schalter input{width:14px;height:14px;flex:none;accent-color:#8A6534;cursor:pointer}
 .wahlnote{margin-top:12px;font-size:12px;color:#6B6155;max-width:62ch}
+.wahlwahlen input[type=range]{flex:1;min-width:180px;max-width:340px;accent-color:#8A6534;
+  height:22px;cursor:pointer}
+.wahlwahlen .stummknopf{border:1px solid rgba(36,30,24,.22);border-radius:2px;padding:6px 12px;
+  font-size:12.5px;flex:none}
+.wahlwahlen .stummknopf.an{border-color:#241E18;box-shadow:inset 0 0 0 1px #241E18}
+.wahlwahlen .lautwert{font-size:12.5px;color:#6B6155;font-variant-numeric:tabular-nums;
+  min-width:4ch;text-align:right}
 .wahlakzente{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .wahlakzente[hidden]{display:none}
 .wahlakzente .kap{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#8A6534;
@@ -1529,7 +1536,7 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
 <div class="wahl" id="wahl" hidden>
   <div class="wahlkasten" role="dialog" aria-modal="true" aria-label="Einstellungen">
     <h2>Einstellungen</h2>
-    <p>Zwölf Oberflächen für dieselbe Sammlung. Was gespielt wird, läuft beim Wechsel weiter —
+    <p>Eine Sammlung, viele Oberflächen. Was gespielt wird, läuft beim Wechsel weiter —
     nur das Gerät drumherum ist ein anderes.</p>
     <div class="wahlende">
       <span class="wahlkap">Format</span>
@@ -1566,6 +1573,14 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
       <div class="wahlreihe" id="wahlende"></div>
     </div>
     <div class="wahlende">
+      <span class="wahlkap">Lautstärke</span>
+      <div class="wahlwahlen">
+        <button type="button" id="wahlstumm" class="stummknopf"></button>
+        <input type="range" id="wahllaut" min="0" max="100" step="1" aria-label="Lautstärke">
+        <span id="wahllautwert" class="lautwert"></span>
+      </div>
+    </div>
+    <div class="wahlende">
       <span class="wahlkap">Reihenfolge</span>
       <div class="wahlreihe" id="wahlzufall"></div>
     </div>
@@ -1574,7 +1589,7 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
       <div class="wahlreihe" id="wahlwach"></div>
     </div>
     <div class="wahlfuss">
-      <span>Taste <b>L</b> öffnet diese Liste · <a href="/">Schreibtisch</a> · <a href="/mobil">Handy</a></span>
+      <span>Taste <b>L</b> öffnet diese Liste · <a href="/tag">Album des Tages</a> · <a href="/klassisch">alte Schreibtischseite</a></span>
       <button type="button" id="wahlzu">Schließen</button>
     </div>
   </div>
@@ -1944,6 +1959,12 @@ class Deck {
     this.audio.volume = v;
     store('volume', v); store('muted', false);
     this.render();
+  }
+  /* Stumm ist nicht „Lautstaerke 0": der alte Pegel muss beim Aufheben
+     wieder da sein. Deshalb ein eigener Zustand, wie in index.html. */
+  setMute(v){
+    this.audio.muted = !!v; store('muted', this.audio.muted);
+    this.render(); wahlAuffrischen();
   }
   toggleShuffle(){ this.setShuffle(!this.shuffle); }
   setShuffle(v){
@@ -4192,6 +4213,25 @@ feldAnsicht.onchange = () => {
   zeichneListen();
 };
 
+/* Lautstaerke und Stumm gibt es seit der Zusammenlegung auch hier: nur
+   sieben der Ansichten tragen einen eigenen Regler, die Pfeiltasten sind
+   auf einem Tablet keine Antwort, und „stumm" hatte bisher gar keine
+   Stelle. Der Regler haengt an ton.volume, der Knopf an ton.muted —
+   getrennt, damit das Aufheben den alten Pegel wiederfindet. */
+const feldLaut = document.getElementById('wahllaut');
+const knopfStumm = document.getElementById('wahlstumm');
+/* Der Regler frischt seine eigene Ablesung auf. setVol() zeichnet den
+   ganzen Dialog absichtlich nicht neu — das waere je Ziehbild ein
+   kompletter Neuaufbau der Ansichtsliste. */
+feldLaut.oninput = () => { deck.setVol(feldLaut.value / 100); zeichneLautstaerke(); };
+knopfStumm.onclick = () => deck.setMute(!ton.muted);
+function zeichneLautstaerke(){
+  feldLaut.value = Math.round(clamp(ton.volume, 0, 1) * 100);
+  document.getElementById('wahllautwert').textContent = feldLaut.value + '%';
+  knopfStumm.textContent = ton.muted ? 'Stumm — aufheben' : 'Stumm schalten';
+  knopfStumm.classList.toggle('an', ton.muted);
+}
+
 const skipKnopf = document.getElementById('wahlskipknopf');
 skipKnopf.onclick = () => {
   const liste = document.getElementById('wahlskipliste');
@@ -4245,6 +4285,7 @@ function zeichneWahl(){
   feldSort.value = sortierung;
   feldAnsicht.value = ansicht;
   zeichneBestand();
+  zeichneLautstaerke();
 
   document.getElementById('wahlziel').innerHTML = ZIELE.map(z => {
     const n = LAYOUTS.filter(L => (L.ziele || []).includes(z.id)).length;
@@ -4414,7 +4455,7 @@ async function start(){
     daten = await r.json();
   }catch(e){
     hinweis('Sammlung nicht erreichbar',
-      'Der Server hat nicht geantwortet. Neu laden, oder am <a href="/">Schreibtisch</a> nachsehen.');
+      'Der Server hat nicht geantwortet. Neu laden, oder auf der <a href="/klassisch">alten Seite</a> nachsehen.');
     return;
   }
   uebernimm(daten);
