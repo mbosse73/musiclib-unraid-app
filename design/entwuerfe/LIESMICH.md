@@ -1,6 +1,6 @@
-# Zweiter Satz: acht Spieler aus dem Ordner `player2/`
+# Zweiter Satz: vier Spieler aus dem Ordner `player2/`
 
-Acht Entwürfe, gebaut aus den Fotos in `player2/` im Wurzelverzeichnis. Sie sind
+Vier Entwürfe, gebaut aus den Fotos in `player2/` im Wurzelverzeichnis. Sie sind
 kein Teil des gelieferten Design-Pakets, halten sich aber an dessen Regeln, weil
 sie am Ende durch dieselbe Portierung gehen sollen:
 
@@ -18,12 +18,8 @@ sie am Ende durch dieselbe Portierung gehen sollen:
 | Nr | Name | Foto | Was die Vorlage hergibt | Bibliotheks-Zugang |
 |---|---|---|---|---|
 | 39 | Kippschalter | 23.30.54 | Schwarz, reine Typografie, zwei Kippschalter als Buchstaben | Umrisspille oben rechts |
-| 40 | Neonschild | 23.31.26 | Dunkler warmer Raum, Leuchtschrift, Plattenspieler | Leuchtpille oben rechts |
-| 41 | Sonntagsblatt | 23.34.02 | Graupappe, fette Schlagzeile, Objekte mit weissem Konturstrich | Umrisspille am Fuss |
-| 42 | Druckgrafik | 23.34.53 | Kunstdruck in drei Farben, Teller von oben, Schieber und Knöpfe | Signatur oben links |
 | 43 | Sonnenglas | 23.38.31 | Glühender Himmel, schwarzer Horizont, Karte aus Milchglas | Glaspille über der Karte |
 | 44 | Gerätezeile | 23.43.04 + 23.43.13 | Kargstes Display: Titel, Haarlinie, Lautstärkezahl, Dreieck | Schriftzug oben mittig |
-| 45 | Kassettenhaufen | 23.56.47 | Berg bunter C60-Kassetten, dunkle Pille, rote Taste | Dunkle Pille — und der Haufen selbst |
 | 46 | Malerblatt | 23.54.59 | Gemaltes Stillleben auf beschriebenem Papier | Pille oben rechts |
 
 **Zwei Fotos, ein Entwurf:** 23.43.04 (schwarz) und 23.43.13 (silbern) zeigen
@@ -38,22 +34,29 @@ Bildsprache ableiten.
 Die Übertragung folgt in jedem Fall demselben Gedanken: **nicht das Foto
 nachzeichnen, sondern seine Bausprache übernehmen** und den ganzen Spieler
 daraus bauen. Bei 39 heisst das, dass der Schalter nicht *neben* der Wiedergabe
-sitzt, sondern *die* Wiedergabe ist; bei 45, dass der Haufen nicht Hintergrund
-ist, sondern die Sammlung; bei 42, dass kein Bauteil plastisch sein darf, weil
-ein Druck keine Schatten wirft.
+sitzt, sondern *die* Wiedergabe ist; bei 46, dass der Fortschritt ein gezogener
+Strich ist und kein Balken.
 
-Drei der acht Vorlagen (39, 41, 45) sind Grafiken ohne jede Bedienung; dort ist
-mehr erfunden als übertragen. 43 und 44 waren dagegen schon fast fertige
-Oberflächen — die sind eher Port als Entwurf.
+39 und 46 gehen auf Grafiken ohne jede Bedienung zurück; dort ist mehr erfunden
+als übertragen. 43 und 44 waren dagegen schon fast fertige Oberflächen — die
+sind eher Port als Entwurf.
+
+## Verworfen
+
+Vier weitere Entwürfe sind auf Wunsch des Eigentümers wieder entfernt worden:
+**40 Neonschild**, **41 Sonntagsblatt**, **42 Druckgrafik** und
+**45 Kassettenhaufen**. Anders als bei den gestrichenen Blättern des Pakets sind
+hier auch die Dateien weg — sie waren Entwürfe, keine Lieferung. In der
+Git-Historie stehen sie im Commit „Acht Spieler aus den Fotos in player2".
 
 ## Neu bauen
 
 ```bash
 cd design/entwuerfe/src
-python3 baualle.py          # schreibt alle 16 Dateien nach ../html/
+python3 baualle.py          # schreibt alle 8 Dateien nach ../html/
 ```
 
-`werkzeug.py` hält, was alle acht teilen: das eine Beispielalbum, die Zeichen
+`werkzeug.py` hält, was alle vier teilen: das eine Beispielalbum, die Zeichen
 (Bibliothek, Lupe, Mischen, Wiederholen, Lautstärke), das abstrakte Cover, die
 Schallplatte, die Kassette und die Wellenform. Dokumentgerüst und die
 Transportzeichen kommen aus `../../src/lib.py`, also aus dem Paket selbst —
@@ -67,6 +70,6 @@ gesetzt, nicht skaliert.
 
 ## Was noch offen ist
 
-Diese acht sind **Entwürfe zum Ansehen**, noch kein Layout in `player.html`.
+Diese vier sind **Entwürfe zum Ansehen**, noch kein Layout in `player.html`.
 Ob und welche davon portiert werden, steht in `design/AUSWAHL.md` — dort sind
 sie bisher nicht eingetragen, weil die Auswahl beim Eigentümer liegt.

@@ -157,7 +157,7 @@ def rechner():
         <b style="left:{A['frac'] * 100:.0f}%;width:26px;height:26px"></b></div>
       <div class="zeiten" style="font-size:19px;margin-top:14px">
         <span>{A['pos']}</span><span>{A['dauer']}</span></div>
-      <div style="margin-top:32px;display:flex">{_transport(g, 68, 100, 28)}</div>
+      <div style="margin-top:32px;display:flex;justify-content:center">{_transport(g, 68, 100, 28)}</div>
     </div>
     <div style="margin-top:auto"></div>
   </div>
