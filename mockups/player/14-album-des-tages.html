@@ -6,10 +6,12 @@
    Scheibe. Oben links zwei Zeichen übereinander und ein Faden, unten links
    drei Zeilen Text, unten rechts ein milchiger Knopf mit Zahl.
 
-   Genommen: alles. Aus der Scheibe wird der einzige Knopf der App, aus den
-   drei Zeilen werden Album, Interpret und laufender Titel, aus den beiden
-   Zeichen oben links das Datum — denn das Datum ist hier die Sache: gespielt
-   wird das Album des Tages, den ganzen Tag lang, immer wieder.
+   Genommen: die Scheibe und die drei Zeilen. Aus der Scheibe wird der einzige
+   Knopf der App, aus den drei Zeilen werden Album, Interpret und laufender
+   Titel. Gestrichen: Datum, Fäden und Zählwerk. Eine App, die nichts zu
+   wählen gibt, braucht auch nichts anzuzeigen — welcher Tag ist, sagt das
+   Album; welcher Titel läuft, steht in der dritten Zeile. Was bleibt, ist
+   eine Fläche, ein Kreis und drei Zeilen.
    ══════════════════════════════════════════════════════════════════════════ */
 .so{
   --papier:#EEE9DF; --tinte:#1A1714; --tinte-2:#6E655A; --tinte-3:#A79C8D;
@@ -28,15 +30,6 @@
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
 
 .so .karte{position:absolute;inset:0}
-
-/* ── Datum: die Sache, um die es geht ── */
-.so .datum{position:absolute;left:var(--rand);top:66px;font-family:var(--serif);line-height:.94;
-  letter-spacing:-.02em}
-.so .datum .t{display:block;font-size:52px}
-.so .datum .m{display:block;font-size:52px;color:var(--tinte)}
-.so .faden{position:absolute;width:1px;background:var(--linie)}
-.so .faden.oben{left:calc(var(--rand) + 7px);top:190px;height:118px}
-.so .faden.unten{right:calc(var(--rand) + 7px);bottom:196px;height:118px}
 
 /* ── Die Scheibe: der einzige Knopf ──
    Voll und rot, solange Ton läuft. Angehalten bleibt der Kreis stehen, aber
@@ -71,8 +64,11 @@
 .so.aufgang.aus .sonne .stand{opacity:.34}
 .so.aufgang .sonne .zeichen{color:var(--zinnober);mix-blend-mode:multiply}
 
-/* ── Die drei Zeilen ── */
-.so .fuss{position:absolute;left:var(--rand);right:122px;bottom:58px}
+/* ── Die drei Zeilen ──
+   Sie stehen jetzt allein auf der Karte: kein Datum oben, keine Fäden an den
+   Rändern, kein Zählwerk daneben. Was übrig ist, ist die Scheibe und das,
+   was gerade läuft. */
+.so .fuss{position:absolute;left:var(--rand);right:var(--rand);bottom:58px}
 .so .fuss .tages{font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--tinte-3);
   margin-bottom:12px}
 .so .fuss h1{font-size:27px;font-weight:800;letter-spacing:.005em;text-transform:uppercase;
@@ -82,18 +78,6 @@
 .so .fuss .tl{margin-top:7px;font-size:13.5px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis}
 .so .fuss .tl b{color:var(--tinte);font-weight:600}
-
-/* ── Milchiger Knopf der Vorlage: hier keiner. Eine Anzeige ──
-   Zählwerk statt Ziel: welcher Titel von wie vielen. Es gibt genau einen
-   Knopf in dieser App, und der ist rund und rot und steht in der Mitte. */
-.so .zaehler{position:absolute;right:26px;bottom:46px;width:76px;height:76px;border-radius:50%;
-  background:rgba(255,255,255,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
-  box-shadow:0 8px 22px rgba(26,23,20,.13),inset 0 0 0 1px rgba(255,255,255,.7);
-  display:grid;place-items:center;font-variant-numeric:tabular-nums}
-.so .zaehler .n{font-size:23px;font-weight:700;letter-spacing:-.02em;line-height:1}
-.so .zaehler .von{position:absolute;top:9px;right:11px;font-size:11px;font-weight:700;
-  color:var(--tinte-2)}
-.so .zaehler .zeit{position:absolute;bottom:11px;font-size:9px;letter-spacing:.06em;color:var(--tinte-2)}
 
 /* ── Fünf Kerben: die einzige Ausnahme des Tages ──
    Sie erscheinen erst beim zweiten Tippen. Wer nur abspielt, sieht sie nie. */
@@ -146,10 +130,11 @@
       per Zufall aus der Sammlung, und den ganzen Tag lang immer wieder dasselbe. Tippen heißt
       abspielen, noch einmal tippen heißt anhalten, noch einmal tippen heißt weiterspielen.
       <b>Fünfmal kurz hintereinander</b> tippen heißt: heute doch ein anderes. Einmal am Tag.</p>
-      <p class="lede" style="margin-top:14px">Der Entwurf nimmt die Vorlage wörtlich. Die rote Scheibe
-      ist der Knopf, die drei Zeilen unten links sind Album, Interpret und laufender Titel, die beiden
-      Zeichen oben links sind das Datum. Der milchige Knopf unten rechts ist das einzige, was seine
-      Bedeutung wechselt: aus dem Ziel wird eine <b>Anzeige</b> — denn es gibt nur einen Knopf.</p>
+      <p class="lede" style="margin-top:14px">Von der Vorlage bleiben zwei Dinge: die rote Scheibe —
+      das ist der Knopf — und die drei Zeilen unten links: Album, Interpret, laufender Titel.
+      <b>Datum, Fäden und Zählwerk sind gestrichen.</b> Sie waren Auskunft über etwas, das man hier
+      nicht entscheiden kann: Welcher Tag ist, sagt das Album; wie weit es ist, sagt der Ring um die
+      Scheibe. Übrig bleiben eine Fläche, ein Kreis und drei Zeilen.</p>
       <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
     </div>
     <figure class="vorlage">
@@ -205,6 +190,7 @@
       <div><dt>Schwäche</dt><dd>Kein Weiter, kein Zurück, keine Suche. <b>Das ist der Entwurf, nicht sein Mangel</b></dd></div>
       <div><dt>Farbe</dt><dd>Zinnober auf Elfenbein. Keine Cover — das Album ist ein Name, kein Bild</dd></div>
       <div><dt>Bewegung</dt><dd>Nur der Ring. Und einmal am Tag der Sonnenuntergang</dd></div>
+      <div><dt>Gestrichen</dt><dd>Datum, Fäden, Zählwerk — <b>die Karte trägt Scheibe und Text, sonst nichts</b></dd></div>
       <div><dt>Verhältnis zu mobile.html</dt><dd>Gegenentwurf: keine Wahl statt aller Wahl</dd></div>
       <div><dt>Neue Felder im Backend</dt><dd><b>Keine</b> — Datum und Zufall stehen im Browser</dd></div>
     </dl>
@@ -288,9 +274,10 @@
       Nutzer hat auf die Scheibe getippt".</span></li>
       <li><span><b>Ein Knopf ist trotzdem ein <code>&lt;button&gt;</code>.</b> Mit
       <code>aria-label</code> („Album des Tages abspielen" / „anhalten") und
-      <code>aria-pressed</code>; die Leertaste tut dasselbe wie der Finger. Die Anzeige unten rechts
-      ist kein Ziel und bekommt keinen Fokus — sonst tabbt man durch eine App mit einem
-      Knopf.</span></li>
+      <code>aria-pressed</code>; die Leertaste tut dasselbe wie der Finger. Sonst gibt es auf der
+      Seite kein Ziel: Die drei Zeilen sind Text, der Ring ist eine Zeichnung. Wer die Tabulatortaste
+      drückt, landet beim ersten Mal auf dem Knopf — und das ist die ganze
+      Bedienungsanleitung.</span></li>
       <li><span><b>Eigene Seite, eigene Route.</b> <code>/tag</code> liefert <code>tag.html</code>
       unverändert aus, wie <code>/mobil</code> und <code>/ipad</code> — eine einzelne Datei ohne
       Bauwerkzeug, über SMB zu ändern. Sie braucht von der API nur
@@ -313,7 +300,6 @@
 const WOCHE  = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
 const MONATE = ['Januar','Februar','März','April','Mai','Juni','Juli','August',
                 'September','Oktober','November','Dezember'];
-const KURZ   = ['JAN','FEB','MRZ','APR','MAI','JUN','JUL','AUG','SEP','OKT','NOV','DEZ'];
 
 const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 
@@ -343,9 +329,6 @@ const zeichenHTML = `
 
 const kartenHTML = `
   <div class="karte">
-    <div class="datum"><span class="t" data-tagzahl></span><span class="m" data-monat></span></div>
-    <div class="faden oben"></div>
-
     <button class="sonne" data-sonne aria-pressed="false">
       <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
         <circle class="bett" cx="50" cy="50" r="48.5"></circle>
@@ -359,8 +342,6 @@ const kartenHTML = `
     <div class="kerben" data-kerben>${'<i></i>'.repeat(NOETIG)}</div>
     <div class="hinweis" data-hinweis></div>
 
-    <div class="faden unten"></div>
-
     <div class="fuss">
       <div class="tages">Album des Tages</div>
       <h1 data-alb></h1>
@@ -368,11 +349,6 @@ const kartenHTML = `
       <div class="tl"><b data-titel></b></div>
     </div>
 
-    <div class="zaehler" aria-hidden="true">
-      <span class="von" data-von></span>
-      <span class="n" data-nr></span>
-      <span class="zeit" data-zeit></span>
-    </div>
     <div class="korn"></div>
   </div>`;
 
@@ -405,11 +381,7 @@ function verdrahte(wurzel){
     s.classList.remove('wechsel'); void s.offsetWidth; s.classList.add('wechsel');
     // ein neuer Tag spielt nicht von allein — und nie dasselbe Album wie gestern
     setzeAlbum(albumDesTages(datum, schub, deck.album.id), false);
-    kerben(0); zeigeDatum(); hebelStand();
-  }
-  function zeigeDatum(){
-    $('[data-tagzahl]').textContent = String(datum.getDate()).padStart(2,'0');
-    $('[data-monat]').textContent   = KURZ[datum.getMonth()];
+    kerben(0); hebelStand();
   }
 
   /* ── Kerben und Hinweis ── */
@@ -463,9 +435,6 @@ function verdrahte(wurzel){
     $('[data-alb]').textContent   = a.t;
     $('[data-ar]').textContent    = a.ar;
     $('[data-titel]').textContent = d.track.t;
-    $('[data-nr]').textContent    = d.qi + 1;
-    $('[data-von]').textContent   = d.queue.length;
-    $('[data-zeit]').textContent  = fmt(d.pos);
 
     wurzel.classList.toggle('aus', !d.playing);
     const knopf = $('[data-sonne]');
@@ -491,7 +460,6 @@ function verdrahte(wurzel){
   };
   hebel.querySelector('[data-zurueck]').onclick = () => neuerTag(new Date(2026, 7, 14));
 
-  zeigeDatum();
   setzeAlbum(albumDesTages(datum, schub), false);
   hebelStand();
 }
