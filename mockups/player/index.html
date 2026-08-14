@@ -28,11 +28,13 @@
   <header class="kopf">
     <div>
       <div class="caps">Musiklib · Entwürfe für ipad.html und pc.html</div>
-      <h1>Zehn Blätter, <em>fünfzehn</em> Spieler</h1>
+      <h1>Elf Blätter, <em>siebzehn</em> Spieler</h1>
       <p class="lede">Aus dreizehn Vorlagen und sechsundzwanzig Entwürfen ist eine <b>engere Wahl</b>
       geworden: zehn Blätter, fünfzehn Varianten. Drei Blätter sind ganz gestrichen, fünf weitere
       Varianten einzeln — sie stehen in der Vorgeschichte des Zweigs, falls doch noch eine
-      gebraucht wird.</p>
+      gebraucht wird. <b>Blatt 14</b> kam später dazu und gehört nicht in diese Reihe: Es zielt
+      nicht auf iPad und Schreibtisch, sondern auf <code style="font-family:var(--mono);font-size:13px">tag.html</code>
+      — einen Spieler fürs iPhone mit einem einzigen Knopf.</p>
       <p class="lede" style="margin-top:14px">Was bleibt, ist bedienbar: abspielen, spulen, Titel
       wechseln. Nichts davon spricht mit dem Backend; die Sammlung ist erfunden und in jedem Blatt
       dieselbe. Aus einem oder zwei dieser Blätter werden <b>ipad.html</b> und <b>pc.html</b> — je eine
@@ -77,7 +79,12 @@
         <td>PC</td></tr>
       <tr><td><b>13 Nussbaum &amp; Champagner</b></td><td>Leiste an der Frontplatte</td>
         <td>Titel, vier Titel zur Wahl, <b>Pegel</b></td><td>PC · iPad quer</td></tr>
+      <tr><td><b>14 Sonnenscheibe</b></td><td class="mit"><b>Gar nicht</b> — es gibt nur einen Knopf</td>
+        <td>Album, Interpret, Titel; keine Sammlung, keine Suche</td><td>iPhone</td></tr>
     </table>
+    <p class="etext" style="margin-top:18px">Blatt 14 fällt aus jeder Spalte: Es spult nicht, es
+    wählt nicht, es sucht nicht. Es steht hier trotzdem, weil es dieselbe Sammlung und dieselben
+    Schlüssel benutzt — und weil die Zeile <b>„gar nicht"</b> zeigt, wie weit die Reihe reicht.</p>
   </div>
 
   <div class="schluss">
@@ -137,10 +144,21 @@ const BLAETTER = [
    'Salbei und Terracotta: links ein langer Regler und die Titelanzeige, rechts die Platte.',['PC']],
   ['13','nussbaum-und-champagner','Nussbaum &amp; Champagner','11.32.25',
    'Holz, Champagner, zwei Zeiger — sie schlagen nur aus, solange Ton läuft.',['PC','iPad quer']],
+  ['14','album-des-tages','Sonnenscheibe','nachgezeichnet',
+   'Ein Knopf, ein Album am Tag. Rote Scheibe auf Elfenbeinpapier.',['iPhone']],
 ];
+/* Blatt 14 hat kein Foto als Vorlage, sondern eine Nachzeichnung — sie steht
+   im Blatt selbst als SVG und hier noch einmal, klein. */
+const NACHGEZEICHNET = `<svg viewBox="0 0 300 220" width="100%" height="100%"
+  preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <rect width="300" height="220" fill="#EEE9DF"/><circle cx="150" cy="104" r="66" fill="#C6331B"/>
+  <text x="26" y="196" font-family="sans-serif" font-size="19" font-weight="800" fill="#1A1714">ALBUM</text>
+  <text x="27" y="210" font-family="sans-serif" font-size="8" letter-spacing="2.2" fill="#3A342C">DES TAGES</text>
+</svg>`;
 document.getElementById('gitter').innerHTML = BLAETTER.map(([nr, datei, name, foto, text, ger]) => `
   <a class="blatt" href="${nr}-${datei}.html">
-    <div class="bild"><img src="../../mckups_player/Bildschirmfoto%202026-08-13%20um%20${foto}.png" alt=""></div>
+    <div class="bild">${foto === 'nachgezeichnet' ? NACHGEZEICHNET
+      : `<img src="../../mckups_player/Bildschirmfoto%202026-08-13%20um%20${foto}.png" alt="">`}</div>
     <div class="nr">Blatt ${nr} · Vorlage ${foto}</div>
     <h3>${name}</h3>
     <p>${text}</p>

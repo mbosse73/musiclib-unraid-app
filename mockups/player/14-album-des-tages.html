@@ -1,0 +1,502 @@
+<title>14 · Sonnenscheibe</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 14 — Vorlage: eine Karte aus Elfenbeinpapier, darauf eine große rote
+   Scheibe. Oben links zwei Zeichen übereinander und ein Faden, unten links
+   drei Zeilen Text, unten rechts ein milchiger Knopf mit Zahl.
+
+   Genommen: alles. Aus der Scheibe wird der einzige Knopf der App, aus den
+   drei Zeilen werden Album, Interpret und laufender Titel, aus den beiden
+   Zeichen oben links das Datum — denn das Datum ist hier die Sache: gespielt
+   wird das Album des Tages, den ganzen Tag lang, immer wieder.
+   ══════════════════════════════════════════════════════════════════════════ */
+.so{
+  --papier:#EEE9DF; --tinte:#1A1714; --tinte-2:#6E655A; --tinte-3:#A79C8D;
+  --zinnober:#C6331B; --linie:rgba(26,23,20,.30); --linie-2:rgba(26,23,20,.13);
+  --rand:34px; --scheibe:248px; --mitte:46%;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+  background:var(--papier);color:var(--tinte);font-family:var(--sans);height:100%;
+  position:relative;overflow:hidden}
+.so *{font-family:inherit}
+
+/* Korn. Das Papier der Vorlage ist nicht glatt — ohne das Korn wirkt dieselbe
+   Farbe wie eine Fläche aus Kunststoff. Liegt über allem, fängt nichts ab. */
+.so .korn{position:absolute;inset:0;z-index:50;pointer-events:none;opacity:.22;
+  mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.so .karte{position:absolute;inset:0}
+
+/* ── Datum: die Sache, um die es geht ── */
+.so .datum{position:absolute;left:var(--rand);top:66px;font-family:var(--serif);line-height:.94;
+  letter-spacing:-.02em}
+.so .datum .t{display:block;font-size:52px}
+.so .datum .m{display:block;font-size:52px;color:var(--tinte)}
+.so .faden{position:absolute;width:1px;background:var(--linie)}
+.so .faden.oben{left:calc(var(--rand) + 7px);top:190px;height:118px}
+.so .faden.unten{right:calc(var(--rand) + 7px);bottom:196px;height:118px}
+
+/* ── Die Scheibe: der einzige Knopf ──
+   Voll und rot, solange Ton läuft. Angehalten bleibt der Kreis stehen, aber
+   leer — Papier mit einer roten Linie und einem Dreieck darin. Ein Zustand,
+   den man aus zwei Metern erkennt, ohne ein Zeichen zu lesen. */
+.so .sonne{position:absolute;left:50%;top:var(--mitte);transform:translate(-50%,-50%);
+  width:var(--scheibe);height:var(--scheibe);border-radius:50%;padding:0;display:block;
+  cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.so .sonne .fl{position:absolute;inset:0;border-radius:50%;background:var(--zinnober);
+  box-shadow:inset 0 0 0 0 var(--zinnober);
+  transition:background .34s ease,box-shadow .34s ease,transform .34s ease}
+.so .sonne .zeichen{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.86);
+  color:var(--zinnober);opacity:0;transition:opacity .28s ease,transform .28s ease;pointer-events:none}
+.so.aus .sonne .fl{background:transparent;box-shadow:inset 0 0 0 1.6px var(--zinnober)}
+.so.aus .sonne .zeichen{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.so .sonne:active .fl{transform:scale(.972)}
+
+/* Fortschritt im Album als Ring um die Scheibe — ein Umlauf ist ein Album. */
+.so .ring{position:absolute;inset:-19px;transform:rotate(-90deg)}
+.so .ring circle{fill:none;stroke-width:.52}
+.so .ring .bett{stroke:var(--linie-2)}
+.so .ring .bogen{stroke:var(--tinte);stroke-linecap:butt;transition:stroke-dashoffset .3s linear}
+
+/* Variante 2: kein Ring, die Scheibe selbst füllt sich von unten. */
+.so.aufgang .ring{display:none}
+.so.aufgang .sonne .fl{background:transparent;box-shadow:inset 0 0 0 1.2px var(--zinnober)}
+.so.aufgang .sonne .stand{position:absolute;left:0;right:0;bottom:0;background:var(--zinnober);
+  transition:height .3s linear}
+.so .sonne .huelle{position:absolute;inset:0;border-radius:50%;overflow:hidden}
+.so .sonne .stand{display:none}
+.so.aufgang .sonne .stand{display:block}
+.so.aufgang.aus .sonne .stand{opacity:.34}
+.so.aufgang .sonne .zeichen{color:var(--zinnober);mix-blend-mode:multiply}
+
+/* ── Die drei Zeilen ── */
+.so .fuss{position:absolute;left:var(--rand);right:122px;bottom:58px}
+.so .fuss .tages{font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--tinte-3);
+  margin-bottom:12px}
+.so .fuss h1{font-size:27px;font-weight:800;letter-spacing:.005em;text-transform:uppercase;
+  line-height:1.08;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.so .fuss .ar{margin-top:11px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--tinte-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.so .fuss .tl{margin-top:7px;font-size:13.5px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.so .fuss .tl b{color:var(--tinte);font-weight:600}
+
+/* ── Milchiger Knopf der Vorlage: hier keiner. Eine Anzeige ──
+   Zählwerk statt Ziel: welcher Titel von wie vielen. Es gibt genau einen
+   Knopf in dieser App, und der ist rund und rot und steht in der Mitte. */
+.so .zaehler{position:absolute;right:26px;bottom:46px;width:76px;height:76px;border-radius:50%;
+  background:rgba(255,255,255,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
+  box-shadow:0 8px 22px rgba(26,23,20,.13),inset 0 0 0 1px rgba(255,255,255,.7);
+  display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.so .zaehler .n{font-size:23px;font-weight:700;letter-spacing:-.02em;line-height:1}
+.so .zaehler .von{position:absolute;top:9px;right:11px;font-size:11px;font-weight:700;
+  color:var(--tinte-2)}
+.so .zaehler .zeit{position:absolute;bottom:11px;font-size:9px;letter-spacing:.06em;color:var(--tinte-2)}
+
+/* ── Fünf Kerben: die einzige Ausnahme des Tages ──
+   Sie erscheinen erst beim zweiten Tippen. Wer nur abspielt, sieht sie nie. */
+.so .kerben{position:absolute;left:50%;transform:translateX(-50%);
+  top:calc(var(--mitte) + var(--scheibe)/2 + 40px);display:flex;gap:10px;
+  opacity:0;transition:opacity .2s ease}
+.so .kerben.sichtbar{opacity:1}
+.so .kerben i{width:17px;height:2px;background:var(--linie-2);display:block;transition:background .15s}
+.so .kerben i.an{background:var(--zinnober)}
+.so .kerben.verbraucht i{background:var(--linie-2)}
+.so .kerben.verbraucht::after{content:'';position:absolute;left:-6px;right:-6px;top:0;height:1px;
+  background:var(--tinte-3);transform:rotate(-4deg)}
+.so .hinweis{position:absolute;left:0;right:0;text-align:center;
+  top:calc(var(--mitte) + var(--scheibe)/2 + 62px);
+  font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--tinte-3);
+  opacity:0;transition:opacity .3s ease}
+.so .hinweis.sichtbar{opacity:1}
+
+/* Tageswechsel: die Scheibe geht unter und kommt wieder herauf. */
+@keyframes so-wechsel{
+  0%{transform:translate(-50%,-50%) scale(1);opacity:1}
+  42%{transform:translate(-50%,-18%) scale(.72);opacity:0}
+  43%{transform:translate(-50%,-82%) scale(.72);opacity:0}
+  100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
+.so .sonne.wechsel{animation:so-wechsel .82s cubic-bezier(.4,0,.2,1)}
+@media (prefers-reduced-motion:reduce){
+  .so .sonne.wechsel{animation:none}
+  .so .ring .bogen,.so .sonne .stand,.so .sonne .fl{transition:none}}
+
+/* ── Gerüst des Blattes, nicht des Entwurfs ──
+   Einen Tageswechsel kann man nicht antippen; im Entwurf braucht es dafür
+   einen Hebel neben dem Gerät. In der App gibt es ihn nicht. */
+.so-demo{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:2px 0 0;
+  padding:12px 0 0;border-top:1px solid var(--line)}
+.so-demo button{border:1px solid var(--line-2);border-radius:2px;padding:6px 13px;font-size:12px;
+  letter-spacing:.06em;cursor:pointer;background:var(--paper)}
+.so-demo button:hover{border-color:var(--brass);color:var(--brass)}
+.so-demo .wo{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+.so-demo .wo b{color:var(--ink-2);font-weight:600}
+.vorlage svg{width:100%;height:auto;display:block}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 14</div>
+      <h1>Sonnenscheibe</h1>
+      <p class="lede">Ein Spieler mit <b>einem einzigen Knopf</b>. Er wählt nichts aus, er sucht
+      nichts, er hat keine Bibliothek: Er spielt das <b>Album des Tages</b> — jeden Tag ein anderes,
+      per Zufall aus der Sammlung, und den ganzen Tag lang immer wieder dasselbe. Tippen heißt
+      abspielen, noch einmal tippen heißt anhalten, noch einmal tippen heißt weiterspielen.
+      <b>Fünfmal kurz hintereinander</b> tippen heißt: heute doch ein anderes. Einmal am Tag.</p>
+      <p class="lede" style="margin-top:14px">Der Entwurf nimmt die Vorlage wörtlich. Die rote Scheibe
+      ist der Knopf, die drei Zeilen unten links sind Album, Interpret und laufender Titel, die beiden
+      Zeichen oben links sind das Datum. Der milchige Knopf unten rechts ist das einzige, was seine
+      Bedeutung wechselt: aus dem Ziel wird eine <b>Anzeige</b> — denn es gibt nur einen Knopf.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <svg viewBox="0 0 300 430" role="img" aria-label="Vorlage: Karte mit roter Scheibe">
+        <rect width="300" height="430" rx="14" fill="#EEE9DF"/>
+        <circle cx="150" cy="205" r="88" fill="#C6331B"/>
+        <text x="30" y="45" font-family="serif" font-size="34" fill="#1A1714">日</text>
+        <text x="30" y="80" font-family="serif" font-size="34" fill="#1A1714">本</text>
+        <line x1="35" y1="100" x2="35" y2="188" stroke="#1A1714" stroke-opacity=".35"/>
+        <line x1="266" y1="305" x2="266" y2="365" stroke="#1A1714" stroke-opacity=".35"/>
+        <text x="30" y="378" font-family="sans-serif" font-size="27" font-weight="800"
+          fill="#1A1714">JAPAN</text>
+        <text x="31" y="396" font-family="sans-serif" font-size="9.5" letter-spacing="2.4"
+          fill="#3A342C">47 PREFECTURES</text>
+        <text x="31" y="412" font-family="serif" font-size="11" fill="#3A342C">四十七都道府県</text>
+        <circle cx="262" cy="392" r="26" fill="#ffffff" fill-opacity=".72"/>
+        <circle cx="258" cy="392" r="7.5" fill="none" stroke="#4A4238" stroke-width="1.6"/>
+        <line x1="263" y1="397" x2="269" y2="403" stroke="#4A4238" stroke-width="1.6"
+          stroke-linecap="round"/>
+        <text x="256" y="384" font-family="sans-serif" font-size="10" font-weight="700"
+          fill="#4A4238">47</text>
+      </svg>
+      <figcaption>Vorlage · nachgezeichnet</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Ring</h2><span class="marke geraet">iPhone · 390 × 844</span>
+      <span class="marke">ein Knopf</span></div>
+    <p class="etext">Die Scheibe ist voll und rot, solange Ton läuft; angehalten bleibt der Kreis
+    stehen, wird aber leer — Papier mit roter Linie und einem Dreieck darin. Das ist der ganze
+    Zustandsanzeiger, und er ist aus zwei Metern zu lesen. Der <b>Ring um die Scheibe</b> ist die
+    Position im Album: ein voller Umlauf ist ein Durchlauf, danach fängt das Album wieder von vorn an,
+    bis der Tag um ist.
+    <span class="probier"><b>Ausprobieren:</b> auf die Scheibe tippen (spielt), noch einmal (hält an),
+    noch einmal (spielt weiter). Dann <b>fünfmal schnell hintereinander</b> tippen — die Sonne geht
+    unter und mit einem neuen Album wieder auf. Ein zweites Mal am selben Tag geht es nicht; erst
+    „Nächster Tag" gibt den Wechsel wieder frei.</span></p>
+    <div class="buehne">
+      <div class="rahmen telefon">
+        <div class="schirm"><div class="kerbe"></div><div class="so" id="v1"></div><div class="griff"></div></div>
+      </div>
+    </div>
+    <div class="so-demo">
+      <button data-tag>Nächster Tag</button>
+      <button data-zurueck>Zurück auf den 14.</button>
+      <span class="wo">Gerüst des Blattes · <b data-stand></b></span>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Ein Ziel, 248 px groß — <b>im Dunkeln, im Auto, ohne Hinsehen</b></dd></div>
+      <div><dt>Schwäche</dt><dd>Kein Weiter, kein Zurück, keine Suche. <b>Das ist der Entwurf, nicht sein Mangel</b></dd></div>
+      <div><dt>Farbe</dt><dd>Zinnober auf Elfenbein. Keine Cover — das Album ist ein Name, kein Bild</dd></div>
+      <div><dt>Bewegung</dt><dd>Nur der Ring. Und einmal am Tag der Sonnenuntergang</dd></div>
+      <div><dt>Verhältnis zu mobile.html</dt><dd>Gegenentwurf: keine Wahl statt aller Wahl</dd></div>
+      <div><dt>Neue Felder im Backend</dt><dd><b>Keine</b> — Datum und Zufall stehen im Browser</dd></div>
+    </dl>
+  </section>
+
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Sonnenaufgang</h2>
+      <span class="marke geraet">iPhone · 390 × 844</span></div>
+    <p class="etext">Dieselbe Karte, nur trägt hier die <b>Scheibe selbst</b> die Position: Sie füllt
+    sich von unten, geht mit jedem Titel auf und beim Wechsel wieder unter. Der Ring entfällt — und
+    damit die Auskunft, wie weit das <em>Album</em> ist. Der Grund ist Auflösung: Ein Album von 40
+    Minuten auf 248 px Höhe bewegt sich in fünf Minuten um einen halben Zentimeter; ein Titel von
+    fünf Minuten füllt die Scheibe sichtbar. Ein Bild, das sich nicht bewegt, ist kein Bild. Also
+    zeigt die Scheibe den Titel, oder sie zeigt nichts. Angehalten wird die Füllung blass, das
+    Dreieck steht darüber.
+    <span class="probier"><b>Ausprobieren:</b> beide Varianten laufen lassen und aus einem Meter
+    Abstand fragen: <b>Wie weit ist das Album?</b> Variante 1 antwortet, Variante 2 nicht. Dann
+    dieselbe Frage für den Titel — da ist es umgekehrt.</span></p>
+    <div class="buehne">
+      <div class="rahmen telefon">
+        <div class="schirm"><div class="kerbe"></div><div class="so aufgang" id="v2"></div><div class="griff"></div></div>
+      </div>
+    </div>
+    <div class="so-demo">
+      <button data-tag>Nächster Tag</button>
+      <button data-zurueck>Zurück auf den 14.</button>
+      <span class="wo">Gerüst des Blattes · <b data-stand></b></span>
+    </div>
+    <dl class="zettel">
+      <div><dt>Unterschied</dt><dd>Füllstand statt Ring — <b>eine Zeichnung weniger</b></dd></div>
+      <div><dt>Zeigt</dt><dd>Den <b>Titel</b>. Wie weit das Album ist, sagt hier nichts mehr</dd></div>
+      <div><dt>Zustand</dt><dd>Läuft/hält unterscheiden nur Blässe und Dreieck — <b>schwächer als Variante 1</b></dd></div>
+      <div><dt>Bewegung</dt><dd>Sichtbar: die Scheibe geht je Titel einmal auf</dd></div>
+    </dl>
+  </section>
+
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Der Knopf schaltet um, sofort.</b> „Einmal drücken = play, zweimal = stop, erneut =
+      weiter" ist wörtlich ein Umschalter: Jeder Druck kehrt den Zustand um, ohne auf einen zweiten zu
+      warten. Ein Doppeltipp, der <em>erkannt</em> werden müsste, hieße 250 ms Verzögerung vor jedem
+      Abspielen — spürbar, und bei einem Knopf, der sonst nichts kann, unentschuldbar. Der
+      Fünffachtipp braucht deshalb keine Wartezeit: er wird <em>mitgezählt</em>, während längst
+      geschaltet wird, und der fünfte Druck überschreibt das Ergebnis (neues Album, spielt).</span></li>
+      <li><span><b>Das Album des Tages ist berechnet, nicht gespeichert.</b>
+      <code>hash("2026-08-14" + schub) % alben.length</code> — dieselbe Zahl auf jedem Gerät, ohne
+      Server, ohne neues Feld in <code>library.json</code>. Gespeichert wird trotzdem, unter
+      <code>musiklib:tag</code> = <code>{datum, albumId, schub}</code>: Der Wert gewinnt, solange er
+      sich auflösen lässt. Sonst tauschte ein Scan mitten am Tag das Album unter den Füßen aus, weil
+      sich die Länge der Liste geändert hat. Der gespeicherte <code>albumId</code> ist außerdem das,
+      was am nächsten Morgen ausgeschlossen wird — <b>nie zweimal hintereinander dasselbe</b>. Bei
+      acht Alben wäre das sonst jeder achte Tag, und der sähe aus wie ein Fehler.</span></li>
+      <li><span><b>Der Wechsel ist ein Zähler, kein Schalter.</b> <code>schub</code> zählt hoch statt
+      neu zu würfeln — damit ist auch das zweite Album des Tages reproduzierbar. Erlaubt ist er
+      einmal je <code>datum</code>; wer die Uhr des Telefons zurückstellt, bekommt einen weiteren.
+      Dagegen hilft nur ein Server, und dafür ist die Sache zu klein.</span></li>
+      <li><span><b>Der Tag wechselt, während die App offen ist.</b> Ein Telefon liegt nachts auf dem
+      Nachttisch. Geprüft wird das Datum bei <code>visibilitychange</code>, bei jedem Titelende und
+      per Minutentakt — nicht per Timer auf Mitternacht, den iOS im Hintergrund ohnehin nicht
+      feuert. Läuft gerade Ton, wird der laufende Titel <b>zu Ende gespielt</b>; das neue Album
+      kommt danach.</span></li>
+      <li><span><b>Die Warteschlange ist das Album, und sie endet nie.</b> Am Ende des letzten Titels
+      geht es zum ersten zurück. Das ist genau <code>musiklib:fortsetzung = "wiederholen"</code> —
+      diese Seite schreibt den Schlüssel nicht, sie ignoriert ihn: <em>ihre</em> Fortsetzung ist der
+      Tag. Alles andere (<code>session</code>, <code>volume</code>, <code>muted</code>) behält Form
+      und Bedeutung der drei anderen Oberflächen; <code>shuffle</code> ist hier ohne Sinn und wird
+      nicht gelesen.</span></li>
+      <li><span><b>Angehalten heißt angehalten, auch über einen Neustart der Seite hinweg.</b> Die
+      Stelle steht in <code>musiklib:session</code>; wer die Seite neu lädt, tippt weiter, wo er
+      aufgehört hat — nicht wieder bei Titel 1. Von allein spielt dabei nichts, hier so wenig wie in
+      <code>index.html</code>: Wiederhergestellt wird die Stelle, gespielt wird erst auf den Knopf.
+      Ein neuer Tag setzt die Stelle zurück, weil er die Warteschlange austauscht.</span></li>
+      <li><span><b>Die drei Ausfälle gelten unverändert.</b> Der abgelehnte Titelwechsel
+      (<code>nachdruck()</code> samt <code>tonGewuenscht</code>), der hängende Strom
+      (<code>heilungPlanen()</code>) und <code>ladeVor()</code> müssen mit — gerade hier, wo niemand
+      hinsieht: Ein Spieler ohne zweiten Knopf hat keinen Weg, sich von Hand zu erholen. Und
+      <code>tonGewuenscht</code> ist der einzige Unterschied zwischen „iOS hat abgelehnt" und „der
+      Nutzer hat auf die Scheibe getippt".</span></li>
+      <li><span><b>Ein Knopf ist trotzdem ein <code>&lt;button&gt;</code>.</b> Mit
+      <code>aria-label</code> („Album des Tages abspielen" / „anhalten") und
+      <code>aria-pressed</code>; die Leertaste tut dasselbe wie der Finger. Die Anzeige unten rechts
+      ist kein Ziel und bekommt keinen Fokus — sonst tabbt man durch eine App mit einem
+      Knopf.</span></li>
+      <li><span><b>Eigene Seite, eigene Route.</b> <code>/tag</code> liefert <code>tag.html</code>
+      unverändert aus, wie <code>/mobil</code> und <code>/ipad</code> — eine einzelne Datei ohne
+      Bauwerkzeug, über SMB zu ändern. Sie braucht von der API nur
+      <code>/api/library</code> und <code>/api/stream/{id}</code>; nicht einmal
+      <code>/api/cover</code>, denn hier ist kein Bild.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für tag.html</span><span>Blatt 14 · Sonnenscheibe</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+
+/* ═════════ Der Tag ═════════
+   Im Entwurf ist der Tag ein Datum, das ein Knopf neben dem Gerät weiterstellt.
+   In tag.html wäre es new Date(); alles andere bliebe wie hier.              */
+const WOCHE  = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+const MONATE = ['Januar','Februar','März','April','Mai','Juni','Juli','August',
+                'September','Oktober','November','Dezember'];
+const KURZ   = ['JAN','FEB','MRZ','APR','MAI','JUN','JUL','AUG','SEP','OKT','NOV','DEZ'];
+
+const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+
+/* FNV-1a: kurz, stabil, im Browser überall gleich. Derselbe Tag ergibt auf
+   jedem Gerät dasselbe Album — ohne dass irgendwer es verabredet hätte. */
+function hash(s){
+  let x = 2166136261 >>> 0;
+  for (const ch of String(s)){ x ^= ch.charCodeAt(0); x = Math.imul(x, 16777619) >>> 0; }
+  return x >>> 0;
+}
+/* Ausgewürfelt wird die Stelle in der Liste, nicht das Album — und nie die,
+   die gerade steht: zwei gleiche Tage hintereinander sähen aus wie ein Fehler,
+   sind bei acht Alben aber jeden achten Tag zu erwarten. Ein Weiterrücken um
+   eins bleibt reproduzierbar; ein zweiter Wurf wäre es nicht. */
+function albumDesTages(datum, schub, ausser){
+  const n = ALBUMS.length;
+  let i = hash(iso(datum) + '#' + schub) % n;
+  if (n > 1 && ausser && ALBUMS[i].id === ausser) i = (i + 1) % n;
+  return ALBUMS[i];
+}
+
+const FENSTER = 700;      // so lange gilt ein Tippen noch als „hintereinander"
+const NOETIG  = 5;
+
+const zeichenHTML = `
+  <svg width="54" height="54" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
+
+const kartenHTML = `
+  <div class="karte">
+    <div class="datum"><span class="t" data-tagzahl></span><span class="m" data-monat></span></div>
+    <div class="faden oben"></div>
+
+    <button class="sonne" data-sonne aria-pressed="false">
+      <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+        <circle class="bett" cx="50" cy="50" r="48.5"></circle>
+        <circle class="bogen" cx="50" cy="50" r="48.5" data-bogen></circle>
+      </svg>
+      <span class="fl"></span>
+      <span class="huelle"><span class="stand" data-stand-fuell></span></span>
+      <span class="zeichen">${zeichenHTML}</span>
+    </button>
+
+    <div class="kerben" data-kerben>${'<i></i>'.repeat(NOETIG)}</div>
+    <div class="hinweis" data-hinweis></div>
+
+    <div class="faden unten"></div>
+
+    <div class="fuss">
+      <div class="tages">Album des Tages</div>
+      <h1 data-alb></h1>
+      <div class="ar" data-ar></div>
+      <div class="tl"><b data-titel></b></div>
+    </div>
+
+    <div class="zaehler" aria-hidden="true">
+      <span class="von" data-von></span>
+      <span class="n" data-nr></span>
+      <span class="zeit" data-zeit></span>
+    </div>
+    <div class="korn"></div>
+  </div>`;
+
+const UMFANG = 2 * Math.PI * 48.5;
+
+/* Der Hebel steht neben dem Gerät, im selben Abschnitt — gesucht wird er von
+   der Wurzel aus, nicht über eine id: im Bündel aller Blätter liegen alle
+   Entwürfe in einem Dokument, und zwei gleiche ids gäbe es dort sofort. */
+function verdrahte(wurzel){
+  const hebel = wurzel.closest('.entwurf').querySelector('.so-demo');
+  wurzel.innerHTML =
+    `<div class="sbar" style="color:#1A1714"><span>9:41</span><div class="ic">${I.vol(15)}</div></div>` +
+    kartenHTML;
+  const $ = s => wurzel.querySelector(s);
+
+  /* Der Entwurf steht mitten am Tag: die Sitzung des Tages ist angehalten, die
+     Scheibe zeigt, wie weit das Album ist. Genau das stünde in musiklib:session. */
+  const deck = new Deck('kob', {qi:1, pos:96, playing:false, speed:25});
+  let datum = new Date(2026, 7, 14), schub = 0, gewechselt = false;
+
+  /* ── Album setzen ── */
+  function setzeAlbum(a, spielen){
+    deck.queue = a.tr.map((_,i) => `${a.id}-${i}`);
+    deck.qi = 0; deck.pos = 0; deck.playing = !!spielen;
+    deck.render();
+  }
+  function neuerTag(d){
+    datum = d; schub = 0; gewechselt = false;
+    const s = $('[data-sonne]');
+    s.classList.remove('wechsel'); void s.offsetWidth; s.classList.add('wechsel');
+    // ein neuer Tag spielt nicht von allein — und nie dasselbe Album wie gestern
+    setzeAlbum(albumDesTages(datum, schub, deck.album.id), false);
+    kerben(0); zeigeDatum(); hebelStand();
+  }
+  function zeigeDatum(){
+    $('[data-tagzahl]').textContent = String(datum.getDate()).padStart(2,'0');
+    $('[data-monat]').textContent   = KURZ[datum.getMonth()];
+  }
+
+  /* ── Kerben und Hinweis ── */
+  let hinweisT = null;
+  function kerben(n, verbraucht){
+    const k = $('[data-kerben]');
+    k.classList.toggle('sichtbar', n >= 2);
+    k.classList.toggle('verbraucht', !!verbraucht);
+    [...k.children].forEach((el,i) => el.classList.toggle('an', i < n && !verbraucht));
+  }
+  function hinweis(text){
+    const h = $('[data-hinweis]');
+    h.textContent = text; h.classList.add('sichtbar');
+    clearTimeout(hinweisT);
+    hinweisT = setTimeout(() => h.classList.remove('sichtbar'), 2600);
+  }
+
+  /* ── Der einzige Knopf ──
+     Umschalten geschieht sofort. Der Zähler läuft nebenher mit; der fünfte
+     Druck innerhalb des Fensters überschreibt das Ergebnis.               */
+  let n = 0, fenster = null;
+  $('[data-sonne]').addEventListener('click', () => {
+    deck.toggle();
+
+    n++;
+    kerben(n, false);
+    clearTimeout(fenster);
+    fenster = setTimeout(() => { n = 0; kerben(0); }, FENSTER);
+
+    if (n >= NOETIG){
+      n = 0; clearTimeout(fenster);
+      if (gewechselt){
+        kerben(NOETIG, true);
+        hinweis('Heute schon gewechselt');
+        setTimeout(() => kerben(0), 1800);
+      } else {
+        gewechselt = true; schub++;
+        kerben(0);
+        const s = $('[data-sonne]');
+        s.classList.remove('wechsel'); void s.offsetWidth; s.classList.add('wechsel');
+        setzeAlbum(albumDesTages(datum, schub, deck.album.id), true);
+        hinweis('Neues Album für heute');
+        hebelStand();
+      }
+    }
+  });
+
+  /* ── Zeichnen ── */
+  deck.onRender = d => {
+    const a = d.album;
+    $('[data-alb]').textContent   = a.t;
+    $('[data-ar]').textContent    = a.ar;
+    $('[data-titel]').textContent = d.track.t;
+    $('[data-nr]').textContent    = d.qi + 1;
+    $('[data-von]').textContent   = d.queue.length;
+    $('[data-zeit]').textContent  = fmt(d.pos);
+
+    wurzel.classList.toggle('aus', !d.playing);
+    const knopf = $('[data-sonne]');
+    knopf.setAttribute('aria-pressed', String(d.playing));
+    knopf.setAttribute('aria-label',
+      d.playing ? `${a.t} anhalten` : `${a.t} von ${a.ar} abspielen`);
+
+    // Ring: das ganze Album, ein Umlauf. Füllung: der laufende Titel.
+    const f = d.total ? d.gpos / d.total : 0;
+    $('[data-bogen]').setAttribute('stroke-dasharray', UMFANG.toFixed(2));
+    $('[data-bogen]').setAttribute('stroke-dashoffset', (UMFANG * (1 - f)).toFixed(2));
+    $('[data-stand-fuell]').style.height = (d.frac * 100).toFixed(2) + '%';
+  };
+
+  /* ── Hebel neben dem Gerät (nur im Entwurf) ── */
+  function hebelStand(){
+    hebel.querySelector('[data-stand]').textContent =
+      `${WOCHE[datum.getDay()]}, ${datum.getDate()}. ${MONATE[datum.getMonth()]} · ` +
+      (gewechselt ? 'Wechsel verbraucht' : 'Wechsel offen');
+  }
+  hebel.querySelector('[data-tag]').onclick = () => {
+    const d = new Date(datum); d.setDate(d.getDate() + 1); neuerTag(d);
+  };
+  hebel.querySelector('[data-zurueck]').onclick = () => neuerTag(new Date(2026, 7, 14));
+
+  zeigeDatum();
+  setzeAlbum(albumDesTages(datum, schub), false);
+  hebelStand();
+}
+
+verdrahte(document.getElementById('v1'));
+verdrahte(document.getElementById('v2'));
+})();
+</script>
