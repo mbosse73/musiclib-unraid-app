@@ -126,6 +126,14 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
 .wahlwahlen .schalter{cursor:pointer;max-width:52ch;line-height:1.4}
 .wahlwahlen .schalter input{width:14px;height:14px;flex:none;accent-color:#8A6534;cursor:pointer}
 .wahlnote{margin-top:12px;font-size:12px;color:#6B6155;max-width:62ch}
+.wahlakzente{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.wahlakzente[hidden]{display:none}
+.wahlakzente .kap{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#8A6534;
+  margin-right:2px}
+.wahlakzente button{display:flex;align-items:center;gap:7px;border:1px solid rgba(36,30,24,.18);
+  border-radius:2px;padding:6px 11px;font-size:12.5px}
+.wahlakzente button.an{border-color:#241E18;box-shadow:inset 0 0 0 1px #241E18}
+.wahlakzente button i{width:11px;height:11px;border-radius:50%;display:block;flex:none}
 .wahlstand{margin-top:12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
   font-size:12.5px;color:#6B6155}
 .wahlstand b{font-weight:600;color:#241E18;font-variant-numeric:tabular-nums}
@@ -1053,6 +1061,461 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
 /* Vollverstaerker: ein Geraet statt zwei, alles auf einer Frontplatte. */
 .nc.voll1{--imax:min(420px,32vw);--ih:min(150px,18vh);--dk:min(112px,14vh);--tg:22px;--fp:26px;
   --fpx:34px;--zarge:16px;--pad:26px;--tb:56px}
+/* ═══════════════════════════════════════════════════════════════════════
+   TELEFON — die fuenf Oberflaechen aus mobile.html
+
+   Auf dem Handy war ein „Thema" die ganze Erscheinung: Palette, Spieler und
+   Achse zusammen. Hier ist genau das ein Layout, und der Unterbau darunter
+   ist derselbe wie fuer die zwoelf anderen. Was aus mobile.html *nicht*
+   mitkommt, ist die Reiterleiste: dort sind Sammlung und Suche eigene
+   Seiten, hier sind sie — wie in jedem Layout dieser Datei — eine Blende
+   hinter einem Knopf.
+
+   Die Farben stehen unveraendert aus mobile.html hier; jede Familie traegt
+   ihren eigenen vollstaendigen Satz. Ein Akzent ist eine zweite Klasse auf
+   derselben Wurzel (.ak-…) und definiert nur die vier Akzentmerkmale.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Der Kopf steht in drei der fuenf an derselben Stelle: links die Sammlung,
+   rechts die Suche. Die Regel nennt alle drei Wurzeln beim Namen und faerbt
+   deshalb nichts, was nicht dazugehoert. */
+.mg .kopfz,.aa .kopfz,.kl .kopfz{display:flex;align-items:center;justify-content:space-between;
+  flex:none;padding:calc(env(safe-area-inset-top,0px) + 14px) 26px 8px}
+.mg .kopfz .mitte,.aa .kopfz .mitte,.kl .kopfz .mitte{font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink-3)}
+
+/* ── Blende fuer Sammlung und Suche, in allen fuenf gleich gebaut ──
+   Sie nimmt die Merkmale der jeweiligen Familie an, deshalb reicht ein
+   Regelsatz je Wurzel mit denselben Werten. */
+.pa .bib,.mg .bib,.aa .bib,.kl .bib{position:absolute;inset:0;z-index:60;display:flex;
+  flex-direction:column;background:var(--paper);color:var(--ink);
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 22px calc(env(safe-area-inset-bottom,0px) + 10px);
+  opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .22s,transform .22s}
+.pa .bib.auf,.mg .bib.auf,.aa .bib.auf,.kl .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.pa .bkopf,.mg .bkopf,.aa .bkopf,.kl .bkopf{display:flex;align-items:center;gap:12px;flex:none}
+.pa .bkopf h2,.mg .bkopf h2,.aa .bkopf h2,.kl .bkopf h2{font-size:17px;font-weight:600;flex:none}
+.pa .suchfeld,.mg .suchfeld,.aa .suchfeld,.kl .suchfeld{flex:1;min-width:0;display:flex;
+  align-items:center;gap:9px;height:42px;padding:0 13px;border-radius:12px;background:var(--tint);
+  box-shadow:inset 0 0 0 1px var(--line)}
+.pa .suchfeld svg,.mg .suchfeld svg,.aa .suchfeld svg,.kl .suchfeld svg{color:var(--ink-4);flex:none}
+.pa .suchfeld input,.mg .suchfeld input,.aa .suchfeld input,.kl .suchfeld input{flex:1;min-width:0;
+  height:100%;background:none;border:none;outline:none;color:var(--ink);font-size:16px}
+.pa .suchfeld input::placeholder,.mg .suchfeld input::placeholder,
+.aa .suchfeld input::placeholder,.kl .suchfeld input::placeholder{color:var(--ink-4)}
+.pa .bzu,.mg .bzu,.aa .bzu,.kl .bzu{width:40px;height:40px;border-radius:50%;flex:none;display:grid;
+  place-items:center;color:var(--ink-3);background:var(--tint)}
+.pa .bliste,.mg .bliste,.aa .bliste,.kl .bliste{flex:1;min-height:0;overflow-y:auto;margin-top:12px;
+  -webkit-overflow-scrolling:touch}
+.pa .bz,.mg .bz,.aa .bz,.kl .bz{display:flex;align-items:center;gap:13px;padding:9px 2px;
+  cursor:pointer;border-bottom:1px solid var(--line)}
+.pa .bz .cov,.mg .bz .cov,.aa .bz .cov,.kl .bz .cov{width:44px;height:44px;border-radius:8px;flex:none;
+  position:relative;overflow:hidden;display:grid;place-items:center}
+.pa .bz .cov img,.mg .bz .cov img,.aa .bz .cov img,.kl .bz .cov img{position:absolute;inset:0;
+  width:100%;height:100%;object-fit:cover}
+.pa .bz .cov .ini,.mg .bz .cov .ini,.aa .bz .cov .ini,.kl .bz .cov .ini{font-size:17px;
+  font-weight:700;color:rgba(255,255,255,.92)}
+.pa .bz .m,.mg .bz .m,.aa .bz .m,.kl .bz .m{flex:1;min-width:0}
+.pa .bz .m>span,.mg .bz .m>span,.aa .bz .m>span,.kl .bz .m>span{display:block}
+.pa .bz .t,.mg .bz .t,.aa .bz .t,.kl .bz .t{font-size:15px;font-weight:600;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.pa .bz .s,.mg .bz .s,.aa .bz .s,.kl .bz .s{font-size:12.5px;color:var(--ink-3);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.pa .bz .n,.mg .bz .n,.aa .bz .n,.kl .bz .n{font-size:11px;color:var(--ink-4);white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+.pa .bz.an .t,.mg .bz.an .t,.aa .bz.an .t,.kl .bz.an .t{color:var(--accent-ink)}
+.pa .bfuss,.mg .bfuss,.aa .bfuss,.kl .bfuss{flex:none;padding-top:9px;font-size:9.5px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--ink-4)}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   „Papier" und „Desert Rose" — eine Familie, zwei Achsen
+
+   Beide teilen sich den Spieler und unterscheiden sich in der Achse: senk-
+   recht im rechten Rand (.pa) oder waagerecht als Skala unter dem Bild
+   (.pa.wu). Beide Achsen stehen im Markup, sichtbar ist immer nur eine —
+   so findet ein Wechsel mitten im Hoeren die andere nicht leer vor.
+   ═══════════════════════════════════════════════════════════════════════ */
+.pa{
+  --paper:#FBF9F5; --tint:#F1EDE4; --ink:#241E18; --ink-2:#5F574B; --ink-3:#766D5F;
+  --ink-4:#A0968A; --ink-5:rgba(36,30,24,.26);
+  --line:rgba(36,30,24,.10); --line-2:rgba(36,30,24,.22);
+  --schatten:36,30,24; --warn:#9C4A2E;
+  --accent:#8A6534; --accent-ink:#7A5A2E;
+  --accent-soft:rgba(138,101,52,.09); --accent-mid:rgba(138,101,52,.42);
+  --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
+  background:var(--paper);color:var(--ink);height:100%;position:relative;overflow:hidden;
+  display:flex;flex-direction:column}
+.pa.ak-petrol{--accent:#1F6470; --accent-ink:#1B5A66;
+  --accent-soft:rgba(31,100,112,.10); --accent-mid:rgba(31,100,112,.42)}
+.pa.ak-gruen{--accent:#4F8A46; --accent-ink:#3D6B36;
+  --accent-soft:rgba(79,138,70,.10); --accent-mid:rgba(79,138,70,.42)}
+
+.pa .lid{display:flex;align-items:center;justify-content:space-between;flex:none;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 30px 0}
+.pa .lid button{display:flex;align-items:center;gap:9px;padding:8px 0;color:var(--ink-3);
+  transition:color .25s}
+.pa .lid button.an,.pa .lid button:active{color:var(--accent-ink)}
+.pa .lid .n{font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  font-variant-numeric:tabular-nums}
+.pa .qbtn{padding-left:12px}
+.pa .gl{display:flex;flex-direction:column;gap:3px;width:13px}
+.pa .gl i{display:block;height:1px;background:currentColor;transition:width .3s,transform .3s,opacity .3s}
+.pa .gl i:nth-child(1),.pa .gl i:nth-child(3){width:13px}
+.pa .gl i:nth-child(2){width:9px}
+.pa .qbtn.offen .gl i:nth-child(1){transform:translateY(4px) rotate(9deg)}
+.pa .qbtn.offen .gl i:nth-child(2){opacity:0}
+.pa .qbtn.offen .gl i:nth-child(3){transform:translateY(-4px) rotate(-9deg)}
+
+.pa .stage{flex:1;min-height:0;position:relative;padding:22px 78px 0 30px}
+.pa .artwrap{position:relative}
+.pa .art{width:100%;aspect-ratio:1;border-radius:1px;background:var(--tint);position:relative;
+  overflow:hidden;box-shadow:0 20px 44px rgba(var(--schatten),.24);
+  transition:width .55s cubic-bezier(.3,.8,.25,1),box-shadow .5s}
+.pa .art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.pa .art .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);
+  font-style:italic;font-size:72px;color:var(--ink-4)}
+.pa .frame{position:absolute;inset:-11px;border:1px solid var(--line-2);border-radius:1px;
+  transition:opacity .4s ease;pointer-events:none}
+.pa .meta{margin-top:34px;transition:opacity .4s ease,transform .5s cubic-bezier(.3,.8,.25,1)}
+.pa .meta h2{font-family:var(--serif);font-weight:400;font-size:26px;line-height:1.2;
+  letter-spacing:-.01em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden}
+.pa .meta .by{margin-top:11px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pa .meta .alb{margin-top:5px;font-family:var(--serif);font-style:italic;font-size:14px;
+  color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pa .meta .err{margin-top:11px;font-size:12px;color:var(--warn)}
+
+.pa .rail{position:absolute;top:22px;bottom:14px;right:0;width:78px;z-index:5;touch-action:none}
+.pa .rline{position:absolute;top:0;bottom:0;right:30px;width:1px;background:var(--line-2)}
+.pa .rdone{position:absolute;top:0;right:29px;width:3px;height:0;background:var(--accent);
+  border-radius:2px}
+.pa .rtick{position:absolute;right:24px;width:13px;height:1px;background:var(--line-2)}
+.pa .rtick.past{background:var(--accent-mid)}
+.pa .rband{position:absolute;right:28px;width:5px;background:var(--accent-soft);border-radius:3px;
+  transition:top .4s cubic-bezier(.3,.8,.25,1),height .4s cubic-bezier(.3,.8,.25,1)}
+.pa .rknob{position:absolute;right:30px;width:11px;height:11px;border-radius:50%;
+  background:var(--paper);border:1.5px solid var(--accent);transform:translate(50%,-50%);
+  pointer-events:none;transition:width .18s,height .18s,box-shadow .18s}
+.pa .rail.zieht .rknob{width:17px;height:17px;box-shadow:0 0 0 7px var(--accent-soft)}
+.pa .rnum{position:absolute;right:44px;width:32px;text-align:right;transform:translateY(-50%);
+  font-size:9px;letter-spacing:.06em;color:var(--ink-3);font-variant-numeric:tabular-nums;
+  white-space:nowrap}
+.pa .rhint{position:absolute;right:52px;bottom:0;font-size:8.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink-4);writing-mode:vertical-rl;transition:opacity .5s;
+  pointer-events:none}
+.pa .rhint.gone{opacity:0}
+
+.pa .veil{position:absolute;inset:0;background:var(--paper);opacity:0;pointer-events:none;
+  transition:opacity .3s ease;z-index:4}
+.pa .peek{position:absolute;left:30px;right:92px;top:46%;transform:translateY(-50%);z-index:6;
+  opacity:0;pointer-events:none;transition:opacity .28s ease}
+.pa .peek .n{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-ink)}
+.pa .peek h3{font-family:var(--serif);font-weight:400;font-size:29px;line-height:1.15;margin-top:9px;
+  letter-spacing:-.01em}
+.pa .peek .t{margin-top:9px;font-size:11px;letter-spacing:.14em;color:var(--ink-2);
+  font-variant-numeric:tabular-nums}
+.pa.zug .veil{opacity:.9}
+.pa.zug .peek{opacity:1}
+.pa.zug .meta,.pa.zug .frame{opacity:0}
+.pa.zug .art{box-shadow:0 8px 20px rgba(var(--schatten),.10)}
+
+.pa .qlist{position:absolute;left:30px;right:92px;top:22px;bottom:8px;opacity:0;pointer-events:none;
+  transition:opacity .4s ease;z-index:3;text-align:right;overflow:hidden}
+.pa.offen .qlist{opacity:1;pointer-events:auto}
+.pa.offen .art{width:96px}
+.pa.offen .frame{opacity:0}
+.pa.offen .meta{opacity:0;transform:translateY(8px)}
+.pa .qitem{position:absolute;left:0;right:0;transition:top .4s cubic-bezier(.3,.8,.25,1);
+  text-align:right}
+.pa .qitem .t,.pa .qitem .d{display:block}
+.pa .qitem .t{font-family:var(--serif);font-size:16px;color:var(--ink-3);line-height:1.25;
+  transition:color .3s,font-size .3s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pa .qitem .d{font-size:9.5px;letter-spacing:.14em;color:var(--ink-4);margin-top:3px;
+  font-variant-numeric:tabular-nums;opacity:0;transition:opacity .3s}
+.pa .qitem.now .t{color:var(--ink);font-size:22px}
+.pa .qitem.now .d{opacity:1;color:var(--ink-3)}
+.pa .qitem.past .t{color:var(--ink-5)}
+
+.pa .foot{flex:none;padding:0 30px calc(env(safe-area-inset-bottom,0px) + 22px);position:relative;
+  z-index:7}
+.pa .transport{display:flex;align-items:center;justify-content:center;gap:34px;padding-top:20px;
+  border-top:1px solid var(--line)}
+.pa .tb{width:44px;height:44px;display:flex;align-items:center;justify-content:center;
+  color:var(--ink-2);border-radius:50%}
+.pa .tb:active{color:var(--ink);background:var(--tint)}
+.pa .play{width:56px;height:56px;border-radius:50%;border:1px solid var(--accent);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,color .2s,transform .12s,border-color .2s}
+.pa .play:active{transform:scale(.95)}
+.pa .play.on{background:var(--accent);color:var(--paper)}
+.pa .nextrow{margin-top:20px;display:flex;align-items:baseline;gap:12px;width:100%;text-align:left}
+.pa .nextrow .k{font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);
+  flex:none}
+.pa .nextrow .v{flex:1;min-width:0;font-family:var(--serif);font-style:italic;font-size:14px;
+  color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pa .nextrow .rest{flex:none;display:flex;align-items:baseline;gap:8px;padding-right:38px;
+  font-size:8.5px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+
+/* Die Skala steht im Markup immer, sichtbar ist sie nur im Sand. */
+.pa .skala{display:none;padding-top:6px}
+.pa .ruler{position:relative;height:38px;touch-action:none}
+.pa .ruler .hairs{position:absolute;left:0;right:0;bottom:12px;height:9px;
+  background:repeating-linear-gradient(90deg,var(--line-2) 0 1px,transparent 1px 9px)}
+.pa .ruler .base{position:absolute;left:0;right:0;bottom:11px;height:1px;background:var(--line-2)}
+.pa .ruler .sdone{position:absolute;left:0;bottom:10px;height:3px;width:0;background:var(--accent);
+  border-radius:2px}
+.pa .ruler .big{position:absolute;bottom:8px;width:1px;height:15px;background:var(--line-2)}
+.pa .ruler .big.past{background:var(--accent-mid)}
+.pa .ruler .sno{position:absolute;bottom:0;transform:translateX(-50%);font-size:8.5px;
+  color:var(--ink-4);font-variant-numeric:tabular-nums;transition:color .25s}
+.pa .ruler .sno.on{color:var(--accent-ink)}
+.pa .ruler .markline{position:absolute;bottom:8px;width:1px;height:22px;background:var(--accent)}
+.pa .ruler .mark{position:absolute;bottom:26px;width:11px;height:11px;border-radius:50%;
+  background:var(--paper);border:1.5px solid var(--accent);transform:translateX(-50%)}
+.pa .ruler .bubble{position:absolute;bottom:38px;transform:translateX(-50%);white-space:nowrap;
+  font-size:10.5px;padding:5px 10px;border-radius:11px;background:var(--ink);color:var(--paper);
+  opacity:0;transition:opacity .2s;pointer-events:none}
+.pa .skala .times{display:flex;justify-content:space-between;margin-top:6px;font-size:9.5px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-variant-numeric:tabular-nums}
+
+/* ── Desert Rose: Sand, Passepartout, Mittelachse, Skala statt Rand ── */
+.pa.wu{
+  --paper:#E8D5C4; --tint:#F3E7DA; --ink:#5D2E46;
+  --ink-2:rgba(93,46,70,.90); --ink-3:rgba(93,46,70,.78); --ink-4:rgba(93,46,70,.52);
+  --ink-5:rgba(93,46,70,.30);
+  --line:rgba(93,46,70,.14); --line-2:rgba(93,46,70,.26);
+  --schatten:93,46,70; --warn:#8E3B2A;
+  --accent:#B87D6D; --accent-ink:#854C3B;
+  --accent-soft:rgba(184,125,109,.16); --accent-mid:rgba(184,125,109,.55)}
+.pa.wu.ak-rose{--accent:#D4A5A5; --accent-ink:#8E4750;
+  --accent-soft:rgba(212,165,165,.20); --accent-mid:rgba(212,165,165,.62)}
+.pa.wu .rail,.pa.wu .veil,.pa.wu .peek,.pa.wu .rhint{display:none}
+.pa.wu .skala{display:block}
+.pa.wu .lid{flex-direction:column;justify-content:center;gap:0;padding-bottom:0}
+.pa.wu .lid .bibknopf{margin-bottom:8px}
+.pa.wu .qbtn{padding:2px 0 0}
+.pa.wu .qbtn .n{letter-spacing:.3em}
+.pa.wu .stage{padding:14px 30px 0;display:flex;flex-direction:column;align-items:center;
+  justify-content:flex-start}
+.pa.wu .artwrap{width:min(76vw,300px,calc(100vh - 512px));min-width:150px;flex:none}
+.pa.wu .frame{inset:-13px;background:var(--tint);border-color:var(--line);z-index:0}
+.pa.wu .art{z-index:1;box-shadow:none}
+.pa.wu .meta{display:flex;flex-direction:column;align-items:center;text-align:center;
+  margin-top:clamp(16px,3.4vh,30px);width:100%}
+.pa.wu .meta .by{order:1;margin-top:0;font-size:10px;letter-spacing:.28em;color:var(--ink)}
+.pa.wu .meta .alb{order:2;margin-top:6px;font-size:14px;color:var(--ink-3)}
+.pa.wu .meta h2{order:3;margin-top:clamp(10px,2.4vh,22px);text-wrap:balance}
+.pa.wu .meta .err{order:4}
+.pa.wu .qlist{left:24px;right:24px;top:14px;bottom:4px;text-align:center;overflow-y:auto}
+.pa.wu .qitem{position:static;width:100%;padding:7px 0;text-align:center}
+.pa.wu .qitem .d{opacity:1}
+.pa.wu.offen .art{width:100%}
+.pa.wu.offen .artwrap{opacity:0;pointer-events:none;transition:opacity .3s}
+.pa.wu .transport{gap:30px;border-top:none;padding-top:clamp(10px,2.2vh,18px)}
+.pa.wu .play{width:60px;height:60px;border:none;background:var(--ink);color:var(--paper)}
+.pa.wu .play.on{background:var(--ink);color:var(--paper)}
+.pa.wu .nextrow{flex-direction:column;align-items:center;gap:5px;margin-top:18px}
+.pa.wu .nextrow .k{letter-spacing:.24em}
+.pa.wu .nextrow .v{flex:none;max-width:100%;font-size:15px}
+.pa.wu .nextrow .rest{display:none}
+.pa.wu.zug .ruler .bubble{opacity:1}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   „Kissen" — Blatt 02. Alles aus einem Material, Tiefe statt Kontur.
+   ═══════════════════════════════════════════════════════════════════════ */
+.mg{
+  --paper:#EDEDF4; --tint:#F2F2F8; --ink:#1B1B25; --ink-2:#4E4E63; --ink-3:#6E6E82;
+  --ink-4:#A6A6B8; --ink-5:rgba(27,27,37,.26);
+  --line:rgba(27,27,37,.08); --line-2:rgba(27,27,37,.16);
+  --warn:#A33B3B;
+  --hell:rgba(255,255,255,.95); --dunkel:rgba(88,88,124,.16);
+  --karte:var(--tint);
+  --accent:#55556E; --accent-ink:#3E3E55;
+  --accent-soft:rgba(85,85,110,.10); --accent-mid:rgba(85,85,110,.42);
+  background:var(--paper);color:var(--ink);height:100%;position:relative;overflow:hidden;
+  display:flex;flex-direction:column}
+.mg.ak-flieder{--accent:#6E5AA8; --accent-ink:#544189;
+  --accent-soft:rgba(110,90,168,.12); --accent-mid:rgba(110,90,168,.46)}
+.mg .rund{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+  color:var(--ink-3);background:var(--karte);
+  box-shadow:-5px -5px 12px var(--hell),6px 6px 14px var(--dunkel)}
+.mg .rund:active{box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
+.mg .spieler{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:0 30px calc(env(safe-area-inset-bottom,0px) + 20px);overflow:hidden}
+.mg .deck{position:relative;width:var(--dk);height:calc(var(--dk) * .84);flex:none;
+  --dk:min(80vw,34vh);border-radius:30px;background:linear-gradient(150deg,#FAFAFF,#E6E6F0);
+  box-shadow:-12px -12px 26px var(--hell),14px 14px 34px var(--dunkel)}
+.mg .deck .teller{position:absolute;left:6%;top:8%;width:74%;aspect-ratio:1;border-radius:50%;
+  background:
+    repeating-radial-gradient(circle at 50% 50%,#0A0A0E 0 1.6px,#17171D 1.6px 3.2px),
+    radial-gradient(circle at 30% 24%,rgba(255,255,255,.22),transparent 44%);
+  box-shadow:0 10px 24px rgba(30,30,60,.28);animation:mgdreh 4.2s linear infinite}
+.mg .deck .teller.halt{animation-play-state:paused}
+@keyframes mgdreh{to{transform:rotate(360deg)}}
+.mg .deck .teller .label{position:absolute;inset:34%;border-radius:50%;background:#F7F7FC;
+  display:grid;place-items:center;font-size:14px;font-weight:700;color:var(--ink-2);overflow:hidden;
+  box-shadow:0 0 0 1px rgba(0,0,0,.18)}
+.mg .deck .teller .label img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  border-radius:50%}
+.mg .deck .arm{position:absolute;right:9%;top:9%;width:26px;height:26px;border-radius:50%;
+  --al:calc(var(--dk) * .33);
+  background:linear-gradient(150deg,#FDFDFF,#D8D8E4);box-shadow:0 2px 6px rgba(30,30,60,.24);
+  transform-origin:50% 50%;transition:transform .45s cubic-bezier(.4,0,.2,1)}
+.mg .deck .arm::before{content:'';position:absolute;left:50%;top:12px;width:4px;height:var(--al);
+  margin-left:-2px;border-radius:3px;background:linear-gradient(180deg,#3C3C48,#15151C)}
+.mg .deck .arm::after{content:'';position:absolute;left:50%;top:calc(var(--al) + 4px);width:16px;
+  height:22px;margin-left:-8px;border-radius:3px;background:linear-gradient(150deg,#FBFBFF,#C9C9D6);
+  box-shadow:0 2px 5px rgba(30,30,60,.3)}
+.mg .deck .stift{position:absolute;right:11%;top:5%;width:8px;height:8px;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.mg .deck .stift.zwei{right:15%}
+.mg .titel{text-align:center;margin-top:clamp(12px,2.6vh,26px);max-width:100%}
+.mg .titel h1{font-size:clamp(21px,3.4vh,30px);font-weight:700;letter-spacing:-.02em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mg .titel .ar{margin-top:6px;font-size:15px;color:var(--ink-2);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.mg .balken{display:flex;align-items:center;justify-content:center;gap:5px;
+  height:clamp(38px,7vh,64px);cursor:pointer;margin-top:clamp(12px,2.4vh,22px);width:100%;
+  touch-action:none}
+.mg .balken b{width:5px;border-radius:3px;background:var(--ink-4);opacity:.5;transition:opacity .15s}
+.mg .balken b.war{opacity:1;background:var(--accent)}
+.mg .uhr{text-align:center;margin-top:12px;font-size:15px;color:var(--ink-2);
+  font-variant-numeric:tabular-nums;letter-spacing:.05em}
+.mg .transport{display:flex;align-items:center;justify-content:center;gap:22px;
+  margin-top:clamp(14px,2.6vh,26px)}
+.mg .kissen{background:var(--karte);border-radius:26px;
+  box-shadow:-9px -9px 20px var(--hell),10px 10px 26px var(--dunkel)}
+.mg .flach{width:92px;height:56px;border-radius:22px;display:grid;place-items:center;
+  color:var(--ink-2)}
+.mg .knauf{width:clamp(84px,13vh,104px);height:clamp(84px,13vh,104px);border-radius:50%;
+  display:grid;place-items:center;color:var(--ink);position:relative}
+.mg .knauf::after{content:'';position:absolute;inset:14px;border-radius:50%;
+  box-shadow:inset -3px -3px 8px var(--hell),inset 4px 4px 9px var(--dunkel)}
+.mg .knauf svg{position:relative;z-index:2}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   „Karte" — Blatt 03. Genau eine Farbe, und die traegt die Position.
+   ═══════════════════════════════════════════════════════════════════════ */
+.aa{
+  --paper:#1A1A1C; --tint:#242427; --ink:#F2EFEA; --ink-2:#C4BFB8; --ink-3:#8E8983;
+  --ink-4:#6A6660; --ink-5:rgba(242,239,234,.28);
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.20);
+  --warn:#E0785E;
+  --karte-papier:#FBFAF8; --karte-tinte:#14100E;
+  --accent:#D8452B; --accent-ink:#E7644C;
+  --accent-soft:rgba(216,69,43,.16); --accent-mid:rgba(216,69,43,.55);
+  --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
+  background:var(--paper);color:var(--ink);height:100%;position:relative;overflow:hidden;
+  display:flex;flex-direction:column}
+.aa .karte{background:var(--karte-papier);color:var(--karte-tinte);border-radius:0 0 34px 34px;
+  flex:none;padding:0 26px 26px;display:flex;flex-direction:column}
+.aa .kopfz{padding-top:calc(env(safe-area-inset-top,0px) + 12px);padding-bottom:14px}
+.aa .kopfz .mitte{color:rgba(20,16,14,.55)}
+.aa .eck{width:44px;height:44px;border-radius:13px;background:#F2EFEA;display:grid;
+  place-items:center;color:var(--karte-tinte);box-shadow:0 1px 2px rgba(20,16,14,.08)}
+.aa h1{font-family:var(--serif);font-weight:400;font-size:clamp(24px,4.4vh,34px);line-height:1.05;
+  letter-spacing:-.01em;text-align:center;text-wrap:balance}
+.aa .ar{margin-top:8px;text-align:center;font-size:14px;color:rgba(20,16,14,.55)}
+.aa .zeit{font-family:var(--serif);font-size:clamp(30px,5.6vh,44px);text-align:center;
+  margin:16px 0 4px;font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.aa .welle{height:clamp(64px,12vh,104px);display:flex;align-items:center;gap:2px;cursor:pointer;
+  position:relative;padding:0 2px;touch-action:none}
+.aa .welle b{flex:1;border-radius:1px;background:rgba(20,16,14,.28);position:relative}
+.aa .welle b.war{background:linear-gradient(180deg,var(--accent),var(--accent-mid))}
+.aa .kopfl{position:absolute;top:0;bottom:0;width:2px;background:var(--accent);
+  pointer-events:none;transition:left .2s linear}
+.aa .kopfl::before{content:'';position:absolute;top:-4px;left:-3px;width:8px;height:8px;
+  border-radius:50%;background:var(--accent)}
+.aa .punkte{position:absolute;left:0;right:0;top:50%;height:1px;pointer-events:none;
+  background:repeating-linear-gradient(90deg,rgba(20,16,14,.3) 0 2px,transparent 2px 7px)}
+.aa .fuss{display:flex;justify-content:space-between;font-size:12px;color:rgba(20,16,14,.5);
+  font-variant-numeric:tabular-nums;margin-top:6px}
+.aa .unten{flex:1;min-height:0;display:flex;flex-direction:column;padding:18px 22px 0}
+.aa .tafel{background:var(--tint);border-radius:22px;padding:18px 20px 12px;flex:1;min-height:0;
+  display:flex;flex-direction:column}
+.aa .tafel h2{font-family:var(--serif);font-size:20px;font-weight:400;display:flex;
+  justify-content:space-between;align-items:center;flex:none}
+.aa .tafel h2 span{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+.aa .qliste{margin-top:10px;overflow-y:auto;flex:1;min-height:0}
+.aa .qz{display:flex;align-items:center;gap:14px;padding:9px 2px;cursor:pointer;
+  border-bottom:1px solid var(--line)}
+.aa .qz .nr{width:20px;font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.aa .qz .t{flex:1;min-width:0;font-size:14.5px;color:var(--ink-3);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.aa .qz .d{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.aa .qz.an .t{color:var(--ink);font-weight:600}
+.aa .qz.an .nr{color:var(--accent)}
+.aa .tasten{display:flex;gap:14px;padding:14px 52px calc(env(safe-area-inset-bottom,0px) + 20px) 22px;
+  flex:none}
+.aa .taste{flex:1;height:clamp(64px,11vh,86px);border-radius:22px;background:var(--karte-papier);
+  display:grid;place-items:center}
+.aa .taste .rund{width:clamp(46px,7.4vh,54px);height:clamp(46px,7.4vh,54px);border-radius:50%;
+  background:#F2EFEA;display:grid;place-items:center;color:var(--karte-tinte);
+  box-shadow:inset 0 0 0 1px rgba(20,16,14,.06)}
+.aa .taste.haupt .rund{background:var(--accent);color:#fff;box-shadow:0 6px 16px var(--accent-soft)}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   „Kiesel" — Blatt 05. Der Spieler ist die Zeile, die laeuft.
+   ═══════════════════════════════════════════════════════════════════════ */
+.kl{
+  --paper:#E3E3E3; --tint:#E9E9E9; --ink:#1C1C1C; --ink-2:#4A4A4A; --ink-3:#6A6A6A;
+  --ink-4:#9A9A9A; --ink-5:rgba(28,28,28,.26);
+  --line:rgba(28,28,28,.08); --line-2:rgba(28,28,28,.16);
+  --warn:#9C3B2E;
+  --hell:rgba(255,255,255,.9); --dunkel:rgba(80,80,80,.22);
+  --karte:var(--tint);
+  --accent:#4A4A4A; --accent-ink:#333333;
+  --accent-soft:rgba(74,74,74,.09); --accent-mid:rgba(74,74,74,.40);
+  background:var(--paper);color:var(--ink);height:100%;position:relative;overflow:hidden;
+  display:flex;flex-direction:column}
+.kl.ak-stahl{--accent:#3F5A70; --accent-ink:#2E4354;
+  --accent-soft:rgba(63,90,112,.11); --accent-mid:rgba(63,90,112,.45)}
+.kl .heraus{background:var(--karte);
+  box-shadow:-6px -6px 14px var(--hell),7px 7px 16px var(--dunkel)}
+.kl .hinein{background:var(--karte);
+  box-shadow:inset -4px -4px 10px var(--hell),inset 5px 5px 12px var(--dunkel)}
+.kl .kopfz .mitte{font-size:12px;font-weight:800;letter-spacing:.18em;color:var(--ink)}
+.kl .rund{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:var(--ink-2)}
+.kl .buehne{display:flex;align-items:center;justify-content:center;
+  padding:14px 26px clamp(14px,2.4vh,24px);flex:none}
+.kl .scheibe{width:var(--sg);height:var(--sg);--sg:min(52vw,22vh);border-radius:50%;
+  position:relative;display:grid;place-items:center;padding:9px;
+  box-shadow:-8px -8px 18px var(--hell),9px 9px 22px var(--dunkel)}
+.kl .scheibe .bild{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;
+  color:#fff;font-size:calc(var(--sg) / 4);font-weight:800;overflow:hidden;position:relative;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+.kl .scheibe .bild img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  border-radius:50%}
+.kl .titelzeile{text-align:center;padding:0 26px 14px;flex:none}
+.kl .titelzeile h1{font-size:21px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.kl .titelzeile .ar{font-size:13.5px;color:var(--ink-2);margin-top:3px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.kl .lauf{margin:0 26px 16px;flex:none}
+.kl .schiene{height:14px;border-radius:9px;position:relative;cursor:pointer;touch-action:none}
+.kl .schiene .voll{position:absolute;left:3px;top:3px;bottom:3px;border-radius:7px;
+  background:var(--accent);min-width:8px}
+.kl .zeiten{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;margin-top:7px}
+.kl .liste{flex:1;min-height:0;overflow-y:auto;padding:0 26px 10px}
+.kl .zeile{display:flex;align-items:center;gap:16px;padding:12px 16px;border-radius:20px;
+  cursor:pointer;margin-bottom:8px}
+.kl .zeile .m{flex:1;min-width:0}
+.kl .zeile .t{font-size:15.5px;font-weight:700;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.kl .zeile .s{font-size:12.5px;color:var(--ink-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.kl .zeile .knopf{width:48px;height:48px;border-radius:50%;flex:none;display:grid;
+  place-items:center;color:var(--ink-2);background:var(--karte);
+  box-shadow:-4px -4px 10px var(--hell),5px 5px 12px var(--dunkel)}
+.kl .zeile.an{background:var(--karte);
+  box-shadow:-6px -6px 14px var(--hell),7px 7px 18px var(--dunkel)}
+.kl .zeile.an .knopf{color:var(--accent-ink);
+  box-shadow:inset -3px -3px 8px var(--hell),inset 4px 4px 10px var(--dunkel)}
+.kl .strich{width:16px;height:3px;border-radius:2px;background:currentColor;display:block}
+.kl .fussz{text-align:center;font-size:11px;color:var(--ink-3);padding-right:44px;
+  padding:0 0 calc(env(safe-area-inset-bottom,0px) + 12px);flex:none}
 </style>
 </head>
 <body>
@@ -1081,6 +1544,7 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
           Auch Ansichten zeigen, die für dieses Format nicht gezeichnet sind</label>
       </div>
       <div class="wahlgitter" id="wahlgitter"></div>
+      <div class="wahlakzente" id="wahlakzent" hidden></div>
       <p class="wahlnote" id="wahlnote"></p>
     </div>
     <div class="wahlende">
@@ -1351,6 +1815,7 @@ class Deck {
     this._ziel = null;        // Ziel eines laufenden Zugs am Spulgriff
     this._zielFrist = 0;
     this._pending = 0;        // Position aus der Sitzung, sobald die Dauer da ist
+    this._gziel = null;       // Ziel eines Zuges auf der Warteschlangen-Achse
     this._rahmen = 0;
     this.fehler = '';
   }
@@ -1371,7 +1836,13 @@ class Deck {
   get rest(){ return Math.max(0, this.dur - this.pos); }
   get offs(){ let o = [], s = 0; for (const id of this.queue){ o.push(s); s += (TRACKS[id] || {d:0}).d; } return o; }
   get total(){ return this.queue.reduce((s,id) => s + (TRACKS[id] || {d:0}).d, 0); }
-  get gpos(){ return (this.offs[this.qi] || 0) + this.pos; }
+  /* Waehrend auf der Achse gezogen wird, gilt das geparkte Ziel: angewendet
+     wird erst beim Loslassen (siehe bindAchse), damit ein Zug ueber eine
+     Titelgrenze nicht je Bildpunkt eine neue Quelle laedt. */
+  get gpos(){
+    if (this._gziel != null) return this._gziel;
+    return (this.offs[this.qi] || 0) + this.pos;
+  }
 
   render(){ try{ this.onRender(this); }catch(e){ console.error(e); } }
 
@@ -1383,6 +1854,7 @@ class Deck {
     if (!t){ this.render(); return; }
     this.fehler = '';
     this._ziel = null;
+    this._gziel = null;
     this._pending = ab || 0;
     this.audio.src = `/api/stream/${encodeURIComponent(t.id)}`;
     heilungAbsagen();
@@ -1856,11 +2328,83 @@ function bindDrag(el, cb, opts = {}){
   el.addEventListener('pointercancel', ende);
 }
 
+/* Die Achse ueber die ganze Warteschlange (Telefon-Layouts „Papier" und
+   „Desert Rose"). Anders als eine Spulleiste im Titel darf sie nicht bei
+   jeder Bewegung anwenden: ein Zug ueber eine Titelgrenze wuerde sonst je
+   Bildpunkt eine neue Quelle laden. Waehrend des Zuges wird deshalb nur ein
+   Ziel geparkt und angezeigt, angewendet wird beim Loslassen — dieselbe
+   Trennung, die mobile.html hat.
+
+   opts.achse 'y' | 'x'; opts.schwelle: erst ab n Punkten gilt es als Zug;
+   opts.tipp: was ein Tippen unterhalb der Schwelle bedeutet (am Rand klappt
+   es die Warteschlange auf); opts.zieht/opts.ruht: Rueckmeldung ans Layout;
+   opts.mass: das Element, an dem gemessen wird, falls es nicht das
+   beruehrte ist. */
+function bindAchse(el, deck, opts = {}){
+  const achse = opts.achse || 'y';
+  const schwelle = opts.schwelle || 0;
+  let aktiv = false, gezogen = false, start = 0;
+  const zeitAn = ev => {
+    const r = (opts.mass ? opts.mass() : el).getBoundingClientRect();
+    const f = achse === 'y' ? (ev.clientY - r.top) / r.height : (ev.clientX - r.left) / r.width;
+    return clamp(f, 0, 1) * deck.total;
+  };
+  const zieh = ev => { deck._gziel = zeitAn(ev); deck.render(); };
+  el.addEventListener('pointerdown', ev => {
+    if (!deck.queue.length) return;
+    aktiv = true; gezogen = schwelle === 0;
+    start = achse === 'y' ? ev.clientY : ev.clientX;
+    try{ el.setPointerCapture(ev.pointerId); }catch{}
+    if (gezogen){ if (opts.zieht) opts.zieht(); zieh(ev); }
+    ev.preventDefault();
+  });
+  el.addEventListener('pointermove', ev => {
+    if (!aktiv) return;
+    if (!gezogen){
+      if (Math.abs((achse === 'y' ? ev.clientY : ev.clientX) - start) < schwelle) return;
+      gezogen = true; if (opts.zieht) opts.zieht();
+    }
+    zieh(ev);
+  });
+  const ende = () => {
+    if (!aktiv) return;
+    aktiv = false;
+    if (!gezogen){ if (opts.tipp) opts.tipp(); return; }
+    const ziel = deck._gziel;
+    deck._gziel = null;
+    if (opts.ruht) opts.ruht();
+    if (ziel != null) deck.seekGlobal(ziel);
+  };
+  el.addEventListener('pointerup', ende);
+  el.addEventListener('pointercancel', ende);
+}
+
+/* Ausschlag: pro Titel immer derselbe, damit die Wellenform beim Wechsel
+   nicht flackert. Echte Werte gaebe es erst mit einer Analyse beim Scan. */
+function wave(seed, n){
+  let x = 0;
+  for (const ch of String(seed)) x = (x*31 + ch.charCodeAt(0)) >>> 0;
+  const out = [];
+  for (let i = 0; i < n; i++){
+    x = (x * 1103515245 + 12345) >>> 0;
+    const r = ((x >>> 16) & 0x7fff) / 0x7fff;
+    const bogen = Math.sin(Math.PI * (i + .5) / n);
+    out.push(.18 + .82 * (0.35 + 0.65*r) * (0.45 + 0.55*bogen));
+  }
+  return out;
+}
+
 /* Bibliothek — jedes Layout bringt sein eigenes Aussehen mit (eine Blende,
    ein Suchfeld, eine Liste, ein Knopf). Filtern, Zeichnen, Markieren und
    Oeffnen ist ueberall dasselbe und steht deshalb hier.
 
-   o = {knopf, zu, blende, feld, liste, treffer, deck, zeile(album), leer} */
+   o = {knopf, suchknopf, zu, blende, feld, liste, treffer, deck,
+        zeile(album), leer}
+
+   `suchknopf` ist fuer die Telefon-Layouts: sie tragen oben zwei Knoepfe an
+   derselben Stelle wie die Blaetter, links die Sammlung, rechts die Suche.
+   Ist er da, oeffnet der linke Knopf ohne den Fokus ins Feld zu setzen —
+   auf einem Telefon soll das Bloettern nicht die Tastatur hochholen. */
 function bindBibliothek(o){
   const markiere = () => [...o.liste.children].forEach(el =>
     el.classList.toggle('an', !!o.deck.album && el.dataset.alb === o.deck.album.id));
@@ -1879,13 +2423,15 @@ function bindBibliothek(o){
     markiere();
   });
 
-  const zeige = auf => {
+  const zeige = (auf, fokus = true) => {
     o.blende.classList.toggle('auf', auf);
     if (o.knopf) o.knopf.classList.toggle('an', auf);
-    if (auf) setTimeout(() => o.feld.focus(), 60);   // erst sichtbar, dann Fokus
+    if (auf && fokus) setTimeout(() => o.feld.focus(), 60);   // erst sichtbar, dann Fokus
   };
 
-  if (o.knopf) o.knopf.onclick = () => zeige(!o.blende.classList.contains('auf'));
+  if (o.knopf) o.knopf.onclick = () =>
+    zeige(!o.blende.classList.contains('auf'), !o.suchknopf);
+  if (o.suchknopf) o.suchknopf.onclick = () => zeige(true);
   if (o.zu)    o.zu.onclick    = () => zeige(false);
   o.feld.oninput = zeichne;
   o.feld.addEventListener('keydown', ev => { if (ev.key === 'Escape') zeige(false); });
@@ -1975,6 +2521,27 @@ function ersteWahl(){
 function layoutFuerZiel(){
   const L = LAYOUTS.find(x => x.id === gemerktesLayout());
   return (L && passtZumZiel(L)) ? L.id : ersteWahl();
+}
+
+/* Akzente gehoeren zum Layout, nicht zur Seite: Messing auf Sand waere
+   kein Angebot, sondern ein Fehler. Die Kennungen sind ueber alle Layouts
+   eindeutig, deshalb reicht ein Wert — passt er nicht zum gebauten Layout,
+   gilt dessen erster. */
+let akzent = restore('akzent', null);
+function akzentFuer(L){
+  const liste = (L && L.akzente) || [];
+  if (!liste.length) return null;
+  return liste.some(x => x.id === akzent) ? akzent : liste[0].id;
+}
+function klasseFuer(L){
+  const a = akzentFuer(L);
+  return L.klasse + (a ? ' ak-' + a : '');
+}
+function setzeAkzent(id){
+  akzent = id; store('akzent', id);
+  const w = buehne.firstElementChild;
+  if (w && aktuell) w.className = klasseFuer(aktuell);
+  zeichneWahl();
 }
 
 function setzeZiel(z){
@@ -3054,6 +3621,530 @@ layout({
 });
 })();
 
+/* ═══════════════════════════════════════════════════════════════════════
+   TELEFON — die fuenf Oberflaechen aus mobile.html
+
+   Auf dem Handy war ein „Thema" die ganze Erscheinung. Hier ist genau das
+   ein Layout: derselbe Unterbau wie fuer die zwoelf anderen, dieselbe
+   Blende fuer Sammlung und Suche, dasselbe `bau(wurzel, deck)`.
+
+   Uebersetzt wurde stur nach der Tabelle, damit es eine Portierung bleibt
+   und keine Neuschrift:
+     togglePlay/playNext/playPrev  →  deck.toggle()/next()/prev()
+     springeAufIndex(k)            →  deck.jump(k)
+     spuleImTitel(f)               →  deck.seek(f)
+     queue[i].track / .album       →  TRACKS[deck.queue[i]] / albOf(…)
+     dauer(i), offsets(), gesamt() →  deck.dur, deck.offs, deck.total
+     globalPos(), springeZu()      →  deck.gpos, deck.seekGlobal()
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Zwei Knoepfe stehen in dreien der fuenf an derselben Stelle wie im Blatt:
+   links die Sammlung, rechts die Suche. Beide oeffnen dieselbe Blende —
+   nur setzt der rechte den Fokus ins Feld und der linke nicht. */
+const kopfHTML = (klasse, mitte) => `
+  <div class="kopfz">
+    <button class="${klasse}" data-bib aria-label="Sammlung">${I.grid(19)}</button>
+    <span class="mitte">${esc(mitte)}</span>
+    <button class="${klasse}" data-suche-auf aria-label="Suchen">${I.search(19)}</button>
+  </div>`;
+
+/* Die Blende ist in allen fuenf gleich gebaut; das Regelwerk der Familie
+   faerbt sie. */
+const telBibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Sammlung</h2>
+      <label class="suchfeld">${I.search(17)}
+        <input type="search" placeholder="Album, Interpret, Titel" data-suche></label>
+      <button class="bzu" data-bib-zu aria-label="Schließen">${I.x(18)}</button>
+    </div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
+function telBib(wurzel, deck){
+  const q = s => wurzel.querySelector(s);
+  return bindBibliothek({
+    knopf: q('[data-bib]'), suchknopf: q('[data-suche-auf]'), zu: q('[data-bib-zu]'),
+    blende: q('[data-bib-blende]'), feld: q('[data-suche]'), liste: q('[data-bibliothek]'),
+    treffer: q('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${esc(a.id)}">
+        ${coverHTML(a, 'cov')}
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)}${a.y ? ' · ' + esc(a.y) : ''}</span></span>
+        <span class="n">${a.tr.length}</span></div>`,
+    leer: '<div class="bz" style="border:none"><span class="m"><span class="t">Nichts gefunden.</span></span></div>',
+  });
+}
+
+/* Welcher Titel liegt an dieser Stelle der Warteschlange? Waehrend am Rand
+   gezogen wird, laeuft die Anzeige dem Ton voraus. */
+function indexBei(deck, v){
+  const o = deck.offs;
+  for (let k = o.length - 1; k >= 0; k--) if (v >= o[k]) return k;
+  return 0;
+}
+
+/* ── 13/14 · Papier und Desert Rose ───────────────────────────────────
+   Der Rand: eine Haarlinie im rechten Rand mit einem Strich je Titel. Er
+   beschriftet nichts — Namen erscheinen nur beim Ziehen (die Ablesung) oder
+   wenn die Achse ueber den Zaehler aufgeklappt wird. Genau das nimmt ihm
+   die Dichtegrenze, die eine beschriftete Achse haette.                */
+(() => {
+const inhalt = `
+  <div class="lid">
+    <button class="bibknopf" data-bib aria-label="Sammlung">
+      <span class="gl"><i></i><i></i><i></i></span><span class="n">Sammlung</span></button>
+    <button class="qbtn" data-qbtn aria-label="Warteschlange">
+      <span class="n" data-qcount>0 / 0</span>
+      <span class="gl"><i></i><i></i><i></i></span></button>
+  </div>
+
+  <div class="stage">
+    <div class="artwrap">
+      <div class="art" data-art><span class="ini">♪</span></div>
+      <div class="frame"></div>
+    </div>
+    <div class="meta">
+      <h2 data-titel>Nichts ausgewählt</h2>
+      <div class="by" data-ar></div>
+      <div class="alb" data-alb></div>
+      <div class="err" data-err hidden></div>
+    </div>
+
+    <div class="veil"></div>
+    <div class="qlist" data-qlist></div>
+
+    <div class="peek">
+      <div class="n" data-peek-no></div>
+      <h3 data-peek-titel></h3>
+      <div class="t" data-peek-zeit></div>
+    </div>
+
+    <div class="rail" data-rail>
+      <div class="rline"></div>
+      <div class="rband" data-rband></div>
+      <div data-rticks></div>
+      <div class="rdone" data-rdone></div>
+      <div class="rknob" data-rknob></div>
+      <div class="rnum" data-rnum></div>
+      <div class="rhint" data-rhint>Ziehen zum Spulen</div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="skala" data-skala>
+      <div class="ruler" data-ruler>
+        <div class="hairs"></div><div class="base"></div>
+        <div class="sdone" data-sdone></div>
+        <div data-sticks></div>
+        <div class="markline" data-smarkline></div>
+        <div class="mark" data-smark></div>
+        <div class="bubble" data-sbubble></div>
+      </div>
+      <div class="times"><span data-szeit></span><span data-srest></span></div>
+    </div>
+    <div class="transport">
+      <button class="tb" data-prev aria-label="Vorheriger Titel">${I.prev(22)}</button>
+      <button class="play" data-pp aria-label="Abspielen">${I.play(22)}</button>
+      <button class="tb" data-next aria-label="Nächster Titel">${I.next(22)}</button>
+    </div>
+    <div class="nextrow">
+      <span class="k">Als nächstes</span>
+      <span class="v" data-next-titel></span>
+      <span class="rest"><span data-rest></span></span>
+    </div>
+  </div>` + telBibHTML;
+
+function verdrahte(wurzel, deck, sand){
+  const q = s => wurzel.querySelector(s);
+  q('[data-pp]').onclick   = () => deck.toggle();
+  q('[data-next]').onclick = () => deck.next();
+  q('[data-prev]').onclick = () => deck.prev();
+
+  /* Nur die sichtbare Achse traegt die Markierung — die andere steht zwar
+     im Markup, ist aber ausgeblendet und waere keine Flaeche zum Greifen. */
+  q(sand ? '[data-skala]' : '[data-rail]').setAttribute('data-spulen', '');
+
+  const bib = telBib(wurzel, deck);
+
+  let offen = false;
+  const zeigeQueue = auf => {
+    offen = auf;
+    wurzel.classList.toggle('offen', auf);
+    q('[data-qbtn]').classList.toggle('offen', auf);
+    if (auf) legeQueue();
+  };
+  q('[data-qbtn]').onclick = () => zeigeQueue(!offen);
+  offeneBlenden.push(() => zeigeQueue(false));
+
+  /* Am Rand sind Tippen und Ziehen zwei Dinge: erst ab acht Punkten wird
+     gespult, darunter bleibt es ein Tippen und klappt die Warteschlange
+     auf. Auf der waagerechten Skala ist ein Tippen dagegen eindeutig ein
+     Spulen — dort braucht es die Trennung nicht. */
+  const zug = an => wurzel.classList.toggle('zug', an);
+  bindAchse(q('[data-rail]'), deck, {
+    achse:'y', schwelle:8,
+    zieht: () => { zug(true); q('[data-rail]').classList.add('zieht');
+                   q('[data-rhint]').classList.add('gone'); },
+    ruht:  () => { zug(false); q('[data-rail]').classList.remove('zieht'); },
+    tipp:  () => zeigeQueue(!offen),
+  });
+  bindAchse(q('[data-skala]'), deck, {
+    achse:'x', mass: () => q('[data-ruler]'),
+    zieht: () => zug(true), ruht: () => zug(false),
+  });
+
+  /* Kurze Titel laegen sonst uebereinander. Der laufende steht groesser und
+     traegt eine zweite Zeile — direkt darunter braucht es mehr Luft. Unter
+     der Skala ordnet die Zeit nicht mehr senkrecht: dort bleibt es eine
+     gewoehnliche Liste ohne gesetzte Hoehen. */
+  function legeQueue(){
+    const liste = q('[data-qlist]');
+    const h = liste.clientHeight;
+    if (!h || !deck.queue.length || sand) return;
+    const o = deck.offs, T = deck.total || 1;
+    let letzte = -Infinity;
+    $$('[data-q]', liste).forEach((el, i) => {
+      const min = (i - 1 === deck.qi) ? 62 : 34;
+      let top = o[i] / T * h;
+      if (top - letzte < min) top = letzte + min;
+      letzte = top;
+      el.style.top = top + 'px';
+    });
+  }
+
+  /* Beide Achsen werden gebaut, nicht nur die sichtbare: ein Wechsel des
+     Layouts waehrend des Hoerens findet die andere sonst leer vor. */
+  function baueAchsen(){
+    const o = deck.offs, T = deck.total || 1;
+    const bei = i => o[i] / T * 100;
+    q('[data-rticks]').innerHTML = deck.queue.map((_, i) =>
+      `<div class="rtick" data-tick="${i}" style="top:${bei(i)}%"></div>`).join('');
+    q('[data-sticks]').innerHTML = deck.queue.map((_, i) => `
+      <div class="big" data-tick="${i}" style="left:${bei(i)}%"></div>
+      <div class="sno" data-no="${i}"
+        style="left:${Math.min(98.6, Math.max(1.4, bei(i)))}%">${i+1}</div>`).join('');
+    const liste = q('[data-qlist]');
+    liste.innerHTML = deck.queue.map((id, i) => {
+      const t = TRACKS[id] || {t:'', d:0};
+      return `<button class="qitem" data-q="${i}">
+        <span class="t">${esc(t.t)}</span><span class="d">${fmt(t.d)}</span></button>`;
+    }).join('');
+    $$('[data-q]', liste).forEach(el => el.onclick = () => deck.jump(+el.dataset.q));
+    legeQueue();
+  }
+
+  let letzteQ = null, letzter = null;
+  deck.onRender = d => {
+    const kennung = d.queue.join();
+    if (letzteQ !== kennung){ letzteQ = kennung; letzter = null; baueAchsen(); }
+
+    const spielt = d.playing;
+    q('[data-pp]').innerHTML = spielt ? I.pause(22) : I.play(22);
+    q('[data-pp]').classList.toggle('on', spielt);
+
+    const T = d.total;
+    if (d.qi < 0 || !T || !d.queue.length){
+      q('[data-qcount]').textContent = '0 / 0';
+      return;
+    }
+    const o = d.offs, g = d.gpos, p = clamp(g / T * 100, 0, 100);
+    const i = d._gziel != null ? indexBei(d, g) : d.qi;
+    const lokal = g - (o[i] || 0);
+    const t = TRACKS[d.queue[i]] || {t:'', d:0};
+    const a = albOf(t);
+
+    if (letzter !== t.id){
+      letzter = t.id;
+      q('[data-titel]').textContent = t.t;
+      q('[data-ar]').textContent  = a ? a.ar : '';
+      q('[data-alb]').textContent = a ? a.t : '';
+      coverFuellung(q('[data-art]'), a);
+      bib.markiere();
+    }
+    const err = q('[data-err]');
+    err.hidden = !d.fehler; err.textContent = d.fehler || '';
+
+    if (sand){
+      q('[data-sdone]').style.width = p + '%';
+      q('[data-smark]').style.left = p + '%';
+      q('[data-smarkline]').style.left = p + '%';
+      q('[data-szeit]').textContent = fmt(lokal);
+      q('[data-srest]').textContent = 'noch ' + fmtLang(T - g);
+      const blase = q('[data-sbubble]');
+      blase.style.left = Math.min(88, Math.max(12, p)) + '%';
+      blase.textContent = `${t.t} · ${fmt(lokal)}`;
+      $$('[data-no]', wurzel).forEach(el => el.classList.toggle('on', +el.dataset.no === i));
+    } else {
+      q('[data-rdone]').style.height = p + '%';
+      q('[data-rknob]').style.top = p + '%';
+      q('[data-rband]').style.top = ((o[i] || 0) / T * 100) + '%';
+      q('[data-rband]').style.height = (t.d / T * 100) + '%';
+      q('[data-rnum]').style.top = p + '%';
+      q('[data-rnum]').textContent = fmt(g);
+    }
+    $$('[data-tick]', wurzel).forEach(el =>
+      el.classList.toggle('past', +el.dataset.tick <= i));
+
+    q('[data-qcount]').textContent = `${i+1} / ${d.queue.length}`;
+    q('[data-rest]').textContent = fmtLang(T - g);
+    q('[data-next-titel]').textContent = i < d.queue.length - 1
+      ? (TRACKS[d.queue[i+1]] || {t:''}).t : 'Ende der Warteschlange';
+
+    q('[data-peek-no]').textContent = `Titel ${i+1} von ${d.queue.length}`;
+    q('[data-peek-titel]').textContent = t.t;
+    q('[data-peek-zeit]').textContent = `${fmt(lokal)} — noch ${fmt(t.d - lokal)}`;
+
+    $$('[data-q]', wurzel).forEach(el => {
+      const k = +el.dataset.q;
+      el.classList.toggle('now', k === i);
+      el.classList.toggle('past', k < i);
+    });
+    if (wurzel.classList.contains('offen')) legeQueue();
+  };
+}
+
+layout({
+  id:'papier', name:'Papier', geraet:'iPhone hoch', klasse:'pa',
+  ziele:['telefon'], familie:'Das Telefon',
+  akzente:[{id:'messing', name:'Messing', farbe:'#8A6534'}, {id:'petrol', name:'Petrol', farbe:'#1F6470'}, {id:'gruen', name:'Grün', farbe:'#4F8A46'}],
+  chrome:['#241E18','rgba(251,249,245,.82)','#FBF9F5'],
+  text:'Elfenbein und Messing, Serifen. Die Warteschlange ist eine Achse im rechten Rand — tippen klappt sie auf, ziehen spult.',
+  bau(w, deck){ w.innerHTML = inhalt; verdrahte(w, deck, false); },
+});
+
+layout({
+  id:'wueste', name:'Desert Rose', geraet:'iPhone hoch', klasse:'pa wu',
+  ziele:['telefon'], familie:'Das Telefon',
+  akzente:[{id:'ton', name:'Ton', farbe:'#B87D6D'}, {id:'rose', name:'Rosé', farbe:'#D4A5A5'}],
+  chrome:['#5D2E46','rgba(232,213,196,.82)','#E8D5C4'],
+  text:'Sand und Burgunder, Bild im Passepartout, alles auf der Mittelachse. Dieselbe Achse liegt hier waagerecht als Skala.',
+  bau(w, deck){ w.innerHTML = inhalt; verdrahte(w, deck, true); },
+});
+})();
+
+/* ── 15 · Kissen — Blatt 02 ───────────────────────────────────────────
+   Alles aus einem Material: Tiefe statt Kontur. Der Ausschlag ist die
+   Spulleiste, das Laufwerk ist das Bild.                              */
+(() => {
+layout({
+  id:'kissen', name:'Kissen', geraet:'iPhone hoch', klasse:'mg',
+  ziele:['telefon'], familie:'Das Telefon',
+  akzente:[{id:'nebel', name:'Nebel', farbe:'#55556E'}, {id:'flieder', name:'Flieder', farbe:'#6E5AA8'}],
+  chrome:['#1B1B25','rgba(237,237,244,.82)','#EDEDF4'],
+  text:'Weiches Weiß, Knöpfe treten aus der Fläche heraus. Der Ausschlag ist die Spulleiste.',
+  bau(w, deck){
+    w.innerHTML = kopfHTML('rund', 'Jetzt läuft') + `
+      <div class="spieler">
+        <div class="deck">
+          <span class="stift"></span><span class="stift zwei"></span>
+          <div class="teller" data-teller><div class="label" data-label></div></div>
+          <div class="arm" data-arm></div>
+        </div>
+        <div class="titel"><h1 data-titel>Nichts ausgewählt</h1><div class="ar" data-ar></div></div>
+        <div class="balken" data-balken data-spulen>${'<b></b>'.repeat(19)}</div>
+        <div class="uhr"><span data-jetzt>0:00</span> / <span data-ende>0:00</span></div>
+        <div class="transport">
+          <button class="flach kissen" data-prev aria-label="Vorheriger Titel">${I.prev(22)}</button>
+          <button class="knauf kissen" data-pp aria-label="Abspielen">${I.play(28)}</button>
+          <button class="flach kissen" data-next aria-label="Nächster Titel">${I.next(22)}</button>
+        </div>
+      </div>` + telBibHTML;
+
+    const q = s => w.querySelector(s);
+    q('[data-pp]').onclick   = () => deck.toggle();
+    q('[data-next]').onclick = () => deck.next();
+    q('[data-prev]').onclick = () => deck.prev();
+    bindDrag(q('[data-balken]'), f => deck.seek(f));
+    const bib = telBib(w, deck);
+    const balken = $$('[data-balken] b', w);
+
+    let letzter = null;
+    deck.onRender = d => {
+      const spielt = d.playing;
+      q('[data-pp]').innerHTML = spielt ? I.pause(28) : I.play(28);
+      q('[data-teller]').classList.toggle('halt', !spielt);
+      const t = d.track, a = d.album;
+      if (!t){ letzter = null; return; }
+      if (letzter !== t.id){
+        letzter = t.id;
+        q('[data-titel]').textContent = t.t;
+        q('[data-ar]').textContent = d.fehler || (a ? a.ar : '');
+        coverFuellung(q('[data-label]'), a);
+        const aus = wave(t.id, balken.length);
+        balken.forEach((b, i) => b.style.height = Math.round(28 + aus[i]*72) + '%');
+        bib.markiere();
+      }
+      if (d.fehler) q('[data-ar]').textContent = d.fehler;
+      const f = d.frac;
+      balken.forEach((b, i) => b.classList.toggle('war', i / balken.length <= f));
+      q('[data-jetzt]').textContent = fmt(d.pos);
+      q('[data-ende]').textContent  = fmt(d.dur);
+      q('[data-arm]').style.transform = `rotate(${(14 + 16*f).toFixed(2)}deg)`;
+    };
+  },
+});
+})();
+
+/* ── 16 · Karte — Blatt 03 ────────────────────────────────────────────
+   Die Zeit ist so gross gesetzt wie der Titel, und genau eine Farbe traegt
+   die Position. Deshalb hat dieses Blatt auch nur einen Akzent.        */
+(() => {
+layout({
+  id:'karte', name:'Karte', geraet:'iPhone hoch', klasse:'aa',
+  ziele:['telefon'], familie:'Das Telefon',
+  chrome:['#F2EFEA','rgba(26,26,28,.82)','#1A1A1C'],
+  text:'Weiße Karte über Schwarz, die Zeit als Überschrift, ein roter Ausschlag. Darunter die Warteschlange.',
+  bau(w, deck){
+    w.innerHTML = `
+      <div class="karte">
+        ${kopfHTML('eck', 'Jetzt läuft')}
+        <h1 data-titel>Nichts ausgewählt</h1>
+        <div class="ar" data-ar></div>
+        <div class="zeit" data-zeit>00:00:00</div>
+        <div class="welle" data-welle data-spulen><div class="punkte"></div>${'<b></b>'.repeat(46)}
+          <div class="kopfl" data-kopf></div></div>
+        <div class="fuss"><span data-vor>0:00</span><span data-rest>−0:00</span></div>
+      </div>
+      <div class="unten">
+        <div class="tafel">
+          <h2>Warteschlange <span data-qlen></span></h2>
+          <div class="qliste" data-queue></div>
+        </div>
+      </div>
+      <div class="tasten">
+        <button class="taste" data-prev aria-label="Vorheriger Titel"><span class="rund">${I.prev(22)}</span></button>
+        <button class="taste haupt" data-pp aria-label="Abspielen"><span class="rund">${I.play(24)}</span></button>
+        <button class="taste" data-next aria-label="Nächster Titel"><span class="rund">${I.next(22)}</span></button>
+      </div>` + telBibHTML;
+
+    const q = s => w.querySelector(s);
+    q('[data-pp]').onclick   = () => deck.toggle();
+    q('[data-next]').onclick = () => deck.next();
+    q('[data-prev]').onclick = () => deck.prev();
+    bindDrag(q('[data-welle]'), f => deck.seek(f));
+    const bib = telBib(w, deck);
+    const balken = $$('[data-welle] b', w);
+
+    let letzter = null, letzteQ = null;
+    deck.onRender = d => {
+      q('[data-pp]').querySelector('.rund').innerHTML = d.playing ? I.pause(24) : I.play(24);
+      const t = d.track, a = d.album;
+      if (!t){ letzter = null; letzteQ = null; return; }
+      const kasten = q('[data-queue]');
+      const kennung = d.queue.join();
+      if (letzteQ !== kennung){
+        letzteQ = kennung;
+        kasten.innerHTML = d.queue.map((id, i) => {
+          const x = TRACKS[id] || {t:'', d:0};
+          return `<div class="qz" data-fq="${i}"><span class="nr">${String(i+1).padStart(2,'0')}</span>
+            <span class="t">${esc(x.t)}</span><span class="d">${fmt(x.d)}</span></div>`;
+        }).join('');
+        $$('[data-fq]', kasten).forEach(el => el.onclick = () => deck.jump(+el.dataset.fq));
+        q('[data-qlen]').textContent = fmtLang(d.total);
+      }
+      $$('[data-fq]', kasten).forEach((el, i) => el.classList.toggle('an', i === d.qi));
+      if (letzter !== t.id){
+        letzter = t.id;
+        q('[data-titel]').textContent = t.t;
+        q('[data-ar]').textContent = a ? `${a.ar} · ${a.t}` : '';
+        const aus = wave(t.id, balken.length);
+        balken.forEach((b, i) => b.style.height = Math.round(aus[i]*100) + '%');
+        bib.markiere();
+      }
+      if (d.fehler) q('[data-ar]').textContent = d.fehler;
+      const f = d.frac;
+      balken.forEach((b, i) => b.classList.toggle('war', i / balken.length <= f));
+      q('[data-kopf]').style.left = (f*100).toFixed(2) + '%';
+      const s = Math.max(0, Math.round(d.pos));
+      q('[data-zeit]').textContent = [Math.floor(s/3600), Math.floor(s%3600/60), s%60]
+        .map(n => String(n).padStart(2,'0')).join(':');
+      q('[data-vor]').textContent  = fmt(d.pos);
+      q('[data-rest]').textContent = '− ' + fmt(d.dur - d.pos);
+    };
+  },
+});
+})();
+
+/* ── 17 · Kiesel — Blatt 05 ───────────────────────────────────────────
+   Der Spieler ist die Zeile, die laeuft. „Weiter" gibt es hier trotzdem —
+   anders als im Blatt, weil jedes Layout dieser Datei Transport traegt.  */
+(() => {
+layout({
+  id:'kiesel', name:'Kiesel', geraet:'iPhone hoch', klasse:'kl',
+  ziele:['telefon'], familie:'Das Telefon',
+  akzente:[{id:'graphit', name:'Graphit', farbe:'#4A4A4A'}, {id:'stahl', name:'Stahl', farbe:'#3F5A70'}],
+  chrome:['#1C1C1C','rgba(227,227,227,.82)','#E3E3E3'],
+  text:'Grau in Grau, weiche Kiesel. Der Spieler ist die Zeile, die läuft — der nächste Titel wird angetippt.',
+  bau(w, deck){
+    w.innerHTML = kopfHTML('rund heraus', 'Jetzt läuft') + `
+      <div class="buehne">
+        <div class="scheibe heraus"><div class="bild" data-bild></div></div>
+      </div>
+      <div class="titelzeile"><h1 data-titel>Nichts ausgewählt</h1><div class="ar" data-ar></div></div>
+      <div class="lauf">
+        <div class="schiene hinein" data-bahn data-spulen><span class="voll" data-voll></span></div>
+        <div class="zeiten"><span data-jetzt>0:00</span><span data-ende>−0:00</span></div>
+      </div>
+      <div class="liste" data-liste></div>
+      <div class="fussz">
+        <button data-prev aria-label="Vorheriger Titel">${I.prev(15)}</button>
+        <button data-pp aria-label="Abspielen">${I.play(15)}</button>
+        <button data-next aria-label="Nächster Titel">${I.next(15)}</button>
+        · <span data-alb></span>
+      </div>` + telBibHTML;
+
+    const q = s => w.querySelector(s);
+    q('[data-pp]').onclick   = () => deck.toggle();
+    q('[data-next]').onclick = () => deck.next();
+    q('[data-prev]').onclick = () => deck.prev();
+    bindDrag(q('[data-bahn]'), f => deck.seek(f));
+    const bib = telBib(w, deck);
+
+    let letzteQ = null;
+    deck.onRender = d => {
+      const liste = q('[data-liste]');
+      const t = d.track, a = d.album;
+      if (!t){ letzteQ = null; liste.innerHTML = ''; return; }
+      const spielt = d.playing;
+      q('[data-pp]').innerHTML = spielt ? I.pause(15) : I.play(15);
+      const kennung = d.queue.join();
+      if (letzteQ !== kennung){
+        letzteQ = kennung;
+        liste.innerHTML = d.queue.map((id, i) => {
+          const x = TRACKS[id] || {t:'', ar:''};
+          return `<div class="zeile" data-fq="${i}">
+            <div class="m"><div class="t">${esc(x.t)}</div><div class="s">${esc(x.ar)}</div></div>
+            <button class="knopf" data-k="${i}" aria-label="Abspielen"><i class="strich"></i></button>
+          </div>`;
+        }).join('');
+        $$('[data-fq]', liste).forEach(el => {
+          el.onclick = () => deck.jump(+el.dataset.fq);
+          el.querySelector('[data-k]').onclick = ev => {
+            ev.stopPropagation(); deck.jump(+el.dataset.fq);
+          };
+        });
+        coverFuellung(q('[data-bild]'), a);
+        q('[data-alb]').textContent = a ? a.t : '';
+        bib.markiere();
+      }
+      $$('[data-fq]', liste).forEach((el, i) => {
+        const an = i === d.qi;
+        el.classList.toggle('an', an);
+        el.querySelector('[data-k]').innerHTML =
+          an ? (spielt ? I.pause(19) : I.play(19)) : '<i class="strich"></i>';
+      });
+      q('[data-titel]').textContent = t.t;
+      q('[data-ar]').textContent = d.fehler || (a ? `${a.ar} · ${a.t}` : '');
+      q('[data-voll]').style.width = `calc(${(d.frac*100).toFixed(2)}% - 6px)`;
+      q('[data-jetzt]').textContent = fmt(d.pos);
+      q('[data-ende]').textContent  = '−' + fmt(d.dur - d.pos);
+    };
+  },
+});
+})();
+
 /* ══ Buehne, Wechsler, Tastatur ════════════════════════════════════════════ */
 const buehne = document.getElementById('buehne');
 const wechsler = document.getElementById('wechsler');
@@ -3068,7 +4159,7 @@ function zeigeLayout(id){
   deck.onRender = () => {};
   buehne.innerHTML = '';
   const w = document.createElement('div');
-  w.className = L.klasse;
+  w.className = klasseFuer(L);
   buehne.appendChild(w);
   document.documentElement.dataset.layout = L.id;
   wechsler.style.setProperty('--chrome-ink', L.chrome[0]);
@@ -3197,6 +4288,19 @@ function zeichneWahl(){
       + (ziel === 'telefon' ? ' Die eigene Handy-Oberfläche liegt weiterhin unter /mobil.' : '');
   }
 
+  /* Der Akzent gehoert zur gewaehlten Ansicht — bietet sie keinen oder nur
+     einen an, gibt es auch nichts zu waehlen. */
+  const akKasten = document.getElementById('wahlakzent');
+  const liste = (aktuell && aktuell.akzente) || [];
+  akKasten.hidden = liste.length < 2;
+  if (!akKasten.hidden){
+    const jetzt = akzentFuer(aktuell);
+    akKasten.innerHTML = '<span class="kap">Akzent</span>' + liste.map(x => `
+      <button type="button" class="${x.id === jetzt ? 'an' : ''}" data-ak="${esc(x.id)}">
+        <i style="background:${esc(x.farbe)}"></i>${esc(x.name)}</button>`).join('');
+    $$('#wahlakzent [data-ak]').forEach(el => el.onclick = () => setzeAkzent(el.dataset.ak));
+  }
+
   $$('#wahlgitter [data-l]').forEach(el => el.onclick = () => {
     zeigeWahl(false);
     zeigeLayout(el.dataset.l);
@@ -3285,6 +4389,22 @@ function hinweis(titel, text){
   document.getElementById('hinweis-titel').textContent = titel;
   document.getElementById('hinweis-text').innerHTML = text || '';
 }
+
+/* Einmalige Uebernahme aus mobile.html. Dort war ein Thema die ganze
+   Erscheinung und lag mit seinem Akzent in `musiklib:einstellungen`. Die
+   Kennungen sind absichtlich dieselben geblieben — die Uebernahme ist
+   deshalb eine Zuweisung und keine Umrechnung. */
+(function uebernahmeVomHandy(){
+  const e = restore('einstellungen', null);
+  if (!e || typeof e !== 'object') return;
+  if (akzent == null && typeof e.akzent === 'string'){
+    akzent = e.akzent; store('akzent', akzent);
+  }
+  const w = restore('layout', null);
+  const schon = w && typeof w === 'object' && w.telefon;
+  if (!schon && typeof e.thema === 'string' && LAYOUTS.some(L => L.id === e.thema))
+    merkeLayout(e.thema, 'telefon');
+})();
 
 async function start(){
   let daten = null;

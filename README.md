@@ -33,7 +33,7 @@ Keine Datenbank. Alles, was die App weiß, liegt in `library.json`.
 Der Dienst macht drei Dinge:
 
 1. **Scannen** – `*.mp3` rekursiv unter `/music` finden, ID3-Tags (Titel, Interpret, Album, Coverbild …) per `mutagen` auslesen, in eine flache `library.json` schreiben. Cover landen als separate Dateien in `data/covers/`.
-2. **Ausliefern** – Vier einzelne HTML-Dateien (je das ganze UI in einer Datei: `index.html` am Schreibtisch, `mobile.html` am Handy, `player.html` als Spieler für iPad und PC, `tag.html` als Spieler mit einem Knopf) plus JSON-Endpunkt.
+2. **Ausliefern** – Vier einzelne HTML-Dateien (je das ganze UI in einer Datei: `index.html` am Schreibtisch, `player.html` als Spieler für Handy, iPad und PC, `mobile.html` als bisherige Handy-Oberfläche unter `/mobil-alt`, `tag.html` als Spieler mit einem Knopf) plus JSON-Endpunkt.
 3. **Streamen** – MP3-Dateien per HTTP-Range, damit Vor- und Zurückspulen auf dem Handy flüssig läuft.
 
 ## Installation auf unraid
@@ -99,18 +99,21 @@ Oder im unraid-Dashboard beim `musiklib`-Container auf **WebUI** klicken — das
 
 Beim allerersten Start scannt die App automatisch. Bei einer Sammlung mit ein paar tausend Titeln dauert das ein paar Minuten. Der Punkt oben rechts in der App zeigt den Fortschritt.
 
-## Am Handy und am iPad
+## Am Handy: die bisherige Oberfläche
 
-Neben der Schreibtischseite liegt unter
+> **Seit der dritten Etappe der Zusammenlegung liefert `/mobil` den Spieler**
+> (nächster Abschnitt) — dessen fünf Telefon-Ansichten sind genau die
+> Erscheinungsbilder, die hier beschrieben sind. Die alte Oberfläche bleibt
+> vorerst erreichbar, als Rückweg:
 
 ```
-http://<unraid-ip>:8080/mobil
+http://<unraid-ip>:8080/mobil-alt
 ```
 
 eine eigene, hellere Oberfläche fürs Handy. Sie greift auf dieselbe Sammlung zu und **spielt auf dem Gerät selbst** — installiert wird nichts, es ist eine normale Webseite.
 
 - **Wie eine App:** in Safari auf _Teilen → Zum Home-Bildschirm_. Dann liegt ein Symbol auf dem Startbildschirm und die Seite startet ohne Browserleiste. Beim nächsten Öffnen ist automatisch die aktuelle Fassung da — es gibt nichts zu aktualisieren.
-- **Absichtlich keine automatische Weiterleitung:** iPad-Safari meldet sich als Schreibtisch-Browser, eine Erkennung nach Gerät ginge schief. Die Adresse `/mobil` wird also bewusst von Hand aufgerufen (bzw. einmal als Lesezeichen abgelegt).
+- **Absichtlich keine automatische Weiterleitung:** iPad-Safari meldet sich als Schreibtisch-Browser, eine Erkennung nach Gerät ginge schief. Die Adresse wird also bewusst von Hand aufgerufen (bzw. einmal als Lesezeichen abgelegt).
 - **Drei Reiter:** Sammlung, Suche, Jetzt läuft. Ein Titel startet die Wiedergabe und wechselt in „Jetzt läuft".
 - **Die Achse am rechten Rand** ist die ganze Warteschlange: eine Marke je Titel. Daran ziehen spult — auch über Titelgrenzen hinweg. Kurzes Antippen (oder der Zähler oben rechts) klappt die Titelliste auf.
 - **Einstellungen** über das Zahnrad oben rechts in der Sammlung. Sie gelten nur für dieses Gerät und bleiben gespeichert:
@@ -131,10 +134,10 @@ eine eigene, hellere Oberfläche fürs Handy. Sie greift auf dieselbe Sammlung z
 Neben Schreibtischseite und Handyseite liegt unter
 
 ```
-http://<unraid-ip>:8080/ipad      (dieselbe Seite auch unter /pc)
+http://<unraid-ip>:8080/ipad      (dieselbe Seite auch unter /pc und /mobil)
 ```
 
-der Spieler. Beide Adressen liefern dieselbe Datei — welche Ansicht passt, entscheidet nicht das Gerät, sondern man selbst. Seit der ersten Etappe der Zusammenlegung kann er alles, was auch die Schreibtischseite kann: sortieren, nach Interpreten gruppieren, neu einlesen und die übersprungenen Dateien nachsehen.
+der Spieler. Alle drei Adressen liefern dieselbe Datei — welche Ansicht passt, entscheidet nicht das Gerät, sondern man selbst. Seit der ersten Etappe der Zusammenlegung kann er alles, was auch die Schreibtischseite kann: sortieren, nach Interpreten gruppieren, neu einlesen und die übersprungenen Dateien nachsehen.
 
 - **Zwölf Ansichten zur Wahl.** Der kleine Knopf unten rechts (oder die Taste **L**) öffnet die **Einstellungen**. Was gerade läuft, läuft beim Wechsel weiter.
 - **Erst das Format, dann die Ansicht.** Ganz oben im Dialog steht *Format*: **Telefon**, **Tablet** oder **Schreibtisch**. Die Liste darunter zeigt nur die Ansichten, die für dieses Format gezeichnet **und nachgemessen** sind — jede wurde auf Telefon hoch, Tablet hoch, Tablet quer und Schreibtisch daraufhin geprüft, ob etwas über den Rand ragt und ob Abspieltaste und Bibliotheksknopf ganz im Bild sind. Zwei Fälle sind nicht an der Messung gescheitert, sondern am Hinsehen: *Werkstisch* verliert am Telefon die Titel aus seiner Liste, *Register* schiebt hochkant die Mitte der Platte aus dem Bild. Beide fehlen dort deshalb.
@@ -142,7 +145,9 @@ der Spieler. Beide Adressen liefern dieselbe Datei — welche Ansicht passt, ent
 - **Jedes Format merkt sich seine eigene Ansicht.** Am Schreibtisch *Pult*, am iPad *Konsole* — dieselbe Datei, zwei Gedächtnisse. Ohne das änderte ein Wechsel am PC das Aussehen auf dem iPad. Eine Wahl aus der Zeit davor wird einmalig übernommen.
 - **Die Adresse ist die Voreinstellung, keine Geräteerkennung.** `/ipad` startet im Format *Tablet*, `/pc` im Format *Schreibtisch*, `/mobil` im Format *Telefon*. Nur ein sehr kleiner Bildschirm sticht das: ein Telefon bleibt ein Telefon, gleich welche Adresse man tippt. Danach entscheidet allein die Wahl im Dialog.
 
-  Fürs Telefon ist bisher eine Ansicht gezeichnet (*Gerät*); die eigene Handy-Oberfläche liegt weiterhin unter `/mobil`.
+- **Fürs Telefon sind es sechs Ansichten.** Seit der dritten Etappe sind die fünf Erscheinungsbilder der alten Handy-Oberfläche ganz normale Ansichten mit Format *Telefon*: **Papier** (Elfenbein und Messing, die Warteschlange als Achse im rechten Rand), **Desert Rose** (Sand und Burgunder, dieselbe Achse waagerecht als Skala), **Kissen**, **Karte** und **Kiesel**. Dazu kommt *Gerät*. `/mobil` liefert deshalb jetzt diese Datei.
+- **Akzentfarben** gehören zur Ansicht, nicht zur Seite: Messing gibt es in *Papier*, Ton und Rosé in *Desert Rose*, und so fort. Sie stehen in den Einstellungen unter der Ansichtsliste — aber nur, wenn die gewählte Ansicht mehr als eine anbietet. *Karte* lässt genau eine Farbe zu und fragt deshalb nicht.
+- **Die alte Handy-Oberfläche bleibt** unter `http://<unraid-ip>:8080/mobil-alt` erreichbar, solange sich die neue beweisen muss. Beide teilen sich Sitzung, Lautstärke, Stumm, Zufall und Fortsetzung — man kann mitten im Lied hin- und herwechseln. Deine dortige Einstellung (Thema und Akzent) wird beim ersten Öffnen der neuen Seite einmalig übernommen.
 
   | Ansicht | Gedacht für | Gespult wird … |
   |---|---|---|
@@ -224,8 +229,8 @@ Der komplette Katalog liegt unterhalb von `DATA_DIR` (im Compose-File auf `/app/
 /mnt/user/appdata/musiklib/
 ├── app.py
 ├── index.html                 ← /
-├── mobile.html                ← /mobil
-├── player.html                ← /ipad und /pc
+├── mobile.html                ← /mobil-alt (bisherige Handy-Oberfläche)
+├── player.html                ← /mobil, /ipad und /pc
 ├── tag.html                   ← /tag
 ├── requirements.txt
 └── data/                      ← DATA_DIR, wird beim ersten Start automatisch angelegt

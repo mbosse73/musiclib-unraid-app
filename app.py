@@ -551,11 +551,23 @@ def index():
 
 @app.get("/mobil")
 def mobile():
-    """Handy-Oberflaeche — dieselben Endpunkte, eigene Bedienung.
+    """Handy-Oberflaeche — seit der Zusammenlegung dieselbe Datei wie /ipad.
 
     Bewusst keine Weiterleitung nach Geraetekennung: iPad-Safari meldet sich
-    als Schreibtisch, die Erkennung ginge also schief. Wer sie will, ruft
-    /mobil auf und legt sie auf den Home-Bildschirm.
+    als Schreibtisch, die Erkennung ginge also schief. Die Adresse ist eine
+    Voreinstellung, kein Sniffing — /mobil startet im Format „Telefon", und
+    danach entscheidet allein die Wahl in den Einstellungen.
+    """
+    return _seite("player.html")
+
+
+@app.get("/mobil-alt")
+def mobile_alt():
+    """Die alte Handy-Oberflaeche, solange die neue sich beweisen muss.
+
+    Sie teilt sich alle Schluessel im localStorage mit der neuen (Sitzung,
+    Lautstaerke, Stumm, Zufall, Fortsetzung), man kann also mitten im Lied
+    hin und her wechseln. Faellt weg, sobald mobile.html geht.
     """
     return _seite("mobile.html")
 

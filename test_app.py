@@ -292,26 +292,32 @@ def test_index_and_library_are_served(client):
     assert lib["album_count"] == 1
 
 
-def test_mobile_page_is_served(client):
-    c, app, data = client
-    r = c.get("/mobil")
-    assert r.status_code == 200
-    assert "text/html" in r.headers["content-type"]
-    # Ohne diese Zeile startet "Zum Home-Bildschirm" mit Safari-Leiste.
-    assert 'name="apple-mobile-web-app-capable"' in r.text
+def test_player_page_is_served_at_every_address(client):
+    """Eine Datei, drei Adressen — seit Etappe 3 gehoert /mobil dazu.
 
-
-def test_player_page_is_served_at_both_addresses(client):
-    """Eine Datei, zwei Adressen — /ipad und /pc liefern dieselbe Seite."""
+    Die Adresse ist nur die Voreinstellung des Formats; welche Ansicht
+    gebaut wird, entscheidet der Browser aus dem localStorage.
+    """
     c, app, data = client
     seiten = []
-    for pfad in ("/ipad", "/pc"):
+    for pfad in ("/ipad", "/pc", "/mobil"):
         r = c.get(pfad)
         assert r.status_code == 200
         assert "text/html" in r.headers["content-type"]
         seiten.append(r.text)
-    assert seiten[0] == seiten[1]
+    assert seiten[0] == seiten[1] == seiten[2]
     assert "<title>Musiklib · Spieler</title>" in seiten[0]
+    # Ohne diese Zeile startet "Zum Home-Bildschirm" mit Safari-Leiste.
+    assert 'name="apple-mobile-web-app-capable"' in seiten[0]
+
+
+def test_old_mobile_page_stays_reachable(client):
+    """Die alte Handy-Oberflaeche bleibt der Rueckweg, solange sie mitkommt."""
+    c, app, data = client
+    r = c.get("/mobil-alt")
+    assert r.status_code == 200
+    assert "<title>Musiklib</title>" in r.text
+    assert 'name="apple-mobile-web-app-capable"' in r.text
 
 
 def test_missing_page_file_says_which_one(client, tmp_path, monkeypatch):

@@ -433,7 +433,9 @@ def phone(browser, server):
     pg = context.new_page()
     pg.errors = []
     pg.on("pageerror", lambda e: pg.errors.append(str(e)))
-    pg.goto(server + "/mobil", wait_until="domcontentloaded")
+    # /mobil zeigt seit Etappe 3 player.html; die alte Oberflaeche liegt
+    # unter /mobil-alt und wird geprueft, solange sie ausgeliefert wird.
+    pg.goto(server + "/mobil-alt", wait_until="domcontentloaded")
     pg.wait_for_selector(".card")
     yield pg
     assert pg.errors == [], f"JavaScript-Fehler auf der Seite: {pg.errors}"
@@ -824,10 +826,15 @@ def layout_ids(pg):
     return pg.evaluate("LAYOUTS.map(l => l.id)")
 
 
-def test_player_offers_twelve_layouts(player):
+def test_player_layout_ids_are_unique_and_every_target_is_served(player):
+    """Eine feste Zahl waere hier eine Bremse, keine Zusicherung — die Liste
+    waechst mit jedem Blatt. Geprueft wird, was gelten muss: eindeutige
+    Kennungen, und fuer jedes Format mindestens eine Ansicht."""
     ids = layout_ids(player)
-    assert len(ids) == 12
-    assert len(set(ids)) == 12, "Kennungen muessen eindeutig sein"
+    assert len(set(ids)) == len(ids), "Kennungen muessen eindeutig sein"
+    for z in player.evaluate("ZIELE.map(z => z.id)"):
+        n = player.evaluate("z => LAYOUTS.filter(L => L.ziele.includes(z)).length", z)
+        assert n >= 1, f"Format {z} hat keine einzige Ansicht"
     assert player.title() == "Musiklib · Spieler"
 
 
@@ -1191,6 +1198,192 @@ def test_player_every_layout_offers_transport_seeking_and_settings(player):
         assert player.locator("#wahl").is_visible(), f"{lid}: Einstellungen öffnen nicht"
         player.keyboard.press("Escape")
     player.evaluate("setzeAlleZeigen(false)")
+
+
+# --------------------------------------------------------------------------
+# Spieler: die fuenf Oberflaechen vom Telefon
+#
+# Etappe 3 — was in mobile.html ein „Thema" war, ist hier eine Ansicht mit
+# Ziel „Telefon". Derselbe Unterbau, dieselbe Blende, dieselben Schluessel.
+# --------------------------------------------------------------------------
+
+TELEFON_LAYOUTS = ["papier", "wueste", "kissen", "karte", "kiesel"]
+
+
+@pytest.fixture
+def telefon(browser, server):
+    """Eigener Kontext im Telefonformat, auf /mobil — mit Beruehrung."""
+    context = browser.new_context(viewport={"width": 390, "height": 844},
+                                  device_scale_factor=2, is_mobile=True, has_touch=True)
+    pg = context.new_page()
+    pg.errors = []
+    pg.on("pageerror", lambda e: pg.errors.append(str(e)))
+    pg.goto(server + "/mobil", wait_until="domcontentloaded")
+    pg.wait_for_function("typeof LAYOUTS !== 'undefined' && document.querySelector('#buehne > *')")
+    yield pg
+    assert pg.errors == [], f"JavaScript-Fehler auf der Seite: {pg.errors}"
+    context.close()
+
+
+def test_phone_address_opens_a_phone_view(telefon):
+    """/mobil ist seit Etappe 3 dieselbe Datei — nur im Format Telefon."""
+    assert telefon.evaluate("ziel") == "telefon"
+    assert telefon.evaluate("aktuell.ziele.includes('telefon')")
+    assert telefon.evaluate("LAYOUTS.filter(L => L.ziele.includes('telefon')).map(L => L.id)") \
+        == ["geraet"] + TELEFON_LAYOUTS
+
+
+@pytest.mark.parametrize("lid", TELEFON_LAYOUTS)
+def test_phone_layout_builds_plays_and_stays_inside_the_screen(telefon, lid):
+    telefon.evaluate("id => zeigeLayout(id)", lid)
+    telefon.wait_for_selector("#buehne [data-pp]")
+    telefon.click("#buehne [data-pp]")
+    telefon.wait_for_function("!ton.paused", timeout=5000)
+    telefon.click("#buehne [data-pp]")
+    telefon.wait_for_function("ton.paused", timeout=5000)
+
+    # Auf einem Telefon ist seitliches Wegrutschen der haeufigste Fehler.
+    raus = telefon.evaluate("""() => {
+      const w = innerWidth, h = innerHeight;
+      const wurzel = document.querySelector('#buehne > *');
+      const raus = [];
+      for (const el of wurzel.querySelectorAll('*')){
+        const b = el.getBoundingClientRect();
+        if (!b.width || !b.height) continue;
+        const cs = getComputedStyle(el);
+        if (cs.position === 'absolute' && cs.opacity === '0') continue;
+        if (b.right > w + 1.5 || b.left < -1.5 || b.bottom > h + 1.5 || b.top < -1.5)
+          raus.push(el.className.toString().slice(0, 40));
+      }
+      return raus;
+    }""")
+    assert raus == [], f"{lid} ragt aus dem Bildschirm: {raus}"
+
+
+@pytest.mark.parametrize("lid", TELEFON_LAYOUTS)
+def test_phone_layout_reaches_the_collection_and_plays_from_it(telefon, lid):
+    telefon.evaluate("id => zeigeLayout(id)", lid)
+    telefon.click("#buehne [data-bib]")
+    telefon.wait_for_timeout(300)
+    telefon.fill("#buehne [data-suche]", "Mensch")
+    telefon.wait_for_timeout(200)
+    zeilen = telefon.locator("#buehne [data-bibliothek] [data-alb]")
+    assert zeilen.count() == 1, f"{lid}: die Suche findet das Album nicht"
+    zeilen.first.click()
+    telefon.wait_for_function("deck.album && deck.album.t === 'Die Mensch-Maschine'", timeout=5000)
+    telefon.evaluate("ton.pause()")
+
+
+def test_phone_collection_button_does_not_raise_the_keyboard(telefon):
+    """Bloettern ist kein Suchen: der linke Knopf setzt keinen Fokus, der
+    rechte schon. Auf einem Telefon ist das der Unterschied zwischen einer
+    ruhigen Liste und einer halb verdeckten."""
+    telefon.evaluate("zeigeLayout('kissen')")
+    telefon.click("#buehne [data-bib]")
+    telefon.wait_for_timeout(250)
+    assert telefon.evaluate(
+        "document.activeElement === document.querySelector('#buehne [data-suche]')") is False
+    telefon.keyboard.press("Escape")
+    telefon.wait_for_timeout(200)
+    telefon.click("#buehne [data-suche-auf]")
+    telefon.wait_for_timeout(250)
+    assert telefon.evaluate(
+        "document.activeElement === document.querySelector('#buehne [data-suche]')") is True
+    telefon.keyboard.press("Escape")
+
+
+def test_phone_rail_unfolds_the_queue_on_a_tap(telefon):
+    """Am Rand sind Tippen und Ziehen zwei Dinge — ein Tippen darf die
+    Wiedergabe nicht bewegen, sondern klappt die Warteschlange auf."""
+    telefon.evaluate("""() => {
+      zeigeLayout('papier');
+      const a = ALBUMS.find(x => x.t === 'Autobahn');
+      deck.ladeAlbum(a, 0); ton.pause();
+    }""")
+    telefon.wait_for_timeout(300)
+    vorher = telefon.evaluate("deck.pos")
+    kasten = telefon.locator("#buehne [data-rail]").bounding_box()
+    telefon.mouse.click(kasten["x"] + kasten["width"] / 2, kasten["y"] + kasten["height"] * 0.7)
+    telefon.wait_for_timeout(350)
+    assert telefon.locator("#buehne .qitem").count() == 2
+    assert telefon.evaluate("document.querySelector('#buehne > *').classList.contains('offen')")
+    assert abs(telefon.evaluate("deck.pos") - vorher) < 1.5, "Tippen darf nicht spulen"
+
+
+def test_phone_rail_seeks_across_a_track_boundary(telefon):
+    """Gezogen wird ueber die ganze Warteschlange, angewendet beim Loslassen."""
+    telefon.evaluate("""() => {
+      zeigeLayout('papier');
+      const a = ALBUMS.find(x => x.t === 'Autobahn');
+      deck.ladeAlbum(a, 0); ton.pause();
+    }""")
+    telefon.wait_for_timeout(300)
+    kasten = telefon.locator("#buehne [data-rail]").bounding_box()
+    x = kasten["x"] + kasten["width"] / 2
+    telefon.mouse.move(x, kasten["y"] + 10)
+    telefon.mouse.down()
+    telefon.mouse.move(x, kasten["y"] + kasten["height"] * 0.8, steps=10)
+    telefon.wait_for_timeout(120)
+    assert telefon.evaluate("deck.qi") == 0, "waehrend des Zuges bleibt der Ton, wo er ist"
+    telefon.mouse.up()
+    telefon.wait_for_function("deck.qi === 1", timeout=5000)
+    telefon.evaluate("ton.pause()")
+
+
+def test_phone_accent_switches_and_survives_reload(telefon, server):
+    telefon.evaluate("zeigeLayout('papier')")
+    telefon.evaluate("zeigeWahl(true)")
+    telefon.click("#wahlakzent [data-ak='petrol']")
+    assert telefon.evaluate("localStorage.getItem('musiklib:akzent')") == '"petrol"'
+    assert telefon.evaluate(
+        "document.querySelector('#buehne > *').classList.contains('ak-petrol')")
+    telefon.evaluate("zeigeWahl(false)")
+
+    telefon.reload(wait_until="domcontentloaded")
+    telefon.wait_for_function("typeof aktuell !== 'undefined' && aktuell")
+    assert telefon.evaluate(
+        "document.querySelector('#buehne > *').classList.contains('ak-petrol')")
+
+    # Ein Akzent gehoert zum Layout: „Karte" laesst genau eine Farbe zu und
+    # bietet deshalb keine Wahl an.
+    telefon.evaluate("zeigeLayout('karte'); zeigeWahl(true)")
+    assert telefon.locator("#wahlakzent").is_visible() is False
+    telefon.evaluate("zeigeWahl(false)")
+
+
+def test_phone_takes_over_the_old_mobile_settings(telefon, server):
+    """Wer am Handy „Kiesel" mit „Stahl" eingestellt hatte, findet beides
+    wieder vor — die Kennungen sind absichtlich dieselben geblieben."""
+    telefon.evaluate("""() => {
+      localStorage.clear();
+      localStorage.setItem('musiklib:einstellungen',
+        JSON.stringify({thema:'kiesel', akzent:'stahl', leiste:'dauerhaft'}));
+    }""")
+    telefon.reload(wait_until="domcontentloaded")
+    telefon.wait_for_function("typeof aktuell !== 'undefined' && aktuell")
+    assert telefon.evaluate("aktuell.id") == "kiesel"
+    assert telefon.evaluate(
+        "document.querySelector('#buehne > *').classList.contains('ak-stahl')")
+
+
+def test_phone_shares_the_session_with_the_old_mobile_page(telefon, server):
+    """Solange beide ausgeliefert werden, laeuft die Sitzung zwischen ihnen
+    weiter — dieselben Schluessel, dieselbe Form."""
+    telefon.evaluate("""() => {
+      zeigeLayout('papier');
+      const a = ALBUMS.find(x => x.t === 'Autobahn');
+      deck.ladeAlbum(a, 1);
+    }""")
+    telefon.wait_for_function("!ton.paused", timeout=5000)
+    telefon.evaluate("ton.pause()")
+    gespeichert = json.loads(telefon.evaluate("localStorage.getItem('musiklib:session')"))
+    assert gespeichert["qIndex"] == 1
+    assert len(gespeichert["items"][0]) == 2
+
+    telefon.goto(server + "/mobil-alt", wait_until="domcontentloaded")
+    telefon.wait_for_selector(".card")
+    telefon.wait_for_function("document.getElementById('np-title').textContent !== 'Nichts ausgewählt'")
+    assert telefon.inner_text("#np-title") == "Kometenmelodie"
 
 
 def test_player_shuffle_from_the_dialog_uses_the_shared_key(player):
