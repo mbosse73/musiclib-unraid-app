@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#EEE9DF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Album des Tages">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23EEE9DF'/%3E%3Ccircle cx='16' cy='16' r='9' fill='%23C6331B'/%3E%3C/svg%3E">
+<title>Musiklib · Album des Tages</title>
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Musiklib — Album des Tages.
+
+   Die vierte Oberflaeche, und die kleinste: ein Spieler mit genau einem
+   Knopf. Er waehlt nichts aus. Er spielt das Album des Tages — per Zufall
+   aus der Sammlung, den ganzen Tag lang immer wieder, am naechsten Tag ein
+   anderes. Entworfen in mockups/player/14-album-des-tages.html (Variante 1),
+   beauftragt in mockups/player/14-auftrag.md.
+
+   Was hier bewusst fehlt, fehlt nicht aus Sparsamkeit: keine Bibliothek,
+   keine Suche, kein Scan, kein Weiter, kein Zurueck, kein Spulgriff, keine
+   Cover. Wer waehlen will, geht auf /mobil, /ipad oder /.
+
+   Aus dem Entwurf sind die festen Masse verschwunden: das Blatt war fuer
+   390 x 844 gezeichnet, hier steht alles in min()/clamp() ueber
+   Viewporteinheiten — dieselbe Karte auf einem iPhone SE, einem iPad und
+   in einem Schreibtischfenster.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --papier:#EEE9DF; --tinte:#1A1714; --tinte-2:#6E655A; --tinte-3:#A79C8D;
+  --zinnober:#C6331B; --linie-2:rgba(26,23,20,.13);
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  --scheibe:min(64vw,40vh,340px);
+  --rand:clamp(22px,7vw,40px);
+}
+
+html,body{height:100%}
+body{
+  background:var(--papier);color:var(--tinte);font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;overscroll-behavior:none;
+  -webkit-user-select:none;user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+:focus-visible{outline:2px solid var(--zinnober);outline-offset:6px}
+a{color:var(--zinnober)}
+
+/* Die Karte fuellt den Schirm. Oben die Scheibe in dem, was uebrig bleibt,
+   unten der Text — die sichere Flaeche des Geraets ist eingerechnet, sonst
+   sitzt die Uhr des iPhones auf der ersten Zeile. */
+.karte{
+  position:fixed;inset:0;display:grid;grid-template-rows:1fr auto;
+  padding:calc(env(safe-area-inset-top) + 20px) calc(env(safe-area-inset-right) + var(--rand))
+          calc(env(safe-area-inset-bottom) + 34px) calc(env(safe-area-inset-left) + var(--rand));
+}
+
+/* Korn: das Papier der Vorlage ist nicht glatt. Liegt ueber allem und faengt
+   nichts ab — sonst waere der Knopf nicht mehr zu treffen. */
+.korn{position:fixed;inset:0;z-index:50;pointer-events:none;opacity:.22;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ── Die Scheibe: der einzige Knopf ──
+   Voll und rot, solange Ton laeuft. Angehalten bleibt der Kreis stehen, wird
+   aber leer — Papier mit roter Linie und einem Dreieck darin. Ein Zustand,
+   den man aus zwei Metern erkennt, ohne ein Zeichen zu lesen. */
+.mitte{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0}
+/* Kerben und Hinweis haengen unter der Scheibe, ohne Platz zu nehmen: sonst
+   sitzt die Scheibe sichtbar zu hoch, weil zwei unsichtbare Zeilen
+   mitgerechnet werden. */
+.unter{height:0;overflow:visible;display:flex;flex-direction:column;align-items:center;width:100%}
+
+.sonne{position:relative;flex:none;width:var(--scheibe);height:var(--scheibe);border-radius:50%;
+  border:none;background:none;padding:0;display:block;cursor:pointer;color:inherit;
+  touch-action:manipulation}
+.sonne .fl{position:absolute;inset:0;border-radius:50%;background:var(--zinnober);
+  transition:background .34s ease,box-shadow .34s ease,transform .18s ease}
+.sonne .zeichen{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.86);
+  color:var(--zinnober);opacity:0;transition:opacity .28s ease,transform .28s ease;
+  pointer-events:none;line-height:0}
+.sonne .zeichen svg{width:calc(var(--scheibe) * .22);height:calc(var(--scheibe) * .22)}
+.aus .sonne .fl{background:transparent;box-shadow:inset 0 0 0 1.6px var(--zinnober)}
+.aus .sonne .zeichen{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.sonne:active .fl{transform:scale(.972)}
+.sonne[disabled]{cursor:default}
+.aus.leer .sonne .fl{box-shadow:inset 0 0 0 1.6px var(--linie-2)}
+.aus.leer .sonne .zeichen{color:var(--tinte-3)}
+
+/* Fortschritt im Album als Ring um die Scheibe — ein Umlauf ist ein Album. */
+.ring{position:absolute;inset:calc(var(--scheibe) * -.075);transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:.52}
+.ring .bett{stroke:var(--linie-2)}
+.ring .bogen{stroke:var(--tinte);stroke-linecap:butt;transition:stroke-dashoffset .3s linear}
+.leer .ring{opacity:0}
+
+/* ── Fuenf Kerben: die einzige Ausnahme des Tages ──
+   Sie erscheinen erst beim zweiten Tippen. Wer nur abspielt, sieht sie nie.
+   Ihr Platz ist immer da, sonst spraenge die Scheibe beim Tippen hoch. */
+.kerben{margin-top:clamp(22px,4vh,40px);display:flex;gap:10px;position:relative;
+  opacity:0;transition:opacity .2s ease}
+.kerben.sichtbar{opacity:1}
+.kerben i{width:17px;height:2px;background:var(--linie-2);display:block;transition:background .15s}
+.kerben i.an{background:var(--zinnober)}
+.kerben.verbraucht i{background:var(--linie-2)}
+.kerben.verbraucht::after{content:'';position:absolute;left:-6px;right:-6px;top:0;height:1px;
+  background:var(--tinte-3);transform:rotate(-4deg)}
+
+.hinweis{margin-top:14px;min-height:1.2em;text-align:center;
+  font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--tinte-3);
+  opacity:0;transition:opacity .3s ease}
+.hinweis.sichtbar{opacity:1}
+
+/* ── Die drei Zeilen ── */
+.fuss{padding-top:24px}
+.fuss .tages{font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--tinte-3);
+  margin-bottom:12px}
+.fuss h1{font-size:clamp(23px,7.2vw,34px);font-weight:800;letter-spacing:.005em;
+  text-transform:uppercase;line-height:1.08;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.fuss .ar{margin-top:11px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--tinte-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fuss .tl{margin-top:7px;font-size:13.5px;color:var(--tinte-2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Tageswechsel: die Scheibe geht unter und kommt wieder herauf. Es ist die
+   einzige Bewegung, die diese Seite von sich aus macht. */
+@keyframes sonnenwechsel{
+  0%{transform:translateY(0) scale(1);opacity:1}
+  42%{transform:translateY(32%) scale(.72);opacity:0}
+  43%{transform:translateY(-32%) scale(.72);opacity:0}
+  100%{transform:translateY(0) scale(1);opacity:1}}
+.sonne.wechsel{animation:sonnenwechsel .82s cubic-bezier(.4,0,.2,1)}
+
+@media (prefers-reduced-motion:reduce){
+  .sonne.wechsel{animation:none}
+  .ring .bogen,.sonne .fl,.sonne .zeichen,.hinweis,.kerben{transition:none}
+}
+/* Ein liegendes Telefon hat keine Hoehe zu verschenken. */
+@media (orientation:landscape) and (max-height:520px){
+  :root{--scheibe:min(38vh,220px)}
+  .kerben{margin-top:16px}
+  .fuss{padding-top:14px}
+}
+</style>
+</head>
+<body>
+
+<main class="karte">
+  <div class="mitte">
+    <button class="sonne" id="knopf" type="button" aria-pressed="false" aria-label="Abspielen">
+      <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+        <circle class="bett" cx="50" cy="50" r="48.5"></circle>
+        <circle class="bogen" id="bogen" cx="50" cy="50" r="48.5"></circle>
+      </svg>
+      <span class="fl"></span>
+      <span class="zeichen"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M8 5v14l11-7z"/></svg></span>
+    </button>
+    <div class="unter">
+      <div class="kerben" id="kerben" aria-hidden="true"></div>
+      <p class="hinweis" id="hinweis" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div class="fuss">
+    <p class="tages" id="marke">Album des Tages</p>
+    <h1 id="alb">Sammlung wird geladen …</h1>
+    <p class="ar" id="ar"></p>
+    <p class="tl" id="tl"></p>
+  </div>
+</main>
+<div class="korn"></div>
+
+<audio id="ton" preload="none"></audio>
+
+<script>
+'use strict';
+/* ══════════════════════════════════════════════════════════════════════════
+   Der Unterbau ist derselbe wie in player.html — Warteschlange, Sitzung und
+   vor allem die drei Stellen, an denen Wiedergabe auf einem iPhone von
+   selbst aufhoert (abgewiesener Titelwechsel, haengender Strom, Vorladen).
+   Hier zaehlt das mehr als anderswo: ein Spieler ohne zweiten Knopf hat
+   keinen Weg, sich von Hand zu erholen.
+
+   Neu ist nur, was das Album des Tages ausmacht — Abschnitt „Der Tag".
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Sitzung ──────────────────────────────────────────────────────────────
+   Dieselben Schluessel wie die anderen drei Oberflaechen, in derselben Form.
+   `shuffle` wird nicht gelesen: ein Album des Tages in zufaelliger Reihen-
+   folge waere ein anderes Versprechen. `fortsetzung` auch nicht — die
+   Fortsetzung dieser Seite ist der Tag. */
+const STORE = 'musiklib:';
+function store(key, value){ try{ localStorage.setItem(STORE+key, JSON.stringify(value)); }catch{} }
+function restore(key, fallback){
+  try{ const raw = localStorage.getItem(STORE+key); return raw === null ? fallback : JSON.parse(raw); }
+  catch{ return fallback; }
+}
+
+const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
+const $ = s => document.getElementById(s);
+
+const knopf = $('knopf'), ton = $('ton');
+
+/* ══ Sammlung ══════════════════════════════════════════════════════════════
+   /api/library kommt flach und unveraendert aus library.json. Einmal in die
+   Form gebracht, die die Entwuerfe benutzen — danach fasst nichts mehr die
+   Rohdaten an. Cover werden hier nicht gelesen: das Album ist ein Name. */
+const ALBUMS = [], TRACKS = Object.create(null);
+
+function uebernimm(daten){
+  ALBUMS.length = 0;
+  for (const k in TRACKS) delete TRACKS[k];
+  const alle = [];
+  ((daten && daten.albums) || []).forEach(al => {
+    const a = {id: al.id, t: al.title || 'Unbekanntes Album',
+               ar: al.artist || 'Unbekannter Interpret', ids: []};
+    (al.tracks || []).forEach((t,i) => {
+      const o = {id: t.id, t: t.title || 'Ohne Titel', d: Number(t.duration) || 0,
+                 al: a.id, no: i+1};
+      a.ids.push(o.id); TRACKS[o.id] = o; alle.push(o);
+    });
+    if (a.ids.length) ALBUMS.push(a);
+  });
+  /* Ein Titel ohne Laenge reisst den Ring ein — er bekommt die mittlere
+     Laenge der Sammlung, wie auf den anderen Oberflaechen auch. */
+  const echte = alle.filter(t => t.d > 0);
+  const mittel = echte.length ? echte.reduce((s,t) => s+t.d, 0) / echte.length : 240;
+  alle.forEach(t => { if (!(t.d > 0)) t.d = Math.round(mittel); });
+  /* Feste Reihenfolge, sonst haengt die Wahl des Tages an der Laune der
+     Sammlung. Dieselbe Sortierung wie in player.html. */
+  ALBUMS.sort((x,y) => x.ar.localeCompare(y.ar,'de') || x.t.localeCompare(y.t,'de'));
+}
+
+/* ══ Laufwerk ══════════════════════════════════════════════════════════════
+   Der Abspielzustand kommt aus den Ereignissen des <audio>, nie aus einer
+   Annahme neben dem Aufruf — sonst laeuft die Anzeige auseinander, sobald
+   von aussen gesteuert wird (Sperrbildschirm, Medientasten, abgewiesenes
+   Autoplay). Dieselbe Regel wie in index.html. */
+const deck = {
+  queue: [], qi: -1, _pending: 0, fehler: '',
+  get track(){ return TRACKS[this.queue[this.qi]] || null; },
+  get dur(){
+    const d = ton.duration;
+    if (isFinite(d) && d > 0) return d;
+    const t = this.track; return t ? t.d : 0;
+  },
+  get pos(){ return ton.currentTime || 0; },
+  get playing(){ return !!ton.src && !ton.paused && !ton.ended; },
+  get offs(){ let o = [], s = 0; for (const id of this.queue){ o.push(s); s += (TRACKS[id]||{d:0}).d; } return o; },
+  get total(){ return this.queue.reduce((s,id) => s + (TRACKS[id]||{d:0}).d, 0); },
+  get gpos(){ return (this.offs[this.qi] || 0) + this.pos; },
+
+  /* Was gespielt wird, aendert genau diese eine Stelle. */
+  spiele(autoplay = true, ab = 0){
+    const t = this.track;
+    if (!t){ zeichne(); return; }
+    this.fehler = '';
+    this._pending = ab || 0;
+    ton.src = `/api/stream/${encodeURIComponent(t.id)}`;
+    heilungAbsagen();
+    if (autoplay){
+      tonGewuenscht = true; nachVersuche = 0;
+      ton.play().catch(() => {});
+      nachdruck();
+    }
+    if ('mediaSession' in navigator){
+      try{
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: t.t, artist: albumJetzt ? albumJetzt.ar : '',
+          album: albumJetzt ? albumJetzt.t : '',
+        });
+      }catch{}
+    }
+    zeichne();
+    sitzungSichern();
+  },
+  toggle(){
+    if (!this.track) return;
+    if (!ton.src){ this.spiele(true); return; }
+    if (ton.paused) this.play();
+    else { nachdruckEnde(); heilungAbsagen(); ton.pause(); }
+  },
+  play(){
+    if (!ton.src){ this.spiele(true); return; }
+    tonGewuenscht = true; nachVersuche = 0;
+    ton.play().catch(() => {});
+    nachdruck();
+  },
+};
+
+ton.volume = clamp(restore('volume', 1), 0, 1);
+ton.muted = restore('muted', false);
+
+ton.addEventListener('play',  () => {
+  zeichne(); wachHalten();
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+});
+ton.addEventListener('pause', () => {
+  zeichne(); sitzungSichern(); wachHalten();
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+});
+ton.addEventListener('loadedmetadata', () => {
+  if (deck._pending > 0 && isFinite(ton.duration)){
+    try{ ton.currentTime = Math.min(deck._pending, ton.duration - 1); }catch{}
+  }
+  deck._pending = 0;
+  zeichne();
+});
+
+/* Am Ende eines Titels: der naechste. Am Ende des Albums: wieder von vorn —
+   die Warteschlange dieser Seite endet nie, sie endet mit dem Tag. Und wenn
+   waehrend des Titels Mitternacht war, ist jetzt der Augenblick dafuer. */
+ton.addEventListener('ended', () => {
+  if (tagWartet){ tagWartet = false; wechsleAufNeuenTag(true); return; }
+  deck.qi = deck.queue.length ? (deck.qi + 1) % deck.queue.length : -1;
+  deck.spiele(true);
+});
+
+/* ══ Nachdruck beim Titelwechsel ═══════════════════════════════════════════
+   iOS weist play() im Hintergrund ab, weil eine neue Quelle als neuer Start
+   gilt und nicht als Fortsetzung. `tonGewuenscht` unterscheidet die
+   abgewiesene Wiedergabe von einer gewollten Pause — ohne das wuerde die
+   Nachfrage gegen den eigenen Knopf arbeiten. */
+let tonGewuenscht = false;
+let NACH_VERZUG = 1200;        // veraenderlich, damit der Test nicht wartet
+const NACH_MAX = 8;
+let nachTimer = 0, nachVersuche = 0;
+
+function nachdruck(){
+  clearTimeout(nachTimer);
+  if (!tonGewuenscht) return;
+  nachTimer = setTimeout(() => {
+    nachTimer = 0;
+    if (!tonGewuenscht || !ton.src || !ton.paused) return;
+    if (++nachVersuche > NACH_MAX) return;
+    ton.play().catch(() => {});
+    nachdruck();
+  }, NACH_VERZUG);
+}
+function nachdruckEnde(){ tonGewuenscht = false; clearTimeout(nachTimer); nachTimer = 0; }
+
+/* ══ Wiederanlauf ══════════════════════════════════════════════════════════
+   Gedrosseltes WLAN, schlafende Platte im NAS: das Element meldet „waiting"
+   und bleibt stehen. Jeder Fortschritt sagt den Zeitgeber wieder ab. */
+let HEIL_VERZUG = 6000;        // veraenderlich, damit der Test nicht wartet
+const HEIL_MAX = 5;
+let heilTimer = 0, heilVersuche = 0;
+
+function heilungPlanen(ms){
+  clearTimeout(heilTimer);
+  heilTimer = setTimeout(versucheWeiter, ms || HEIL_VERZUG);
+}
+function heilungAbsagen(){ clearTimeout(heilTimer); heilTimer = 0; heilVersuche = 0; }
+function versucheWeiter(){
+  heilTimer = 0;
+  if (!ton.src || !deck.track) return;
+  if (heilVersuche >= HEIL_MAX){
+    deck.fehler = 'Verbindung abgerissen — Seite neu laden';
+    zeichne();
+    return;
+  }
+  heilVersuche++;
+  deck._pending = ton.currentTime || 0;    // an derselben Stelle weiter
+  try{ ton.load(); }catch{}
+  ton.play().catch(() => {});
+  heilungPlanen();
+}
+ton.addEventListener('waiting', () => heilungPlanen());
+ton.addEventListener('stalled', () => heilungPlanen());
+ton.addEventListener('playing', () => { heilungAbsagen(); nachVersuche = 0; });
+/* Ein Titel, dessen Datei seit dem letzten Scan verschoben wurde, liefert
+   404 — dann hilft kein neuer Versuch. Ein Netzfehler dagegen schon. */
+ton.addEventListener('error', () => {
+  if (!ton.src) return;
+  const code = ton.error && ton.error.code;
+  if (code === 2 || code === 3){ heilungPlanen(1500); return; }
+  heilungAbsagen();
+  deck.fehler = 'Titel nicht abspielbar — am Schreibtisch neu scannen';
+  zeichne();
+});
+
+/* ══ Vorladen ══════════════════════════════════════════════════════════════
+   25 Sekunden vor dem Ende die ersten 256 KB des naechsten Titels holen und
+   wegwerfen: das weckt die Platte, bevor sie gebraucht wird. */
+const VORLAUF = 25;
+let vorgeladen = null;
+function ladeVor(){
+  if (!deck.queue.length) return;
+  const naechst = deck.queue[(deck.qi + 1) % deck.queue.length];
+  if (!naechst || vorgeladen === naechst) return;
+  vorgeladen = naechst;
+  fetch(`/api/stream/${encodeURIComponent(naechst)}`, {headers:{Range:'bytes=0-262143'}})
+    .then(r => r.arrayBuffer()).catch(() => {});
+}
+
+ton.addEventListener('timeupdate', () => {
+  heilungAbsagen();                        // Fortschritt heisst: alles in Ordnung
+  const d = deck.dur;
+  if (d && d - deck.pos < VORLAUF) ladeVor();
+  zeichne();
+});
+setInterval(() => { if (deck.playing) zeichne(); }, 250);
+setInterval(sitzungSichern, 5000);
+addEventListener('pagehide', sitzungSichern);
+
+/* ══ Bildschirm anlassen ═══════════════════════════════════════════════════
+   Solange Ton laeuft und `musiklib:wach` es erlaubt, bleibt der Bildschirm
+   an — das ist es, was iOS davon abhaelt, bei dunklem Schirm das WLAN zu
+   drosseln. Diese Seite liest den Schluessel nur; gestellt wird er dort, wo
+   es dafuer eine Einstellung gibt (/mobil, /ipad). Ein zweiter Knopf kommt
+   hier nicht dazu, auch kein verborgener. */
+let wachSchloss = null;
+function wachGewuenscht(){ return restore('wach', false) === true && !ton.paused && !!ton.src; }
+async function wachHalten(){
+  try{
+    if (wachGewuenscht()){
+      if (!wachSchloss && 'wakeLock' in navigator && document.visibilityState === 'visible'){
+        wachSchloss = await navigator.wakeLock.request('screen');
+        wachSchloss.addEventListener('release', () => { wachSchloss = null; });
+      }
+    } else if (wachSchloss){
+      const s = wachSchloss; wachSchloss = null; await s.release();
+    }
+  }catch{ wachSchloss = null; }
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') return;
+  wachHalten();
+  nachVersuche = 0;            // ein im Hintergrund abgewiesener Wechsel
+  nachdruck();                 // bekommt jetzt seine Gelegenheit
+  pruefeTag();                 // und vielleicht ist inzwischen ein neuer Tag
+});
+
+if ('mediaSession' in navigator){
+  /* Nur zwei Griffe: der Sperrbildschirm bedient denselben einen Knopf.
+     Weiter und Zurueck gibt es hier nicht — auch nicht ueber Umwege. */
+  try{ navigator.mediaSession.setActionHandler('play',  () => deck.play()); }catch{}
+  try{ navigator.mediaSession.setActionHandler('pause', () => { nachdruckEnde(); ton.pause(); }); }catch{}
+}
+
+function sitzungSichern(){
+  if (deck.qi < 0 || !deck.queue.length) return;
+  const stuecke = deck.queue.map(id => {
+    const t = TRACKS[id]; return t ? [t.al, t.id] : null;
+  }).filter(Boolean);
+  if (!stuecke.length) return;
+  store('session', {items: stuecke, qIndex: deck.qi, position: Math.floor(deck.pos || 0)});
+}
+
+/* Wiederhergestellt wird nur, was zum Album des Tages gehoert: Eine Sitzung
+   von gestern — oder von einer anderen Oberflaeche mit einem anderen Album —
+   wird verworfen, sonst spielte diese Seite etwas anderes als das, was sie
+   anzeigt. Losgespielt wird nie von allein. */
+function sitzungHolen(album){
+  const s = restore('session', null);
+  if (!s || !Array.isArray(s.items) || !s.items.length) return false;
+  if (!s.items.every(([albumId]) => albumId === album.id)) return false;
+  const ids = [];
+  let neu = 0;
+  s.items.forEach(([albumId, trackId], i) => {
+    const t = TRACKS[trackId];
+    if (!t || t.al !== albumId) return;
+    if (i === s.qIndex) neu = ids.length;
+    ids.push(trackId);
+  });
+  if (!ids.length) return false;
+  deck.queue = ids;
+  deck.qi = Math.min(neu, ids.length - 1);
+  ton.preload = 'metadata';
+  deck.spiele(false, s.position || 0);
+  return true;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Der Tag
+   ══════════════════════════════════════════════════════════════════════════
+   Das Album des Tages ist berechnet, nicht gewuerfelt: FNV-1a ueber das
+   Datum, modulo der Laenge der Sammlung. Dieselbe Zahl auf jedem Geraet,
+   ohne Server, ohne neues Feld in library.json.
+
+   Gespeichert wird es trotzdem, unter `musiklib:tag` — der gespeicherte
+   Wert gewinnt, solange er sich aufloesen laesst. Sonst tauschte ein Scan
+   mitten am Tag das Album unter den Fuessen aus, blos weil sich die Laenge
+   der Liste geaendert hat.                                                */
+
+let heute = () => new Date();          // veraenderlich, damit der Test kein Datum erfinden muss
+let FENSTER = 700;                     // so lange gilt ein Tippen noch als „hintereinander"
+const NOETIG = 5;
+
+let tagStand = null;                   // {datum, albumId, schub, gewechselt}
+let albumJetzt = null;                 // das Album, das gerade steht
+let tagWartet = false;                 // Mitternacht war, der Titel laeuft noch
+
+const zwei = n => String(n).padStart(2, '0');
+function tagesSchluessel(){
+  const d = heute();
+  return `${d.getFullYear()}-${zwei(d.getMonth()+1)}-${zwei(d.getDate())}`;   // lokale Zeit, nicht UTC
+}
+
+function hash(s){
+  let x = 2166136261 >>> 0;
+  for (const ch of String(s)){ x ^= ch.charCodeAt(0); x = Math.imul(x, 16777619) >>> 0; }
+  return x >>> 0;
+}
+
+/* Ausgewuerfelt wird die Stelle in der Liste — und nie die, die gerade
+   steht: zwei gleiche Tage hintereinander saehen aus wie ein Fehler, sind
+   bei acht Alben aber jeden achten Tag zu erwarten. Ein Weiterruecken um
+   eins bleibt reproduzierbar; ein zweiter Wurf waere es nicht. */
+function albumDesTages(iso, schub, ausser){
+  const n = ALBUMS.length;
+  if (!n) return null;
+  let i = hash(iso + '#' + schub) % n;
+  if (n > 1 && ausser && ALBUMS[i].id === ausser) i = (i + 1) % n;
+  return ALBUMS[i];
+}
+
+/* Welches Album gilt heute? Der gespeicherte Stand, wenn er zum heutigen
+   Datum gehoert und noch aufloesbar ist — sonst gerechnet. */
+function bestimmeTag(){
+  const iso = tagesSchluessel();
+  const alt = restore('tag', null);
+
+  if (alt && alt.datum === iso){
+    const a = ALBUMS.find(x => x.id === alt.albumId);
+    if (a){ tagStand = {datum: iso, albumId: a.id, schub: alt.schub || 0,
+                        gewechselt: !!alt.gewechselt}; return a; }
+    // Album verschwunden (geloescht, umbenannt): fuer denselben Tag neu
+    // rechnen — der Wechsel bleibt verbraucht, wenn er es schon war.
+    const ersatz = albumDesTages(iso, alt.schub || 0, null);
+    tagStand = {datum: iso, albumId: ersatz.id, schub: alt.schub || 0,
+                gewechselt: !!alt.gewechselt};
+    store('tag', tagStand);
+    return ersatz;
+  }
+
+  const gestern = alt && alt.albumId;          // nie zweimal hintereinander dasselbe
+  const a = albumDesTages(iso, 0, gestern);
+  tagStand = {datum: iso, albumId: a.id, schub: 0, gewechselt: false};
+  store('tag', tagStand);
+  return a;
+}
+
+function ladeAlbum(a, spielen){
+  albumJetzt = a;
+  deck.queue = a.ids.slice();
+  deck.qi = 0;
+  vorgeladen = null;
+  deck.spiele(!!spielen);
+}
+
+function sonnenwechsel(){
+  knopf.classList.remove('wechsel');
+  void knopf.offsetWidth;                      // Neustart der Bewegung erzwingen
+  knopf.classList.add('wechsel');
+}
+
+/* Ein neuer Tag spielt nicht von allein los — es sei denn, es lief schon:
+   wer morgens um sieben noch von gestern Abend Ton hat, will keinen
+   Abbruch, sondern das neue Album. */
+function wechsleAufNeuenTag(spielen){
+  const a = bestimmeTag();
+  if (!a) return;
+  sonnenwechsel();
+  ladeAlbum(a, spielen);
+}
+
+/* Geprueft wird bei Sichtbarkeit, am Ende jedes Titels und im Minutentakt —
+   kein Zeitgeber auf Mitternacht, den iOS im Hintergrund ohnehin nicht
+   feuert. Laeuft gerade Ton, wird der laufende Titel zu Ende gespielt. */
+function pruefeTag(){
+  if (!tagStand || !ALBUMS.length) return;
+  if (tagStand.datum === tagesSchluessel()) return;
+  if (deck.playing){ tagWartet = true; return; }
+  wechsleAufNeuenTag(false);
+}
+setInterval(pruefeTag, 60000);
+
+/* Der Wechsel von Hand: fuenf Tipper, einmal am Tag. */
+function wechsleAlbum(){
+  if (tagStand.gewechselt){
+    kerbenZeigen(NOETIG, true);
+    hinweis('Heute schon gewechselt');
+    setTimeout(() => kerbenZeigen(0), 1800);
+    return;
+  }
+  const schub = tagStand.schub + 1;
+  const a = albumDesTages(tagStand.datum, schub, tagStand.albumId);
+  if (!a || a.id === tagStand.albumId){
+    // Eine Sammlung mit einem Album kann nicht wechseln. Das zu behaupten,
+    // waere schlimmer, als es zu sagen — und der Wechsel bleibt offen.
+    hinweis('Nur ein Album in der Sammlung');
+    kerbenZeigen(0);
+    return;
+  }
+  tagStand = {datum: tagStand.datum, albumId: a.id, schub, gewechselt: true};
+  store('tag', tagStand);
+  kerbenZeigen(0);
+  sonnenwechsel();
+  ladeAlbum(a, true);
+  hinweis('Neues Album für heute');
+}
+
+/* ══ Der einzige Knopf ═════════════════════════════════════════════════════
+   Umgeschaltet wird sofort: „einmal druecken = spielt, noch einmal = haelt
+   an, noch einmal = spielt weiter" ist woertlich ein Umschalter. Ein
+   erkannter Doppeltipp muesste erst 250 ms warten, ob ein zweiter kommt —
+   spuerbar vor jedem Abspielen, und bei einem Knopf, der sonst nichts kann,
+   nicht zu rechtfertigen.
+
+   Der Fuenffachtipp wird deshalb mitgezaehlt, waehrend laengst geschaltet
+   wurde; der fuenfte Druck ueberschreibt das Ergebnis.                    */
+let tipps = 0, tippFenster = 0;
+
+function tippe(){
+  if (!ALBUMS.length || !deck.track) return;
+  deck.toggle();
+  /* Gleich neu zeichnen — nicht auf Verdacht, sondern weil das Element
+     seinen Zustand schon geaendert hat: `paused` kippt sofort, das
+     Ereignis kommt einen Wimpernschlag spaeter. Gelesen wird weiterhin
+     nur das Element; weist iOS das Abspielen ab, kommt „pause" und
+     zeichnet zurueck. */
+  zeichne();
+
+  tipps++;
+  kerbenZeigen(tipps, false);
+  clearTimeout(tippFenster);
+  tippFenster = setTimeout(() => { tipps = 0; kerbenZeigen(0); }, FENSTER);
+
+  if (tipps >= NOETIG){
+    tipps = 0;
+    clearTimeout(tippFenster);
+    wechsleAlbum();
+  }
+}
+
+knopf.addEventListener('click', tippe);
+addEventListener('keydown', ev => {
+  if (ev.key !== ' ' && ev.key !== 'Spacebar') return;
+  if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+  ev.preventDefault();
+  tippe();
+});
+
+/* ══ Zeichnen ══════════════════════════════════════════════════════════════ */
+const UMFANG = 2 * Math.PI * 48.5;
+/* Beide Werte gleich setzen: ohne den Versatz steht der Bogen bis zum ersten
+   Zeichnen auf „voll" und der Ring blitzt beim Laden einmal ganz auf. */
+$('bogen').setAttribute('stroke-dasharray', UMFANG.toFixed(2));
+$('bogen').setAttribute('stroke-dashoffset', UMFANG.toFixed(2));
+
+const kerbenFeld = $('kerben');
+kerbenFeld.innerHTML = '<i></i>'.repeat(NOETIG);
+
+function kerbenZeigen(n, verbraucht){
+  kerbenFeld.classList.toggle('sichtbar', n >= 2);
+  kerbenFeld.classList.toggle('verbraucht', !!verbraucht);
+  [...kerbenFeld.children].forEach((el,i) => el.classList.toggle('an', i < n && !verbraucht));
+}
+
+let hinweisT = 0;
+function hinweis(text){
+  const h = $('hinweis');
+  h.textContent = text || '';
+  h.classList.toggle('sichtbar', !!text);
+  clearTimeout(hinweisT);
+  if (text) hinweisT = setTimeout(() => h.classList.remove('sichtbar'), 2600);
+}
+
+function zeichne(){
+  const t = deck.track;
+  document.documentElement.classList.toggle('aus', !deck.playing);
+
+  if (albumJetzt){
+    $('alb').textContent = albumJetzt.t;
+    $('ar').textContent  = albumJetzt.ar;
+  }
+  $('tl').textContent = deck.fehler || (t ? t.t : '');
+
+  knopf.setAttribute('aria-pressed', String(deck.playing));
+  knopf.setAttribute('aria-label', albumJetzt
+    ? (deck.playing ? `${albumJetzt.t} anhalten` : `${albumJetzt.t} von ${albumJetzt.ar} abspielen`)
+    : 'Abspielen');
+
+  const f = deck.total ? clamp(deck.gpos / deck.total, 0, 1) : 0;
+  $('bogen').setAttribute('stroke-dashoffset', (UMFANG * (1 - f)).toFixed(2));
+}
+
+/* Eine Karte ohne Album: dieselbe Flaeche, andere Worte. Der Knopf ist
+   still — es gibt nichts, was er tun koennte. */
+function leer(titel, zeile){
+  document.documentElement.classList.add('aus', 'leer');
+  knopf.disabled = true;
+  knopf.setAttribute('aria-label', titel);
+  $('marke').textContent = 'Musiklib';
+  $('alb').textContent = titel;
+  $('ar').textContent = '';
+  $('tl').innerHTML = zeile;
+}
+
+/* ══ Start ═════════════════════════════════════════════════════════════════ */
+async function start(){
+  document.documentElement.classList.add('aus');
+  let daten = null;
+  try{
+    const r = await fetch('/api/library', {cache:'no-store'});
+    if (!r.ok) throw new Error(r.status);
+    daten = await r.json();
+  }catch{
+    leer('Sammlung nicht erreichbar', 'Der Server hat nicht geantwortet — neu laden.');
+    return;
+  }
+  uebernimm(daten);
+  if (!ALBUMS.length){
+    leer('Noch keine Alben', 'Gescannt wird am <a href="/">Schreibtisch</a>.');
+    return;
+  }
+  const a = bestimmeTag();
+  albumJetzt = a;
+  if (!sitzungHolen(a)) ladeAlbum(a, false);   // nie von allein losspielen
+  zeichne();
+}
+start();
+</script>
+</body>
+</html>

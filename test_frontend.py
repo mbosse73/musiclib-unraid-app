@@ -1051,3 +1051,180 @@ def test_player_insists_when_a_track_change_is_refused(player):
     player.evaluate("""() => { ton.pause(); nachVersuche = 0; nachdruck(); }""")
     player.wait_for_function("!ton.paused", timeout=5000)
     player.evaluate("nachdruckEnde(); ton.pause()")
+
+
+# --------------------------------------------------------------------------
+# Album des Tages — der Spieler mit einem Knopf
+# --------------------------------------------------------------------------
+
+@pytest.fixture
+def tagseite(browser, server):
+    """Eigener Kontext im Telefonformat, auf /tag."""
+    context = browser.new_context(viewport={"width": 390, "height": 844})
+    pg = context.new_page()
+    pg.errors = []
+    pg.on("pageerror", lambda e: pg.errors.append(str(e)))
+    pg.goto(server + "/tag", wait_until="domcontentloaded")
+    pg.wait_for_function("typeof albumJetzt !== 'undefined' && albumJetzt")
+    yield pg
+    assert pg.errors == [], f"JavaScript-Fehler auf der Seite: {pg.errors}"
+    context.close()
+
+
+def test_day_page_shows_album_artist_and_track(tagseite):
+    """Drei Zeilen, mehr sagt die Karte nicht — aber die sagt sie."""
+    assert tagseite.title() == "Musiklib · Album des Tages"
+    # text_content statt inner_text: Album und Interpret stehen in Versalien,
+    # aber das macht das Stylesheet — im Text steht der echte Name.
+    assert tagseite.text_content("#alb") == tagseite.evaluate("albumJetzt.t")
+    assert tagseite.text_content("#ar") == tagseite.evaluate("albumJetzt.ar")
+    assert tagseite.text_content("#tl") == tagseite.evaluate("deck.track.t")
+    # Genau ein Bedienelement, und es ist ein Knopf.
+    assert tagseite.locator("button").count() == 1
+
+
+def test_day_page_never_autoplays(tagseite):
+    """Wiederhergestellt wird die Stelle, gespielt wird erst auf den Knopf."""
+    tagseite.wait_for_timeout(300)
+    assert tagseite.evaluate("ton.paused") is True
+
+
+def test_day_button_plays_stops_and_resumes(tagseite):
+    """Einmal druecken = spielt, noch einmal = haelt an, noch einmal = weiter."""
+    tagseite.click("#knopf")
+    tagseite.wait_for_function("!ton.paused", timeout=5000)
+    assert tagseite.get_attribute("#knopf", "aria-pressed") == "true"
+
+    tagseite.click("#knopf")
+    tagseite.wait_for_function("ton.paused", timeout=5000)
+    assert tagseite.get_attribute("#knopf", "aria-pressed") == "false"
+
+    tagseite.click("#knopf")
+    tagseite.wait_for_function("!ton.paused", timeout=5000)
+    tagseite.evaluate("ton.pause()")
+
+
+def test_day_five_taps_choose_a_new_album_only_once_a_day(tagseite):
+    """Die einzige Ausnahme des Tages — und sie gilt nur einmal."""
+    tagseite.evaluate("FENSTER = 5000")          # der Test tippt langsamer als ein Finger
+    vorher = tagseite.evaluate("albumJetzt.id")
+
+    for _ in range(5):
+        tagseite.click("#knopf")
+    tagseite.wait_for_function("id => albumJetzt.id !== id", arg=vorher, timeout=5000)
+    assert tagseite.evaluate("JSON.parse(localStorage.getItem('musiklib:tag')).gewechselt") is True
+    nachher = tagseite.evaluate("albumJetzt.id")
+
+    for _ in range(5):
+        tagseite.click("#knopf")
+    tagseite.wait_for_function(
+        "document.getElementById('hinweis').textContent.includes('Heute schon')", timeout=5000)
+    assert tagseite.evaluate("albumJetzt.id") == nachher, "zweiter Wechsel am selben Tag"
+    tagseite.evaluate("ton.pause()")
+
+
+def test_day_choice_is_the_same_on_every_device(browser, server, tagseite):
+    """Berechnet, nicht gewuerfelt: derselbe Tag ergibt dasselbe Album."""
+    tage = ["2026-08-14", "2027-01-01", "2030-06-30"]
+    hier = tagseite.evaluate("t => t.map(iso => albumDesTages(iso, 0, null).id)", tage)
+
+    context = browser.new_context(viewport={"width": 390, "height": 844})
+    pg = context.new_page()                      # frischer localStorage = fremdes Geraet
+    pg.goto(server + "/tag", wait_until="domcontentloaded")
+    pg.wait_for_function("typeof albumJetzt !== 'undefined' && albumJetzt")
+    dort = pg.evaluate("t => t.map(iso => albumDesTages(iso, 0, null).id)", tage)
+    context.close()
+
+    assert hier == dort
+    assert len(set(hier)) > 1, "immer dasselbe Album waere kein Zufall"
+
+
+def test_day_never_repeats_yesterdays_album(tagseite):
+    """Zwei gleiche Tage hintereinander saehen aus wie ein Fehler."""
+    paare = tagseite.evaluate("""() => {
+      const aus = [];
+      let vorher = null;
+      for (let n = 0; n < 40; n++){
+        const iso = `2026-09-${String(n % 30 + 1).padStart(2,'0')}`;
+        const a = albumDesTages(iso, 0, vorher);
+        aus.push([vorher, a.id]);
+        vorher = a.id;
+      }
+      return aus;
+    }""")
+    assert all(vorher != jetzt for vorher, jetzt in paare)
+
+
+def test_day_queue_starts_over_at_the_end_of_the_album(tagseite):
+    """Die Warteschlange endet nicht — sie endet mit dem Tag."""
+    tagseite.click("#knopf")
+    tagseite.wait_for_function("!ton.paused", timeout=5000)
+    album = tagseite.evaluate("albumJetzt.id")
+    tagseite.evaluate("""() => {
+      deck.qi = deck.queue.length - 1;
+      ton.dispatchEvent(new Event('ended'));
+    }""")
+    tagseite.wait_for_function("deck.qi === 0", timeout=5000)
+    assert tagseite.evaluate("albumJetzt.id") == album, "das Album bleibt, der Tag entscheidet"
+    tagseite.evaluate("ton.pause()")
+
+
+def test_day_change_waits_for_the_running_track(tagseite):
+    """Mitternacht schneidet keinen Titel ab."""
+    vorher = tagseite.evaluate("albumJetzt.id")
+    tagseite.click("#knopf")
+    tagseite.wait_for_function("!ton.paused", timeout=5000)
+
+    tagseite.evaluate("heute = () => new Date(2026, 7, 15, 9, 0)")   # naechster Tag
+    tagseite.evaluate("pruefeTag()")
+    assert tagseite.evaluate("tagWartet") is True
+    assert tagseite.evaluate("albumJetzt.id") == vorher, "der laufende Titel wird zu Ende gespielt"
+
+    tagseite.evaluate("ton.dispatchEvent(new Event('ended'))")
+    tagseite.wait_for_function("id => albumJetzt.id !== id", arg=vorher, timeout=5000)
+    assert tagseite.evaluate(
+        "JSON.parse(localStorage.getItem('musiklib:tag')).datum") == "2026-08-15"
+    tagseite.evaluate("ton.pause()")
+
+
+def test_day_shares_the_session_shape_with_the_other_pages(tagseite):
+    """Ein Schluessel, vier Oberflaechen — dieselbe Form."""
+    tagseite.click("#knopf")
+    tagseite.wait_for_function("!ton.paused", timeout=5000)
+    tagseite.evaluate("ton.pause()")
+    gespeichert = json.loads(tagseite.evaluate("localStorage.getItem('musiklib:session')"))
+    assert gespeichert["qIndex"] == 0
+    assert len(gespeichert["items"][0]) == 2, "Form muss [albumId, trackId] bleiben"
+    assert gespeichert["items"][0][0] == tagseite.evaluate("albumJetzt.id")
+
+
+def test_day_ignores_a_session_that_belongs_to_another_album(ctx, server):
+    """Eine Sitzung von gestern darf nicht spielen, was die Karte nicht zeigt."""
+    pg = ctx.new_page()
+    pg.goto(server + "/tag", wait_until="domcontentloaded")
+    pg.wait_for_function("typeof albumJetzt !== 'undefined' && albumJetzt")
+    fremd = pg.evaluate("""() => {
+      const a = ALBUMS.find(x => x.id !== albumJetzt.id);
+      return {items: a.ids.map(id => [a.id, id]), qIndex: 1, position: 7, id: a.id};
+    }""")
+    pg.evaluate("s => localStorage.setItem('musiklib:session', JSON.stringify(s))", fremd)
+    pg.reload(wait_until="domcontentloaded")
+    pg.wait_for_function("typeof albumJetzt !== 'undefined' && albumJetzt")
+    assert pg.evaluate("deck.queue[0]") == pg.evaluate("albumJetzt.ids[0]")
+    assert pg.evaluate("deck.qi") == 0
+
+
+def test_day_insists_when_a_track_change_is_refused(tagseite):
+    """Ohne zweiten Knopf gibt es keinen Weg, sich von Hand zu erholen."""
+    tagseite.evaluate("NACH_VERZUG = 150")
+    tagseite.click("#knopf")
+    tagseite.wait_for_function("!ton.paused", timeout=5000)
+    tagseite.evaluate("""() => { ton.pause(); nachVersuche = 0; nachdruck(); }""")
+    tagseite.wait_for_function("!ton.paused", timeout=5000)
+    tagseite.evaluate("nachdruckEnde(); ton.pause()")
+
+
+def test_day_reports_a_moved_file_instead_of_stopping_silently(tagseite):
+    tagseite.evaluate("""() => { ton.src = '/api/stream/gibtsnicht'; ton.load(); }""")
+    tagseite.wait_for_function("deck.fehler !== ''", timeout=5000)
+    assert "nicht abspielbar" in tagseite.inner_text("#tl")

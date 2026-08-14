@@ -314,6 +314,17 @@ def test_player_page_is_served_at_both_addresses(client):
     assert "<title>Musiklib · Spieler</title>" in seiten[0]
 
 
+def test_day_page_is_served(client):
+    """Vierte Oberflaeche: /tag liefert den Spieler mit einem Knopf."""
+    c, app, data = client
+    r = c.get("/tag")
+    assert r.status_code == 200
+    assert "text/html" in r.headers["content-type"]
+    assert "<title>Musiklib · Album des Tages</title>" in r.text
+    # Ohne diese Zeile startet "Zum Home-Bildschirm" mit Safari-Leiste.
+    assert 'name="apple-mobile-web-app-capable"' in r.text
+
+
 def test_stream_supports_range_requests(client):
     c, app, data = client
     track_id = next(iter(json.loads((data / "tracks.json").read_text())))

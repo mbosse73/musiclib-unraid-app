@@ -33,7 +33,7 @@ Keine Datenbank. Alles, was die App weiß, liegt in `library.json`.
 Der Dienst macht drei Dinge:
 
 1. **Scannen** – `*.mp3` rekursiv unter `/music` finden, ID3-Tags (Titel, Interpret, Album, Coverbild …) per `mutagen` auslesen, in eine flache `library.json` schreiben. Cover landen als separate Dateien in `data/covers/`.
-2. **Ausliefern** – Drei einzelne HTML-Dateien (je das ganze UI in einer Datei: `index.html` am Schreibtisch, `mobile.html` am Handy, `player.html` als reiner Spieler für iPad und PC) plus JSON-Endpunkt.
+2. **Ausliefern** – Vier einzelne HTML-Dateien (je das ganze UI in einer Datei: `index.html` am Schreibtisch, `mobile.html` am Handy, `player.html` als reiner Spieler für iPad und PC, `tag.html` als Spieler mit einem Knopf) plus JSON-Endpunkt.
 3. **Streamen** – MP3-Dateien per HTTP-Range, damit Vor- und Zurückspulen auf dem Handy flüssig läuft.
 
 ## Installation auf unraid
@@ -50,7 +50,7 @@ Per Windows-Explorer / macOS Finder auf den unraid-Server:
 \\<unraid-ip>\appdata\
 ```
 
-Dort einen neuen Ordner `musiklib` anlegen und vier Dateien hineinkopieren:
+Dort einen neuen Ordner `musiklib` anlegen und fünf Dateien hineinkopieren:
 
 ```
 \\<unraid-ip>\appdata\musiklib\
@@ -58,6 +58,7 @@ Dort einen neuen Ordner `musiklib` anlegen und vier Dateien hineinkopieren:
 ├── index.html
 ├── mobile.html
 ├── player.html
+├── tag.html
 └── requirements.txt
 ```
 
@@ -156,13 +157,32 @@ ein **reiner Spieler**: hören und finden, sonst nichts. Gescannt wird weiterhin
 - **Tastatur:** **Leertaste** Wiedergabe/Pause, **←/→** 5 Sekunden, **↑/↓** Lautstärke, **n**/**p** Titelwechsel, **L** Ansicht wechseln, **Esc** schließt Bibliothek und Liste.
 - Sperrbildschirm und Medientasten bedienen dieselbe Warteschlange. Die Sitzung wird mit den beiden anderen Oberflächen geteilt: auf demselben Gerät läuft sie zwischen Schreibtisch, Handy und Spieler weiter.
 
+## Am iPhone: das Album des Tages
+
+Die kleinste der vier Oberflächen liegt unter
+
+```
+http://<unraid-ip>:8080/tag
+```
+
+und hat **einen einzigen Knopf**. Sie wählt nichts aus: Sie spielt das **Album des Tages** — jeden Tag ein anderes, per Zufall aus der Sammlung, den ganzen Tag lang immer wieder dasselbe. Gedacht ist sie für den Home-Bildschirm des Telefons: aufmachen, tippen, Musik.
+
+- **Tippen heißt abspielen.** Noch einmal tippen hält an, noch einmal tippen spielt weiter. Mehr Bedienung gibt es nicht — kein Weiter, kein Zurück, kein Spulen, keine Suche.
+- **Die rote Scheibe ist der Knopf** und zugleich die Anzeige: voll, solange Ton läuft; angehalten bleibt der Kreis stehen, wird aber leer. Der dünne Ring darum ist die Position im Album — ein voller Umlauf ist ein Durchlauf. Danach fängt das Album wieder von vorn an, bis der Tag um ist.
+- **Unten stehen drei Zeilen:** Album, Interpret und der laufende Titel. Sonst nichts.
+- **Ein anderes Album für heute:** **fünfmal kurz hintereinander** auf die Scheibe tippen. Ab dem zweiten Tippen zeigen fünf Kerben unter der Scheibe, wie weit du bist; beim fünften geht die Sonne unter und mit einem neuen Album wieder auf. Das geht **einmal am Tag** — der zweite Versuch sagt „Heute schon gewechselt".
+- **Jeden Tag ein anderes, und nie zweimal dasselbe hintereinander.** Welches Album es ist, wird aus dem Datum errechnet, nicht gewürfelt: Auf zwei Geräten mit derselben Sammlung ist es am selben Tag dasselbe Album, ganz ohne Absprache. Der Wechsel kommt um Mitternacht, schneidet aber keinen laufenden Titel ab.
+- **Angehalten bleibt angehalten**, auch wenn die Seite neu geladen wird: Es geht dort weiter, wo du aufgehört hast — losgespielt wird erst auf den Knopf.
+- **Bewusst nicht enthalten:** Scannen, Bibliothek, Suche, Cover, Lautstärkeregler, Titelnummern, Einstellungen. Wer wählen will, nimmt `/mobil`, `/ipad` oder die Schreibtischseite. Auch *Bildschirm anlassen* hat hier keinen eigenen Schalter — die Seite befolgt, was am Handy oder im Spieler eingestellt ist.
+- Sperrbildschirm und Kopfhörertasten bedienen denselben Knopf (nur Wiedergabe und Pause, nichts anderes).
+
 ## Wenn die Wiedergabe von allein aufhört
 
 Ein Browser, der Musik von einem NAS streamt, hat drei Stellen, an denen es abreißen kann. Alle drei sind behandelt — was übrig bleibt, sind zwei Schalter.
 
 - **Am Titelwechsel** (der häufigste Fall am iPhone). Am Ende eines Titels bekommt das Audio-Element eine neue Quelle, und iOS wertet das im Hintergrund als *neuen* Start, nicht als Fortsetzung — und weist ihn ab. Die Seiten fragen jetzt nach: solange Ton gewünscht ist und keiner läuft, alle 1,2 Sekunden erneut, und noch einmal, sobald die Seite wieder im Vordergrund ist. Eine Pause, die du selbst gedrückt hast, bleibt davon unberührt.
 - **Mitten im Titel**, wenn der Stream hängt (WLAN gedrosselt, Platte im NAS eingeschlafen). Bleibt das Element stehen, wird die Quelle nach ein paar Sekunden an derselben Stelle neu geladen — bis zu fünfmal. Zusätzlich wird 25 Sekunden vor dem Ende der Anfang des nächsten Titels schon geholt: das weckt die Platte und hält die Verbindung warm.
-- **Am Ende des Albums.** Eine Warteschlange ist ein Album; bisher war danach Schluss. Jetzt läuft standardmäßig das **nächste Album der Sammlung** weiter. Einstellbar in drei Stufen — am Handy unter *Einstellungen → Am Ende der Warteschlange*, im Spieler im Ansichtsblatt, am Schreibtisch über den Knopf rechts neben ▶ (Weiter · Wdh. · Halt). Die Wahl gilt für alle drei Oberflächen.
+- **Am Ende des Albums.** Eine Warteschlange ist ein Album; bisher war danach Schluss. Jetzt läuft standardmäßig das **nächste Album der Sammlung** weiter. Einstellbar in drei Stufen — am Handy unter *Einstellungen → Am Ende der Warteschlange*, im Spieler im Ansichtsblatt, am Schreibtisch über den Knopf rechts neben ▶ (Weiter · Wdh. · Halt). Die Wahl gilt für diese drei Oberflächen; `/tag` fragt nicht danach, dort ist das Ende des Albums immer der Anfang desselben Albums.
 
 Bleibt es trotzdem stehen, hilft **Bildschirm anlassen** (am Handy in den Einstellungen, im Spieler im Ansichtsblatt): Solange Musik läuft, bleibt der Bildschirm an — und damit auch das WLAN auf voller Leistung. Das kostet Akku und wirkt nur, solange die Seite sichtbar ist; iOS gibt die Sperre frei, sobald du die App verlässt. Braucht iOS 16.4 oder neuer.
 
@@ -179,7 +199,7 @@ Bleibt es trotzdem stehen, hilft **Bildschirm anlassen** (am Handy in den Einste
 
 ## Updates und Wartung
 
-**Code-Änderungen einfach per SMB einspielen**: `app.py`, `index.html`, `mobile.html` oder `player.html` in `/mnt/user/appdata/musiklib/` ersetzen, dann:
+**Code-Änderungen einfach per SMB einspielen**: `app.py`, `index.html`, `mobile.html`, `player.html` oder `tag.html` in `/mnt/user/appdata/musiklib/` ersetzen, dann:
 
 - **HTML-Änderung**: nur Browser-Reload, kein Container-Neustart nötig.
 - **Python-Änderung**: Container neu starten (unraid → musiklib → Restart).

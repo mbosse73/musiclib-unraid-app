@@ -1,6 +1,9 @@
 # Auftrag: `tag.html` — der Spieler mit einem Knopf
 
-**Stand:** Entwurf abgenommen, Umsetzung offen.
+**Stand:** **umgesetzt** — `tag.html` und die Route `/tag` stehen, Tests in
+`test_app.py` und `test_frontend.py` (`-k day`). Was hier steht, gilt weiter:
+es ist die Begründung hinter dem Code. Die drei offenen Fragen sind unten
+beantwortet.
 **Vorlage:** `mockups/player/14-album-des-tages.html`, **Variante 1 · Ring**.
 Variante 2 („Sonnenaufgang") ist **verworfen** — sie steht im Blatt nur noch als
 Begründung, warum der Ring gewonnen hat. Nichts aus Variante 2 wird gebaut.
@@ -256,13 +259,31 @@ nur mit einer echten Nacht prüfbar.
 - [ ] Bestehende Testsuite bleibt grün, neue Tests kommen dazu.
 - [ ] `CLAUDE.md` und `README.md` kennen die vierte Oberfläche.
 
-## 12. Offene Fragen an den Auftraggeber
+## 12. Die drei Fragen — so entschieden
 
-1. **Bildschirm wach:** ohne eigenen Schalter (Vorschlag oben) — oder darf
-   der Knopf ein *langes* Drücken bekommen, das ihn umlegt? Das wäre eine
-   zweite verborgene Geste neben dem Fünffachtipp.
-2. **Titelnummer:** mit dem Zählwerk ist „Titel 3 von 5" verschwunden. Zurück
-   in die dritte Zeile („So What · 3/5") oder ganz weg?
-3. **Neuer Tag, laufender Ton:** der laufende Titel wird zu Ende gespielt.
-   Soll danach von selbst weitergespielt werden (Vorschlag: ja, es lief ja
-   schon) oder anhalten und auf den Knopf warten?
+Gebaut ist jeweils der Vorschlag. Wer eine davon anders will, ändert eine
+Stelle; wo, steht dabei.
+
+1. **Bildschirm wach: kein eigener Schalter.** `tag.html` liest
+   `musiklib:wach` und hält die Sperre entsprechend; gestellt wird sie auf
+   `/mobil` oder `/ipad`. Kein langes Drücken — eine zweite verborgene Geste
+   neben dem Fünffachtipp wäre eine zu viel für einen Knopf.
+   (`wachGewuenscht()` in `tag.html`.)
+2. **Titelnummer: weg.** Die dritte Zeile trägt nur den Titelnamen. Wer
+   „So What · 3/5" will, ändert eine Zeile in `zeichne()`.
+3. **Neuer Tag bei laufendem Ton: es läuft weiter.** Der laufende Titel wird
+   zu Ende gespielt, dann kommt das neue Album — und es spielt, weil vorher
+   auch gespielt wurde. Wer stattdessen anhalten will, ruft
+   `wechsleAufNeuenTag(false)` im `ended`-Zweig.
+
+## 13. Was beim Bauen dazukam
+
+Zwei Dinge, die im Auftrag nicht standen und im Code stehen, mit Grund:
+
+- **`tippe()` zeichnet sofort neu.** Nicht auf Verdacht — `ton.paused` hat
+  zu diesem Zeitpunkt bereits umgeschaltet, das Ereignis kommt einen
+  Wimpernschlag später. Ohne das hinkt der Knopf hinterher; ein Test hat es
+  gefunden. Gelesen wird weiterhin nur das Element, nie eine Annahme.
+- **Der Fortschrittsring bekommt seinen Versatz schon beim Laden.** Ohne
+  ihn steht der Bogen bis zum ersten Zeichnen auf „voll", und der Ring
+  blitzt beim Öffnen einmal ganz auf.

@@ -556,6 +556,18 @@ def player():
     return FileResponse(APP_DIR / "player.html", media_type="text/html")
 
 
+@app.get("/tag")
+def tag():
+    """Album des Tages — ein Spieler mit genau einem Knopf.
+
+    Die kleinste der vier Oberflaechen: kein Scan, keine Bibliothek, keine
+    Suche, kein Weiter. Gespielt wird ein Album, das der Browser aus dem
+    Datum errechnet — der Server weiss davon nichts und braucht dafuer auch
+    kein Feld in library.json.
+    """
+    return FileResponse(APP_DIR / "tag.html", media_type="text/html")
+
+
 @app.get("/api/library")
 def get_library():
     if not LIBRARY_FILE.exists():
