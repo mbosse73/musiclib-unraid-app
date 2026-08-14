@@ -90,8 +90,16 @@ a{color:var(--zinnober)}
 .aus.leer .sonne .fl{box-shadow:inset 0 0 0 1.6px var(--linie-2)}
 .aus.leer .sonne .zeichen{color:var(--tinte-3)}
 
-/* Fortschritt im Album als Ring um die Scheibe — ein Umlauf ist ein Album. */
-.ring{position:absolute;inset:calc(var(--scheibe) * -.075);transform:rotate(-90deg)}
+/* Fortschritt im Album als Ring um die Scheibe — ein Umlauf ist ein Album.
+   Masse und Ecke stehen ausgeschrieben, nicht als inset: ein <svg> ohne
+   width/height ist ein ersetztes Element mit width:auto. Blink spannt so eins
+   ueber alle vier Kanten auf, WebKit nimmt stattdessen 100% des Knopfes und
+   verschiebt es um das negative left/top — auf dem iPhone sass der Ring
+   dadurch links oben neben der Scheibe statt um sie herum. */
+.ring{position:absolute;display:block;
+  left:calc(var(--scheibe) * -.075);top:calc(var(--scheibe) * -.075);
+  width:calc(var(--scheibe) * 1.15);height:calc(var(--scheibe) * 1.15);
+  transform:rotate(-90deg)}
 .ring circle{fill:none;stroke-width:.52}
 .ring .bett{stroke:var(--linie-2)}
 .ring .bogen{stroke:var(--tinte);stroke-linecap:butt;transition:stroke-dashoffset .3s linear}

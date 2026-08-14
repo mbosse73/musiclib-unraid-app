@@ -1083,6 +1083,40 @@ def test_day_page_shows_album_artist_and_track(tagseite):
     assert tagseite.locator("button").count() == 1
 
 
+def test_day_ring_is_concentric_with_the_disc(tagseite):
+    """Der Fortschrittsring liegt um die Scheibe, nicht daneben.
+
+    Auf dem iPhone sass er einmal links oben neben ihr: <svg class="ring"> hat
+    kein width/height, ist damit ein ersetztes Element mit width:auto, und
+    WebKit spannt so eins nicht ueber vier gesetzte Kanten auf — es nimmt 100%
+    des Knopfes und verschiebt das Ergebnis um das negative left/top. Blink
+    zeigt den Fehler nicht, und ein WebKit steht hier nicht zur Verfuegung.
+    Darum prueft der Test beides: die Lage, die jeder Browser zeigt, und die
+    Regel selbst, die ihre Masse ausschreiben muss statt sie ableiten zu lassen.
+    """
+    lage = tagseite.evaluate("""() => {
+      const mitte = el => { const r = el.getBoundingClientRect();
+        return [(r.left + r.right) / 2, (r.top + r.bottom) / 2, r.width]; };
+      const [kx, ky, kb] = mitte(document.getElementById('knopf'));
+      const [rx, ry, rb] = mitte(document.querySelector('.ring'));
+      return {versatz: [Math.abs(rx - kx), Math.abs(ry - ky)], knopf: kb, ring: rb};
+    }""")
+    assert lage["versatz"][0] < 1 and lage["versatz"][1] < 1, (
+        f"Ring liegt um {lage['versatz']} px versetzt")
+    # Der Ring steht 7,5 % der Scheibe weiter aussen — an jeder Seite.
+    assert abs(lage["ring"] - lage["knopf"] * 1.15) < 1
+
+    ausgeschrieben = tagseite.evaluate("""() => {
+      for (const bl of document.styleSheets)
+        for (const rg of bl.cssRules)
+          if (rg.selectorText === '.ring')
+            return [rg.style.width, rg.style.height, rg.style.left, rg.style.top];
+      return null;
+    }""")
+    assert ausgeschrieben and all(ausgeschrieben), (
+        f".ring muss Breite, Hoehe und Ecke selbst nennen, hat aber {ausgeschrieben}")
+
+
 def test_day_page_never_autoplays(tagseite):
     """Wiederhergestellt wird die Stelle, gespielt wird erst auf den Knopf."""
     tagseite.wait_for_timeout(300)
