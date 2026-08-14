@@ -4,7 +4,14 @@ Vollständige Kopie aller Dateien der App, so wie sie vor dem Zusammenlegen der
 Oberflächen liefen. Zweck: ein Ordner, den man ohne Git-Kenntnisse per SMB
 zurückkopieren kann, wenn nach einem Update etwas nicht stimmt.
 
-Gleicher Stand auch als Git-Marke: `stand-vor-konsolidierung`.
+Gleicher Stand in der Git-Historie: Commit **`ed0f1b0`** („neue ui") ist der
+letzte, in dem die App-Dateien unverändert sind — alles danach betrifft
+zunächst nur `design/` und diesen Backup-Ordner.
+
+```bash
+git show ed0f1b0:player.html > player.html      # eine Datei zurückholen
+git checkout ed0f1b0 -- app.py index.html mobile.html player.html tag.html
+```
 
 ## Was hier liegt
 
