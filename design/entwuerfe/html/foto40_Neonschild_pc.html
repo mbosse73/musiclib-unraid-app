@@ -1,0 +1,84 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1600px;height:1000px;overflow:hidden}
+.stage{position:relative;width:1600px;height:1000px;overflow:hidden}
+
+.stage{background:
+  radial-gradient(70% 50% at 32% 26%, #4a2c18 0%, #2a1710 45%, #150c08 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#f6e3c8}
+
+/* Das Licht des Schildes auf der Wand */
+.wandlicht{position:absolute;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,190,110,.32) 0%,rgba(255,190,110,.10) 40%,rgba(255,190,110,0) 70%)}
+
+/* Neon: Kern weiss, Hülle bernstein — vier Schattenlagen machen die Röhre */
+.neon{color:#fff6e2;font-weight:800;letter-spacing:-.01em;line-height:1.04;
+  text-shadow:0 0 4px #fff4dd, 0 0 13px #ffcf7a,
+    0 0 32px rgba(255,190,110,.85), 0 0 69px rgba(255,190,110,.45)}
+.neonklein{color:#ffcf7a;letter-spacing:4.3px;text-transform:uppercase;
+  text-shadow:0 0 6px rgba(255,190,110,.9), 0 0 19px rgba(255,190,110,.5)}
+
+/* Die Röhre unter dem Schild ist zugleich die Spulleiste */
+.rohr{position:relative;border-radius:999px;background:rgba(255,207,122,.16)}
+.rohr i{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:#ffcf7a;
+  box-shadow:0 0 10px rgba(255,190,110,.95), 0 0 29px rgba(255,190,110,.55)}
+.rohr b{position:absolute;top:50%;transform:translate(-50%,-50%);border-radius:50%;
+  background:#fff6e2;box-shadow:0 0 12px rgba(255,190,110,.95)}
+.zeiten{display:flex;justify-content:space-between;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(246,227,200,.55);
+  font-variant-numeric:tabular-nums}
+
+/* Sideboard und Gerät */
+.brett{position:absolute;background:linear-gradient(180deg,#5a3a22,#3a2416)}
+.geraet{position:relative;background:linear-gradient(180deg,#c9a271,#9c7746);
+  box-shadow:0 19px 36px rgba(0,0,0,.55)}
+.haube{position:absolute;border:1px solid rgba(255,190,120,.42);
+  border-bottom:none;background:linear-gradient(180deg,rgba(255,190,120,.10),rgba(255,190,120,.02))}
+.front{position:absolute;left:0;right:0;bottom:0;background:#1d150e;
+  border-top:1px solid rgba(255,190,120,.20)}
+
+.taste{flex-shrink:0;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(255,190,120,.35);background:rgba(255,190,120,.06)}
+.taste.gross{background:rgba(255,207,122,.16);border-color:#ffcf7a;
+  box-shadow:0 0 17px rgba(255,190,110,.55), inset 0 0 14px rgba(255,190,110,.28)}
+.bib{display:inline-flex;align-items:center;border-radius:999px;
+  border:1px solid rgba(255,190,120,.35)}
+
+</style></head><body><div class="stage"><div class="wandlicht" style="left:-220px;top:-180px;width:1250px;height:1250px"></div>
+<div style="position:absolute;inset:0;padding:70px 88px;display:flex;flex-direction:column">
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <span class="neonklein" style="font-size:16px">Jetzt läuft</span>
+    <span class="bib" style="height:48px;padding:0 20px;gap:10px"><span class="neonklein" style="font-size:15px">Sammlung · 240</span></span>
+  </div>
+
+  <div style="display:flex;gap:70px;align-items:flex-end;flex:1;min-height:0;margin-top:34px">
+    <div style="flex:1;min-width:0;padding-bottom:26px">
+      <div class="neon" style="font-size:86px">Blue in Green</div>
+      <div style="font-size:25px;color:rgba(246,227,200,.55);margin-top:18px">
+        Miles Davis · Kind of Blue · 1959</div>
+      <div class="rohr" style="height:10px;margin-top:40px">
+        <i style="width:40%"></i>
+        <b style="left:40%;width:22px;height:22px"></b></div>
+      <div class="zeiten" style="font-size:19px;margin-top:16px">
+        <span>02:14</span><span>05:37</span></div>
+      <div style="margin-top:36px;display:flex"><div style="display:flex;align-items:center;justify-content:center;gap:30px"><div class="taste" style="width:68px;height:68px"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="rgba(246,227,200,.55)" stroke-width="2" stroke-linecap="round"><path d="M3 6h4l4 12h6M3 18h4l2-6"/><path d="M17 3l4 3-4 3M17 15l4 3-4 3"/></svg></div><div class="taste" style="width:68px;height:68px"><svg width="27" height="27" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#f6e3c8" stroke-width="2" fill="#f6e3c8" stroke-linejoin="round"/></svg></div><div class="taste gross" style="width:100px;height:100px"><svg width="38" height="38" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#ffcf7a"/></svg></div><div class="taste" style="width:68px;height:68px"><svg width="27" height="27" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#f6e3c8" stroke-width="2" fill="#f6e3c8" stroke-linejoin="round"/></svg></div><div class="taste" style="width:68px;height:68px"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="rgba(246,227,200,.55)" stroke-width="2" stroke-linecap="round"><path d="M4 9a5 5 0 0 1 5-5h9"/><path d="M15 1l3 3-3 3"/><path d="M20 15a5 5 0 0 1-5 5H6"/><path d="M9 23l-3-3 3-3"/></svg></div></div></div>
+    </div>
+    <div style="flex-shrink:0"><div style="position:relative;width:520px;height:520px">
+  <div class="haube" style="left:31px;top:0;width:406px;
+    height:208px;transform:perspective(900px) rotateX(24deg);
+    transform-origin:bottom center;border-radius:6px"></div>
+  <div class="geraet" style="position:absolute;left:0;bottom:0;width:520px;
+    height:312px;border-radius:8px">
+    <div style="position:absolute;left:52px;top:28px">
+      <svg viewBox="0 0 176.8 176.8" width="176.8" height="176.8"><defs><radialGradient id="pg176e08" cx="36%" cy="30%" r="76%"><stop offset="0%" stop-color="#4d4d51"/><stop offset="20%" stop-color="#161618"/><stop offset="100%" stop-color="#0b0b0c"/></radialGradient></defs><circle cx="88.4" cy="88.4" r="88.4" fill="url(#pg176e08)"/><circle cx="88.4" cy="88.4" r="27.4" fill="none" stroke="#2e2e30" stroke-width="1.5" opacity="0.8"/><circle cx="88.4" cy="88.4" r="29.6" fill="none" stroke="#2e2e30" stroke-width="0.9" opacity="0.5"/><circle cx="88.4" cy="88.4" r="31.8" fill="none" stroke="#2e2e30" stroke-width="0.9" opacity="0.5"/><circle cx="88.4" cy="88.4" r="33.9" fill="none" stroke="#2e2e30" stroke-width="1.5" opacity="0.8"/><circle cx="88.4" cy="88.4" r="36.1" fill="none" stroke="#2e2e30" stroke-width="0.9" opacity="0.5"/><circle cx="88.4" cy="88.4" r="38.3" fill="none" stroke="#2e2e30" stroke-width="0.9" opacity="0.5"/><circle cx="88.4" cy="88.4" r="40.5" fill="none" stroke="#2e2e30" stroke-width="1.5" opacity="0.8"/><circle cx="88.4" cy="88.4" r="42.6" fill="none" stroke="#2e2e30" stroke-width="0.9" opacity="0.5"/><circle cx="88.4" cy="88.4" r="44.8" fill="none" stroke="#2e2e30" stroke-width="0.9" opacity="0.5"/><circle cx="88.4" cy="88.4" r="47.0" fill="none" stroke="#2e2e30" stroke-width="1.5" opacity="0.8"/><circle cx="88.4" cy="88.4" r="49.2" fill="none" stroke="#2e2e30" stroke-width="0.9" opacity="0.5"/><circle cx="88.4" cy="88.4" r="51.3" fill="none" stroke="#2e2e30" stroke-width="0.9" opacity="0.5"/><circle cx="88.4" cy="88.4" r="53.5" fill="none" stroke="#2e2e30" stroke-width="1.5" opacity="0.8"/><circle cx="88.4" cy="88.4" r="55.7" fill="none" stroke="#2e2e30" stroke-width="0.9" opacity="0.5"/><circle cx="88.4" cy="88.4" r="57.9" fill="none" stroke="#2e2e30" stroke-width="0.9" opacity="0.5"/><circle cx="88.4" cy="88.4" r="60.0" fill="none" stroke="#2e2e30" stroke-width="1.5" opacity="0.8"/><circle cx="88.4" cy="88.4" r="62.2" fill="none" stroke="#2e2e30" stroke-width="0.9" opacity="0.5"/><circle cx="88.4" cy="88.4" r="64.4" fill="none" stroke="#2e2e30" stroke-width="0.9" opacity="0.5"/><circle cx="88.4" cy="88.4" r="66.6" fill="none" stroke="#2e2e30" stroke-width="1.5" opacity="0.8"/><circle cx="88.4" cy="88.4" r="68.7" fill="none" stroke="#2e2e30" stroke-width="0.9" opacity="0.5"/><circle cx="88.4" cy="88.4" r="70.9" fill="none" stroke="#2e2e30" stroke-width="0.9" opacity="0.5"/><circle cx="88.4" cy="88.4" r="73.1" fill="none" stroke="#2e2e30" stroke-width="1.5" opacity="0.8"/><circle cx="88.4" cy="88.4" r="75.3" fill="none" stroke="#2e2e30" stroke-width="0.9" opacity="0.5"/><circle cx="88.4" cy="88.4" r="77.5" fill="none" stroke="#2e2e30" stroke-width="0.9" opacity="0.5"/><circle cx="88.4" cy="88.4" r="79.6" fill="none" stroke="#2e2e30" stroke-width="1.5" opacity="0.8"/><circle cx="88.4" cy="88.4" r="81.8" fill="none" stroke="#2e2e30" stroke-width="0.9" opacity="0.5"/><circle cx="88.4" cy="88.4" r="24.8" fill="#e08a3c"/><circle cx="88.4" cy="88.4" r="2.5" fill="#f2f2f0"/></svg></div>
+    <div style="position:absolute;right:68px;top:37px;
+      width:6px;height:131px;background:#d8cdbd;
+      transform:rotate(24deg);transform-origin:top center;border-radius:2px"></div>
+    <div style="position:absolute;right:60px;top:22px;
+      width:23px;height:23px;border-radius:50%;
+      background:#2a2118"></div>
+    <div class="front" style="height:94px;border-radius:0 0
+      8px 8px"></div>
+  </div>
+</div></div>
+  </div>
+</div></div></body></html>

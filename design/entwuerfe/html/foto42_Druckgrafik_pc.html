@@ -1,0 +1,75 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1600px;height:1000px;overflow:hidden}
+.stage{position:relative;width:1600px;height:1000px;overflow:hidden}
+
+.stage{background:#efe8da;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#3a3630}
+.korn{position:absolute;inset:0;pointer-events:none;opacity:.45;
+  background:
+    repeating-linear-gradient(0deg, rgba(0,0,0,.028) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(0,0,0,.022) 0 1px, transparent 1px 4px)}
+
+/* Bibliothek: die Marke oben links ist der Zugang, wie die Signatur des Drucks */
+.marke{display:flex;align-items:center}
+.markentext{text-transform:uppercase;letter-spacing:2.9px;line-height:1.35}
+.markentext b{display:block;font-weight:700;letter-spacing:3.6px}
+.markentext span{display:block;color:#8b857a;font-size:.68em}
+
+.zeiten{display:flex;justify-content:space-between;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:#8b857a;
+  font-variant-numeric:tabular-nums}
+.spur{position:relative;height:2px;background:rgba(58,54,48,.20)}
+.spur i{position:absolute;left:0;top:0;bottom:0;background:#d4653c}
+
+/* Schieber und Knöpfe sind gedruckt, nicht plastisch: flache Flächen, harte Kanten */
+.schieber{position:relative;background:#5b83a8;border-radius:3px}
+.schieber .schlitz{position:absolute;left:50%;transform:translateX(-50%);
+  background:#7b3524;border-radius:2px}
+.schieber .griff{position:absolute;left:50%;transform:translate(-50%,-50%);
+  background:#d4653c;border-radius:2px;box-shadow:0 0 0 2px #efe8da}
+.knopf{position:relative;border-radius:50%;display:flex;align-items:center;
+  justify-content:center}
+.knopf i{position:absolute;background:#7b3524;border-radius:2px;transform-origin:center}
+
+</style></head><body><div class="stage"><div class="korn"></div>
+<div style="position:absolute;inset:0;padding:60px 80px;display:flex;gap:70px;align-items:center">
+  <div style="flex-shrink:0"><svg viewBox="0 0 781 717"
+  width="781" height="717">
+<ellipse cx="334" cy="339" rx="320.0" ry="320.0"
+  fill="#d4653c" opacity=".55"/>
+<circle cx="320.0" cy="320.0" r="320.0" fill="#5b83a8"/>
+<circle cx="320.0" cy="320.0" r="108.8" fill="none" stroke="#e9eef3" stroke-width="1.8" opacity="0.55"/><circle cx="320.0" cy="320.0" r="114.6" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="120.5" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="126.3" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="132.1" fill="none" stroke="#e9eef3" stroke-width="1.8" opacity="0.55"/><circle cx="320.0" cy="320.0" r="138.0" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="143.8" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="149.6" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="155.5" fill="none" stroke="#e9eef3" stroke-width="1.8" opacity="0.55"/><circle cx="320.0" cy="320.0" r="161.3" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="167.2" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="173.0" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="178.8" fill="none" stroke="#e9eef3" stroke-width="1.8" opacity="0.55"/><circle cx="320.0" cy="320.0" r="184.7" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="190.5" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="196.3" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="202.2" fill="none" stroke="#e9eef3" stroke-width="1.8" opacity="0.55"/><circle cx="320.0" cy="320.0" r="208.0" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="213.8" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="219.7" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="225.5" fill="none" stroke="#e9eef3" stroke-width="1.8" opacity="0.55"/><circle cx="320.0" cy="320.0" r="231.3" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="237.2" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="243.0" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="248.8" fill="none" stroke="#e9eef3" stroke-width="1.8" opacity="0.55"/><circle cx="320.0" cy="320.0" r="254.7" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="260.5" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="266.4" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="272.2" fill="none" stroke="#e9eef3" stroke-width="1.8" opacity="0.55"/><circle cx="320.0" cy="320.0" r="278.0" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="283.9" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="289.7" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/><circle cx="320.0" cy="320.0" r="295.5" fill="none" stroke="#e9eef3" stroke-width="1.8" opacity="0.55"/><circle cx="320.0" cy="320.0" r="301.4" fill="none" stroke="#e9eef3" stroke-width="1.1" opacity="0.3"/>
+<circle cx="320.0" cy="320.0" r="96.0" fill="#d4653c"/>
+<circle cx="320.0" cy="320.0" r="9.0" fill="#efe8da"/>
+<circle cx="486.4" cy="96.0" r="54.4" fill="#d4653c"/>
+<circle cx="486.4" cy="96.0" r="27.2" fill="#3b3129"/>
+<circle cx="471.8" cy="57.6" r="17.6" fill="#3b3129"/>
+<path d="M486.4 96.0 L486.4 320.0 L127.5 368.0"
+  fill="none" stroke="#efe8da" stroke-width="10.2"
+  stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="98.7" y="360.3" width="54.4"
+  height="39.7" rx="5.1" fill="#d4653c"
+  transform="rotate(-26 127.5 368.0)"/>
+<circle cx="116.0" cy="378.2" r="5.8" fill="#efe8da"/>
+<circle cx="131.3" cy="377.0" r="5.8" fill="#efe8da"/>
+</svg></div>
+
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column;
+    align-self:stretch;padding:12px 0">
+    <div class="marke" style="gap:10px"><svg width="39" height="39" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="#d4653c"/><rect x="8" y="4" width="3" height="16" rx="1" fill="#d4653c"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="#d4653c"/></svg><span class="markentext" style="font-size:19px"><b>Musiklib</b><span>Sammlung · 240 Alben</span></span></div>
+    <div style="margin-top:auto">
+      <div style="font-size:60px;font-weight:700;letter-spacing:-.02em">Blue in Green</div>
+      <div style="font-size:24px;color:#8b857a;margin-top:10px">
+        Miles Davis · Kind of Blue · 1959</div>
+      <div class="spur" style="margin-top:30px"><i style="width:40%"></i></div>
+      <div class="zeiten" style="font-size:19px;margin-top:14px">
+        <span>02:14</span><span>05:37</span></div>
+    </div>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:auto">
+      <div class="schieber" style="width:66px;height:200px"><div class="schlitz" style="top:14px;width:10px;height:172px"></div><div class="griff" style="top:60px;width:34px;height:25px"></div></div>
+      <div style="display:flex;align-items:flex-end;gap:32px">
+        <div class="knopf" style="width:68px;height:68px;background:#d4653c"><i style="width:27px;height:5px;transform:rotate(200deg) translateX(10px)"></i></div>
+        <div class="knopf" style="width:90px;height:90px;background:#5b83a8"><i style="width:36px;height:7px;transform:rotate(-20deg) translateX(14px)"></i></div>
+      </div>
+    </div>
+  </div>
+</div></div></body></html>

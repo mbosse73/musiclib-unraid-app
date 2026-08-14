@@ -1,0 +1,65 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1600px;height:1000px;overflow:hidden}
+.stage{position:relative;width:1600px;height:1000px;overflow:hidden}
+
+.stage{background:
+  linear-gradient(180deg, #f0913c 0%, #d9662c 26%, #7a3418 48%, #23150e 62%, #0b0906 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#ffffff}
+
+/* Der Horizont: eine dunkle Kante mit weichem Ansatz, kein Foto */
+.horizont{position:absolute;left:0;right:0;background:#0d0906}
+.huegel{position:absolute;border-radius:50%;background:#140d08}
+
+.glas{position:relative;background:rgba(255,255,255,.13);
+  border:1px solid rgba(255,255,255,.24);backdrop-filter:blur(19px);
+  -webkit-backdrop-filter:blur(19px);
+  box-shadow:0 19px 44px rgba(0,0,0,.38),
+    inset 0 1px 0 rgba(255,255,255,.34)}
+
+.linie{position:relative;border-radius:999px;background:rgba(255,255,255,.34)}
+.linie i{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:#ffffff}
+.linie b{position:absolute;top:50%;transform:translate(-50%,-50%);border-radius:50%;
+  background:#ffffff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.zeiten{display:flex;justify-content:space-between;font-variant-numeric:tabular-nums;
+  font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace}
+.tasten{display:flex;align-items:center;justify-content:space-between}
+.bib{display:inline-flex;align-items:center;border-radius:999px;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.26);
+  backdrop-filter:blur(13px);text-transform:uppercase}
+
+</style></head><body><div class="stage"><div class="horizont" style="top:640px;bottom:0"></div>
+<div class="huegel" style="left:-300px;top:520px;width:1100px;height:340px"></div>
+<div class="huegel" style="right:-260px;top:580px;width:960px;height:300px"></div>
+<div style="position:absolute;inset:0;padding:56px 74px;display:flex;
+  flex-direction:column;align-items:center">
+  <div style="align-self:flex-start"><span class="bib" style="height:48px;padding:0 19px;gap:10px;font-size:15px;letter-spacing:2.5px"><svg width="19" height="19" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="#ffffff"/><rect x="8" y="4" width="3" height="16" rx="1" fill="#ffffff"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="#ffffff"/></svg>Sammlung · 240</span></div>
+  <div style="margin-top:auto;margin-bottom:auto">
+    <div class="glas" style="width:900px;border-radius:40px;
+  padding:28px 29px 25px">
+  <div style="display:flex;align-items:center;gap:22px">
+    <div style="line-height:0;flex-shrink:0"><svg viewBox="0 0 168 168" width="168" height="168">
+<defs><linearGradient id="hg168" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#f6a24a"/><stop offset="52%" stop-color="#dd6a2c"/>
+<stop offset="100%" stop-color="#8a3a1a"/></linearGradient></defs>
+<rect x="0" y="0" width="168" height="168" rx="36.96" fill="url(#hg168)"/>
+<circle cx="84.0" cy="104.2" r="14.3" fill="#ffe6b0"/>
+<path d="M0 117.6 Q 50.4 97.4 92.4 114.2
+  T 168 105.8 L168 168 L0 168 Z" fill="#1b120c"/>
+</svg></div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:44px;font-weight:700;overflow:hidden;
+        white-space:nowrap;text-overflow:ellipsis">Blue in Green</div>
+      <div style="font-size:27px;color:rgba(255,255,255,.68);margin-top:5px;
+        overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Miles Davis</div>
+    </div>
+  </div>
+  <div class="zeiten" style="font-size:21px;margin-top:30px">
+    <span>02:14</span><span>-03:23</span></div>
+  <div class="linie" style="height:5px;margin-top:11px">
+    <i style="width:40%"></i>
+    <b style="left:40%;width:16px;height:16px"></b></div>
+  <div style="margin-top:26px"><div class="tasten" style="gap:7px"><svg width="31" height="31" viewBox="0 0 24 24" fill="none" stroke="#f2d64b" stroke-width="1.924" stroke-linecap="round"><path d="M3 6h4l4 12h6M3 18h4l2-6"/><path d="M17 3l4 3-4 3M17 15l4 3-4 3"/></svg><svg width="34" height="34" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#ffffff" stroke-width="2" fill="#ffffff" stroke-linejoin="round"/></svg><svg width="35" height="35" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#ffffff"/><rect x="14" y="5" width="4" height="14" fill="#ffffff"/></svg><svg width="34" height="34" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#ffffff" stroke-width="2" fill="#ffffff" stroke-linejoin="round"/></svg><svg width="31" height="31" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.776" stroke-linecap="round"><path d="M4 9a5 5 0 0 1 5-5h9"/><path d="M15 1l3 3-3 3"/><path d="M20 15a5 5 0 0 1-5 5H6"/><path d="M9 23l-3-3 3-3"/></svg></div></div>
+</div>
+  </div>
+</div></div></body></html>

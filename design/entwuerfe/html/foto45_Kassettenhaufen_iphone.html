@@ -1,0 +1,732 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:2340px;overflow:hidden}
+.stage{position:relative;width:1080px;height:2340px;overflow:hidden}
+
+.stage{background:#8f8b84;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#141416}
+.haufen{position:absolute;inset:0;overflow:hidden}
+.haufen > div{position:absolute;filter:drop-shadow(0 8px 14px rgba(0,0,0,.45))}
+
+/* Der Haufen wird nach unten hin abgedunkelt, damit die Leiste lesbar bleibt */
+.schleier{position:absolute;left:0;right:0;bottom:0;pointer-events:none;
+  background:linear-gradient(180deg, rgba(10,10,12,0) 0%, rgba(10,10,12,.62) 55%,
+    rgba(10,10,12,.86) 100%)}
+
+.pille{display:inline-flex;align-items:center;border-radius:999px;
+  background:rgba(18,18,20,.72);color:#f7f6f3;backdrop-filter:blur(14px);
+  box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.knopfrot{display:inline-flex;align-items:center;justify-content:center;
+  background:#e0342c;color:#fff;font-weight:700;
+  box-shadow:0 10px 24px rgba(180,35,28,.5)}
+
+.leiste{position:relative;background:rgba(18,18,20,.62);
+  border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(22px);
+  color:#f7f6f3}
+.balken{position:relative;border-radius:999px;background:rgba(255,255,255,.26)}
+.balken i{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:#f7f6f3}
+.balken b{position:absolute;top:50%;transform:translate(-50%,-50%);border-radius:50%;
+  background:#f7f6f3}
+.zeiten{display:flex;justify-content:space-between;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;
+  color:rgba(247,246,243,.66);font-variant-numeric:tabular-nums}
+.taste{flex-shrink:0;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22)}
+.taste.gross{background:#f7f6f3;border-color:transparent}
+
+</style></head><body><div class="stage"><div class="haufen"><div style="left:-36px;top:-62px;transform:rotate(3.7deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#e8613f"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#f2b33c"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:207px;top:-34px;transform:rotate(-20.1deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#3f7fb8"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#e8e4d8"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:449px;top:-5px;transform:rotate(26.0deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#f2c33c"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#e8613f"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:692px;top:-40px;transform:rotate(-18.2deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#7a6fb0"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#e8e4d8"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:935px;top:-60px;transform:rotate(0.9deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#4aa89a"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#f2efe4"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:-138px;top:264px;transform:rotate(16.9deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#e05a86"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#f2c33c"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:105px;top:273px;transform:rotate(-25.8deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#d8d4c8"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#3f7fb8"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:347px;top:231px;transform:rotate(21.2deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#2f4a72"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#e8613f"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:590px;top:232px;transform:rotate(-5.4deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#c9553c"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#f2efe4"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:833px;top:274px;transform:rotate(-13.2deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#6fae5a"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#f2c33c"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:-36px;top:545px;transform:rotate(24.9deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#8e8a84"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#e05a86"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:207px;top:507px;transform:rotate(-23.5deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#f2934a"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#2f4a72"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:449px;top:529px;transform:rotate(9.7deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#e8613f"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#f2b33c"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:692px;top:562px;transform:rotate(9.1deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#3f7fb8"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#e8e4d8"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:935px;top:531px;transform:rotate(-23.2deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#f2c33c"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#e8613f"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:-138px;top:790px;transform:rotate(25.1deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#7a6fb0"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#e8e4d8"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:105px;top:827px;transform:rotate(-13.8deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#4aa89a"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#f2efe4"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:347px;top:843px;transform:rotate(-4.7deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#e05a86"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#f2c33c"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:590px;top:801px;transform:rotate(20.7deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#d8d4c8"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#3f7fb8"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:833px;top:797px;transform:rotate(-25.9deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#2f4a72"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#e8613f"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:-36px;top:1123px;transform:rotate(17.4deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#c9553c"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#f2efe4"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:207px;top:1116px;transform:rotate(0.2deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#6fae5a"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#f2c33c"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:449px;top:1075px;transform:rotate(-17.7deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#8e8a84"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#e05a86"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:692px;top:1092px;transform:rotate(25.9deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#f2934a"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#2f4a72"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:935px;top:1129px;transform:rotate(-20.5deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#e8613f"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#f2b33c"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:-138px;top:1386px;transform:rotate(4.4deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#3f7fb8"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#e8e4d8"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:105px;top:1356px;transform:rotate(14.1deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#f2c33c"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#e8613f"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:347px;top:1390px;transform:rotate(-25.2deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#7a6fb0"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#e8e4d8"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:590px;top:1411px;transform:rotate(23.0deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#4aa89a"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#f2efe4"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:833px;top:1372px;transform:rotate(-8.8deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#e05a86"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#f2c33c"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:-36px;top:1645px;transform:rotate(-10.1deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#d8d4c8"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#3f7fb8"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:207px;top:1687px;transform:rotate(23.6deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#2f4a72"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#e8613f"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:449px;top:1687px;transform:rotate(-24.8deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#c9553c"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#f2efe4"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:692px;top:1645px;transform:rotate(12.9deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#6fae5a"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#f2c33c"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:935px;top:1656px;transform:rotate(5.8deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#8e8a84"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#e05a86"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:-138px;top:1979px;transform:rotate(-21.4deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#f2934a"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#2f4a72"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:105px;top:1958px;transform:rotate(25.8deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#e8613f"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#f2b33c"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:347px;top:1924px;transform:rotate(-16.6deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#3f7fb8"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#e8e4d8"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:590px;top:1954px;transform:rotate(-1.2deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#f2c33c"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#e8613f"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:833px;top:1980px;transform:rotate(18.5deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#7a6fb0"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#e8e4d8"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:-36px;top:2227px;transform:rotate(-26.0deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#4aa89a"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#f2efe4"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:207px;top:2210px;transform:rotate(19.9deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#e05a86"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#f2c33c"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:449px;top:2251px;transform:rotate(-3.3deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#d8d4c8"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#3f7fb8"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:692px;top:2257px;transform:rotate(-15.0deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#2f4a72"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#e8613f"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div><div style="left:935px;top:2215px;transform:rotate(25.4deg)"><svg viewBox="0 0 300 186.0" width="300" height="186.0">
+<rect x="0" y="0" width="300" height="186.0" rx="16.7" fill="#c9553c"
+  stroke="#1a1a1a" stroke-width="1.8"/>
+<rect x="15.0" y="13.0" width="270.0" height="55.8"
+  rx="5.6" fill="#f2efe6"/>
+<rect x="15.0" y="74.4" width="270.0" height="13.0"
+  fill="#f2efe4"/>
+<rect x="48.0" y="96.7" width="204.0" height="48.4"
+  rx="5.6" fill="#17171a"/>
+<circle cx="90.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="210.0" cy="120.9" r="46.5" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.5"/>
+<circle cx="90.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="210.0" cy="120.9" r="19.5" fill="#17171a"/>
+<circle cx="60.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="105.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="150.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="195.0" cy="161.8" r="5.1" fill="#1a1a1a"/><circle cx="240.0" cy="161.8" r="5.1" fill="#1a1a1a"/></svg></div></div>
+<div class="schleier" style="height:900px"></div>
+<div style="position:absolute;inset:0;padding:120px 54px 90px;display:flex;flex-direction:column">
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <span class="pille" style="height:78px;padding:0 32px;gap:16px;font-size:29px">
+      <svg width="30" height="30" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="#f2b33c"/><rect x="8" y="4" width="3" height="16" rx="1" fill="#f2b33c"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="#f2b33c"/></svg>Sammlung · 240</span>
+    <span class="knopfrot" style="height:78px;padding:0 38px;border-radius:20px;font-size:29px">
+      Merken</span>
+  </div>
+
+  <div class="leiste" style="margin-top:auto;border-radius:44px;padding:36px 40px">
+    <div style="font-size:44px;font-weight:700;overflow:hidden;white-space:nowrap;
+      text-overflow:ellipsis">Blue in Green</div>
+    <div style="font-size:29px;color:rgba(247,246,243,.66);margin-top:8px">
+      Miles Davis · Kind of Blue</div>
+    <div class="balken" style="height:10px;margin-top:32px">
+      <i style="width:40%"></i>
+      <b style="left:40%;width:26px;height:26px"></b></div>
+    <div class="zeiten" style="font-size:25px;margin-top:18px">
+      <span>02:14</span><span>05:37</span></div>
+    <div style="margin-top:34px"><div style="display:flex;align-items:center;justify-content:center;gap:38px"><div class="taste" style="width:96px;height:96px"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="rgba(247,246,243,.7)" stroke-width="2" stroke-linecap="round"><path d="M3 6h4l4 12h6M3 18h4l2-6"/><path d="M17 3l4 3-4 3M17 15l4 3-4 3"/></svg></div><div class="taste" style="width:96px;height:96px"><svg width="40" height="40" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#f7f6f3" stroke-width="2" fill="#f7f6f3" stroke-linejoin="round"/></svg></div><div class="taste gross" style="width:140px;height:140px"><svg width="56" height="56" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#141416"/></svg></div><div class="taste" style="width:96px;height:96px"><svg width="40" height="40" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#f7f6f3" stroke-width="2" fill="#f7f6f3" stroke-linejoin="round"/></svg></div><div class="taste" style="width:96px;height:96px"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="rgba(247,246,243,.7)" stroke-width="2" stroke-linecap="round"><path d="M4 9a5 5 0 0 1 5-5h9"/><path d="M15 1l3 3-3 3"/><path d="M20 15a5 5 0 0 1-5 5H6"/><path d="M9 23l-3-3 3-3"/></svg></div></div></div>
+  </div>
+</div></div></body></html>
