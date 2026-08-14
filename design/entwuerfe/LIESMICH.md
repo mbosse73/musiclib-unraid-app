@@ -40,11 +40,12 @@ ihre **Oberfläche**.
 | 43b | Klarglas | 3 px · 5 % | poliert, harter Spiegelstreifen quer |
 | 43c | Mattglas | 48 px · 30 % | geätzt, Korn 14 %, gar kein Glanz |
 | 43f | Rauchglas | 12 px · 36 % | poliert, **dunkel getönt statt weiss** |
-| 43g | Schliffglas | 8 px Trübung, **34 px Fase** | klar poliert, **Licht von links, Schlagschatten rechts** |
+| 43h | Vitrinenglas | 46 px · 15 % · Fase 20 px | poliert wie 43b, **aber ohne Spiegelstreifen** |
 
-Die Buchstaben d und e sind frei: dort standen *Riffelglas* (gegossen, gerippt)
-und *Blockglas* (130 px, milchig), beide wieder entfernt. Ihre Nummern werden
-nicht neu vergeben, damit ein Blick auf eine ältere Aufnahme eindeutig bleibt.
+Die Buchstaben d, e und g sind frei: dort standen *Riffelglas* (gegossen,
+gerippt), *Blockglas* (130 px, milchig) und *Schliffglas* (klar, Licht von
+links), alle drei wieder entfernt. Ihre Buchstaben werden nicht neu vergeben,
+damit ein Blick auf eine ältere Aufnahme eindeutig bleibt.
 
 Wie die Rezepte gebaut sind: `blur` ist die Dicke, `weiss` die Eigenfarbe,
 `rand`/`kante` die Kanten. Die Oberfläche liegt in zwei Pseudo-Lagen darüber —
@@ -65,11 +66,11 @@ Drei Dinge, die die Reihe gezeigt hat:
 - **Rauchglas dreht die Richtung um.** Alle anderen hellen die Karte auf, 43f
   dunkelt sie ab. Weisse Schrift wird dadurch kontrastreicher, nicht schwächer —
   es ist die einzige Fassung, die auch über einem hellen Himmel noch trüge.
-- **Dick heisst nicht milchig.** 43g hat nur 8 px Trübung und ist trotzdem die
-  dickste Scheibe der Reihe: die Stärke steckt in der 34 px breiten Fase, deren
-  innere Kante links leuchtet und rechts ins Dunkle läuft, plus dem
-  Schlagschatten, der nach rechts fällt. Bei allen anderen Fassungen ist der
-  Schatten mittig — nur hier steht eine Lichtquelle im Bild.
+- **Poliert ist die Kante, nicht der Reflex.** 43h nimmt 43b als Vorlage, lässt
+  den Spiegelstreifen weg und wird um ein Vielfaches dicker. Was bleibt, ist die
+  harte helle Kante — und genau die trägt den Eindruck „poliert". Der Streifen
+  war Zierde, die Kante ist die Aussage. Gegen 43a (fast gleich dick) steht 43h
+  deshalb klarer und schärfer da, obwohl beide milchig sind.
 
 Alle sechs liegen in einer Datei (`d43.py`); `FASSUNGEN` hält je Fassung nur
 noch das Glasrezept, Himmel und Coverfarben sind gemeinsam. Eine siebte anzulegen

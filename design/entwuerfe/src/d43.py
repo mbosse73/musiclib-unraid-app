@@ -46,16 +46,15 @@ FASSUNGEN = {
     'c': _f('Mattglas', 'Geätzt: kein Glanz, dafür Korn — Licht wird gestreut, nicht geworfen',
             dict(blur=48, weiss=.30, rand=.16, kante=.20, koern=.14, saettigung=.85)),
 
-
-
     'f': _f('Rauchglas', 'Dunkel getönt und poliert — die Scheibe dämpft, statt aufzuhellen',
             dict(blur=12, weiss=.36, rand=.26, kante=.44, streif=.42, saettigung=1.15,
                  ton='rgba(18,10,8,'), stumm='rgba(255,255,255,.60)'),
 
-    'g': _f('Schliffglas',
-            'Sehr dick, aber klar — Licht von links, Schlagschatten nach rechts',
-            dict(blur=8, weiss=.07, rand=.28, kante=.55, saettigung=1.18,
-                 dicke=34, licht='links', schatten=(54, 28, 64, .58))),
+    # 43b als Vorlage: dieselbe polierte Kante, aber ohne den Spiegelstreifen
+    # und um ein Vielfaches dicker.
+    'h': _f('Vitrinenglas',
+            'Wie Klarglas poliert, aber ohne Spiegelstreifen und um ein Vielfaches dicker',
+            dict(blur=46, weiss=.15, rand=.62, kante=.98, saettigung=1.20, dicke=20)),
 }
 
 
