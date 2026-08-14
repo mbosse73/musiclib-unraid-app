@@ -53,6 +53,26 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
 #buehne{position:fixed;inset:0;overflow:hidden}
 #buehne>*{width:100%;height:100%}
 
+/* ── Ueberschrift der Interpreten-Ansicht ───────────────────────────────
+   Die einzige Regel ausserhalb der Wurzelklassen, die in den Listen der
+   Layouts landet — und deshalb die einzige, die keine eigene Farbe haben
+   darf: alles kommt ueber currentColor aus der Umgebung, damit sie auf
+   Nussbaum wie auf Milchglas dazugehoert.
+
+   grid-column, weil mehrere Listen zweispaltig sind (.nc .bliste, .wr
+   .spalten): ohne das saesse die Ueberschrift in einer der beiden Spalten
+   statt darueber. In Flex- und Blockkontexten ist die Angabe wirkungslos. */
+.bgruppe{grid-column:1/-1;display:flex;align-items:baseline;gap:10px;
+  padding:15px 2px 5px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  opacity:.75;line-height:1.4}
+.bgruppe:first-child{padding-top:2px}
+.bgruppe .bgn{font-weight:600;letter-spacing:.13em;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap}
+.bgruppe .bgz{opacity:.7;white-space:nowrap;font-variant-numeric:tabular-nums}
+.bgruppe .bga{margin-left:auto;flex:none;font:inherit;letter-spacing:.13em;
+  text-transform:uppercase;opacity:.85;border-bottom:1px solid currentColor;padding-bottom:1px}
+.bgruppe .bga:hover{opacity:1}
+
 /* ── Wechsler ───────────────────────────────────────────────────────────
    Der einzige Knopf, den alle zwoelf teilen. Er nimmt seine Farbe vom
    Layout (--chrome-ink/--chrome-grund werden beim Bauen gesetzt), sonst
@@ -74,7 +94,7 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
   box-shadow:0 30px 80px rgba(20,18,14,.45)}
 .wahlkasten h2{font-size:22px;font-weight:500;letter-spacing:-.01em}
 .wahlkasten p{margin-top:6px;font-size:13px;color:#6B6155;max-width:62ch}
-.wahlgitter{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.wahlgitter{margin-top:10px;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
 .wk{text-align:left;border:1px solid rgba(36,30,24,.16);border-radius:2px;padding:12px 13px 13px;
   display:block;transition:background .15s}
 .wk:hover{background:rgba(36,30,24,.045)}
@@ -84,6 +104,7 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
   color:#8A6534}
 .wk .b{display:block;margin-top:7px;font-size:12.5px;color:#6B6155;line-height:1.5}
 .wahlende{margin-top:24px;padding-top:18px;border-top:1px solid rgba(36,30,24,.12)}
+.wahlende:first-of-type{margin-top:18px}
 .wahlkap{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#8A6534}
 .wahlreihe{margin-top:10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
 .wahlfuss{margin-top:22px;padding-top:16px;border-top:1px solid rgba(36,30,24,.12);
@@ -91,6 +112,30 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
   font-size:12px;color:#6B6155}
 .wahlfuss a{color:#8A6534}
 .wahlfuss button{border:1px solid rgba(36,30,24,.22);border-radius:2px;padding:7px 14px;font-size:13px}
+
+/* ── Sammlung im Einstellungsdialog ─────────────────────────────────────
+   Der Dialog ist die einzige Flaeche, die alle Layouts teilen — deshalb
+   steht hier, was frueher nur der Schreibtisch konnte: sortieren, die
+   Ansicht umstellen, neu einlesen, uebersprungene Dateien nachsehen. */
+.wahlwahlen{margin-top:10px;display:flex;gap:14px;flex-wrap:wrap}
+.wahlwahlen label{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#6B6155}
+.wahlwahlen select{border:1px solid rgba(36,30,24,.22);border-radius:2px;padding:6px 8px;
+  font-size:13px;color:#241E18;background:#fff}
+.wahlstand{margin-top:12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  font-size:12.5px;color:#6B6155}
+.wahlstand b{font-weight:600;color:#241E18;font-variant-numeric:tabular-nums}
+.wahlstand .fehler{color:#8C2F1E}
+.wahlstand button{border:1px solid rgba(36,30,24,.22);border-radius:2px;padding:6px 12px;
+  font-size:12.5px;margin-left:auto}
+.wahlstand button[disabled]{opacity:.5;cursor:default}
+.wahlskip{margin-top:10px}
+.wahlskip>button{font-size:12px;color:#8C2F1E;border-bottom:1px solid rgba(140,47,30,.4);
+  padding-bottom:1px}
+.wahlskip ul{margin-top:8px;padding:10px 12px;border:1px solid rgba(140,47,30,.28);border-radius:2px;
+  max-height:160px;overflow:auto;list-style:none;font-size:12px;color:#6B6155;
+  font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace}
+.wahlskip ul[hidden]{display:none}
+.wahlskip li{padding:2px 0;word-break:break-all}
 
 /* ── Zustaende vor dem ersten Ton ── */
 .hinweis{position:fixed;inset:0;z-index:150;display:grid;place-items:center;text-align:center;
@@ -1006,18 +1051,39 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
 <audio id="ton" preload="metadata"></audio>
 <div id="buehne"></div>
 
-<button class="wechsler" id="wechsler" type="button" title="Ansicht wechseln (Taste L)"
-  aria-label="Ansicht wechseln"></button>
+<button class="wechsler" id="wechsler" type="button" title="Einstellungen (Taste L)"
+  aria-label="Einstellungen öffnen"></button>
 
 <div class="wahl" id="wahl" hidden>
-  <div class="wahlkasten" role="dialog" aria-modal="true" aria-label="Ansicht wählen">
-    <h2>Ansicht</h2>
+  <div class="wahlkasten" role="dialog" aria-modal="true" aria-label="Einstellungen">
+    <h2>Einstellungen</h2>
     <p>Zwölf Oberflächen für dieselbe Sammlung. Was gespielt wird, läuft beim Wechsel weiter —
     nur das Gerät drumherum ist ein anderes.</p>
-    <div class="wahlgitter" id="wahlgitter"></div>
+    <div class="wahlende">
+      <span class="wahlkap">Ansicht</span>
+      <div class="wahlgitter" id="wahlgitter"></div>
+    </div>
+    <div class="wahlende">
+      <span class="wahlkap">Sammlung</span>
+      <div class="wahlwahlen">
+        <label>Sortierung
+          <select id="wahlsort" aria-label="Sortierung der Sammlung"></select></label>
+        <label>Anzeigen
+          <select id="wahlansicht" aria-label="Sammlung anzeigen als"></select></label>
+      </div>
+      <div class="wahlstand" id="wahlstand"></div>
+      <div class="wahlskip" id="wahlskip" hidden>
+        <button type="button" id="wahlskipknopf" aria-expanded="false"></button>
+        <ul id="wahlskipliste" hidden></ul>
+      </div>
+    </div>
     <div class="wahlende">
       <span class="wahlkap">Am Ende der Warteschlange</span>
       <div class="wahlreihe" id="wahlende"></div>
+    </div>
+    <div class="wahlende">
+      <span class="wahlkap">Reihenfolge</span>
+      <div class="wahlreihe" id="wahlzufall"></div>
     </div>
     <div class="wahlende">
       <span class="wahlkap">Bildschirm</span>
@@ -1134,12 +1200,102 @@ function uebernimm(daten){
     || x.t.localeCompare(y.t,'de'));
 }
 
+/* ── Sortierung ─────────────────────────────────────────────────────────
+   Dieselben fuenf Ordnungen wie am Schreibtisch, unter demselben Schluessel
+   `musiklib:sort` und mit denselben Kennungen — wer dort nach Jahr sortiert,
+   findet die Sammlung hier ebenso vor. Nur die Feldnamen sind die kurzen
+   dieser Seite (a.ar statt a.artist).
+
+   Sortiert wird immer in eine neue Liste: ALBUMS selbst bleibt in seiner
+   Reihenfolge, weil naechstesAlbum() und der erste Start daran haengen. */
+const kollate = (a,b) => String(a == null ? '' : a)
+  .localeCompare(String(b == null ? '' : b), 'de', {sensitivity:'base'});
+const SORTIERUNGEN = {
+  artist:      {name:'Interpret',
+                fn:(a,b) => kollate(a.ar,b.ar) || (a.y||0)-(b.y||0) || kollate(a.t,b.t)},
+  title:       {name:'Albumtitel',
+                fn:(a,b) => kollate(a.t,b.t) || kollate(a.ar,b.ar)},
+  'year-desc': {name:'Jahr, neueste zuerst',
+                fn:(a,b) => (b.y||0)-(a.y||0) || kollate(a.ar,b.ar)},
+  'year-asc':  {name:'Jahr, älteste zuerst',
+                fn:(a,b) => (a.y||9999)-(b.y||9999) || kollate(a.ar,b.ar)},
+  added:       {name:'Zuletzt hinzugefügt',
+                fn:(a,b) => (b.added||0)-(a.added||0) || kollate(a.ar,b.ar)},
+};
+let sortierung = SORTIERUNGEN[restore('sort', 'artist')] ? restore('sort', 'artist') : 'artist';
+
 /* Gesucht wird im Blob aus Albumtitel, Interpret, Jahr und allen Titelnamen —
-   ein includes() je Album, genau wie a._q in index.html. */
+   ein includes() je Album, genau wie a._q in index.html. Die Sortierung sitzt
+   hier und nicht in den Layouts: alle drei Listenzeichner der Seite gehen
+   durch diese eine Funktion, damit gilt die Wahl ueberall. */
 const suche = text => {
   const q = String(text || '').trim().toLowerCase();
-  return q ? ALBUMS.filter(a => a._q.includes(q)) : ALBUMS.slice();
+  const treffer = q ? ALBUMS.filter(a => a._q.includes(q)) : ALBUMS.slice();
+  return treffer.sort((SORTIERUNGEN[sortierung] || SORTIERUNGEN.artist).fn);
 };
+
+/* ── Alben oder Interpreten ─────────────────────────────────────────────
+   Dieselbe Gruppierung, die index.html fuer seine zweite Registerkarte
+   rechnet: aus der gefilterten Albenliste, nicht aus einer eigenen Quelle —
+   einen Interpreten-Endpunkt gibt es im Backend nicht und soll es nicht
+   geben. Innerhalb eines Interpreten stehen die Alben nach Jahr. */
+let ansicht = restore('ansicht', 'alben') === 'interpreten' ? 'interpreten' : 'alben';
+
+function interpreten(alben){
+  const nach = new Map();
+  for (const a of alben){
+    if (!nach.has(a.ar)) nach.set(a.ar, []);
+    nach.get(a.ar).push(a);
+  }
+  const raus = [];
+  for (const [name, liste] of nach){
+    liste.sort((x,y) => (x.y||9999) - (y.y||9999) || kollate(x.t,y.t));
+    raus.push({name, alben: liste, titel: liste.reduce((n,x) => n + x.tr.length, 0)});
+  }
+  return raus.sort((a,b) => kollate(a.name, b.name));
+}
+
+/* Die Liste eines Layouts als HTML. Die Zeile bringt das Layout mit, die
+   Ueberschrift kommt von hier — so bekommen alle zwoelf die Gruppierung,
+   ohne dass zwoelf Stylesheets etwas davon wissen muessen. */
+function listeHTML(alben, zeile, leer){
+  if (!alben.length) return leer || '';
+  if (ansicht !== 'interpreten') return alben.map(zeile).join('');
+  return interpreten(alben).map(g =>
+    `<div class="bgruppe"><span class="bgn">${esc(g.name)}</span>` +
+    `<span class="bgz">${g.alben.length} ${g.alben.length === 1 ? 'Album' : 'Alben'}` +
+    ` · ${g.titel} Titel</span>` +
+    `<button type="button" class="bga" data-int="${esc(g.name)}">Alles</button></div>` +
+    g.alben.map(zeile).join('')).join('');
+}
+
+/* „Alles abspielen" eines Interpreten — die Warteschlange ist dann nicht ein
+   Album, sondern alle seine Alben in Jahresfolge. Danach greift wie sonst
+   `fortsetzung`.
+
+   `alben` ist die Liste, aus der die Ueberschriften gerechnet wurden, nicht
+   die ganze Sammlung: steht eine Suche im Feld, spielt „Alles" das, was die
+   Suche zeigt — sonst spielte der Knopf etwas anderes, als daneben steht. */
+function bindeGruppen(wurzel, deck, danach, alben){
+  $$('.bga[data-int]', wurzel).forEach(el => el.onclick = ev => {
+    ev.stopPropagation();
+    const g = interpreten(alben || ALBUMS).find(x => x.name === el.dataset.int);
+    if (!g) return;
+    deck.ladeIds(g.alben.flatMap(a => a.ids), 0);
+    if (danach) danach();
+  });
+}
+
+/* Alle sichtbaren Listen neu zeichnen. Jeder Zeichner traegt sich beim Bauen
+   ein, zeigeLayout() leert die Liste wieder — genau wie offeneBlenden. */
+let listenZeichner = [];
+const merkeListe = fn => { listenZeichner.push(fn); return fn; };
+const zeichneListen = () => listenZeichner.forEach(fn => { try{ fn(); }catch(e){ console.error(e); } });
+
+/* Der Einstellungsdialog wird weiter unten gebaut; bis dahin ist das hier
+   ein Platzhalter. Ohne ihn muessten Stellen wie setShuffle() eine Funktion
+   aufrufen, deren Umgebung es noch nicht gibt. */
+let wahlAuffrischen = () => {};
 
 /* Cover: das Bild, wenn es eines gibt, sonst der Verlauf mit Initial. Beide
    Faelle fuellen denselben Kasten, damit kein Layout zwei Groessen kennt. */
@@ -1230,7 +1386,15 @@ class Deck {
   }
   ladeAlbum(a, i = 0){
     if (!a || !a.ids.length) return;
-    let ids = a.ids.slice();
+    this.ladeIds(a.ids, i);
+  }
+  /* Eine Warteschlange ist sonst immer ein Album; „Alles abspielen" eines
+     Interpreten ist der einzige Fall, der mehrere zusammenlegt. Deshalb
+     nimmt die eigentliche Arbeit Kennungen entgegen und ladeAlbum() ist
+     nur noch der haeufige Sonderfall davon. */
+  ladeIds(ids0, i = 0){
+    if (!ids0 || !ids0.length) return;
+    let ids = ids0.slice();
     if (this.shuffle){
       const kopf = ids[i], rest = ids.filter((_,k) => k !== i);
       for (let k = rest.length-1; k > 0; k--){ const j = Math.floor(Math.random()*(k+1));
@@ -1289,7 +1453,11 @@ class Deck {
     store('volume', v); store('muted', false);
     this.render();
   }
-  toggleShuffle(){ this.shuffle = !this.shuffle; store('shuffle', this.shuffle); this.render(); }
+  toggleShuffle(){ this.setShuffle(!this.shuffle); }
+  setShuffle(v){
+    this.shuffle = !!v; store('shuffle', this.shuffle);
+    this.render(); wahlAuffrischen();
+  }
 }
 
 const ton = document.getElementById('ton');
@@ -1530,6 +1698,107 @@ function sitzungHolen(){
   return true;
 }
 
+/* ══ Bestand und Scan ══════════════════════════════════════════════════════
+   Bis hierher war diese Seite ein reiner Spieler: eingelesen wurde am
+   Schreibtisch. Das faellt weg — der Scan sitzt jetzt im Einstellungsdialog,
+   den alle zwoelf Layouts teilen.
+
+   Zwei Regeln, die daraus folgen:
+     • Beim Laden wird nur *nachgesehen*, ob gerade ein Scan laeuft. Ausgeloest
+       wird er ausschliesslich per Knopf. Ein Spieler, der beim Oeffnen die
+       Platte im NAS anwirft, waere ein Fehler, kein Dienst.
+     • Nach einem Scan wird die Sammlung neu uebernommen, ohne die Wiedergabe
+       anzufassen. Wer gerade hoert, soll von einem Scan nichts merken.     */
+const SAMMLUNG = {alben:0, titel:0, stand:null, uebersprungen:0, dateien:[]};
+let scanLaeuft = false, scanText = '', scanFehler = false, scanZeitgeber = 0;
+
+function bestandUebernehmen(daten){
+  SAMMLUNG.alben = daten.album_count || 0;
+  SAMMLUNG.titel = daten.track_count || 0;
+  SAMMLUNG.stand = daten.scanned_at || null;
+  SAMMLUNG.uebersprungen = daten.skipped_count || 0;
+  SAMMLUNG.dateien = daten.skipped_files || [];
+}
+
+async function ladeSammlung(){
+  const r = await fetch('/api/library', {cache:'no-store'});
+  if (!r.ok) throw new Error(r.status);
+  const daten = await r.json();
+  uebernimm(daten);
+  bestandUebernehmen(daten);
+}
+
+/* Nach einem Scan: die Warteschlange auf das kuerzen, was es noch gibt, und
+   dabei den laufenden Titel behalten. track_id haengt am Pfad — eine
+   verschobene Datei ist nach dem Scan eine andere und faellt still heraus. */
+function nachScan(){
+  const laufend = deck.queue[deck.qi];
+  const rest = deck.queue.filter(id => TRACKS[id]);
+  if (rest.length !== deck.queue.length){
+    const i = rest.indexOf(laufend);
+    deck.queue = rest;
+    deck.qi = rest.length ? (i >= 0 ? i : clamp(deck.qi, 0, rest.length - 1)) : -1;
+  }
+  /* Aus der leeren Sammlung heraus gibt es noch kein Layout: dann ist der
+     erste gelungene Scan zugleich der Start der Seite. */
+  if (ALBUMS.length && !aktuell){
+    hinweis(false);
+    const gespeichert = restore('layout', null);
+    zeigeLayout(LAYOUTS.some(L => L.id === gespeichert) ? gespeichert : ersteWahl());
+  }
+  if (deck.qi < 0 && ALBUMS.length){ deck.queue = ALBUMS[0].ids.slice(); deck.qi = 0; }
+  zeichneListen();
+  deck.render();
+  wahlAuffrischen();
+}
+
+async function starteScan(){
+  if (scanLaeuft) return;
+  scanLaeuft = true; scanFehler = false; scanText = 'Scan wird gestartet …';
+  wahlAuffrischen();
+  try{
+    await fetch('/api/scan', {method:'POST'});
+  }catch{
+    scanLaeuft = false; scanFehler = true; scanText = 'Der Server hat nicht geantwortet.';
+    wahlAuffrischen(); return;
+  }
+  pruefeScan();
+}
+
+/* 600 ms wie am Schreibtisch, und nur solange etwas laeuft: im Ruhezustand
+   fragt diese Seite den Server nichts. */
+async function pruefeScan(){
+  clearTimeout(scanZeitgeber);
+  let s;
+  try{
+    const r = await fetch('/api/scan/status', {cache:'no-store'});
+    s = await r.json();
+  }catch{
+    scanLaeuft = false; scanFehler = true; scanText = 'Verbindung verloren.';
+    wahlAuffrischen(); return;
+  }
+  scanLaeuft = !!s.running;
+  if (scanLaeuft){
+    scanFehler = false;
+    scanText = s.total > 0 ? `Liest ${s.progress} von ${s.total}` : 'Liest ein …';
+    wahlAuffrischen();
+    scanZeitgeber = setTimeout(pruefeScan, 600);
+    return;
+  }
+  /* scan_state.error ist bereits ein kurzer deutscher Satz und wird so
+     angezeigt, wie er kommt — genau wie am Schreibtisch. */
+  scanFehler = !!s.error;
+  scanText = s.error || '';
+  if (!scanFehler){
+    try{ await ladeSammlung(); }
+    catch{ scanFehler = true; scanText = 'Sammlung nicht erreichbar.'; }
+  }
+  if (!scanFehler) scanText = SAMMLUNG.uebersprungen
+    ? `Fertig — ${SAMMLUNG.uebersprungen} Datei(en) übersprungen`
+    : 'Fertig';
+  nachScan();
+}
+
 /* ══ Bedienhilfen fuer die Layouts ═════════════════════════════════════════ */
 
 /* Ziehen auf einer Leiste: liefert 0…1 bei Klick, Zug und Abbruch.
@@ -1577,9 +1846,9 @@ function bindBibliothek(o){
   const markiere = () => [...o.liste.children].forEach(el =>
     el.classList.toggle('an', !!o.deck.album && el.dataset.alb === o.deck.album.id));
 
-  const zeichne = () => {
+  const zeichne = merkeListe(() => {
     const treffer = suche(o.feld.value);
-    o.liste.innerHTML = treffer.map(o.zeile).join('') || (o.leer || '');
+    o.liste.innerHTML = listeHTML(treffer, o.zeile, o.leer);
     if (o.treffer) o.treffer.textContent = o.feld.value.trim()
       ? `${treffer.length} von ${ALBUMS.length} Alben` : `${ALBUMS.length} Alben`;
     [...o.liste.children].forEach(el => el.dataset.alb && (el.onclick = () => {
@@ -1587,8 +1856,9 @@ function bindBibliothek(o){
       if (a) o.deck.ladeAlbum(a, 0);
       zeige(false);
     }));
+    bindeGruppen(o.liste, o.deck, () => zeige(false), treffer);
     markiere();
-  };
+  });
 
   const zeige = auf => {
     o.blende.classList.toggle('auf', auf);
@@ -1691,22 +1961,46 @@ function verdrahte(wurzel, deck){
   const liste = q('[data-liste]'), feldListe = liste && wurzel.querySelector('[data-suche]');
   const markiereListe = () => liste && $$('[data-t]', wurzel)
     .forEach(el => el.classList.toggle('an', el.dataset.t === deck.queue[deck.qi]));
-  function zeichneTextliste(){
+  /* Diese eine Liste zeigt Titel statt Alben. In der Interpreten-Ansicht
+     steht deshalb dieselbe Ueberschrift wie in den Blenden der anderen
+     Layouts vor jedem Block seiner Titel — die Deckelung bei 300 Zeilen
+     zaehlt ueber alle Bloecke, nicht je Block. */
+  const zeichneTextliste = liste && merkeListe(() => {
     const alben = suche(feldListe.value);
-    const zeilen = alben.flatMap(a => a.ids.map(id => TRACKS[id])).slice(0, 300);
-    liste.innerHTML = zeilen.map((t,i) => `
-      <div class="lz" data-t="${esc(t.id)}"><span class="nr">${String(i+1).padStart(2,'0')}</span>
+    const bloecke = ansicht === 'interpreten'
+      ? interpreten(alben).map(g => ({kopf:g, alben:g.alben}))
+      : [{kopf:null, alben}];
+    const teile = [];
+    let n = 0;
+    for (const b of bloecke){
+      if (n >= 300) break;
+      if (b.kopf) teile.push(
+        `<div class="bgruppe"><span class="bgn">${esc(b.kopf.name)}</span>` +
+        `<span class="bgz">${b.kopf.titel} Titel</span>` +
+        `<button type="button" class="bga" data-int="${esc(b.kopf.name)}">Alles</button></div>`);
+      for (const a of b.alben){
+        for (const id of a.ids){
+          if (n >= 300) break;
+          const t = TRACKS[id]; if (!t) continue;
+          n++;
+          teile.push(`
+      <div class="lz" data-t="${esc(t.id)}"><span class="nr">${String(n).padStart(2,'0')}</span>
         <span class="t">${esc(t.t)}</span><span class="ar">${esc(t.ar)}</span>
-        <span class="d">${fmt(t.d)}</span></div>`).join('') ||
+        <span class="d">${fmt(t.d)}</span></div>`);
+        }
+      }
+    }
+    liste.innerHTML = teile.join('') ||
       '<div class="lz" style="border:none"><span class="t">Nichts gefunden.</span></div>';
     q('[data-anz]').textContent = feldListe.value.trim()
-      ? `${alben.length} von ${ALBUMS.length} Alben` : `${zeilen.length} von ${TLIST.length} Titeln`;
+      ? `${alben.length} von ${ALBUMS.length} Alben` : `${n} von ${TLIST.length} Titeln`;
     $$('[data-t]', wurzel).forEach(el => el.onclick = () => {
       const t = TRACKS[el.dataset.t], a = albOf(t);
       if (a) deck.ladeAlbum(a, t.no - 1);
     });
+    bindeGruppen(liste, deck, null, alben);
     markiereListe();
-  }
+  });
   if (liste){ feldListe.oninput = zeichneTextliste; zeichneTextliste(); }
 
   const blende = q('[data-bib-blende]');
@@ -1949,14 +2243,14 @@ function verdrahte(w, deck){
   const regal = q('[data-regal]'), feld = q('[data-suche]');
   const markiereRegal = () => $$('.spine', w)
     .forEach(el => el.classList.toggle('an', !!deck.album && el.dataset.alb === deck.album.id));
-  function zeichneRegal(){
+  const zeichneRegal = merkeListe(() => {
     const treffer = suche(feld.value);
-    regal.innerHTML = treffer.map(a => `
+    regal.innerHTML = listeHTML(treffer, a => `
       <div class="spine" data-alb="${esc(a.id)}">
         <span class="farbe" style="background:${grad(a)}"></span>
         <div class="m"><div class="t">${esc(a.t)}</div>
-          <div class="s">${esc(a.ar)} · ${fmtLang(albDur(a))}</div></div></div>`).join('') ||
-      '<div class="spine" style="box-shadow:none"><div class="m"><div class="s">Nichts gefunden.</div></div></div>';
+          <div class="s">${esc(a.ar)} · ${fmtLang(albDur(a))}</div></div></div>`,
+      '<div class="spine" style="box-shadow:none"><div class="m"><div class="s">Nichts gefunden.</div></div></div>');
     q('[data-treffer]').textContent = feld.value.trim()
       ? `${treffer.length} von ${ALBUMS.length} Kassetten` : `${ALBUMS.length} Kassetten`;
     $$('.spine', w).forEach(el => el.dataset.alb && (el.onclick = () => {
@@ -1964,8 +2258,9 @@ function verdrahte(w, deck){
       if (a) deck.ladeAlbum(a, 0);
       if (fach) fach.classList.remove('auf');       // eingelegt heisst: Fach zu
     }));
+    bindeGruppen(regal, deck, () => { if (fach) fach.classList.remove('auf'); }, treffer);
     markiereRegal();
-  }
+  });
   feld.oninput = zeichneRegal;
   zeichneRegal();
 
@@ -2636,6 +2931,7 @@ function zeigeLayout(id){
   const L = LAYOUTS.find(x => x.id === id) || LAYOUTS[0];
   aktuell = L;
   offeneBlenden = [];
+  listenZeichner = [];
   deck.onRender = () => {};
   buehne.innerHTML = '';
   const w = document.createElement('div');
@@ -2652,7 +2948,70 @@ function zeigeLayout(id){
   zeichneWahl();
 }
 
+/* Die beiden Auswahlfelder werden einmal gefuellt; zeichneWahl() setzt danach
+   nur noch den Wert. Ein <select>, das bei jedem Zeichnen neu entsteht,
+   verliert waehrend der Bedienung den Fokus. */
+const feldSort = document.getElementById('wahlsort');
+const feldAnsicht = document.getElementById('wahlansicht');
+feldSort.innerHTML = Object.entries(SORTIERUNGEN)
+  .map(([id,o]) => `<option value="${id}">${esc(o.name)}</option>`).join('');
+feldAnsicht.innerHTML = [['alben','Alben'],['interpreten','Interpreten']]
+  .map(([id,n]) => `<option value="${id}">${n}</option>`).join('');
+feldSort.onchange = () => {
+  sortierung = SORTIERUNGEN[feldSort.value] ? feldSort.value : 'artist';
+  store('sort', sortierung);          // derselbe Schluessel wie am Schreibtisch
+  zeichneListen();
+};
+feldAnsicht.onchange = () => {
+  ansicht = feldAnsicht.value === 'interpreten' ? 'interpreten' : 'alben';
+  store('ansicht', ansicht);
+  zeichneListen();
+};
+
+const skipKnopf = document.getElementById('wahlskipknopf');
+skipKnopf.onclick = () => {
+  const liste = document.getElementById('wahlskipliste');
+  const auf = liste.hidden;
+  liste.hidden = !auf;
+  skipKnopf.setAttribute('aria-expanded', String(auf));
+};
+
+/* Bestand, Scan und die uebersprungenen Dateien — dasselbe, was am
+   Schreibtisch oben rechts steht, nur an der Stelle, die alle Layouts
+   gemeinsam haben. */
+function zeichneBestand(){
+  const teile = [`<span><b>${SAMMLUNG.alben.toLocaleString('de-DE')}</b> Alben ·
+    <b>${SAMMLUNG.titel.toLocaleString('de-DE')}</b> Titel</span>`];
+  const stand = SAMMLUNG.stand ? new Date(SAMMLUNG.stand) : null;
+  if (stand && !isNaN(stand)) teile.push(`<span>Stand ${stand.toLocaleString('de-DE',
+    {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}</span>`);
+  if (scanText) teile.push(
+    `<span class="${scanFehler ? 'fehler' : ''}" id="wahlscanstand">${esc(scanText)}</span>`);
+  teile.push(`<button type="button" id="wahlscan"${scanLaeuft ? ' disabled' : ''}>${
+    scanLaeuft ? 'Liest ein …' : 'Neu einlesen'}</button>`);
+
+  const kasten = document.getElementById('wahlstand');
+  kasten.innerHTML = teile.join('');
+  kasten.querySelector('#wahlscan').onclick = starteScan;
+
+  const skip = document.getElementById('wahlskip');
+  const liste = document.getElementById('wahlskipliste');
+  skip.hidden = !SAMMLUNG.uebersprungen;
+  if (!SAMMLUNG.uebersprungen){
+    liste.hidden = true; skipKnopf.setAttribute('aria-expanded','false'); return;
+  }
+  skipKnopf.textContent = `${SAMMLUNG.uebersprungen} übersprungen — nicht lesbar`;
+  const zeilen = SAMMLUNG.dateien.map(f => `<li>${esc(f)}</li>`);
+  if (SAMMLUNG.uebersprungen > SAMMLUNG.dateien.length)
+    zeilen.push(`<li>… und ${SAMMLUNG.uebersprungen - SAMMLUNG.dateien.length} weitere
+      (siehe Containerlog)</li>`);
+  liste.innerHTML = zeilen.join('');
+}
+
 function zeichneWahl(){
+  feldSort.value = sortierung;
+  feldAnsicht.value = ansicht;
+  zeichneBestand();
   document.getElementById('wahlgitter').innerHTML = LAYOUTS.map(L => `
     <button class="wk${aktuell && L.id === aktuell.id ? ' an' : ''}" type="button" data-l="${L.id}">
       <span class="n">${esc(L.name)}</span>
@@ -2669,6 +3028,18 @@ function zeichneWahl(){
       <span class="b">${esc(f.text)}</span>
     </button>`).join('');
   $$('#wahlende [data-f]').forEach(el => el.onclick = () => setzeFortsetzung(el.dataset.f));
+
+  /* Zufall hat nicht jedes Layout als Knopf — hier hat es ihn immer. */
+  document.getElementById('wahlzufall').innerHTML = [
+    {an:false, name:'Der Reihe nach', text:'Ein Album läuft in der Reihenfolge, in der es steht.'},
+    {an:true,  name:'Zufall',         text:'Beim Laden wird gemischt; der angetippte Titel bleibt vorn.'},
+  ].map(o => `
+    <button class="wk${o.an === deck.shuffle ? ' an' : ''}" type="button" data-z="${o.an}">
+      <span class="n">${o.name}</span>
+      <span class="b">${esc(o.text)}</span>
+    </button>`).join('');
+  $$('#wahlzufall [data-z]').forEach(el =>
+    el.onclick = () => deck.setShuffle(el.dataset.z === 'true'));
 
   const kann = 'wakeLock' in navigator;
   document.getElementById('wahlwach').innerHTML = [
@@ -2689,6 +3060,9 @@ function zeigeWahl(auf){
   wechsler.classList.toggle('wach', auf);
   if (auf) zeichneWahl();
 }
+/* Der Scan und die Zufallswahl frischen den Dialog auf, waehrend er offen
+   ist — geschlossen waere es Arbeit fuer niemanden. */
+wahlAuffrischen = () => { if (!wahl.hidden) zeichneWahl(); };
 wechsler.innerHTML = I.grid(17);
 wechsler.onclick = () => zeigeWahl(wahl.hidden);
 document.getElementById('wahlzu').onclick = () => zeigeWahl(false);
@@ -2753,9 +3127,18 @@ async function start(){
     return;
   }
   uebernimm(daten);
+  bestandUebernehmen(daten);
+
+  /* Nur nachsehen, nie ausloesen. Laeuft gerade einer — etwa der beim ersten
+     Start des Containers —, zeigt der Dialog ihn an und die Sammlung wird
+     danach von selbst nachgeladen. */
+  fetch('/api/scan/status', {cache:'no-store'}).then(r => r.json())
+    .then(s => { if (s.running){ scanLaeuft = true; pruefeScan(); } }).catch(() => {});
+
   if (!ALBUMS.length){
     hinweis('Noch keine Alben',
-      'Diese Seite spielt nur ab. Gescannt wird am <a href="/">Schreibtisch</a>.');
+      'Die Sammlung ist leer. Mit der Taste <b>L</b> oder dem Knopf unten rechts die '
+      + 'Einstellungen öffnen und dort <b>Neu einlesen</b> drücken.');
     return;
   }
   hinweis(false);

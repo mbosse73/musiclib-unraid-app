@@ -33,7 +33,7 @@ Keine Datenbank. Alles, was die App weiß, liegt in `library.json`.
 Der Dienst macht drei Dinge:
 
 1. **Scannen** – `*.mp3` rekursiv unter `/music` finden, ID3-Tags (Titel, Interpret, Album, Coverbild …) per `mutagen` auslesen, in eine flache `library.json` schreiben. Cover landen als separate Dateien in `data/covers/`.
-2. **Ausliefern** – Vier einzelne HTML-Dateien (je das ganze UI in einer Datei: `index.html` am Schreibtisch, `mobile.html` am Handy, `player.html` als reiner Spieler für iPad und PC, `tag.html` als Spieler mit einem Knopf) plus JSON-Endpunkt.
+2. **Ausliefern** – Vier einzelne HTML-Dateien (je das ganze UI in einer Datei: `index.html` am Schreibtisch, `mobile.html` am Handy, `player.html` als Spieler für iPad und PC, `tag.html` als Spieler mit einem Knopf) plus JSON-Endpunkt.
 3. **Streamen** – MP3-Dateien per HTTP-Range, damit Vor- und Zurückspulen auf dem Handy flüssig läuft.
 
 ## Installation auf unraid
@@ -134,9 +134,9 @@ Neben Schreibtischseite und Handyseite liegt unter
 http://<unraid-ip>:8080/ipad      (dieselbe Seite auch unter /pc)
 ```
 
-ein **reiner Spieler**: hören und finden, sonst nichts. Gescannt wird weiterhin am Schreibtisch. Beide Adressen liefern dieselbe Datei — welche Ansicht passt, entscheidet nicht das Gerät, sondern man selbst.
+der Spieler. Beide Adressen liefern dieselbe Datei — welche Ansicht passt, entscheidet nicht das Gerät, sondern man selbst. Seit der ersten Etappe der Zusammenlegung kann er alles, was auch die Schreibtischseite kann: sortieren, nach Interpreten gruppieren, neu einlesen und die übersprungenen Dateien nachsehen.
 
-- **Zwölf Ansichten zur Wahl.** Der kleine Knopf unten rechts (oder die Taste **L**) öffnet die Liste. Die Wahl bleibt auf diesem Gerät gespeichert; was gerade läuft, läuft beim Wechsel weiter.
+- **Zwölf Ansichten zur Wahl.** Der kleine Knopf unten rechts (oder die Taste **L**) öffnet die **Einstellungen**. Die Wahl bleibt auf diesem Gerät gespeichert; was gerade läuft, läuft beim Wechsel weiter.
 
   | Ansicht | Gedacht für | Gespult wird … |
   |---|---|---|
@@ -154,7 +154,9 @@ ein **reiner Spieler**: hören und finden, sonst nichts. Gescannt wird weiterhin
   | **Vollverstärker** | iPad quer | ebenso, alles auf einer Frontplatte statt auf zwei Geräten |
 
 - **Bibliothek und Suche gibt es in jeder Ansicht**, immer hinter *einem* Knopf und immer als Blende über dem Gerät, nie als eigene Seite: Auswurftaste am Kassettendeck, am Rack und am Verstärker, Rasterzeichen im Weißraum, Schalter mit Lampe am Pult, Listenzeichen an den Drehreglern der Platte. Gesucht wird überall über Albumtitel, Interpret, Jahr und alle Titelnamen. Einzige Ausnahme sind **Werkstisch** und **Deck**: dort liegt die Sammlung ohnehin offen daneben, und die Suchzeile steht direkt darüber.
-- **Tastatur:** **Leertaste** Wiedergabe/Pause, **←/→** 5 Sekunden, **↑/↓** Lautstärke, **n**/**p** Titelwechsel, **L** Ansicht wechseln, **Esc** schließt Bibliothek und Liste.
+- **Sortieren und Gruppieren gelten überall.** In den Einstellungen unter *Sammlung*: fünf Ordnungen (Interpret, Albumtitel, Jahr auf- und absteigend, zuletzt hinzugefügt) und die Wahl zwischen *Alben* und *Interpreten*. Beides wirkt sofort in der Liste jeder Ansicht — in der Interpreten-Ansicht steht über jedem Block eine Überschrift mit einem Knopf **Alles**, der alle Alben dieses Interpreten hintereinander spielt (steht etwas im Suchfeld, spielt er genau das, was daneben steht). Die Sortierung teilt sich den Speicherplatz mit der Schreibtischseite: dort eingestellt, hier schon so vorgefunden.
+- **Neu einlesen ohne Umweg über den Schreibtisch.** Ebenfalls unter *Sammlung*: Anzahl der Alben und Titel, Datum des letzten Scans, der Knopf **Neu einlesen** mit Fortschritt, und darunter — falls es welche gab — die Liste der übersprungenen, nicht lesbaren Dateien. Ausgelöst wird ein Scan **nur** über diesen Knopf; das bloße Öffnen der Seite weckt die Platte im NAS nicht. Läuft gerade ein Scan (etwa der beim ersten Containerstart), zeigt der Dialog ihn an und lädt die Sammlung danach von selbst nach. Wer dabei Musik hört, merkt vom Scan nichts.
+- **Tastatur:** **Leertaste** Wiedergabe/Pause, **←/→** 5 Sekunden, **↑/↓** Lautstärke, **n**/**p** Titelwechsel, **L** Einstellungen, **Esc** schließt Bibliothek und Dialog.
 - Sperrbildschirm und Medientasten bedienen dieselbe Warteschlange. Die Sitzung wird mit den beiden anderen Oberflächen geteilt: auf demselben Gerät läuft sie zwischen Schreibtisch, Handy und Spieler weiter.
 
 ## Am iPhone: das Album des Tages
@@ -182,9 +184,9 @@ Ein Browser, der Musik von einem NAS streamt, hat drei Stellen, an denen es abre
 
 - **Am Titelwechsel** (der häufigste Fall am iPhone). Am Ende eines Titels bekommt das Audio-Element eine neue Quelle, und iOS wertet das im Hintergrund als *neuen* Start, nicht als Fortsetzung — und weist ihn ab. Die Seiten fragen jetzt nach: solange Ton gewünscht ist und keiner läuft, alle 1,2 Sekunden erneut, und noch einmal, sobald die Seite wieder im Vordergrund ist. Eine Pause, die du selbst gedrückt hast, bleibt davon unberührt.
 - **Mitten im Titel**, wenn der Stream hängt (WLAN gedrosselt, Platte im NAS eingeschlafen). Bleibt das Element stehen, wird die Quelle nach ein paar Sekunden an derselben Stelle neu geladen — bis zu fünfmal. Zusätzlich wird 25 Sekunden vor dem Ende der Anfang des nächsten Titels schon geholt: das weckt die Platte und hält die Verbindung warm.
-- **Am Ende des Albums.** Eine Warteschlange ist ein Album; bisher war danach Schluss. Jetzt läuft standardmäßig das **nächste Album der Sammlung** weiter. Einstellbar in drei Stufen — am Handy unter *Einstellungen → Am Ende der Warteschlange*, im Spieler im Ansichtsblatt, am Schreibtisch über den Knopf rechts neben ▶ (Weiter · Wdh. · Halt). Die Wahl gilt für diese drei Oberflächen; `/tag` fragt nicht danach, dort ist das Ende des Albums immer der Anfang desselben Albums.
+- **Am Ende des Albums.** Eine Warteschlange ist ein Album; bisher war danach Schluss. Jetzt läuft standardmäßig das **nächste Album der Sammlung** weiter. Einstellbar in drei Stufen — am Handy unter *Einstellungen → Am Ende der Warteschlange*, im Spieler in den Einstellungen, am Schreibtisch über den Knopf rechts neben ▶ (Weiter · Wdh. · Halt). Die Wahl gilt für diese drei Oberflächen; `/tag` fragt nicht danach, dort ist das Ende des Albums immer der Anfang desselben Albums.
 
-Bleibt es trotzdem stehen, hilft **Bildschirm anlassen** (am Handy in den Einstellungen, im Spieler im Ansichtsblatt): Solange Musik läuft, bleibt der Bildschirm an — und damit auch das WLAN auf voller Leistung. Das kostet Akku und wirkt nur, solange die Seite sichtbar ist; iOS gibt die Sperre frei, sobald du die App verlässt. Braucht iOS 16.4 oder neuer.
+Bleibt es trotzdem stehen, hilft **Bildschirm anlassen** (am Handy wie im Spieler in den Einstellungen): Solange Musik läuft, bleibt der Bildschirm an — und damit auch das WLAN auf voller Leistung. Das kostet Akku und wirkt nur, solange die Seite sichtbar ist; iOS gibt die Sperre frei, sobald du die App verlässt. Braucht iOS 16.4 oder neuer.
 
 ## Bedienung
 
@@ -195,7 +197,7 @@ Bleibt es trotzdem stehen, hilft **Bildschirm anlassen** (am Handy in den Einste
 - Am PC per Tastatur: **Leertaste** Wiedergabe/Pause, **←/→** 10 Sekunden springen, **n**/**p** nächster/vorheriger Titel, **s** Zufallswiedergabe, **/** springt ins Suchfeld, **Esc** schließt das Album.
 - Beim erneuten Öffnen setzt die App dort fort, wo sie zuletzt war — gleicher Titel, gleiche Position, angehalten. Praktisch am Handy, wo der Tab ständig geschlossen wird.
 - Auf dem Sperrbildschirm bzw. über die Medientasten funktionieren Wiedergabe, Pause und Titelwechsel.
-- Wenn sich die Sammlung ändert: Knopf **„Neu scannen"** oben rechts. Der Scan läuft im Hintergrund, das UI bleibt benutzbar. Nur geänderte Dateien werden neu eingelesen, weitere Scans dauern daher meist nur Sekunden.
+- Wenn sich die Sammlung ändert: Knopf **„Neu scannen"** oben rechts — oder unter `/ipad` bzw. `/pc` in den Einstellungen (**L**) der Knopf **Neu einlesen**. Der Scan läuft im Hintergrund, das UI bleibt benutzbar. Nur geänderte Dateien werden neu eingelesen, weitere Scans dauern daher meist nur Sekunden.
 
 ## Updates und Wartung
 

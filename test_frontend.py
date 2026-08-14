@@ -361,7 +361,12 @@ def test_session_is_restored_without_autoplay(page, ctx, server):
 
     assert again.inner_text("#now-title") == title
     assert again.evaluate("qIndex") == 1
-    assert abs(again.evaluate("document.getElementById('audio').currentTime") - 12) < 2
+    # Die Position wird erst gesetzt, wenn das Element seine Dauer kennt
+    # (loadedmetadata). Unter Last liegt zwischen Titel und Position mehr als
+    # ein Wimpernschlag — direkt danach zu pruefen, misst den Rechner, nicht
+    # die App.
+    again.wait_for_function(
+        "Math.abs(document.getElementById('audio').currentTime - 12) < 2", timeout=5000)
     assert again.evaluate("document.getElementById('audio').paused"), "darf nie automatisch starten"
     again.close()
 
@@ -915,6 +920,146 @@ def test_player_reports_a_moved_file_instead_of_stopping_silently(player):
     player.wait_for_function(
         "document.querySelector('#buehne [data-alb]').textContent.includes('nicht abspielbar')",
         timeout=5000)
+
+
+# --------------------------------------------------------------------------
+# Spieler: was bisher nur der Schreibtisch konnte
+#
+# Etappe 1 der Zusammenlegung — Sortierung, Interpreten-Ansicht, Scan und die
+# uebersprungenen Dateien sitzen jetzt im Einstellungsdialog, den alle zwoelf
+# Layouts teilen. Was hier geprueft wird, ist genau das Versprechen: /pc kann,
+# was / kann, ohne dass ein Layout etwas davon wissen muss.
+# --------------------------------------------------------------------------
+
+def test_player_sorting_reorders_and_is_shared_with_the_desktop(player, server):
+    """Fuenf Ordnungen wie am Schreibtisch — unter demselben Schluessel."""
+    assert player.evaluate("suche('').map(a => a.t)")[0] == "Erstes Album"
+
+    player.evaluate("zeigeWahl(true)")
+    player.select_option("#wahlsort", "year-desc")
+    assert player.evaluate("suche('').map(a => a.y)") == [2001, 1978, 1974]
+    assert player.evaluate("localStorage.getItem('musiklib:sort')") == '"year-desc"'
+    player.evaluate("zeigeWahl(false)")
+
+    # ALBUMS selbst bleibt unberuehrt — naechstesAlbum() und der erste Start
+    # haengen an dieser Reihenfolge.
+    assert player.evaluate("ALBUMS.map(a => a.t)")[0] == "Erstes Album"
+
+    player.reload(wait_until="domcontentloaded")
+    player.wait_for_function("typeof sortierung !== 'undefined' && sortierung === 'year-desc'")
+
+    player.goto(server, wait_until="domcontentloaded")      # Schreibtischseite
+    player.wait_for_selector(".album")
+    assert player.eval_on_selector("#sort", "el => el.value") == "year-desc", \
+        "musiklib:sort muss auf beiden Seiten dasselbe bedeuten"
+
+
+def test_player_sorting_reaches_the_list_inside_the_layout(player):
+    """Ein Layout sortiert nicht selbst — es zeigt, was suche() liefert."""
+    player.evaluate("zeigeLayout('aufgeschlagen')")
+    player.evaluate("zeigeWahl(true)")
+    player.select_option("#wahlsort", "title")
+    player.evaluate("zeigeWahl(false)")
+
+    player.click("#buehne [data-bib]")
+    player.wait_for_timeout(250)
+    sichtbar = player.eval_on_selector_all(
+        "#buehne [data-bibliothek] [data-alb]", "els => els.map(e => e.dataset.alb)")
+    assert sichtbar == player.evaluate("suche('').map(a => a.id)")
+    player.keyboard.press("Escape")
+
+
+def test_player_groups_the_collection_by_artist(player):
+    player.evaluate("zeigeLayout('aufgeschlagen')")
+    player.click("#buehne [data-bib]")
+    player.wait_for_timeout(250)
+    assert player.locator("#buehne [data-bibliothek] .bgruppe").count() == 0
+
+    player.evaluate("zeigeWahl(true)")
+    player.select_option("#wahlansicht", "interpreten")
+    player.evaluate("zeigeWahl(false)")
+    player.wait_for_timeout(150)
+
+    assert player.eval_on_selector_all(
+        "#buehne [data-bibliothek] .bgruppe .bgn",
+        "els => els.map(e => e.textContent)") == ["Andere Band", "Kraftwerk"]
+    # Die Alben bleiben in derselben Liste — die Ueberschrift kommt dazu.
+    assert player.locator("#buehne [data-bibliothek] [data-alb]").count() == 3
+    assert player.evaluate("localStorage.getItem('musiklib:ansicht')") == '"interpreten"'
+    player.keyboard.press("Escape")
+
+
+def test_player_artist_group_plays_all_its_albums(player):
+    """„Alles" spielt die Alben eines Interpreten in Jahresfolge."""
+    player.evaluate("""() => {
+      deck.setShuffle(false);
+      ansicht = 'interpreten';
+      zeigeLayout('aufgeschlagen');
+    }""")
+    player.click("#buehne [data-bib]")
+    player.wait_for_timeout(250)
+    player.click("#buehne [data-bibliothek] .bga[data-int='Kraftwerk']")
+    player.wait_for_function("deck.queue.length === 3", timeout=5000)
+    assert player.evaluate("deck.queue.map(id => TRACKS[id].t)") == \
+        ["Autobahn", "Kometenmelodie", "Die Roboter"]
+    player.evaluate("ton.pause()")
+
+
+def test_player_grouping_reaches_the_layouts_with_an_open_collection(player):
+    """Werkstisch zeigt Titel statt Alben — gruppiert wird trotzdem."""
+    player.evaluate("""() => { ansicht = 'interpreten'; zeigeLayout('werkstisch'); }""")
+    player.wait_for_timeout(200)
+    assert player.eval_on_selector_all(
+        "#buehne [data-liste] .bgruppe .bgn",
+        "els => els.map(e => e.textContent)") == ["Andere Band", "Kraftwerk"]
+    assert player.locator("#buehne [data-liste] [data-t]").count() == 4
+
+
+def test_player_never_scans_just_because_the_page_opened(player):
+    """Ein Spieler, der beim Oeffnen die Platte im NAS anwirft, waere ein Fehler."""
+    assert player.evaluate("scanLaeuft") is False
+    zustand = player.evaluate("() => fetch('/api/scan/status').then(r => r.json())")
+    assert zustand["running"] is False
+
+
+def test_player_scan_can_be_started_from_the_settings(player):
+    player.evaluate("zeigeWahl(true)")
+    player.click("#wahlscan")
+    player.wait_for_function("scanText.startsWith('Fertig')", timeout=30000)
+    assert player.evaluate("ALBUMS.length") == 3, "Der Katalog muss den Scan ueberleben"
+    assert player.evaluate("SAMMLUNG.titel") == 4
+    assert player.evaluate("scanFehler") is False
+    player.evaluate("zeigeWahl(false)")
+
+
+def test_player_names_the_skipped_file(player):
+    """defekt.mp3 aus der Fixture — die Liste nennt sie, statt sie zu verschweigen."""
+    player.evaluate("zeigeWahl(true)")
+    assert player.locator("#wahlskip").is_visible()
+    assert "1 übersprungen" in player.inner_text("#wahlskipknopf")
+    player.click("#wahlskipknopf")
+    assert "defekt.mp3" in player.inner_text("#wahlskipliste")
+    assert player.get_attribute("#wahlskipknopf", "aria-expanded") == "true"
+    player.evaluate("zeigeWahl(false)")
+
+
+def test_player_settings_dialog_carries_every_group(player):
+    """Der Dialog ist die Flaeche, die alle Layouts teilen — hier haengt alles."""
+    player.evaluate("zeigeWahl(true)")
+    for auswahl in ("#wahlgitter [data-l]", "#wahlsort", "#wahlansicht", "#wahlscan",
+                    "#wahlende [data-f]", "#wahlzufall [data-z]", "#wahlwach [data-w]"):
+        assert player.locator(auswahl).count() >= 1, f"{auswahl} fehlt im Dialog"
+    player.evaluate("zeigeWahl(false)")
+
+
+def test_player_shuffle_from_the_dialog_uses_the_shared_key(player):
+    player.evaluate("zeigeWahl(true)")
+    player.click("#wahlzufall [data-z='true']")
+    assert player.evaluate("localStorage.getItem('musiklib:shuffle')") == "true"
+    assert player.evaluate("deck.shuffle") is True
+    player.click("#wahlzufall [data-z='false']")
+    assert player.evaluate("deck.shuffle") is False
+    player.evaluate("zeigeWahl(false)")
 
 
 # --------------------------------------------------------------------------
