@@ -202,6 +202,7 @@ Bleibt es trotzdem stehen, hilft **Bildschirm anlassen** (am Handy in den Einste
 **Code-Änderungen einfach per SMB einspielen**: `app.py`, `index.html`, `mobile.html`, `player.html` oder `tag.html` in `/mnt/user/appdata/musiklib/` ersetzen, dann:
 
 - **HTML-Änderung**: nur Browser-Reload, kein Container-Neustart nötig.
+- **Eine Adresse antwortet mit „liegt nicht im Ordner der App"**: genau das steht dann auch da — die genannte Datei fehlt neben `app.py` und wird nachkopiert, mehr ist nicht zu tun. `/` läuft in diesem Fall weiter, weil `index.html` ja da ist. Kommt stattdessen ein nacktes `{"detail":"Not Found"}`, ist die Adresse selbst unbekannt: dann läuft im Container noch ein älteres `app.py`.
 - **Python-Änderung**: Container neu starten (unraid → musiklib → Restart).
 - **Neue Python-Dependency in `requirements.txt`**: Container **stoppen und neu starten** (nicht nur Restart) — nur dann läuft der `pip install`-Schritt im Command wieder.
 
@@ -214,7 +215,10 @@ Der komplette Katalog liegt unterhalb von `DATA_DIR` (im Compose-File auf `/app/
 ```
 /mnt/user/appdata/musiklib/
 ├── app.py
-├── index.html
+├── index.html                 ← /
+├── mobile.html                ← /mobil
+├── player.html                ← /ipad und /pc
+├── tag.html                   ← /tag
 ├── requirements.txt
 └── data/                      ← DATA_DIR, wird beim ersten Start automatisch angelegt
     ├── library.json           ← der Katalog: Alben, Interpreten, Titel
