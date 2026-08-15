@@ -28,7 +28,7 @@
   <header class="kopf">
     <div>
       <div class="caps">Musiklib · Entwürfe für ipad.html und pc.html</div>
-      <h1>Elf Blätter, <em>siebzehn</em> Spieler</h1>
+      <h1>Siebzehn Blätter, <em>neunundzwanzig</em> Spieler</h1>
       <p class="lede">Aus dreizehn Vorlagen und sechsundzwanzig Entwürfen ist eine <b>engere Wahl</b>
       geworden: zehn Blätter, fünfzehn Varianten. Drei Blätter sind ganz gestrichen, fünf weitere
       Varianten einzeln — sie stehen in der Vorgeschichte des Zweigs, falls doch noch eine
@@ -40,6 +40,13 @@
       dieselbe. Aus einem oder zwei dieser Blätter werden <b>ipad.html</b> und <b>pc.html</b> — je eine
       einzelne Datei, genau wie
       <code style="font-family:var(--mono);font-size:13px">mobile.html</code>.</p>
+      <p class="lede" style="margin-top:14px"><b>Blätter 15 bis 20 sind eine zweite Reihe</b> und
+      entstanden anders als die erste: nicht aus Fotos, sondern aus einer Frage — welche Vorlagen,
+      Materialien und Techniken in der ersten Reihe <em>fehlen</em>. Ihre Vorlagen sind benannte Geräte
+      (Weltempfänger, Fallblattanzeige, Leuchttisch, Diktiergerät, Rechenscheibe) und ein Material
+      (Bespannstoff), gezeichnet statt fotografiert. Sie führen eine dritte Spalte ein:
+      <b>was das Gerät ist, wenn nichts läuft</b>. Auch sie brauchen kein neues Feld in
+      <code style="font-family:var(--mono);font-size:13px">library.json</code>.</p>
     </div>
     <figure class="vorlage">
       <img src="../../mckups_player/Bildschirmfoto%202026-08-13%20um%2011.32.25.png" alt="">
@@ -49,6 +56,16 @@
   <div class="regel"></div>
 
   <div class="gitter" id="gitter"></div>
+
+  <div class="reihe2">
+    <div class="regel" style="margin-top:70px"></div>
+    <h2 style="font-family:var(--serif);font-size:27px;font-weight:400;margin-top:34px">Zweite Reihe</h2>
+    <p class="etext" style="margin-top:12px;max-width:70ch">Sechs Blätter, zwölf Varianten. Jede Variante
+    bringt zusätzlich ein Material mit, das in der ersten Reihe nicht vorkam: Bakelit, Emailleblech,
+    Cyanotypie, Graupappe, Risodruck, Filz auf Terrazzo.</p>
+  </div>
+
+  <div class="gitter" id="gitter2"></div>
 
   <div class="tafel">
     <div class="regel" style="margin-bottom:34px"></div>
@@ -85,6 +102,35 @@
     <p class="etext" style="margin-top:18px">Blatt 14 fällt aus jeder Spalte: Es spult nicht, es
     wählt nicht, es sucht nicht. Es steht hier trotzdem, weil es dieselbe Sammlung und dieselben
     Schlüssel benutzt — und weil die Zeile <b>„gar nicht"</b> zeigt, wie weit die Reihe reicht.</p>
+
+    <h2 style="font-family:var(--serif);font-size:27px;font-weight:400;margin-top:56px">Die zweite Reihe,
+    mit einer Spalte mehr</h2>
+    <p class="etext" style="margin-top:12px;max-width:70ch">Dieselbe Frage wie oben, plus die, die in der
+    ersten Reihe keiner stellt: <b>Was ist das Ding, wenn nichts läuft?</b> Zehn der ersten elf Blätter
+    antworten darauf „ein ausgeschaltetes Gerät".</p>
+    <table>
+      <tr><th style="width:150px">Blatt</th><th style="width:200px">Womit gespult wird</th>
+        <th style="width:200px">Ohne Tippen sichtbar</th><th style="width:210px">Wenn nichts läuft</th>
+        <th>Geräte</th></tr>
+      <tr><td><b>15 Weltempfänger</b></td><td class="mit">Feinskala; das Band <b>wählt</b></td>
+        <td>Nachbaralben auf dem Band</td><td>Ein lesbares, beschriftetes Skalenband</td>
+        <td>iPad quer · PC</td></tr>
+      <tr><td><b>16 Fallblatt</b></td><td>Die laufende Zeile selbst</td>
+        <td>Die ganze Warteschlange und der Anschluss</td><td>Eine Tafel, die stehen bleibt</td>
+        <td>iPad quer · PC</td></tr>
+      <tr><td><b>17 Leuchttisch</b></td><td class="mit">Filmstreifen unter dem Fadenkreuz</td>
+        <td>Die ganze Sammlung als Dias</td><td><b>Ein Tisch voller Cover</b></td>
+        <td>PC · iPad quer</td></tr>
+      <tr><td><b>18 Zählwerk</b></td><td class="mit">Das Zählwerk hochdrehen</td>
+        <td>Ein Titel und ein Zählerstand</td><td>Ein Gerät mit stehendem Zählerstand</td>
+        <td>iPhone</td></tr>
+      <tr><td><b>19 Rechenscheibe</b></td><td class="mit">Die Scheibe drehen, eine Umdrehung je Album</td>
+        <td>Ein Titel groß, das Album als Ring</td><td>Ein Instrument auf einem Wert</td>
+        <td>iPad hoch</td></tr>
+      <tr><td><b>20 Bespannung</b></td><td>Die Kordel, Knoten an den Titelgrenzen</td>
+        <td>Titel, Pegel, Lage in der Schlange</td><td>Ein Möbel mit einem Schild</td>
+        <td>PC · iPad quer</td></tr>
+    </table>
   </div>
 
   <div class="schluss">
@@ -118,7 +164,8 @@
     </ol>
   </div>
 
-  <footer><span>Musiklib — Spieler-Entwürfe</span><span>engere Wahl · 10 Blätter · 15 Varianten</span></footer>
+  <footer><span>Musiklib — Spieler-Entwürfe</span>
+    <span>engere Wahl · 10 Blätter · 15 Varianten &nbsp;·&nbsp; zweite Reihe · 6 Blätter · 12 Varianten</span></footer>
 </div>
 
 <script>
@@ -155,13 +202,113 @@ const NACHGEZEICHNET = `<svg viewBox="0 0 300 220" width="100%" height="100%"
   <text x="26" y="196" font-family="sans-serif" font-size="19" font-weight="800" fill="#1A1714">ALBUM</text>
   <text x="27" y="210" font-family="sans-serif" font-size="8" letter-spacing="2.2" fill="#3A342C">DES TAGES</text>
 </svg>`;
-document.getElementById('gitter').innerHTML = BLAETTER.map(([nr, datei, name, foto, text, ger]) => `
+/* ── zweite Reihe ──────────────────────────────────────────────────────────
+   Diese Blätter haben kein Foto: ihre Vorlage ist ein benanntes Gerät, aus
+   der Beschreibung gezeichnet. Die Skizzen hier sind dieselben Zeichnungen
+   wie im Blattkopf, nur kleiner und gefüllt statt gestrichelt. */
+const skizze = (grund, inner) => `<svg viewBox="0 0 300 220" width="100%" height="100%"
+  preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <rect width="300" height="220" fill="${grund}"/>${inner}</svg>`;
+
+const SKIZZEN = {
+  '15': skizze('#241F1A', `
+    <rect x="26" y="34" width="188" height="76" rx="3" fill="#EFE7D2"/>
+    <g fill="#241E18">${[0,1,2,3,4,5,6,7,8].map(i =>
+      `<rect x="${40 + i*20}" y="${i%2?86:78}" width="1.6" height="${i%2?18:26}"/>`).join('')}</g>
+    <rect x="128" y="30" width="3" height="86" fill="#C0392B"/>
+    <circle cx="250" cy="72" r="26" fill="#4A4540"/><circle cx="250" cy="72" r="9" fill="#2D2A27"/>
+    <rect x="26" y="128" width="188" height="14" rx="2" fill="#15130F"/>
+    <rect x="26" y="128" width="96" height="14" rx="2" fill="#E8C87A" opacity=".55"/>
+    <g fill="#494440">${[0,1,2].map(i =>
+      `<rect x="${26 + i*46}" y="164" width="38" height="16" rx="2"/>`).join('')}</g>
+    <circle cx="250" cy="164" r="20" fill="#4A4540"/>`),
+
+  '16': skizze('#7E8288', `
+    <rect x="20" y="20" width="260" height="180" rx="3" fill="#131315"/>
+    <rect x="20" y="20" width="260" height="42" fill="#1E1E21"/>
+    <g fill="#E9C13C">${[0,1,2,3,4,5,6,7,8,9,10].map(i =>
+      `<rect x="${34 + i*15}" y="34" width="11" height="15"/>`).join('')}</g>
+    <g fill="#EFEFEA" opacity=".85">${[0,1,2,3].map(r =>
+      [0,1,2,3,4,5,6,7,8].map(i =>
+        `<rect x="${34 + i*15}" y="${82 + r*28}" width="11" height="12"/>`).join('')).join('')}</g>
+    <rect x="20" y="76" width="260" height="26" fill="#E9C13C" opacity=".16"/>`),
+
+  '17': skizze('#23242A', `
+    <rect x="118" y="26" width="164" height="168" rx="3" fill="#F1F0EA"/>
+    <g fill="#D9D2C4">${[0,1,2].map(r => [0,1,2].map(c =>
+      `<rect x="${130 + c*50}" y="${38 + r*54}" width="42" height="46"/>`).join('')).join('')}</g>
+    <g fill="#9FB0B8">${[0,1,2].map(r => [0,1,2].map(c =>
+      `<rect x="${134 + c*50}" y="${42 + r*54}" width="34" height="30"/>`).join('')).join('')}</g>
+    <circle cx="62" cy="86" r="46" fill="#8FA6BE"/>
+    <circle cx="62" cy="86" r="46" fill="none" stroke="#0F1013" stroke-width="7"/>
+    <rect x="16" y="150" width="92" height="42" rx="2" fill="#0E0F12"/>
+    <g fill="#C9A96E">${[0,1,2,3,4].map(i =>
+      `<rect x="${22 + i*18}" y="${156}" width="12" height="6"/>
+       <rect x="${22 + i*18}" y="${180}" width="12" height="6"/>`).join('')}</g>
+    <rect x="60" y="150" width="2" height="42" fill="#C9A96E"/>`),
+
+  '18': skizze('#DED7C5', `
+    <rect x="76" y="18" width="148" height="184" rx="14" fill="#E9E2D1"/>
+    <rect x="92" y="40" width="116" height="52" rx="4" fill="#1A1815"/>
+    <g fill="#F0EADA">${[0,1,2,3].map(i =>
+      `<rect x="${100 + i*28}" y="52" width="18" height="28" rx="2"/>`).join('')}</g>
+    <rect x="92" y="112" width="90" height="9" rx="2" fill="#2C2721"/>
+    <rect x="92" y="128" width="60" height="7" rx="2" fill="#6E6455"/>
+    <rect x="92" y="158" width="30" height="30" rx="5" fill="#F2ECDC"/>
+    <rect x="178" y="158" width="30" height="30" rx="5" fill="#F2ECDC"/>
+    <rect x="130" y="152" width="40" height="42" rx="6" fill="#D89A2C"/>`),
+
+  '19': skizze('#5E5F63', `
+    <circle cx="150" cy="110" r="92" fill="#3A2E24"/>
+    <circle cx="150" cy="110" r="74" fill="#D8D6D0"/>
+    <path d="M150 110 L150 36 A74 74 0 0 1 216 74 Z" fill="#A9A79F"/>
+    <path d="M150 110 L84 146 A74 74 0 0 1 84 74 Z" fill="#A9A79F"/>
+    <circle cx="150" cy="110" r="42" fill="#F2F0EA"/>
+    <circle cx="150" cy="110" r="13" fill="#A98B4C"/>
+    <rect x="147" y="12" width="5" height="34" fill="#B23A2E"/>`),
+
+  '20': skizze('#54452F', `
+    <rect x="18" y="24" width="264" height="140" rx="3" fill="#7B6549"/>
+    <rect x="30" y="36" width="104" height="116" rx="2" fill="#42301F"/>
+    <rect x="38" y="44" width="88" height="100" rx="1" fill="none"
+      stroke="#C9B48C" stroke-dasharray="4 4"/>
+    <g fill="#E4A94A">${[0,1,2,3,4,5,6,7,8].map(i =>
+      `<rect x="${152 + i*14}" y="${140 - (16 + ((i*37)%56))}" width="9"
+        height="${16 + ((i*37)%56)}" rx="2"/>`).join('')}</g>
+    <rect x="18" y="182" width="264" height="6" rx="3" fill="#D8C9A8"/>
+    <circle cx="120" cy="185" r="15" fill="#42301F"/>`),
+};
+
+const ZWEITE = [
+  ['15','weltempfaenger','Weltempfänger',
+   'Auf dem Band liegen die Alben. Abstimmen ist Suchen, dazwischen rauscht es.',['iPad quer','PC']],
+  ['16','fallblatt','Fallblatt',
+   'Die Warteschlange als Abfahrtstafel; beim Wechsel klappen die Zeichen um.',['iPad quer','PC']],
+  ['17','leuchttisch','Leuchttisch',
+   'Dias auf Milchglas, der Spieler ist die Lupe, gespult wird am Filmstreifen.',['PC','iPad quer']],
+  ['18','zaehlwerk','Zählwerk',
+   'Position als Zählerstand auf vier Rollen — hochdrehen heißt spulen.',['iPhone']],
+  ['19','rechenscheibe','Rechenscheibe',
+   'Das Album als Ring um eine Achse, die rote Ablesemarke steht still.',['iPad hoch']],
+  ['20','bespannung','Bespannung',
+   'Stoff, Leder, eine gespannte Kordel — der Pegel leuchtet durchs Gewebe.',['PC','iPad quer']],
+];
+
+const karte = (nr, datei, name, bild, vorlage, text, ger) => `
   <a class="blatt" href="${nr}-${datei}.html">
-    <div class="bild">${foto === 'nachgezeichnet' ? NACHGEZEICHNET
-      : `<img src="../../mckups_player/Bildschirmfoto%202026-08-13%20um%20${foto}.png" alt="">`}</div>
-    <div class="nr">Blatt ${nr} · Vorlage ${foto}</div>
+    <div class="bild">${bild}</div>
+    <div class="nr">Blatt ${nr} · Vorlage ${vorlage}</div>
     <h3>${name}</h3>
     <p>${text}</p>
     <div class="geraete">${ger.map(g => `<span>${g}</span>`).join('')}</div>
-  </a>`).join('');
+  </a>`;
+
+document.getElementById('gitter').innerHTML = BLAETTER.map(([nr, datei, name, foto, text, ger]) =>
+  karte(nr, datei, name,
+    foto === 'nachgezeichnet' ? NACHGEZEICHNET
+      : `<img src="../../mckups_player/Bildschirmfoto%202026-08-13%20um%20${foto}.png" alt="">`,
+    foto, text, ger)).join('');
+
+document.getElementById('gitter2').innerHTML = ZWEITE.map(([nr, datei, name, text, ger]) =>
+  karte(nr, datei, name, SKIZZEN[nr], 'gezeichnet', text, ger)).join('');
 </script>

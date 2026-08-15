@@ -44,6 +44,8 @@ img{display:block;max-width:100%}
 .kopf .lede b{color:var(--ink);font-weight:600}
 .vorlage{border:1px solid var(--line-2);background:var(--paper);padding:9px 9px 11px}
 .vorlage img{width:100%;height:auto;filter:saturate(.9)}
+/* Blätter der zweiten Reihe haben kein Foto: ihre Vorlage ist eine Zeichnung. */
+.vorlage svg{width:100%;height:auto;display:block;color:var(--ink-2)}
 .vorlage figcaption{margin-top:9px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
 
 /* ── ein Entwurf ── */

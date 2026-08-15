@@ -1,0 +1,407 @@
+<title>19 · Rechenscheibe</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 19 — Vorlage: die Drehrechenscheibe eines Belichtungsmessers
+   (Gossen Lunasix) — zwei ineinandergesetzte Scheiben, eine geätzte Skala,
+   eine feste Ablesemarke, ein Lederring um das Zinkgussgehäuse.
+   Genommen: die Ablesemarke steht, die Scheibe dreht sich. Das Album liegt
+   als Ring um die Achse; ein Titel ist ein Kreisabschnitt, so groß wie er
+   lang ist. Gespult wird, indem man die Scheibe dreht — nicht indem man auf
+   eine Zeitlinie zielt.
+   ══════════════════════════════════════════════════════════════════════════ */
+@property --winkel{syntax:'<angle>';inherits:false;initial-value:0deg}
+
+.rs{
+  --guss:#6E6F72; --guss-2:#4A4B4E; --leder:#3A2E24; --leder-2:#2A211A;
+  --skala:#D8D6D0; --skala-2:#A9A79F; --tinte:#1F1E1C; --tinte-2:#615F59;
+  --marke:#B23A2E; --licht:rgba(255,255,255,.7);
+  --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
+  height:100%;overflow:hidden;position:relative;display:flex;flex-direction:column;
+  align-items:center;gap:var(--gap,22px);padding:var(--pad,34px);font-family:var(--sans);
+  color:#EDEBE5;
+  background:
+    repeating-linear-gradient(102deg,rgba(255,255,255,.045) 0 1px,rgba(0,0,0,.05) 1px 3px),
+    radial-gradient(70% 50% at 50% 8%,#7A7B7E,transparent 60%),
+    linear-gradient(168deg,var(--guss),var(--guss-2))}
+.rs *{font-family:inherit}
+.rs .kap{font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:#C8C6C0}
+
+/* ── Kopf ── */
+.rs .kopfz{flex:none;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.rs .kopfz .wer{min-width:0}
+.rs .kopfz .al{font-family:var(--serif);font-size:var(--ag,21px);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.rs .knopf{width:46px;height:46px;flex:none;border-radius:50%;display:grid;place-items:center;
+  color:#EDEBE5;
+  background:repeating-conic-gradient(from 0deg,#83848A 0 3deg,#55565A 3deg 6deg),#6A6B6F;
+  box-shadow:0 0 0 1px rgba(255,255,255,.16),0 4px 10px rgba(0,0,0,.45),inset 0 0 12px rgba(0,0,0,.4)}
+
+/* ── das Gehäuse mit der Scheibe ── */
+.rs .gehaeuse{flex:none;width:var(--dm,640px);height:var(--dm,640px);border-radius:50%;position:relative;
+  padding:var(--lp,22px);
+  background:linear-gradient(160deg,var(--leder),var(--leder-2));
+  box-shadow:0 0 0 1px rgba(0,0,0,.5),0 24px 50px rgba(0,0,0,.45),
+    inset 0 2px 0 rgba(255,255,255,.10)}
+/* Lederstruktur: zwei feine Rasterverläufe, kein Bild */
+.rs .gehaeuse::before{content:'';position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:
+    repeating-radial-gradient(circle at 30% 30%,rgba(255,255,255,.05) 0 1px,transparent 1px 4px),
+    repeating-radial-gradient(circle at 70% 60%,rgba(0,0,0,.06) 0 1px,transparent 1px 5px)}
+
+.rs .scheibe{position:absolute;inset:var(--lp,22px);border-radius:50%;cursor:grab;touch-action:none;
+  transform:rotate(var(--winkel));transition:--winkel .22s linear;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.35),0 0 22px rgba(0,0,0,.4)}
+.rs .scheibe.zieht{cursor:grabbing;transition:none}
+.rs .scheibe .ring{position:absolute;inset:0;border-radius:50%;
+  /* Die Titel als Kreisabschnitte — der Verlauf wird aus offs gebaut. */
+  background:conic-gradient(var(--sektoren,var(--skala)))}
+.rs .scheibe .rand{position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:repeating-conic-gradient(from 0deg,rgba(31,30,28,.34) 0 .25deg,transparent .25deg 6deg);
+  -webkit-mask:radial-gradient(circle,transparent 0 calc(50% - 26px),#000 calc(50% - 26px) 100%);
+  mask:radial-gradient(circle,transparent 0 calc(50% - 26px),#000 calc(50% - 26px) 100%)}
+.rs .scheibe .nr{position:absolute;left:50%;top:0;width:0;height:50%;transform-origin:50% 100%;
+  pointer-events:none}
+.rs .scheibe .nr span{position:absolute;left:-16px;top:var(--nt,40px);width:32px;text-align:center;
+  font-family:var(--mono);font-size:15px;font-weight:600;color:var(--tinte)}
+/* Innenscheibe: das Ablesefenster, dreht sich mit */
+/* Der zweite Farbauszug liegt nur im Risodruck (Variante 2) über dem Ring. */
+.rs .scheibe .versatz{display:none}
+.rs .scheibe .innen{position:absolute;inset:var(--ii,20%);border-radius:50%;
+  background:linear-gradient(160deg,#F2F0EA,#CFCDC6);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.35)}
+.rs .achse{position:absolute;left:50%;top:50%;width:var(--ad,54px);height:var(--ad,54px);
+  transform:translate(-50%,-50%);border-radius:50%;z-index:4;pointer-events:none;
+  background:radial-gradient(circle at 34% 30%,#C6A96A,#7A6230 70%);
+  box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 -2px 4px rgba(0,0,0,.35)}
+
+/* Ablesefenster: steht still, während die Scheibe dreht */
+.rs .fenster{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;
+  width:var(--fw,300px);text-align:center;color:var(--tinte);pointer-events:none}
+.rs .fenster .t{font-family:var(--serif);font-size:var(--tg,25px);line-height:1.2;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.rs .fenster .u{margin-top:8px;font-family:var(--mono);font-size:12.5px;color:var(--tinte-2);
+  font-variant-numeric:tabular-nums}
+.rs .fenster .k{margin-top:12px;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--tinte-2)}
+
+/* Ablesemarke — der einzige rote Strich auf dem Blatt */
+.rs .ablese{position:absolute;left:50%;top:calc(var(--lp,22px) - 12px);width:2px;
+  height:var(--mh,54px);margin-left:-1px;background:var(--marke);z-index:5;pointer-events:none;
+  box-shadow:0 0 8px rgba(178,58,46,.7)}
+.rs .ablese::after{content:'';position:absolute;left:-6px;top:0;border-left:7px solid transparent;
+  border-right:7px solid transparent;border-top:10px solid var(--marke)}
+
+/* ── Fuß ── */
+.rs .fuss{flex:1;min-height:0;width:100%;display:flex;align-items:center;gap:14px}
+.rs .fuss .uhr{font-family:var(--mono);font-size:13px;color:#DAD8D2;font-variant-numeric:tabular-nums;
+  flex:1;min-width:0}
+.rs .fuss button{width:var(--tb,58px);height:var(--tb,58px);border-radius:50%;display:grid;
+  place-items:center;color:#EDEBE5;background:linear-gradient(180deg,#7E7F83,#54555A);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 4px 10px rgba(0,0,0,.45)}
+.rs .fuss button.pp{color:#2A2A2C;background:linear-gradient(180deg,#E6E4DE,#B9B7B1)}
+.rs .fuss button:active{transform:translateY(1px)}
+
+/* ── Bibliothek ── */
+.rs .bib{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;padding:var(--pad,34px);
+  background:rgba(38,38,40,.96);backdrop-filter:blur(3px);
+  opacity:0;pointer-events:none;transform:scale(.99);transition:opacity .2s,transform .2s}
+.rs .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.rs .bib .bkopf{flex:none;display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.rs .bib h2{font-family:var(--serif);font-size:22px;font-weight:400;flex:none}
+.rs .bib .suchfeld{flex:1;min-width:0;display:flex;align-items:center;gap:10px;height:44px;padding:0 14px;
+  border-radius:22px;background:rgba(0,0,0,.35);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.rs .bib .suchfeld input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:#EDEBE5;font-size:15px}
+.rs .bib .suchfeld input::placeholder{color:#9B9992}
+.rs .bib .zu{width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center;
+  color:#EDEBE5;background:rgba(255,255,255,.12)}
+.rs .bib .bliste{flex:1;min-height:0;overflow:hidden;display:grid;
+  grid-template-columns:repeat(var(--bsp,2),1fr);gap:10px 14px;align-content:start}
+.rs .bib .bz{display:flex;align-items:center;gap:12px;padding:10px;border-radius:6px;cursor:pointer;
+  background:rgba(255,255,255,.06)}
+.rs .bib .bz .pl{width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center;
+  color:#fff;font-family:var(--serif);font-size:17px}
+.rs .bib .bz .m{min-width:0}
+.rs .bib .bz .m>span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rs .bib .bz .t{font-size:14px}
+.rs .bib .bz .s{font-size:11px;color:#B0AEA7}
+.rs .bib .bz.an{box-shadow:inset 0 0 0 1.5px var(--marke)}
+.rs .bib .bfuss{flex:none;padding-top:12px}
+
+/* ══ Variante 2: Volvelle im Risodruck ════════════════════════════════════
+   Aus dem Gerät wird Papier. Zwei Farben, leicht versetzt gedruckt, mit
+   mix-blend-mode:multiply übereinander — der Versatz ist der ganze Effekt.  */
+.rs.ri{
+  --guss:#EFE9DC; --guss-2:#E3DCC9; --leder:#D9D0B8; --leder-2:#CDC3A8;
+  --skala:#F6F2E6; --skala-2:#E0D8C2; --tinte:#26221C; --tinte-2:#6E6656;
+  --marke:#D5452F; --blau:#2B4C8C;
+  color:var(--tinte)}
+.rs.ri .kap{color:var(--tinte-2)}
+.rs.ri .gehaeuse{box-shadow:0 0 0 1px rgba(38,34,28,.18),0 12px 26px rgba(38,34,28,.16)}
+.rs.ri .gehaeuse::before{background:
+  repeating-radial-gradient(circle at 50% 50%,rgba(38,34,28,.05) 0 1px,transparent 1px 6px)}
+/* Der Riso-Versatz: eine zweite, blaue Ausgabe des Rings, 3 px daneben */
+.rs.ri .scheibe .ring{mix-blend-mode:multiply}
+.rs.ri .scheibe .versatz{display:block;position:absolute;inset:0;border-radius:50%;mix-blend-mode:multiply;
+  transform:translate(3px,2px);opacity:.55;
+  background:conic-gradient(var(--sektoren2,var(--blau)))}
+.rs.ri .scheibe .innen{background:#FBF8EF;box-shadow:inset 0 0 0 1px rgba(38,34,28,.25)}
+.rs.ri .achse{background:radial-gradient(circle at 34% 30%,#D8BE7C,#8A6F35 70%)}
+.rs.ri .knopf{background:#FBF8EF;color:var(--tinte);box-shadow:0 0 0 1px rgba(38,34,28,.25)}
+.rs.ri .fuss .uhr{color:var(--tinte-2)}
+.rs.ri .fuss button{color:var(--tinte);background:#FBF8EF;
+  box-shadow:0 0 0 1px rgba(38,34,28,.25),0 2px 5px rgba(38,34,28,.14)}
+.rs.ri .fuss button.pp{color:#FBF8EF;background:var(--blau);box-shadow:0 2px 5px rgba(38,34,28,.2)}
+.rs.ri .bib{background:rgba(246,242,230,.97);color:var(--tinte)}
+.rs.ri .bib .suchfeld{background:#fff;box-shadow:inset 0 0 0 1px rgba(38,34,28,.25)}
+.rs.ri .bib .suchfeld input{color:var(--tinte)}
+.rs.ri .bib .zu{color:var(--tinte);background:#fff;box-shadow:0 0 0 1px rgba(38,34,28,.25)}
+.rs.ri .bib .bz{background:#fff;box-shadow:0 0 0 1px rgba(38,34,28,.16)}
+.rs.ri .bib .bz .s{color:var(--tinte-2)}
+@media (prefers-reduced-motion:reduce){.rs .scheibe{transition:none}.rs .bib{transition:none}}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 19 · zweite Reihe</div>
+      <h1>Rechenscheibe</h1>
+      <p class="lede">Das Album ist ein <b>Ring um eine Achse</b>: jeder Titel ein Kreisabschnitt, so groß
+      wie er lang ist. Die rote Ablesemarke steht still, die Scheibe dreht sich darunter — spulen heißt
+      <b>drehen bis zur Marke</b>, nicht auf eine Zeitlinie zielen.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <svg viewBox="0 0 300 200" fill="none" stroke="currentColor" stroke-width="1.4">
+        <circle cx="150" cy="100" r="80"/><circle cx="150" cy="100" r="66"/>
+        <circle cx="150" cy="100" r="40"/><circle cx="150" cy="100" r="7"/>
+        <path d="M150 20v14M150 166v14M70 100h14M216 100h14"/>
+        <g stroke-width="1">
+          <path d="M206 44l-10 10M94 44l10 10M206 156l-10-10M94 156l10-10"/>
+          <path d="M150 34v8M187 44l-4 7M213 81l-7 2M213 119l-7-2M187 156l-4-7
+                   M113 156l4-7M87 119l7-2M87 81l7 2M113 44l4 7"/>
+        </g>
+        <path d="M150 14v26" stroke-width="3"/>
+        <path d="M118 96h64M118 108h44" stroke-width="1"/>
+      </svg>
+      <figcaption>Vorlage · Drehrechenscheibe, gezeichnet</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Zinkguss</h2><span class="marke geraet">iPad hoch · 834 × 1194</span></div>
+    <p class="etext">Gehäuse aus Zinkguss, ein Lederring, eine geätzte Skala und eine Messingachse. Die
+    Titelnummern liegen am Rand der Scheibe und drehen mit; im Ablesefenster in der Mitte steht immer der
+    Titel, der gerade unter der Marke liegt. Die Scheibe hat <b>eine Umdrehung je Album</b> — dadurch ist
+    ein kurzes Album grob und ein langes fein, was genau richtig ist.
+    <span class="probier"><b>Ausprobieren:</b> die Scheibe drehen und über eine Abschnittsgrenze hinweg
+    ziehen; das Fenster wechselt den Titel, ohne dass die Bewegung anhält.</span></p>
+    <div class="buehne">
+      <div class="rahmen ipad-hoch">
+        <div class="schirm"><div class="rs" id="v1"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Womit gespult wird</dt><dd>Die <b>Scheibe drehen</b>, eine Umdrehung je Album</dd></div>
+      <div><dt>Ohne Tippen sichtbar</dt><dd>Ein Titel groß, das ganze Album als Ring</dd></div>
+      <div><dt>Ruhezustand</dt><dd>Ein Instrument, das auf einem Wert stehen bleibt</dd></div>
+      <div><dt>Schwäche</dt><dd>30 Titel sind 30 Abschnitte à 12° — die Nummern werden eng</dd></div>
+      <div><dt>Aufwand</dt><dd>mittel — der Ring ist ein gerechneter <code>conic-gradient</code></dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Volvelle</h2><span class="marke geraet">iPad hoch · 834 × 1194</span></div>
+    <p class="etext">Dieselbe Scheibe als <b>Risodruck</b>: zwei Farben, absichtlich um drei Pixel
+    versetzt übereinander, mit <code style="font-family:var(--mono);font-size:13px">mix-blend-mode:
+    multiply</code>. Aus dem Messing wird eine Öse, aus dem Leder Papier. Der Versatz ist kein Fehler,
+    sondern das ganze Verfahren — er macht aus zwei Flächen ein Druckerzeugnis.
+    <span class="probier"><b>Ausprobieren:</b> beim Drehen wandern die beiden Farbauszüge nicht ganz
+    deckungsgleich — genau das tut eine Risomaschine auch.</span></p>
+    <div class="buehne">
+      <div class="rahmen ipad-hoch">
+        <div class="schirm"><div class="rs ri" id="v2"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Material</dt><dd>Riso: zwei Auszüge, <code>multiply</code>, 3 px Versatz</dd></div>
+      <div><dt>Farbe</dt><dd>Zwei — Blau trägt, Rot ist nur die Marke</dd></div>
+      <div><dt>Ruhezustand</dt><dd>Ein bedrucktes Blatt Papier mit einer Öse</dd></div>
+      <div><dt>Quer</dt><dd>Trägt: die Scheibe wandert nach links, Fuß und Kopf nach rechts</dd></div>
+      <div><dt>Nähe zu Blatt 06</dt><dd>Beide drehen — dort ein <em>Tonarm</em> über der Platte, hier die Platte selbst</dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Der Ring wird aus <code>offs</code> gerechnet.</b> Ein
+      <code>conic-gradient</code> mit zwei Stopps je Titel: <code>farbe von° bis°</code>. Kein Bild, kein
+      SVG, keine Bibliothek — die Farbfolge ist eine <code>map()</code> über die
+      Warteschlange.</span></li>
+      <li><span><b><code>@property --winkel</code> macht die Drehung animierbar.</b> Ohne Registrierung
+      ist eine Custom Property ein Text und lässt sich nicht überblenden; registriert als
+      <code>&lt;angle&gt;</code> reicht ein <code>transition: --winkel .22s linear</code>, damit ein
+      Titelsprung eine <em>Fahrt</em> wird statt eines Bildwechsels. Beim Ziehen wird die Transition
+      abgeschaltet, sonst hängt die Scheibe am Finger hinterher.</span></li>
+      <li><span><b>Gedreht wird über Winkeldifferenzen</b>, wie am Rad in Blatt 11: Der Sprung von 359°
+      auf 1° muss abgefangen werden. Absolute Winkel wären falsch — die Scheibe würde beim Anfassen
+      unter dem Finger wegspringen.</span></li>
+      <li><span><b>Eine Umdrehung je Album ist die richtige Übersetzung.</b> Nicht je Titel: Sonst müsste
+      man beim Wechsel zwischen zwei Titeln die Hand neu ansetzen, und die Grenzen wären nicht
+      sichtbar.</span></li>
+      <li><span><b>Der Riso-Versatz ist zwei Regeln.</b> Eine zweite Kopie des Rings, um 3 px verschoben,
+      <code>mix-blend-mode:multiply</code>, <code>opacity:.55</code>. Was am Bildschirm nach Papier
+      aussieht, ist fast immer eine Rechenregel und kein Bild.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für player.html</span><span>Blatt 19 · Rechenscheibe</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Sammlung</h2>
+      <label class="suchfeld">${I.search(17)}
+        <input type="search" placeholder="Album, Interpret oder Titel suchen …" data-suche></label>
+      <button class="zu" data-bib-zu>${I.x(17)}</button>
+    </div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss kap" data-btreffer></div>
+  </div>`;
+
+const geraetHTML = `
+  <div class="kopfz">
+    <div class="wer">
+      <div class="kap" data-interpret></div>
+      <div class="al" data-album></div>
+    </div>
+    <button class="knopf" data-bib title="Sammlung">${I.grid(18)}</button>
+  </div>
+
+  <div class="gehaeuse">
+    <div class="scheibe" data-scheibe>
+      <div class="versatz" data-versatz></div>
+      <div class="ring" data-ring></div>
+      <div class="rand"></div>
+      <div class="nrn" data-nrn></div>
+      <div class="innen"></div>
+    </div>
+    <div class="achse"></div>
+    <div class="fenster">
+      <div class="t" data-titel></div>
+      <div class="u"><span data-jetzt></span> · <span data-ende></span></div>
+      <div class="k" data-lage></div>
+    </div>
+    <div class="ablese"></div>
+  </div>
+
+  <div class="fuss">
+    <span class="uhr" data-gesamt></span>
+    <button data-prev>${I.prev(19)}</button>
+    <button class="pp" data-pp>${I.pause(22)}</button>
+    <button data-next>${I.next(19)}</button>
+  </div>` + bibHTML;
+
+function verdrahte(wurzel, deck, stil){
+  const $  = s => wurzel.querySelector(s);
+  wurzel.innerHTML = geraetHTML;
+  Object.entries(stil).forEach(([k,v]) => wurzel.style.setProperty(k, v));
+
+  $('[data-pp]').onclick   = () => deck.toggle();
+  $('[data-next]').onclick = () => deck.next();
+  $('[data-prev]').onclick = () => deck.prev();
+
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="pl" style="background:${grad(a)}">${ini(a)}</span>
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)} · ${fmtLang(albDur(a))}</span></span></div>`,
+    leer: '<div class="bz" style="box-shadow:none;background:none"><span class="s">Nichts gefunden.</span></div>',
+  });
+
+  /* Drehen: Winkeldifferenz, nicht Winkel — sonst springt die Scheibe beim
+     Anfassen unter den Finger. Dieselbe Rechnung wie das Rad in Blatt 11. */
+  const scheibe = $('[data-scheibe]');
+  let letzter = null;
+  const winkelVon = ev => {
+    const r = scheibe.getBoundingClientRect();
+    return Math.atan2(ev.clientY - (r.top + r.height/2), ev.clientX - (r.left + r.width/2)) * 180/Math.PI;
+  };
+  scheibe.addEventListener('pointerdown', ev => {
+    letzter = winkelVon(ev); scheibe.classList.add('zieht');
+    scheibe.setPointerCapture(ev.pointerId); ev.preventDefault();
+  });
+  scheibe.addEventListener('pointermove', ev => {
+    if (letzter === null) return;
+    const w = winkelVon(ev);
+    let dw = w - letzter;
+    if (dw > 180) dw -= 360; if (dw < -180) dw += 360;
+    letzter = w;
+    deck.seekGlobal(deck.gpos - dw/360 * deck.total);   // Scheibe nach links = vorwärts
+  });
+  const los = () => { letzter = null; scheibe.classList.remove('zieht'); };
+  scheibe.addEventListener('pointerup', los);
+  scheibe.addEventListener('pointercancel', los);
+
+  /* Der Ring: ein conic-gradient aus den Titelgrenzen der Warteschlange. */
+  const ringVon = (d, hell, dunkel) => {
+    const o = d.offs, ges = d.total;
+    return d.queue.map((id,i) => {
+      const von = o[i]/ges*360, bis = (o[i] + TRACKS[id].d)/ges*360;
+      return `${i % 2 ? dunkel : hell} ${von.toFixed(3)}deg ${bis.toFixed(3)}deg`;
+    }).join(',');
+  };
+
+  let letztesAlbum = null, letzterTitel = null;
+  deck.onRender = d => {
+    const t = d.track, a = d.album;
+    if (letztesAlbum !== a.id){
+      letztesAlbum = a.id;
+      wurzel.style.setProperty('--sektoren',
+        ringVon(d, 'var(--skala)', 'var(--skala-2)'));
+      wurzel.style.setProperty('--sektoren2',
+        ringVon(d, 'transparent', 'var(--blau, #2B4C8C)'));
+      $('[data-album]').textContent = a.t;
+      $('[data-interpret]').textContent = `${a.ar} · ${a.y}`;
+      $('[data-gesamt]').textContent = `${d.queue.length} Titel · ${fmtLang(d.total)}`;
+      /* Titelnummern am Scheibenrand, jede in der Mitte ihres Abschnitts */
+      const o = d.offs;
+      $('[data-nrn]').innerHTML = d.queue.map((id,i) => {
+        const mitte = (o[i] + TRACKS[id].d/2) / d.total * 360;
+        return `<div class="nr" style="transform:rotate(${mitte.toFixed(2)}deg)">
+          <span style="transform:rotate(${(-mitte).toFixed(2)}deg)">${i+1}</span></div>`;
+      }).join('');
+      bib.markiere();
+    }
+    if (letzterTitel !== t.id){
+      letzterTitel = t.id;
+      $('[data-titel]').textContent = t.t;
+      $('[data-lage]').textContent = `Titel ${d.qi+1} von ${d.queue.length}`;
+    }
+    scheibe.style.setProperty('--winkel', (-(d.gpos / d.total) * 360).toFixed(2) + 'deg');
+    $('[data-jetzt]').textContent = fmt(d.pos);
+    $('[data-ende]').textContent  = '−' + fmt(d.rest);
+    $('[data-pp]').innerHTML = d.playing ? I.pause(22) : I.play(22);
+  };
+  deck.render();
+}
+
+verdrahte(document.getElementById('v1'), new Deck('sat', {qi:1, pos:120, speed:8}),
+  {'--dm':'748px','--pad':'30px','--bsp':'2'});
+verdrahte(document.getElementById('v2'), new Deck('blu', {qi:0, pos:70, speed:8}),
+  {'--dm':'748px','--pad':'30px','--bsp':'2','--tg':'24px'});
+})();
+</script>
