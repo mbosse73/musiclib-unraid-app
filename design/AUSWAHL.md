@@ -1,15 +1,15 @@
 # Auswahl für Etappe 5
 
-Das Design-Paket liefert 21 Konzepte. Der Eigentümer hat daraus ausgewählt: **12
-werden gebaut, 9 fallen weg**. Diese Datei hält den Stand fest, damit später
-niemand raten muss, warum ein Blatt in `design/html/` liegt, aber in
+Das Design-Paket lieferte 22 Konzepte. Der Eigentümer hat daraus **12 ausgewählt;
+die anderen zehn sind samt Dateien entfernt**. Diese Datei hält den Stand fest,
+damit später niemand raten muss, warum ein Blatt in der Historie steht, aber in
 `player.html` nie auftaucht.
 
-Gestrichen heißt **nicht bauen**, nicht *gelöscht*: die gelieferten Dateien
-bleiben vollständig unter `design/html/` liegen. Davon gibt es genau eine
-Ausnahme: **33 Glass Musiknote** ist auf Wunsch des Eigentümers samt Dateien und
-Abwandlungen entfernt worden, und von **18 Akai 747** ist das Hochformat weg.
-Beides steht in der Git-Historie, nicht mehr im Paket.
+Gestrichen heißt hier also **gelöscht**: unter `design/html/` und
+`design/previews/` liegen nur noch die zwölf, die gebaut werden. Was weg ist,
+ist nicht verloren — es steht vollständig in der Git-Historie und lässt sich mit
+einem `git show` zurückholen. Von **18 Akai 747** ist zusätzlich das Hochformat
+weg; das Konzept selbst bleibt.
 
 ## Wird gebaut
 
@@ -23,13 +23,19 @@ Beides steht in der Git-Historie, nicht mehr im Paket.
 **35 Music Sounds Better** ist der Pilot: das schlichteste Blatt, an dem sich das
 Portierungsrezept festzurren lässt, bevor die aufwendigeren folgen.
 
-## Fällt weg
+## Entfernt
 
 | | | |
 |---|---|---|
 | 17 Sony Bandmaschine | 19 On-Air-Leuchtkasten | 20 Philips Radio |
 | 21 Yamaha Tuner | 23 Magnetola | 28 Rewind Boombox |
 | 29 Rewind Deck | 30 iPod Weiß | 32 Seattle Skeuo |
+| 33 Glass Musiknote | | |
+
+Die ersten neun in einem Zug, 33 schon vorher (dort waren zwei Fassungen zur
+Auswahl offen, und die Frage hat sich mit dem Löschen erledigt). Mit ihnen sind
+`d17` bis `d32` aus `design/src/designs3.py` verschwunden — der Generator baut
+nur noch, was es noch gibt.
 
 Damit bleibt von der Familie *Gerät* nur ein Blatt übrig — und das nur im
 Querformat. Die Gruppierung nach Familien im Einstellungsdialog lohnt sich
