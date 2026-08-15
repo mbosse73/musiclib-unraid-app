@@ -56,15 +56,22 @@ wegbricht:
 Welche der beiden gebaut wird, ist noch nicht entschieden. Solange das offen
 ist, wird 33 nicht portiert.
 
-## Zweiter Satz: vier Entwürfe aus dem Ordner `player2/`
+## Eigene Entwürfe aus den Ordnern `player2/` und `player3/`
 
 Aus den Fotos in `player2/` sind vier Spieler entstanden — 39 Kippschalter,
 43 Sonnenglas, 44 Gerätezeile, 46 Malerblatt. Vier weitere (40 Neonschild,
 41 Sonntagsblatt, 42 Druckgrafik, 45 Kassettenhaufen) sind auf Wunsch wieder
 verworfen und samt Dateien entfernt. Von **43 gibt es sechs Fassungen** (gleiche
 Farbe, unterschiedliche Glasdicke, -oberfläche und Lichtführung, siehe LIESMICH); welche davon
-gilt, ist offen. Die verbliebenen
-liegen unter
+gilt, ist offen.
+
+Aus den fünfzehn Fotos in `player3/` sind dreizehn weitere entstanden —
+47 Redaktionsblatt, 48 Siebdruck, 49 Weckdock, 50 Fallblatt, 51 Tastenfeld,
+52 Meldetafel, 53 Fokusmodul, 54 Roséblech, 55 Tonartkarte, 56 Punktring,
+57 Mischpult, 58 Zeigerfront, 59 Skalenblech. Zwei davon fassen je zwei Fotos
+desselben Geräts zusammen (49 und 58), wie es 44 schon vormacht.
+
+Alle siebzehn liegen unter
 `design/entwuerfe/`, halten dieselben Regeln ein wie das Paket und sind bisher
 **nicht** Teil der Auswahl oben: welche davon gebaut werden, ist noch nicht
 entschieden. Begründung je Entwurf in `design/entwuerfe/LIESMICH.md`.

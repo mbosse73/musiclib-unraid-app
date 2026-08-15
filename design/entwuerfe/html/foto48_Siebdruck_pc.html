@@ -1,0 +1,75 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1600px;height:1000px;overflow:hidden}
+.stage{position:relative;width:1600px;height:1000px;overflow:hidden}
+
+.stage{background:#d4502a;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#17150f}
+
+/* Gelbe Versalien, eng gesetzt und im Anschnitt — wie gedruckt, nicht gesetzt */
+.kopf{font-family:'Arial Narrow','Helvetica Neue Condensed',Arial,sans-serif;font-weight:800;color:#e9b43e;line-height:.84;
+  letter-spacing:-.01em;text-transform:uppercase}
+
+/* Passerversatz: dieselbe Zeile ein Haar daneben in Schwarz */
+.passer{position:relative}
+.passer .unter{position:absolute;left:2px;top:3px;
+  color:#17150f;opacity:.30}
+
+.tafel{background:#ead8ac;position:relative}
+.tafel .korn{position:absolute;inset:0;opacity:.16;
+  background:repeating-linear-gradient(90deg,#17150f 0 1px,transparent 1px 5px)}
+
+.balken{position:relative;background:rgba(23,21,15,.22)}
+.balken i{position:absolute;left:0;top:0;bottom:0;background:#c0301c}
+.balken i::after{content:"";position:absolute;left:0;right:0;top:0;
+  height:2px;background:#e9b43e;opacity:.75}
+.zeiten{display:flex;justify-content:space-between;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;
+  color:rgba(23,21,15,.62);font-variant-numeric:tabular-nums}
+
+.taste{flex-shrink:0;border-radius:50%;background:#17150f;display:flex;
+  align-items:center;justify-content:center}
+.taste.hell{background:#ead8ac}
+.bib{display:inline-flex;align-items:center;background:#e9b43e;color:#17150f;
+  text-transform:uppercase;font-weight:800;border-radius:999px}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;display:flex">
+  <div style="width:790px;flex-shrink:0;padding:58px 0 54px 72px;display:flex;
+    flex-direction:column">
+    <div class="passer"><div class="kopf unter" style="font-size:124px">Blue in<br>Green</div><div class="kopf" style="font-size:124px">Blue in<br>Green</div></div>
+    <div style="margin-top:26px;display:flex;align-items:center;gap:26px">
+      <span class="bib" style="height:50px;padding:0 19px;gap:9px;font-size:16px;letter-spacing:1.8px"><svg width="20" height="20" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="#17150f"/><rect x="8" y="4" width="3" height="16" rx="1" fill="#17150f"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="#17150f"/></svg>Sammlung · 240</span>
+      <span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:15px;letter-spacing:.16em;
+        text-transform:uppercase;color:rgba(23,21,15,.55)">Kind of Blue · 1959</span>
+    </div>
+    <div style="margin-top:22px;padding-right:56px"><div style="display:flex;align-items:baseline;gap:11px;padding:6px 0;border-top:1px solid rgba(23,21,15,.22);font-size:21px;color:rgba(23,21,15,.62)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:16px">01</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">So What</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:16px">9:22</span></div><div style="display:flex;align-items:baseline;gap:11px;padding:6px 0;border-top:1px solid rgba(23,21,15,.22);font-size:21px;color:rgba(23,21,15,.62)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:16px">02</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Freddie Freeloader</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:16px">9:46</span></div><div style="display:flex;align-items:baseline;gap:11px;padding:6px 0;border-top:1px solid rgba(23,21,15,.22);font-size:21px;font-weight:800"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:16px">03</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Blue in Green</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:16px">5:37</span></div><div style="display:flex;align-items:baseline;gap:11px;padding:6px 0;border-top:1px solid rgba(23,21,15,.22);font-size:21px;color:rgba(23,21,15,.62)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:16px">04</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">All Blues</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:16px">11:33</span></div>
+      <div style="border-top:1px solid rgba(23,21,15,.22)"></div></div>
+    <div style="margin-top:auto"><div class="tafel" style="padding:25px 25px 23px">
+  <span class="korn"></span>
+  <div style="position:relative">
+    <div style="font-size:40px;font-weight:800;letter-spacing:-.02em">
+      Miles Davis</div>
+    <div style="font-size:21px;color:rgba(23,21,15,.66);margin-top:5px">
+      Kind of Blue · 1959 · Titel 03 von 04</div>
+
+    <div class="balken" style="height:11px;margin-top:19px">
+      <i style="width:40%"></i></div>
+    <div class="zeiten" style="font-size:18px;margin-top:8px">
+      <span>02:14</span><span>-03:23</span></div>
+
+    <div style="display:flex;align-items:center;justify-content:center;
+      gap:22px;margin-top:20px">
+      <div class="taste" style="width:70px;height:70px">
+        <svg width="29" height="29" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#ead8ac" stroke-width="2" fill="#ead8ac" stroke-linejoin="round"/></svg></div>
+      <div class="taste" style="width:96px;height:96px">
+        <svg width="38" height="38" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#e9b43e"/><rect x="14" y="5" width="4" height="14" fill="#e9b43e"/></svg></div>
+      <div class="taste" style="width:70px;height:70px">
+        <svg width="29" height="29" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#ead8ac" stroke-width="2" fill="#ead8ac" stroke-linejoin="round"/></svg></div>
+      <div class="taste hell" style="width:70px;height:70px">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#17150f" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 L21 21"/></svg></div>
+    </div>
+  </div>
+</div></div>
+  </div>
+  <div style="flex:1;min-width:0;display:flex;align-items:flex-end;line-height:0">
+    <svg viewBox="0 0 810 1000" width="810" height="1000"><rect x="16" y="40" width="96" height="215" fill="#17150f"/><rect x="124" y="52" width="96" height="215" fill="#17150f"/><rect x="139" y="82" width="65" height="112" fill="#ead8ac"/><circle cx="172" cy="138" r="16" fill="#17150f"/><rect x="232" y="64" width="96" height="215" fill="#17150f"/><rect x="339" y="40" width="96" height="215" fill="#17150f"/><rect x="355" y="70" width="65" height="112" fill="#ead8ac"/><circle cx="387" cy="126" r="16" fill="#17150f"/><rect x="447" y="52" width="96" height="215" fill="#17150f"/><rect x="555" y="64" width="96" height="215" fill="#17150f"/><rect x="570" y="94" width="65" height="112" fill="#ead8ac"/><circle cx="603" cy="150" r="16" fill="#17150f"/><rect x="663" y="40" width="96" height="215" fill="#17150f"/><rect x="0" y="300" width="810" height="45" fill="#17150f"/><rect x="28" y="400" width="227" height="168" rx="7" fill="#ead8ac" stroke="#17150f" stroke-width="3"/><circle cx="133" cy="487" r="67" fill="#17150f"/><circle cx="133" cy="487" r="28.2" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="133" cy="487" r="35.6" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="133" cy="487" r="43.0" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="133" cy="487" r="50.3" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="133" cy="487" r="57.7" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="133" cy="487" r="20" fill="#ead8ac"/><path d="M228 430 L180 473" stroke="#17150f" stroke-width="5" stroke-linecap="round"/><rect x="284" y="355" width="267" height="198" rx="8" fill="#ead8ac" stroke="#17150f" stroke-width="3"/><circle cx="406" cy="458" r="79" fill="#17150f"/><circle cx="406" cy="458" r="33.2" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="406" cy="458" r="41.9" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="406" cy="458" r="50.6" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="406" cy="458" r="59.3" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="406" cy="458" r="68.0" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="406" cy="458" r="24" fill="#c0301c"/><path d="M519 391 L462 440" stroke="#17150f" stroke-width="5" stroke-linecap="round"/><rect x="563" y="400" width="227" height="168" rx="7" fill="#ead8ac" stroke="#17150f" stroke-width="3"/><circle cx="667" cy="487" r="67" fill="#17150f"/><circle cx="667" cy="487" r="28.2" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="667" cy="487" r="35.6" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="667" cy="487" r="43.0" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="667" cy="487" r="50.3" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="667" cy="487" r="57.7" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="667" cy="487" r="20" fill="#ead8ac"/><path d="M763 430 L714 473" stroke="#17150f" stroke-width="5" stroke-linecap="round"/><rect x="49" y="695" width="713" height="305" fill="#17150f"/><rect x="69" y="740" width="27" height="215" fill="#d4502a"/><rect x="118" y="740" width="27" height="215" fill="#ead8ac"/><rect x="167" y="740" width="27" height="215" fill="#ead8ac"/><rect x="216" y="740" width="27" height="215" fill="#d4502a"/><rect x="264" y="740" width="27" height="215" fill="#ead8ac"/><rect x="313" y="740" width="27" height="215" fill="#ead8ac"/><rect x="362" y="740" width="27" height="215" fill="#d4502a"/><rect x="411" y="740" width="27" height="215" fill="#ead8ac"/><rect x="460" y="740" width="27" height="215" fill="#ead8ac"/><rect x="509" y="740" width="27" height="215" fill="#d4502a"/><rect x="558" y="740" width="27" height="215" fill="#ead8ac"/><rect x="607" y="740" width="27" height="215" fill="#ead8ac"/><rect x="656" y="740" width="27" height="215" fill="#d4502a"/><rect x="704" y="740" width="27" height="215" fill="#ead8ac"/><path d="M0 1000 L340 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M26 1000 L366 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M52 1000 L392 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M78 1000 L418 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M104 1000 L444 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M130 1000 L470 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M156 1000 L496 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M182 1000 L522 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M208 1000 L548 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M234 1000 L574 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M260 1000 L600 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M286 1000 L626 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M312 1000 L652 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M338 1000 L678 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M364 1000 L704 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M390 1000 L730 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M416 1000 L756 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M442 1000 L782 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M468 1000 L808 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M494 1000 L834 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M520 1000 L860 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M546 1000 L886 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M572 1000 L912 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M598 1000 L938 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M624 1000 L964 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M650 1000 L990 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M676 1000 L1016 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M702 1000 L1042 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M728 1000 L1068 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M754 1000 L1094 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M780 1000 L1120 0" stroke="#17150f" stroke-width="1" opacity=".10"/></svg>
+  </div>
+</div></div></body></html>

@@ -1,0 +1,88 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1600px;height:1000px;overflow:hidden}
+.stage{position:relative;width:1600px;height:1000px;overflow:hidden}
+
+.stage{background:linear-gradient(155deg,#c7c9cb 0%,#9fa2a5 46%,#bcbfc2 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#f0f1f2}
+
+.modul{position:relative;border-radius:20px;
+  background:linear-gradient(168deg,#34373a 0%,#212325 26%,#141618 100%);
+  box-shadow:0 22px 48px rgba(20,22,24,.5),
+             inset 0 2px 0 rgba(255,255,255,.16)}
+
+/* Das Fenster liegt tiefer als das Gehäuse */
+.fenster{background:#0a0b0c;border-radius:11px;
+  box-shadow:inset 0 2px 9px rgba(0,0,0,.9),
+             0 0 0 1px rgba(255,255,255,.06)}
+
+.zeile{display:flex;justify-content:space-between;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;
+  color:rgba(240,241,242,.55);text-transform:uppercase;letter-spacing:.1em}
+.zahl{font-weight:200;line-height:1;text-align:center;
+  font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.wort{text-align:center;color:rgba(240,241,242,.55);font-weight:400}
+
+/* Geriffelter Knopf: Zylinder mit Rillen, wie im Foto oben */
+.knopf{position:relative;border-radius:999px;flex-shrink:0;overflow:hidden;
+  background:linear-gradient(180deg,#4b4f53 0%,#25282b 52%,#101214 100%);
+  box-shadow:0 5px 11px rgba(0,0,0,.5)}
+.knopf::after{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.16) 0 2px,
+    rgba(0,0,0,.30) 2px 4px)}
+.knopf span{position:absolute;left:0;right:0;bottom:5px;z-index:1;
+  text-align:center;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:#f0f1f2}
+
+/* Gummitasten: matt, mit einem Lichtsaum an der Oberkante */
+.taste{flex-shrink:0;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;
+  background:linear-gradient(180deg,#3c4044 0%,#1b1e20 60%,#111315 100%);
+  box-shadow:0 4px 9px rgba(0,0,0,.5),
+             inset 0 1px 0 rgba(255,255,255,.22)}
+.taste.warm{background:linear-gradient(180deg,#ff8b3a 0%,#f26a12 60%,#b8450a 100%)}
+.bib{display:inline-flex;align-items:center;color:rgba(240,241,242,.55);font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;
+  text-transform:uppercase}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;padding:56px 74px">
+  <div class="modul" style="width:1452px;padding:44px 48px;display:flex;gap:52px;
+    align-items:center">
+    <div style="width:430px;flex-shrink:0">
+      <div class="fenster" style="padding:34px 32px 30px">
+  <div class="zeile" style="font-size:18px">
+    <span>Blue in Green<br>03</span>
+    <span style="text-align:right">05:37<br>An</span>
+  </div>
+  <div class="zahl" style="font-size:118px;margin-top:20px">
+    02.14</div>
+  <div style="display:flex;justify-content:center;margin-top:20px">
+    <svg viewBox="0 0 366 190" width="366" height="190">
+<defs><radialGradient id="ku366" cx="50%" cy="100%" r="100%">
+<stop offset="0%" stop-color="#ffb15a"/><stop offset="52%" stop-color="#f0610b"/>
+<stop offset="100%" stop-color="#8c2f04"/></radialGradient></defs>
+<path d="M0 190 A183 183 0 0 1 366 190 Z" fill="url(#ku366)"/>
+<line x1="183" y1="190" x2="137.8" y2="51.1" stroke="#ffffff"
+  stroke-width="6" stroke-linecap="round"/>
+<line x1="235.9"
+  y1="94.1"
+  x2="255.3"
+  y2="58.8" stroke="rgba(255,255,255,.6)"
+  stroke-width="2" stroke-linecap="round"/></svg></div>
+  <div class="wort" style="font-size:20px;margin-top:12px">titel</div>
+</div>
+    </div>
+
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span class="bib" style="gap:7px;font-size:16px;letter-spacing:1.9px"><svg width="20" height="20" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="rgba(240,241,242,.55)"/><rect x="8" y="4" width="3" height="16" rx="1" fill="rgba(240,241,242,.55)"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="rgba(240,241,242,.55)"/></svg>Sammlung · 240</span>
+        <div style="display:flex;gap:18px"><div class="knopf" style="width:112px;height:56px"><span style="font-size:16px">Ton 60</span></div><div class="knopf" style="width:112px;height:56px"><span style="font-size:16px">1959</span></div></div>
+      </div>
+      <div style="font-size:44px;font-weight:300;margin-top:26px;letter-spacing:-.01em">
+        Blue in Green</div>
+      <div style="font-size:22px;color:rgba(240,241,242,.55);margin-top:8px">
+        Miles Davis · Kind of Blue</div>
+      <div style="margin-top:22px"><div style="display:flex;align-items:baseline;gap:16px;padding:11px 0;border-top:1px solid rgba(240,241,242,.12);font-size:21px;color:rgba(240,241,242,.55)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(240,241,242,.22)">01</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">So What</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(240,241,242,.22)">9:22</span></div><div style="display:flex;align-items:baseline;gap:16px;padding:11px 0;border-top:1px solid rgba(240,241,242,.12);font-size:21px;color:rgba(240,241,242,.55)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(240,241,242,.22)">02</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Freddie Freeloader</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(240,241,242,.22)">9:46</span></div><div style="display:flex;align-items:baseline;gap:16px;padding:11px 0;border-top:1px solid rgba(240,241,242,.12);font-size:21px;color:#f0f1f2"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(240,241,242,.22)">03</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Blue in Green</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(240,241,242,.22)">5:37</span></div><div style="display:flex;align-items:baseline;gap:16px;padding:11px 0;border-top:1px solid rgba(240,241,242,.12);font-size:21px;color:rgba(240,241,242,.55)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(240,241,242,.22)">04</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">All Blues</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(240,241,242,.22)">11:33</span></div>
+        <div style="border-top:1px solid rgba(240,241,242,.12)"></div></div>
+      <div style="margin-top:30px"><div style="display:flex;align-items:center;justify-content:center;gap:30px"><div class="taste" style="width:96px;height:96px"><svg width="38" height="38" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#f0f1f2" stroke-width="2" fill="#f0f1f2" stroke-linejoin="round"/></svg></div><div class="taste warm" style="width:124px;height:124px"><svg width="47" height="47" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#1b1006"/><rect x="14" y="5" width="4" height="14" fill="#1b1006"/></svg></div><div class="taste" style="width:96px;height:96px"><svg width="38" height="38" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#f0f1f2" stroke-width="2" fill="#f0f1f2" stroke-linejoin="round"/></svg></div><div class="taste" style="width:96px;height:96px"><svg width="38" height="38" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="#f0f1f2"/><rect x="8" y="4" width="3" height="16" rx="1" fill="#f0f1f2"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="#f0f1f2"/></svg></div></div></div>
+    </div>
+  </div>
+</div></div></body></html>

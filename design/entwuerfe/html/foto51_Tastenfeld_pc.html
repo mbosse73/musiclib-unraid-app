@@ -1,0 +1,90 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1600px;height:1000px;overflow:hidden}
+.stage{position:relative;width:1600px;height:1000px;overflow:hidden}
+
+.stage{background:linear-gradient(150deg,#f4f4f2 0%,#dcdcda 50%,#ececeb 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#2c2e30}
+
+.geraet{position:relative;border-radius:17px;overflow:hidden;
+  background:linear-gradient(180deg,#e9e9e7 0%,#cfcfcc 100%);
+  box-shadow:0 20px 47px rgba(40,44,48,.28),
+             inset 0 1px 0 rgba(255,255,255,.9)}
+
+/* Die Glasfläche endet nicht mit einer Kante, sondern mit der Fortschrittslinie */
+.glas{position:relative;background:#0d0e0f;color:#f4f5f4}
+.glas .bahn{position:absolute;left:0;right:0;bottom:0;height:2px;
+  background:rgba(244,245,244,.20)}
+.glas .bahn i{position:absolute;left:0;top:0;bottom:0;background:#f4f5f4}
+.marke{text-transform:uppercase;color:rgba(244,245,244,.52);letter-spacing:.2em;font-weight:500}
+.zahl{font-weight:200;line-height:1;font-variant-numeric:tabular-nums;
+  letter-spacing:-.03em}
+
+/* Das Tastenfeld: Quadrate mit einer Fuge, kein Rahmen um das einzelne Feld */
+.feld{display:grid;background:#cfcfcc}
+.k{background:#fbfbfa;display:flex;align-items:center;justify-content:center;
+  gap:8px;color:#7c8084;text-transform:uppercase;font-weight:600;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9)}
+.k.gruen{color:#31b356}
+.k.zeichen{font-size:0}
+.zeiten{display:flex;justify-content:space-between;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(244,245,244,.52);
+  font-variant-numeric:tabular-nums}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;padding:60px 76px">
+  <div class="geraet" style="width:1448px;display:grid;
+    grid-template-columns:1fr 520px">
+    <div style="position:relative"><div class="glas" style="padding:52px 48px 46px">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between">
+    <div>
+      <div class="marke" style="font-size:18px">Spielt</div>
+      <div class="marke" style="font-size:18px;margin-top:4px;
+        color:rgba(244,245,244,.20)">Titel 03 von 04</div>
+    </div>
+    <div style="display:flex;gap:17px;align-items:center">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(244,245,244,.52)" stroke-width="2" stroke-linecap="round"><path d="M3 6h4l4 12h6M3 18h4l2-6"/><path d="M17 3l4 3-4 3M17 15l4 3-4 3"/></svg>
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(244,245,244,.20)" stroke-width="2" stroke-linecap="round"><path d="M4 9a5 5 0 0 1 5-5h9"/><path d="M15 1l3 3-3 3"/><path d="M20 15a5 5 0 0 1-5 5H6"/><path d="M9 23l-3-3 3-3"/></svg>
+    </div>
+  </div>
+
+  <div class="zahl" style="font-size:168px;margin-top:14px">
+    02:14</div>
+
+  <div style="font-size:36px;margin-top:15px;
+    font-weight:300">Blue in Green</div>
+  <div style="font-size:24px;color:rgba(244,245,244,.52);margin-top:6px">
+    Miles Davis · Kind of Blue · 1959</div>
+
+  <div class="zeiten" style="font-size:21px;
+    margin-top:14px">
+    <span>02:14</span><span>05:37</span></div>
+
+  <span class="bahn"><i style="width:40%"></i></span>
+</div></div>
+    <div style="background:#0d0e0f;padding:52px 44px 46px;color:#f4f5f4;
+      border-left:3px solid #cfcfcc">
+      <div class="marke" style="font-size:18px">Album</div>
+      <div style="font-size:30px;font-weight:300;margin-top:12px">Kind of Blue</div>
+      <div style="margin-top:20px"><div style="display:flex;align-items:baseline;gap:16px;padding:10px 0;border-top:1px solid rgba(244,245,244,.14);font-size:20px;color:rgba(244,245,244,.52)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:16px;color:rgba(244,245,244,.20)">01</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">So What</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:16px;color:rgba(244,245,244,.20)">9:22</span></div><div style="display:flex;align-items:baseline;gap:16px;padding:10px 0;border-top:1px solid rgba(244,245,244,.14);font-size:20px;color:rgba(244,245,244,.52)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:16px;color:rgba(244,245,244,.20)">02</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Freddie Freeloader</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:16px;color:rgba(244,245,244,.20)">9:46</span></div><div style="display:flex;align-items:baseline;gap:16px;padding:10px 0;border-top:1px solid rgba(244,245,244,.14);font-size:20px;color:#f4f5f4"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:16px;color:rgba(244,245,244,.20)">03</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Blue in Green</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:16px;color:rgba(244,245,244,.20)">5:37</span></div><div style="display:flex;align-items:baseline;gap:16px;padding:10px 0;border-top:1px solid rgba(244,245,244,.14);font-size:20px;color:rgba(244,245,244,.52)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:16px;color:rgba(244,245,244,.20)">04</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">All Blues</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:16px;color:rgba(244,245,244,.20)">11:33</span></div>
+        <div style="border-top:1px solid rgba(244,245,244,.14)"></div></div>
+    </div>
+    <div style="grid-column:1/-1"><div class="feld" style="grid-template-columns:repeat(3,1fr);
+  gap:2px;padding:2px 0 0">
+  <div class="k zeichen" style="height:132px"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#7c8084" stroke-width="2" stroke-linecap="round"><path d="M3 6h4l4 12h6M3 18h4l2-6"/><path d="M17 3l4 3-4 3M17 15l4 3-4 3"/></svg></div>
+  <div class="k gruen" style="height:132px;font-size:17px;
+    letter-spacing:1.6px"><svg width="36" height="36" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="#31b356"/><rect x="8" y="4" width="3" height="16" rx="1" fill="#31b356"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="#31b356"/></svg>Sammlung · 240</div>
+  <div class="k zeichen" style="height:132px"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#7c8084" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 L21 21"/></svg></div>
+
+  <div class="k zeichen" style="height:132px"><svg width="36" height="36" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#3a3d40" stroke-width="2" fill="#3a3d40" stroke-linejoin="round"/></svg></div>
+  <div class="k zeichen" style="height:132px"><svg width="41" height="41" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#3a3d40"/><rect x="14" y="5" width="4" height="14" fill="#3a3d40"/></svg></div>
+  <div class="k zeichen" style="height:132px"><svg width="36" height="36" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#3a3d40" stroke-width="2" fill="#3a3d40" stroke-linejoin="round"/></svg></div>
+
+  <div class="k" style="height:132px;font-size:17px;
+    letter-spacing:1.6px">Leiser</div>
+  <div class="k" style="height:132px;font-size:17px;
+    letter-spacing:1.6px">Anzeige</div>
+  <div class="k" style="height:132px;font-size:17px;
+    letter-spacing:1.6px">Lauter</div>
+</div></div>
+  </div>
+</div></div></body></html>

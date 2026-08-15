@@ -1,0 +1,105 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:2340px;overflow:hidden}
+.stage{position:relative;width:1080px;height:2340px;overflow:hidden}
+
+.stage{background:linear-gradient(150deg,#c2c2c0 0%,#a6a6a4 52%,#bcbcba 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#f7f7f6}
+
+/* Die gelbe Karte liegt unter dem Riegel und schaut an zwei Seiten hervor */
+.karte{position:absolute;background:#d3b53c;
+  box-shadow:0 18px 40px rgba(60,50,10,.35),
+             inset 0 0 0 1px #a98d24}
+.karte .kmark{position:absolute;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;text-transform:uppercase;
+  letter-spacing:.18em;color:rgba(30,24,4,.62)}
+.karte .geist{position:absolute;font-weight:700;color:rgba(30,24,4,.16);
+  line-height:.8;letter-spacing:-.04em}
+
+.riegel{position:relative;border-radius:40px;
+  background:linear-gradient(160deg,#2a2c2f 0%,#17181a 22%,#0d0e10 100%);
+  box-shadow:0 30px 64px rgba(20,20,20,.5),
+             inset 0 2px 0 rgba(255,255,255,.12)}
+
+.gross{font-weight:300;letter-spacing:-.035em;line-height:.92}
+.pille{display:inline-flex;align-items:center;border-radius:999px;
+  border:2px solid rgba(247,247,246,.20);color:rgba(247,247,246,.52);text-transform:uppercase;
+  font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;letter-spacing:.16em}
+
+/* Die runden Tasten: dunkel mit hellem Ring, drei davon farbig */
+.rt{position:relative;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;font-weight:400;
+  background:linear-gradient(180deg,#303336 0%,#191b1d 62%,#0f1113 100%);
+  box-shadow:0 0 0 2px rgba(247,247,246,.55),
+             0 5px 12px rgba(0,0,0,.45)}
+
+.spiel{display:flex;align-items:center;justify-content:center;
+  border-radius:999px;background:#0e1012;color:#f7f7f6;
+  box-shadow:0 0 0 2px rgba(247,247,246,.65),
+             inset 0 2px 6px rgba(255,255,255,.08)}
+.rund{display:flex;align-items:center;justify-content:center;border-radius:50%;
+  background:#0e1012;flex-shrink:0;
+  box-shadow:0 0 0 2px rgba(247,247,246,.55)}
+
+/* Geriffelter Knopf wie im Foto oben rechts */
+.knopf{position:relative;border-radius:10px;overflow:hidden;flex-shrink:0;
+  background:linear-gradient(180deg,#3d4145 0%,#1c1f22 55%,#0d0f11 100%);
+  box-shadow:0 5px 12px rgba(0,0,0,.5)}
+.knopf::after{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.14) 0 2px,
+    rgba(0,0,0,.32) 2px 5px)}
+.knopf span{position:relative;z-index:1;display:block;text-align:center;
+  font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:#f7f7f6}
+.gitter{border-radius:8px;
+  background:repeating-linear-gradient(180deg,#0c0d0f 0 4px,
+    #24272a 4px 9px)}
+
+.haar{position:relative;height:2px;background:rgba(247,247,246,.20)}
+.haar i{position:absolute;left:0;top:0;bottom:0;background:#f7f7f6}
+.zeiten{display:flex;justify-content:space-between;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(247,247,246,.52);
+  font-variant-numeric:tabular-nums}
+.klein{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(247,247,246,.20);line-height:1.5;letter-spacing:.04em}
+.bib{display:inline-flex;align-items:center;border-radius:999px;
+  border:2px solid rgba(247,247,246,.5);color:#f7f7f6;
+  text-transform:uppercase;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;letter-spacing:.14em}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;padding:70px 46px">
+  <div style="position:relative;width:932px">
+  <div class="karte" style="left:-46px;top:-92px;right:46px;bottom:-92px">
+    <span class="kmark" style="left:30px;top:26px;font-size:20px">musiklib.local</span>
+    <span class="kmark" style="right:76px;top:26px;font-size:20px">01</span>
+    <span class="geist" style="left:30px;top:130px;font-size:320px">C</span>
+    <span class="kmark" style="right:76px;bottom:26px;font-size:20px">Beta</span>
+  </div>
+
+  <div class="riegel" style="position:relative;padding:56px 50px">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span class="bib" style="height:58px;padding:0 22px;gap:12px;font-size:19px"><svg width="24" height="24" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="#f7f7f6"/><rect x="8" y="4" width="3" height="16" rx="1" fill="#f7f7f6"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="#f7f7f6"/></svg>Sammlung · 240</span>
+      <div style="display:flex;align-items:center;gap:16px"><div class="gitter" style="width:112px;height:56px"></div><div class="knopf" style="width:112px;height:68px;padding-top:21px"><span style="font-size:21px">60</span></div><div class="knopf" style="width:112px;height:68px;padding-top:21px"><span style="font-size:21px">1959</span></div></div>
+    </div>
+
+    <div class="gross" style="font-size:118px;margin-top:52px">Blue in Green</div>
+    <div style="display:flex;align-items:center;gap:22px;margin-top:22px">
+      <span class="pille" style="height:44px;padding:0 20px;font-size:19px">
+        Titel 03 / 04</span>
+      <span style="font-size:27px;color:rgba(247,247,246,.52)">Miles Davis · Kind of Blue</span>
+    </div>
+
+    <div class="haar" style="margin-top:40px">
+      <i style="width:40%"></i></div>
+    <div class="zeiten" style="font-size:24px;margin-top:16px">
+      <span>02:14</span><span>05:37</span></div>
+
+    <div style="margin-top:56px"><div style="display:grid;grid-template-columns:repeat(5,124px);gap:26px"><div class="rt" style="width:124px;height:124px;font-size:34px;box-shadow:0 0 0 3px #dcc23f;">01</div><div class="rt" style="width:124px;height:124px;font-size:34px;">02</div><div class="rt" style="width:124px;height:124px;font-size:34px;box-shadow:0 0 0 3px #e08a3c;">03</div><div class="rt" style="width:124px;height:124px;font-size:34px;box-shadow:0 0 0 3px #4a9fd8;">04</div><div class="rt" style="width:124px;height:124px;font-size:34px;">·</div><div class="rt" style="width:124px;height:124px;font-size:34px;">·</div><div class="rt" style="width:124px;height:124px;font-size:34px;">·</div><div class="rt" style="width:124px;height:124px;font-size:34px;">·</div><div class="rt" style="width:124px;height:124px;font-size:34px;">·</div><div class="rt" style="width:124px;height:124px;font-size:34px;">·</div></div></div>
+
+    <div style="display:flex;align-items:center;gap:26px;margin-top:56px">
+      <div class="rund" style="width:104px;height:104px"><svg width="42" height="42" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#f7f7f6" stroke-width="2" fill="#f7f7f6" stroke-linejoin="round"/></svg></div>
+      <div class="spiel" style="flex:1;height:104px;gap:20px;font-size:26px;
+        letter-spacing:.24em;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace"><svg width="38" height="38" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#f7f7f6"/><rect x="14" y="5" width="4" height="14" fill="#f7f7f6"/></svg>Pause</div>
+      <div class="rund" style="width:104px;height:104px"><svg width="42" height="42" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#f7f7f6" stroke-width="2" fill="#f7f7f6" stroke-linejoin="round"/></svg></div>
+    </div>
+
+    <div class="klein" style="font-size:18px;margin-top:44px">Musiklib · lokale Sammlung · kein Netz · kein Konto · keine Werbung<br>Alben werden beim Einlesen aus den Dateien gelesen, nicht aus dem Netz<br>Fortsetzung: weiter · Zufall: aus · Wiederholen: aus</div>
+  </div>
+  </div>
+</div></div></body></html>

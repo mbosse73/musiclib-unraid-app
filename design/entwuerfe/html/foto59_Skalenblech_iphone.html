@@ -1,0 +1,129 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:2340px;overflow:hidden}
+.stage{position:relative;width:1080px;height:2340px;overflow:hidden}
+
+.stage{background:linear-gradient(160deg,#5c5f63 0%,#3a3d40 55%,#4c4f53 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#2f2e2b}
+
+.geraet{position:relative;background:linear-gradient(180deg,#eceae4 0%,#d3d0c8 100%);
+  border-radius:5px;
+  box-shadow:0 26px 60px rgba(0,0,0,.5),
+             inset 0 1px 0 #fff}
+
+/* Chromleiste: drei Streifen, hell-dunkel-hell — mehr braucht es nicht */
+.chrom{background:linear-gradient(180deg,#ffffff 0%,#c8c6c0 46%,
+  #8e8b85 54%,#ffffff 100%)}
+
+.klappe{position:relative;background:linear-gradient(180deg,#f6f5f1 0%,#eceae4 100%);
+  border-radius:3px;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.16),
+             0 2px 4px rgba(0,0,0,.10)}
+.sicht{background:#17181a;border-radius:2px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:inset 0 0 10px rgba(0,0,0,.9)}
+.wort{text-transform:uppercase;letter-spacing:.2em;color:rgba(47,46,43,.58)}
+
+/* Die Skala: zwei Zahlenreihen, Teilstriche dazwischen, ein roter Strich quer */
+.skala{position:relative;background:#fbfaf7;border-radius:2px;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+.skala .reihe{display:flex;justify-content:space-between;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;
+  color:#2f2e2b;font-variant-numeric:tabular-nums}
+.skala .striche{display:flex;justify-content:space-between;align-items:center}
+.skala .striche i{width:1px;background:rgba(47,46,43,.45)}
+.skala .zeiger{position:absolute;top:0;bottom:0;width:3px;background:#cc2a22;
+  box-shadow:0 0 6px rgba(204,42,34,.6)}
+
+/* Kippschalter: Chromhülse mit schwarzem Hebel */
+.kipp{display:flex;flex-direction:column;align-items:center;gap:8px}
+.huelse{position:relative;border-radius:4px;
+  background:linear-gradient(180deg,#ffffff 0%,#c8c6c0 50%,#8e8b85 100%);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+.huelse b{position:absolute;left:50%;transform:translateX(-50%);border-radius:999px;
+  background:linear-gradient(180deg,#4a4a48 0%,#1b1b1a 100%)}
+
+.taste{flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  border-radius:4px;
+  background:linear-gradient(180deg,#fbfaf7 0%,#dedbd4 100%);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.18),
+             0 2px 4px rgba(0,0,0,.14)}
+.zeiten{display:flex;justify-content:space-between;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(47,46,43,.58);
+  font-variant-numeric:tabular-nums}
+.bib{display:inline-flex;align-items:center;border-radius:3px;
+  background:linear-gradient(180deg,#fbfaf7 0%,#dedbd4 100%);color:#2f2e2b;
+  text-transform:uppercase;font-weight:700;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;padding:80px 50px">
+  <div class="geraet" style="width:980px">
+    <div class="chrom" style="height:8px"></div>
+    <div style="padding:46px 44px 52px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div class="klappe" style="width:560px;height:400px;
+  padding:20px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:18px">
+  <span class="wort" style="font-size:21px">Kind of Blue</span>
+  <div class="sicht" style="width:436px;height:184px">
+    <svg viewBox="0 0 347 215" width="347" height="215">
+<rect x="0" y="0" width="347" height="215" rx="19.3" fill="#2f3336"
+  stroke="#1a1a1a" stroke-width="2.1"/>
+<rect x="17.4" y="15.1" width="312.3" height="64.5"
+  rx="6.5" fill="#f2efe6"/>
+<rect x="17.4" y="86.0" width="312.3" height="15.1"
+  fill="#d9702c"/>
+<rect x="55.5" y="111.8" width="236.0" height="55.9"
+  rx="6.5" fill="#17171a"/>
+<circle cx="104.1" cy="139.8" r="53.8" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.7"/>
+<circle cx="242.9" cy="139.8" r="53.8" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.7"/>
+<circle cx="104.1" cy="139.8" r="22.6" fill="#17171a"/>
+<circle cx="242.9" cy="139.8" r="22.6" fill="#17171a"/>
+<circle cx="69.4" cy="187.1" r="5.9" fill="#1a1a1a"/><circle cx="121.4" cy="187.1" r="5.9" fill="#1a1a1a"/><circle cx="173.5" cy="187.1" r="5.9" fill="#1a1a1a"/><circle cx="225.6" cy="187.1" r="5.9" fill="#1a1a1a"/><circle cx="277.6" cy="187.1" r="5.9" fill="#1a1a1a"/></svg></div>
+  <span class="wort" style="font-size:21px">Auto weiter</span>
+</div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:26px">
+          <svg viewBox="0 0 300 150" width="300" height="150">
+<rect x="0" y="0" width="300" height="150" rx="10" fill="#f4f3ef"/>
+<line x1="62.9" y1="96.7" x2="38.3" y2="82.5" stroke="#3a3a3a" stroke-width="1.4"/><line x1="67.6" y1="72.8" x2="54.1" y2="60.7" stroke="#3a3a3a" stroke-width="2.4"/><line x1="84.8" y1="57.2" x2="74.2" y2="42.6" stroke="#3a3a3a" stroke-width="2.4"/><line x1="104.9" y1="45.7" x2="97.5" y2="29.2" stroke="#3a3a3a" stroke-width="2.4"/><line x1="126.9" y1="38.5" x2="123.2" y2="20.8" stroke="#3a3a3a" stroke-width="2.4"/><line x1="150.0" y1="46.4" x2="150.0" y2="18.0" stroke="#3a3a3a" stroke-width="1.4"/><line x1="173.1" y1="38.5" x2="176.8" y2="20.8" stroke="#3a3a3a" stroke-width="2.4"/><line x1="195.1" y1="45.7" x2="202.5" y2="29.2" stroke="#c9402e" stroke-width="2.4"/><line x1="215.2" y1="57.2" x2="225.8" y2="42.6" stroke="#c9402e" stroke-width="2.4"/><line x1="232.4" y1="72.8" x2="245.9" y2="60.7" stroke="#c9402e" stroke-width="2.4"/><line x1="237.1" y1="96.7" x2="261.7" y2="82.5" stroke="#c9402e" stroke-width="1.4"/>
+<line x1="150.0" y1="147.0" x2="125.3" y2="30.9" stroke="#1a1a1a" stroke-width="2.6"/>
+<circle cx="150.0" cy="147.0" r="5" fill="#1a1a1a"/>
+<text x="150.0" y="75.0" fill="#3a3a3a" font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" font-size="20" text-anchor="middle" opacity="0.7"></text>
+<text x="48.0" y="51.00000000000001" fill="#3a3a3a" font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" font-size="15" opacity="0.6">-</text>
+<text x="252.0" y="51.00000000000001" fill="#c9402e" font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" font-size="15" text-anchor="end">+</text></svg>
+          <div style="display:flex;gap:34px">
+            <div class="kipp"><div class="huelse" style="width:46px;height:96px"><b style="bottom:11px;width:16px;height:44px"></b></div><span class="wort" style="font-size:17px">Zufall</span></div>
+            <div class="kipp"><div class="huelse" style="width:46px;height:96px"><b style="top:11px;width:16px;height:44px"></b></div><span class="wort" style="font-size:17px">Wdh.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:46px"><div class="skala" style="padding:12px 16px">
+  <div class="reihe" style="font-size:25px">
+    <span class="wort" style="font-size:20px">Min</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+  <div class="striche" style="height:34px"><i style="height:17px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:17px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:17px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:17px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:17px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:17px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:17px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:17px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:10px"></i><i style="height:17px"></i></div>
+  <div class="reihe" style="font-size:25px">
+    <span class="wort" style="font-size:20px">Titel</span><span>01</span><span>02</span><span>03</span><span>04</span></div>
+  <span class="zeiger" style="left:calc(40% - 2px)"></span>
+</div></div>
+      <div class="zeiten" style="font-size:24px;margin-top:16px">
+        <span>02:14</span><span>05:37</span></div>
+
+      <div style="margin-top:44px;font-size:52px;font-weight:700;letter-spacing:-.02em">
+        Blue in Green</div>
+      <div style="font-size:28px;color:rgba(47,46,43,.58);margin-top:10px">
+        Miles Davis · 1959</div>
+
+      <div style="margin-top:40px"><div style="display:flex;align-items:baseline;gap:16px;padding:11px 0;border-top:1px solid rgba(47,46,43,.20);font-size:30px;color:rgba(47,46,43,.58)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:24px;color:rgba(47,46,43,.58)">01</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">So What</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:24px;color:rgba(47,46,43,.58)">9:22</span></div><div style="display:flex;align-items:baseline;gap:16px;padding:11px 0;border-top:1px solid rgba(47,46,43,.20);font-size:30px;color:rgba(47,46,43,.58)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:24px;color:rgba(47,46,43,.58)">02</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Freddie Freeloader</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:24px;color:rgba(47,46,43,.58)">9:46</span></div><div style="display:flex;align-items:baseline;gap:16px;padding:11px 0;border-top:1px solid rgba(47,46,43,.20);font-size:30px;font-weight:700"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:24px;color:rgba(47,46,43,.58)">03</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Blue in Green</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:24px;color:rgba(47,46,43,.58)">5:37</span></div><div style="display:flex;align-items:baseline;gap:16px;padding:11px 0;border-top:1px solid rgba(47,46,43,.20);font-size:30px;color:rgba(47,46,43,.58)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:24px;color:rgba(47,46,43,.58)">04</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">All Blues</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:24px;color:rgba(47,46,43,.58)">11:33</span></div>
+        <div style="border-top:1px solid rgba(47,46,43,.20)"></div></div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;
+        margin-top:44px">
+        <div style="display:flex;gap:20px"><div class="taste" style="width:116px;height:96px"><svg width="42" height="42" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#2f2e2b" stroke-width="2" fill="#2f2e2b" stroke-linejoin="round"/></svg></div><div class="taste" style="width:185px;height:96px"><svg width="42" height="42" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#2f2e2b"/><rect x="14" y="5" width="4" height="14" fill="#2f2e2b"/></svg></div><div class="taste" style="width:116px;height:96px"><svg width="42" height="42" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#2f2e2b" stroke-width="2" fill="#2f2e2b" stroke-linejoin="round"/></svg></div></div>
+        <span class="bib" style="height:68px;padding:0 20px;gap:11px;font-size:20px;letter-spacing:2.2px"><svg width="26" height="26" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="#2f2e2b"/><rect x="8" y="4" width="3" height="16" rx="1" fill="#2f2e2b"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="#2f2e2b"/></svg>Sammlung · 240</span>
+      </div>
+    </div>
+    <div class="chrom" style="height:8px"></div>
+  </div>
+</div></div></body></html>

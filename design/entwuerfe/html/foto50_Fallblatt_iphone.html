@@ -1,0 +1,93 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:2340px;overflow:hidden}
+.stage{position:relative;width:1080px;height:2340px;overflow:hidden}
+
+.stage{background:linear-gradient(155deg,#dfe0dc 0%,#b7b9b4 52%,#d6d8d3 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#3a1a06}
+
+.kasten{position:relative;border-radius:30px;
+  background:linear-gradient(168deg,#e8843f 0%,#cf5f1e 30%,#9d4413 100%);
+  box-shadow:0 30px 66px rgba(60,30,10,.42),
+             inset 0 3px 0 rgba(255,255,255,.42)}
+
+/* Das Fenster ist eingelassen, nicht aufgesetzt */
+.fenster{background:#131313;border-radius:12px;
+  box-shadow:inset 0 4px 14px rgba(0,0,0,.85),
+             0 0 0 3px rgba(0,0,0,.28)}
+
+/* Ein Fallblatt: Karte mit Naht in der Mitte und zwei Scharnieren */
+.blatt{position:relative;border-radius:8px;overflow:hidden;
+  background:linear-gradient(180deg,#2c2c2c 0%,#252525 49.6%,#1c1c1c 50.4%,#2a2a2a 100%);
+  display:flex;align-items:center;justify-content:center;color:#f4f2ee;
+  font-weight:500;font-variant-numeric:tabular-nums;line-height:1}
+.blatt::after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;
+  transform:translateY(-50%);background:rgba(0,0,0,.75);
+  box-shadow:0 1px 0 rgba(255,255,255,.12)}
+.blatt b{position:absolute;top:50%;transform:translateY(-50%);width:7px;
+  height:18px;background:#8d8d8d;border-radius:2px}
+
+.spalte{display:flex;flex-direction:column;justify-content:center;
+  color:rgba(244,242,238,.72);font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-variant-numeric:tabular-nums;
+  text-align:center}
+.spalte .jetzt{color:#f4f2ee}
+
+/* Der Knopf: schwarz, mit dem eingeprägten Pfeil aus dem Foto */
+.knopf{position:relative;border-radius:50%;flex-shrink:0;
+  background:radial-gradient(circle at 34% 28%,#5a5a5a 0%,#1d1d1d 46%,#0a0a0a 100%);
+  box-shadow:0 8px 16px rgba(40,20,5,.5)}
+
+.bahn{position:relative;background:rgba(58,26,6,.26);border-radius:999px}
+.bahn i{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:#3a1a06}
+.zeiten{display:flex;justify-content:space-between;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;
+  color:rgba(58,26,6,.62);font-variant-numeric:tabular-nums}
+
+/* Die Tasten sind flach in den Kunststoff gesetzt */
+.taste{flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  border-radius:6px;background:rgba(58,26,6,.20);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.22)}
+.bib{display:inline-flex;align-items:center;border-radius:999px;background:#f4f2ee;
+  color:#3a1a06;text-transform:uppercase;font-weight:700}
+.marke{text-transform:uppercase;font-weight:800;color:rgba(58,26,6,.42)}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;padding:70px 54px">
+  <div class="kasten" style="width:996px;padding:56px 52px 62px">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span class="bib" style="height:66px;padding:0 24px;gap:12px;font-size:21px;letter-spacing:2.4px"><svg width="26" height="26" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="#3a1a06"/><rect x="8" y="4" width="3" height="16" rx="1" fill="#3a1a06"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="#3a1a06"/></svg>Sammlung · 240</span>
+      <span class="marke" style="font-size:25px;letter-spacing:5px">Musiklib</span>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:34px;margin-top:52px">
+      <div class="fenster" style="flex:1;min-width:0;padding:44px 30px">
+        <div style="display:flex;align-items:center;justify-content:center;
+    gap:18px">
+    <div class="blatt" style="width:272px;height:400px;font-size:230px">
+      02<b style="left:-4px"></b><b style="right:-4px"></b></div>
+    <div class="spalte" style="width:64px;font-size:27px;
+      gap:10px">
+      <span>04</span><span class="jetzt">03</span><span>02</span></div>
+    <div class="blatt" style="width:272px;height:400px;font-size:230px">
+      14<b style="left:-4px"></b><b style="right:-4px"></b></div>
+  </div>
+      </div>
+      <div class="knopf" style="width:140px;height:140px"><svg width="140" height="140" viewBox="0 0 140 140" style="position:absolute;inset:0"><path d="M38 49 A41 41 0 1 1 43 99" fill="none" stroke="#8a8a8a" stroke-width="5" stroke-linecap="round"/><path d="M34 87 l11 14 l15 -7" fill="#8a8a8a"/></svg></div>
+    </div>
+
+    <div style="margin-top:62px;font-size:56px;font-weight:700;letter-spacing:-.02em">
+      Blue in Green</div>
+    <div style="font-size:30px;color:rgba(58,26,6,.68);margin-top:12px">
+      Miles Davis · Kind of Blue · 1959</div>
+
+    <div class="bahn" style="height:10px;margin-top:40px">
+      <i style="width:40%"></i></div>
+    <div class="zeiten" style="font-size:25px;margin-top:16px">
+      <span>02:14</span><span>05:37</span></div>
+
+    <div style="margin-top:46px"><div style="display:flex;align-items:baseline;gap:18px;padding:12px 0;border-top:1px solid rgba(58,26,6,.18);font-size:30px;color:rgba(58,26,6,.62)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:24px;color:rgba(58,26,6,.48)">01</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">So What</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:24px;color:rgba(58,26,6,.48)">9:22</span></div><div style="display:flex;align-items:baseline;gap:18px;padding:12px 0;border-top:1px solid rgba(58,26,6,.18);font-size:30px;color:rgba(58,26,6,.62)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:24px;color:rgba(58,26,6,.48)">02</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Freddie Freeloader</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:24px;color:rgba(58,26,6,.48)">9:46</span></div><div style="display:flex;align-items:baseline;gap:18px;padding:12px 0;border-top:1px solid rgba(58,26,6,.18);font-size:30px;font-weight:700"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:24px;color:rgba(58,26,6,.48)">03</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Blue in Green</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:24px;color:rgba(58,26,6,.48)">5:37</span></div><div style="display:flex;align-items:baseline;gap:18px;padding:12px 0;border-top:1px solid rgba(58,26,6,.18);font-size:30px;color:rgba(58,26,6,.62)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:24px;color:rgba(58,26,6,.48)">04</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">All Blues</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:24px;color:rgba(58,26,6,.48)">11:33</span></div>
+      <div style="border-top:1px solid rgba(58,26,6,.18)"></div></div>
+
+    <div style="margin-top:54px;display:flex;justify-content:center">
+      <div style="display:flex;gap:28px"><div class="taste" style="width:100px;height:100px"><svg width="42" height="42" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#f4f2ee" stroke-width="2" fill="#f4f2ee" stroke-linejoin="round"/></svg></div><div class="taste" style="width:150px;height:100px"><svg width="40" height="40" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#f4f2ee"/><rect x="14" y="5" width="4" height="14" fill="#f4f2ee"/></svg></div><div class="taste" style="width:100px;height:100px"><svg width="42" height="42" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#f4f2ee" stroke-width="2" fill="#f4f2ee" stroke-linejoin="round"/></svg></div><div class="taste" style="width:100px;height:100px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(244,242,238,.66)" stroke-width="2" stroke-linecap="round"><path d="M3 6h4l4 12h6M3 18h4l2-6"/><path d="M17 3l4 3-4 3M17 15l4 3-4 3"/></svg></div></div></div>
+  </div>
+</div></div></body></html>

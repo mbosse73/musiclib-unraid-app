@@ -1,0 +1,130 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1600px;height:1000px;overflow:hidden}
+.stage{position:relative;width:1600px;height:1000px;overflow:hidden}
+
+.stage{background:linear-gradient(160deg,#5c5f63 0%,#3a3d40 55%,#4c4f53 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#2f2e2b}
+
+.geraet{position:relative;background:linear-gradient(180deg,#eceae4 0%,#d3d0c8 100%);
+  border-radius:4px;
+  box-shadow:0 20px 47px rgba(0,0,0,.5),
+             inset 0 1px 0 #fff}
+
+/* Chromleiste: drei Streifen, hell-dunkel-hell — mehr braucht es nicht */
+.chrom{background:linear-gradient(180deg,#ffffff 0%,#c8c6c0 46%,
+  #8e8b85 54%,#ffffff 100%)}
+
+.klappe{position:relative;background:linear-gradient(180deg,#f6f5f1 0%,#eceae4 100%);
+  border-radius:2px;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.16),
+             0 2px 3px rgba(0,0,0,.10)}
+.sicht{background:#17181a;border-radius:2px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:inset 0 0 8px rgba(0,0,0,.9)}
+.wort{text-transform:uppercase;letter-spacing:.2em;color:rgba(47,46,43,.58)}
+
+/* Die Skala: zwei Zahlenreihen, Teilstriche dazwischen, ein roter Strich quer */
+.skala{position:relative;background:#fbfaf7;border-radius:2px;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+.skala .reihe{display:flex;justify-content:space-between;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;
+  color:#2f2e2b;font-variant-numeric:tabular-nums}
+.skala .striche{display:flex;justify-content:space-between;align-items:center}
+.skala .striche i{width:1px;background:rgba(47,46,43,.45)}
+.skala .zeiger{position:absolute;top:0;bottom:0;width:2px;background:#cc2a22;
+  box-shadow:0 0 5px rgba(204,42,34,.6)}
+
+/* Kippschalter: Chromhülse mit schwarzem Hebel */
+.kipp{display:flex;flex-direction:column;align-items:center;gap:6px}
+.huelse{position:relative;border-radius:3px;
+  background:linear-gradient(180deg,#ffffff 0%,#c8c6c0 50%,#8e8b85 100%);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+.huelse b{position:absolute;left:50%;transform:translateX(-50%);border-radius:999px;
+  background:linear-gradient(180deg,#4a4a48 0%,#1b1b1a 100%)}
+
+.taste{flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  border-radius:3px;
+  background:linear-gradient(180deg,#fbfaf7 0%,#dedbd4 100%);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.18),
+             0 2px 3px rgba(0,0,0,.14)}
+.zeiten{display:flex;justify-content:space-between;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(47,46,43,.58);
+  font-variant-numeric:tabular-nums}
+.bib{display:inline-flex;align-items:center;border-radius:2px;
+  background:linear-gradient(180deg,#fbfaf7 0%,#dedbd4 100%);color:#2f2e2b;
+  text-transform:uppercase;font-weight:700;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;padding:64px 64px">
+  <div class="geraet" style="width:1472px">
+    <div class="chrom" style="height:7px"></div>
+    <div style="padding:34px 38px 38px;display:flex;gap:38px">
+      <div class="klappe" style="width:420px;height:330px;
+  padding:15px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:14px">
+  <span class="wort" style="font-size:16px">Kind of Blue</span>
+  <div class="sicht" style="width:327px;height:151px">
+    <svg viewBox="0 0 260 161" width="260" height="161">
+<rect x="0" y="0" width="260" height="161" rx="14.5" fill="#2f3336"
+  stroke="#1a1a1a" stroke-width="1.6"/>
+<rect x="13.0" y="11.3" width="234.0" height="48.3"
+  rx="4.8" fill="#f2efe6"/>
+<rect x="13.0" y="64.4" width="234.0" height="11.3"
+  fill="#d9702c"/>
+<rect x="41.6" y="83.7" width="176.8" height="41.9"
+  rx="4.8" fill="#17171a"/>
+<circle cx="78.0" cy="104.7" r="40.3" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.3"/>
+<circle cx="182.0" cy="104.7" r="40.3" fill="#f2efe6"
+  stroke="#1a1a1a" stroke-width="1.3"/>
+<circle cx="78.0" cy="104.7" r="16.9" fill="#17171a"/>
+<circle cx="182.0" cy="104.7" r="16.9" fill="#17171a"/>
+<circle cx="52.0" cy="140.1" r="4.4" fill="#1a1a1a"/><circle cx="91.0" cy="140.1" r="4.4" fill="#1a1a1a"/><circle cx="130.0" cy="140.1" r="4.4" fill="#1a1a1a"/><circle cx="169.0" cy="140.1" r="4.4" fill="#1a1a1a"/><circle cx="208.0" cy="140.1" r="4.4" fill="#1a1a1a"/></svg></div>
+  <span class="wort" style="font-size:16px">Auto weiter</span>
+</div>
+
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:flex-start;gap:30px">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:40px;font-weight:700;letter-spacing:-.02em">
+              Blue in Green</div>
+            <div style="font-size:21px;color:rgba(47,46,43,.58);margin-top:8px">
+              Miles Davis · Kind of Blue · 1959</div>
+            <div style="margin-top:14px"><div style="display:flex;align-items:baseline;gap:12px;padding:8px 0;border-top:1px solid rgba(47,46,43,.20);font-size:21px;color:rgba(47,46,43,.58)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(47,46,43,.58)">01</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">So What</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(47,46,43,.58)">9:22</span></div><div style="display:flex;align-items:baseline;gap:12px;padding:8px 0;border-top:1px solid rgba(47,46,43,.20);font-size:21px;color:rgba(47,46,43,.58)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(47,46,43,.58)">02</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Freddie Freeloader</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(47,46,43,.58)">9:46</span></div><div style="display:flex;align-items:baseline;gap:12px;padding:8px 0;border-top:1px solid rgba(47,46,43,.20);font-size:21px;font-weight:700"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(47,46,43,.58)">03</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Blue in Green</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(47,46,43,.58)">5:37</span></div><div style="display:flex;align-items:baseline;gap:12px;padding:8px 0;border-top:1px solid rgba(47,46,43,.20);font-size:21px;color:rgba(47,46,43,.58)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(47,46,43,.58)">04</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">All Blues</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(47,46,43,.58)">11:33</span></div>
+              <div style="border-top:1px solid rgba(47,46,43,.20)"></div></div>
+          </div>
+          <svg viewBox="0 0 240 120" width="240" height="120">
+<rect x="0" y="0" width="240" height="120" rx="10" fill="#f4f3ef"/>
+<line x1="50.3" y1="77.4" x2="30.6" y2="66.0" stroke="#3a3a3a" stroke-width="1.4"/><line x1="54.0" y1="58.2" x2="43.3" y2="48.5" stroke="#3a3a3a" stroke-width="2.4"/><line x1="67.8" y1="45.8" x2="59.3" y2="34.1" stroke="#3a3a3a" stroke-width="2.4"/><line x1="83.9" y1="36.5" x2="78.0" y2="23.3" stroke="#3a3a3a" stroke-width="2.4"/><line x1="101.5" y1="30.8" x2="98.5" y2="16.7" stroke="#3a3a3a" stroke-width="2.4"/><line x1="120.0" y1="37.1" x2="120.0" y2="14.4" stroke="#3a3a3a" stroke-width="1.4"/><line x1="138.5" y1="30.8" x2="141.5" y2="16.7" stroke="#3a3a3a" stroke-width="2.4"/><line x1="156.1" y1="36.5" x2="162.0" y2="23.3" stroke="#c9402e" stroke-width="2.4"/><line x1="172.2" y1="45.8" x2="180.7" y2="34.1" stroke="#c9402e" stroke-width="2.4"/><line x1="186.0" y1="58.2" x2="196.7" y2="48.5" stroke="#c9402e" stroke-width="2.4"/><line x1="189.7" y1="77.4" x2="209.4" y2="66.0" stroke="#c9402e" stroke-width="1.4"/>
+<line x1="120.0" y1="117.6" x2="100.3" y2="24.7" stroke="#1a1a1a" stroke-width="2.6"/>
+<circle cx="120.0" cy="117.6" r="5" fill="#1a1a1a"/>
+<text x="120.0" y="60.0" fill="#3a3a3a" font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" font-size="16" text-anchor="middle" opacity="0.7"></text>
+<text x="38.4" y="40.800000000000004" fill="#3a3a3a" font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" font-size="12" opacity="0.6">-</text>
+<text x="201.6" y="40.800000000000004" fill="#c9402e" font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" font-size="12" text-anchor="end">+</text></svg>
+        </div>
+
+        <div style="margin-top:26px"><div class="skala" style="padding:9px 12px">
+  <div class="reihe" style="font-size:19px">
+    <span class="wort" style="font-size:15px">Min</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+  <div class="striche" style="height:26px"><i style="height:14px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:14px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:14px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:14px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:14px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:14px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:14px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:14px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:14px"></i></div>
+  <div class="reihe" style="font-size:19px">
+    <span class="wort" style="font-size:15px">Titel</span><span>01</span><span>02</span><span>03</span><span>04</span></div>
+  <span class="zeiger" style="left:calc(40% - 1px)"></span>
+</div></div>
+        <div class="zeiten" style="font-size:18px;margin-top:12px">
+          <span>02:14</span><span>05:37</span></div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;
+          margin-top:26px">
+          <div style="display:flex;align-items:center;gap:30px">
+            <div style="display:flex;gap:15px"><div class="taste" style="width:88px;height:70px"><svg width="32" height="32" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#2f2e2b" stroke-width="2" fill="#2f2e2b" stroke-linejoin="round"/></svg></div><div class="taste" style="width:140px;height:70px"><svg width="32" height="32" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#2f2e2b"/><rect x="14" y="5" width="4" height="14" fill="#2f2e2b"/></svg></div><div class="taste" style="width:88px;height:70px"><svg width="32" height="32" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#2f2e2b" stroke-width="2" fill="#2f2e2b" stroke-linejoin="round"/></svg></div></div>
+            <div class="kipp"><div class="huelse" style="width:36px;height:72px"><b style="bottom:8px;width:13px;height:33px"></b></div><span class="wort" style="font-size:13px">Zufall</span></div>
+            <div class="kipp"><div class="huelse" style="width:36px;height:72px"><b style="top:8px;width:13px;height:33px"></b></div><span class="wort" style="font-size:13px">Wdh.</span></div>
+          </div>
+          <span class="bib" style="height:52px;padding:0 15px;gap:8px;font-size:15px;letter-spacing:1.7px"><svg width="19" height="19" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="#2f2e2b"/><rect x="8" y="4" width="3" height="16" rx="1" fill="#2f2e2b"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="#2f2e2b"/></svg>Sammlung · 240</span>
+        </div>
+      </div>
+    </div>
+    <div class="chrom" style="height:7px"></div>
+  </div>
+</div></div></body></html>

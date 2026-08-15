@@ -1,0 +1,71 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1600px;height:1000px;overflow:hidden}
+.stage{position:relative;width:1600px;height:1000px;overflow:hidden}
+
+.stage{background:linear-gradient(150deg,#c9cdc6 0%,#9aa096 44%,#c6cac3 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#f6f7f5}
+
+/* Das Gehäuse: Kunststoff mit weicher Kante und einem hellen Grat oben */
+.schale{position:relative;border-radius:20px;
+  background:linear-gradient(168deg,#a3d95a 0%,#86c232 24%,#63901f 100%);
+  box-shadow:0 20px 47px rgba(30,40,20,.42),
+             inset 0 2px 0 rgba(255,255,255,.45)}
+
+/* Die Rippen der Oberseite — im Foto das einzige Muster am ganzen Block */
+.rippen{border-radius:6px;
+  background:repeating-linear-gradient(90deg,
+    rgba(0,0,0,.16) 0 4px,rgba(255,255,255,.20) 4px 9px)}
+.rippen.quer{background:repeating-linear-gradient(180deg,
+    rgba(0,0,0,.16) 0 4px,rgba(255,255,255,.20) 4px 9px)}
+
+/* Die Glasfläche sitzt im Kunststoff, nicht darauf */
+.glas{position:relative;background:#08090a;border-radius:11px;
+  box-shadow:inset 0 0 0 2px rgba(0,0,0,.55),
+             inset 0 2px 8px rgba(0,0,0,.9),
+             0 0 0 2px rgba(255,255,255,.22)}
+
+.uhr{font-weight:200;letter-spacing:-.02em;font-variant-numeric:tabular-nums;
+  line-height:1}
+.zeile{font-weight:300}
+.klein{color:rgba(246,247,245,.56);font-weight:400}
+
+.bahn{position:relative;background:rgba(246,247,245,.26)}
+.bahn i{position:absolute;left:0;top:0;bottom:0;background:#f6f7f5}
+.zeiten{display:flex;justify-content:space-between;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(246,247,245,.56);
+  font-variant-numeric:tabular-nums}
+
+/* Bibliothek: die kleine Zeile über der Uhr, wie „Internet radio" im Foto */
+.bib{display:inline-flex;align-items:center;color:#f6f7f5;font-weight:400}
+.taste{flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  border-radius:50%;background:rgba(246,247,245,.10)}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;padding:56px 70px">
+  <div class="schale" style="width:1440px;padding:26px;display:flex;gap:26px">
+    <div class="rippen quer" style="width:52px;flex-shrink:0"></div>
+
+    <div class="glas" style="flex:1;min-width:0;padding:44px 52px 42px;display:flex;
+      gap:56px;align-items:center">
+      <div style="flex-shrink:0">
+        <span class="bib" style="gap:9px;font-size:19px;letter-spacing:1.2px"><svg width="22" height="22" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="#f6f7f5"/><rect x="8" y="4" width="3" height="16" rx="1" fill="#f6f7f5"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="#f6f7f5"/></svg>Sammlung · 240</span>
+        <div class="uhr" style="font-size:176px;margin-top:20px">02:14</div>
+        <div class="zeiten" style="font-size:18px;margin-top:14px;width:430px">
+          <span>Kind of Blue · 1959</span><span>05:37</span></div>
+        <div class="bahn" style="height:3px;margin-top:12px;width:430px">
+          <i style="width:40%"></i></div>
+        <div style="margin-top:34px;width:430px"><div style="display:flex;align-items:center;justify-content:center;gap:30px"><div class="taste" style="width:68px;height:68px"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="rgba(246,247,245,.56)" stroke-width="2" stroke-linecap="round"><path d="M3 6h4l4 12h6M3 18h4l2-6"/><path d="M17 3l4 3-4 3M17 15l4 3-4 3"/></svg></div><div class="taste" style="width:68px;height:68px"><svg width="28" height="28" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#f6f7f5" stroke-width="2" fill="#f6f7f5" stroke-linejoin="round"/></svg></div><div class="taste" style="width:94px;height:94px;background:rgba(246,247,245,.16)"><svg width="35" height="35" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#f6f7f5"/><rect x="14" y="5" width="4" height="14" fill="#f6f7f5"/></svg></div><div class="taste" style="width:68px;height:68px"><svg width="28" height="28" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#f6f7f5" stroke-width="2" fill="#f6f7f5" stroke-linejoin="round"/></svg></div><div class="taste" style="width:68px;height:68px;opacity:.0"></div></div></div>
+      </div>
+
+      <div style="flex:1;min-width:0">
+        <div class="zeile" style="font-size:40px">Miles Davis</div>
+        <div class="zeile klein" style="font-size:26px;margin-top:10px">
+          Jetzt: Blue in Green</div>
+        <div style="margin-top:24px"><div style="display:flex;align-items:baseline;gap:14px;padding:10px 0;border-top:1px solid rgba(246,247,245,.14);font-size:21px;color:rgba(246,247,245,.56)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(246,247,245,.26)">01</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">So What</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(246,247,245,.26)">9:22</span></div><div style="display:flex;align-items:baseline;gap:14px;padding:10px 0;border-top:1px solid rgba(246,247,245,.14);font-size:21px;color:rgba(246,247,245,.56)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(246,247,245,.26)">02</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Freddie Freeloader</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(246,247,245,.26)">9:46</span></div><div style="display:flex;align-items:baseline;gap:14px;padding:10px 0;border-top:1px solid rgba(246,247,245,.14);font-size:21px;color:#f6f7f5"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(246,247,245,.26)">03</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Blue in Green</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(246,247,245,.26)">5:37</span></div><div style="display:flex;align-items:baseline;gap:14px;padding:10px 0;border-top:1px solid rgba(246,247,245,.14);font-size:21px;color:rgba(246,247,245,.56)"><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(246,247,245,.26)">04</span><span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">All Blues</span><span style="font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:17px;color:rgba(246,247,245,.26)">11:33</span></div>
+          <div style="border-top:1px solid rgba(246,247,245,.14)"></div></div>
+      </div>
+    </div>
+
+    <div class="rippen quer" style="width:52px;flex-shrink:0"></div>
+  </div>
+</div></div></body></html>

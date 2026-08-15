@@ -1,0 +1,68 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:2340px;overflow:hidden}
+.stage{position:relative;width:1080px;height:2340px;overflow:hidden}
+
+.stage{background:#d4502a;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#17150f}
+
+/* Gelbe Versalien, eng gesetzt und im Anschnitt — wie gedruckt, nicht gesetzt */
+.kopf{font-family:'Arial Narrow','Helvetica Neue Condensed',Arial,sans-serif;font-weight:800;color:#e9b43e;line-height:.84;
+  letter-spacing:-.01em;text-transform:uppercase}
+
+/* Passerversatz: dieselbe Zeile ein Haar daneben in Schwarz */
+.passer{position:relative}
+.passer .unter{position:absolute;left:3px;top:4px;
+  color:#17150f;opacity:.30}
+
+.tafel{background:#ead8ac;position:relative}
+.tafel .korn{position:absolute;inset:0;opacity:.16;
+  background:repeating-linear-gradient(90deg,#17150f 0 1px,transparent 1px 5px)}
+
+.balken{position:relative;background:rgba(23,21,15,.22)}
+.balken i{position:absolute;left:0;top:0;bottom:0;background:#c0301c}
+.balken i::after{content:"";position:absolute;left:0;right:0;top:0;
+  height:3px;background:#e9b43e;opacity:.75}
+.zeiten{display:flex;justify-content:space-between;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;
+  color:rgba(23,21,15,.62);font-variant-numeric:tabular-nums}
+
+.taste{flex-shrink:0;border-radius:50%;background:#17150f;display:flex;
+  align-items:center;justify-content:center}
+.taste.hell{background:#ead8ac}
+.bib{display:inline-flex;align-items:center;background:#e9b43e;color:#17150f;
+  text-transform:uppercase;font-weight:800;border-radius:999px}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;display:flex;flex-direction:column">
+  <div style="padding:88px 66px 0">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:24px"><span class="bib" style="height:64px;padding:0 26px;gap:13px;font-size:21px;letter-spacing:2.4px"><svg width="27" height="27" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="#17150f"/><rect x="8" y="4" width="3" height="16" rx="1" fill="#17150f"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="#17150f"/></svg>Sammlung · 240</span></div>
+    <div class="passer"><div class="kopf unter" style="font-size:172px">Blue in<br>Green</div><div class="kopf" style="font-size:172px">Blue in<br>Green</div></div>
+  </div>
+
+  <div style="margin-top:38px;line-height:0"><svg viewBox="0 0 1080 1170" width="1080" height="1170"><rect x="22" y="47" width="127" height="252" fill="#17150f"/><rect x="165" y="61" width="127" height="252" fill="#17150f"/><rect x="186" y="96" width="87" height="131" fill="#ead8ac"/><circle cx="229" cy="161" r="22" fill="#17150f"/><rect x="309" y="75" width="127" height="252" fill="#17150f"/><rect x="453" y="47" width="127" height="252" fill="#17150f"/><rect x="473" y="82" width="87" height="131" fill="#ead8ac"/><circle cx="516" cy="147" r="22" fill="#17150f"/><rect x="596" y="61" width="127" height="252" fill="#17150f"/><rect x="740" y="75" width="127" height="252" fill="#17150f"/><rect x="760" y="110" width="87" height="131" fill="#ead8ac"/><circle cx="804" cy="176" r="22" fill="#17150f"/><rect x="883" y="47" width="127" height="252" fill="#17150f"/><rect x="0" y="351" width="1080" height="53" fill="#17150f"/><rect x="38" y="468" width="302" height="224" rx="9" fill="#ead8ac" stroke="#17150f" stroke-width="4"/><circle cx="177" cy="584" r="90" fill="#17150f"/><circle cx="177" cy="584" r="37.6" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="177" cy="584" r="47.4" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="177" cy="584" r="57.3" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="177" cy="584" r="67.1" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="177" cy="584" r="77.0" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="177" cy="584" r="27" fill="#ead8ac"/><path d="M304 508 L240 565" stroke="#17150f" stroke-width="6" stroke-linecap="round"/><rect x="378" y="415" width="356" height="264" rx="11" fill="#ead8ac" stroke="#17150f" stroke-width="4"/><circle cx="542" cy="552" r="105" fill="#17150f"/><circle cx="542" cy="552" r="44.3" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="542" cy="552" r="55.9" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="542" cy="552" r="67.5" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="542" cy="552" r="79.1" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="542" cy="552" r="90.7" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="542" cy="552" r="32" fill="#c0301c"/><path d="M692 463 L616 529" stroke="#17150f" stroke-width="6" stroke-linecap="round"/><rect x="751" y="468" width="302" height="224" rx="9" fill="#ead8ac" stroke="#17150f" stroke-width="4"/><circle cx="890" cy="584" r="90" fill="#17150f"/><circle cx="890" cy="584" r="37.6" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="890" cy="584" r="47.4" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="890" cy="584" r="57.3" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="890" cy="584" r="67.1" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="890" cy="584" r="77.0" fill="none" stroke="#ead8ac" stroke-width="1.4" opacity=".45"/><circle cx="890" cy="584" r="27" fill="#ead8ac"/><path d="M1017 508 L952 565" stroke="#17150f" stroke-width="6" stroke-linecap="round"/><rect x="65" y="813" width="950" height="357" fill="#17150f"/><rect x="92" y="866" width="36" height="252" fill="#d4502a"/><rect x="157" y="866" width="36" height="252" fill="#ead8ac"/><rect x="222" y="866" width="36" height="252" fill="#ead8ac"/><rect x="287" y="866" width="36" height="252" fill="#d4502a"/><rect x="353" y="866" width="36" height="252" fill="#ead8ac"/><rect x="418" y="866" width="36" height="252" fill="#ead8ac"/><rect x="483" y="866" width="36" height="252" fill="#d4502a"/><rect x="548" y="866" width="36" height="252" fill="#ead8ac"/><rect x="613" y="866" width="36" height="252" fill="#ead8ac"/><rect x="678" y="866" width="36" height="252" fill="#d4502a"/><rect x="744" y="866" width="36" height="252" fill="#ead8ac"/><rect x="809" y="866" width="36" height="252" fill="#ead8ac"/><rect x="874" y="866" width="36" height="252" fill="#d4502a"/><rect x="939" y="866" width="36" height="252" fill="#ead8ac"/><path d="M0 1170 L398 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M26 1170 L424 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M52 1170 L450 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M78 1170 L476 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M104 1170 L502 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M130 1170 L528 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M156 1170 L554 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M182 1170 L580 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M208 1170 L606 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M234 1170 L632 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M260 1170 L658 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M286 1170 L684 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M312 1170 L710 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M338 1170 L736 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M364 1170 L762 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M390 1170 L788 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M416 1170 L814 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M442 1170 L840 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M468 1170 L866 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M494 1170 L892 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M520 1170 L918 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M546 1170 L944 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M572 1170 L970 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M598 1170 L996 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M624 1170 L1022 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M650 1170 L1048 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M676 1170 L1074 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M702 1170 L1100 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M728 1170 L1126 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M754 1170 L1152 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M780 1170 L1178 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M806 1170 L1204 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M832 1170 L1230 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M858 1170 L1256 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M884 1170 L1282 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M910 1170 L1308 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M936 1170 L1334 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M962 1170 L1360 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M988 1170 L1386 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M1014 1170 L1412 0" stroke="#17150f" stroke-width="1" opacity=".10"/><path d="M1040 1170 L1438 0" stroke="#17150f" stroke-width="1" opacity=".10"/></svg></div>
+
+  <div style="padding:36px 66px 84px"><div class="tafel" style="padding:34px 34px 32px">
+  <span class="korn"></span>
+  <div style="position:relative">
+    <div style="font-size:52px;font-weight:800;letter-spacing:-.02em">
+      Miles Davis</div>
+    <div style="font-size:27px;color:rgba(23,21,15,.66);margin-top:8px">
+      Kind of Blue · 1959 · Titel 03 von 04</div>
+
+    <div class="balken" style="height:16px;margin-top:26px">
+      <i style="width:40%"></i></div>
+    <div class="zeiten" style="font-size:23px;margin-top:12px">
+      <span>02:14</span><span>-03:23</span></div>
+
+    <div style="display:flex;align-items:center;justify-content:center;
+      gap:30px;margin-top:28px">
+      <div class="taste" style="width:96px;height:96px">
+        <svg width="40" height="40" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#ead8ac" stroke-width="2" fill="#ead8ac" stroke-linejoin="round"/></svg></div>
+      <div class="taste" style="width:132px;height:132px">
+        <svg width="52" height="52" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#e9b43e"/><rect x="14" y="5" width="4" height="14" fill="#e9b43e"/></svg></div>
+      <div class="taste" style="width:96px;height:96px">
+        <svg width="40" height="40" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#ead8ac" stroke-width="2" fill="#ead8ac" stroke-linejoin="round"/></svg></div>
+      <div class="taste hell" style="width:96px;height:96px">
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#17150f" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 L21 21"/></svg></div>
+    </div>
+  </div>
+</div></div>
+</div></div></body></html>

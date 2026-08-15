@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
-"""Gemeinsame Bausteine der Entwürfe aus dem Ordner player2/.
+"""Gemeinsame Bausteine der Entwürfe aus den Ordnern player2/ und player3/.
 
 Dieselben Regeln wie im gelieferten Paket: eigenständiges HTML, kein Framework,
 keine externen Dateien, keine Webfonts — alles CSS und inline SVG. Dokument,
-Wellenform und die Transportzeichen kommen aus design/src/lib.py, damit beide
-Sätze dieselbe Sprache sprechen.
+Wellenform, Zeigerinstrument und die Transportzeichen kommen aus
+design/src/lib.py, damit beide Sätze dieselbe Sprache sprechen.
 """
 import math
 import pathlib
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2] / 'src'))
-from lib import doc, waveform, tri, pausei, prev, nexti, SANS, MONO  # noqa: E402
+from lib import (doc, waveform, vumeter, tri, pausei, prev, nexti,  # noqa: E402
+                 SANS, MONO, SERIF, COND, IMPACT)
 
 TEL = (1080, 2340)
 PC = (1600, 1000)

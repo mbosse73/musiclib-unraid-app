@@ -1,0 +1,121 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:2340px;overflow:hidden}
+.stage{position:relative;width:1080px;height:2340px;overflow:hidden}
+
+.stage{background:linear-gradient(160deg,#e9eaec 0%,#c9ccd0 54%,#dfe1e4 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#f2f3f4}
+
+.pult{position:relative;border-radius:20px;
+  background:linear-gradient(168deg,#303338 0%,#1b1c1e 18%,#0f1012 100%);
+  box-shadow:0 30px 70px rgba(30,34,40,.45),
+             inset 0 2px 0 rgba(255,255,255,.14)}
+
+.schirm{position:relative;overflow:hidden;background:#0b0c0d;
+  border-radius:12px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07)}
+.nr{position:absolute;font-weight:800;color:#e86a1e;line-height:.78;
+  letter-spacing:-.05em;opacity:.9}
+
+/* Die Kacheln sind die Sammlung — quadratisch, mit einem Namen darunter */
+.kacheln{display:grid}
+.kach{border-radius:7px;background:#232629;display:flex;
+  align-items:flex-end;padding:7px;overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.kach span{font-size:inherit;color:rgba(242,243,244,.55);line-height:1.15;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%}
+.kach.bib{background:#e86a1e}
+.kach.bib span{color:#1a0d03;font-weight:700}
+
+/* Schieber: Nut, Kappe, Beschriftung — senkrecht wie waagerecht dieselbe Form */
+.nut{position:relative;background:#0c0d0e;border-radius:999px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.kappe{position:absolute;border-radius:4px;
+  background:linear-gradient(180deg,#4b4f54 0%,#1e2124 60%,#101214 100%);
+  box-shadow:0 3px 7px rgba(0,0,0,.55)}
+.band{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(242,243,244,.20);text-align:center}
+
+.pad{border-radius:9px;background:#232629;display:flex;
+  align-items:center;justify-content:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),
+             0 3px 7px rgba(0,0,0,.4)}
+.pad.weiss{background:#eef0f1}
+.pad.orange{background:#e86a1e}
+.zeiten{display:flex;justify-content:space-between;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(242,243,244,.55);
+  font-variant-numeric:tabular-nums}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;padding:74px 46px">
+  <div class="pult" style="width:988px;padding:44px 42px 52px">
+    <div class="schirm" style="padding:38px 36px 40px">
+  <span class="nr" style="right:-14px;top:-10px;
+    font-size:240px">03</span>
+  <div style="position:relative;display:flex;gap:22px;align-items:flex-end">
+    <svg class="" viewBox="0 0 210 210" width="210" height="210">
+<defs><linearGradient id="cg2102f6123" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#2f6f8f"/><stop offset="100%" stop-color="#123044"/></linearGradient></defs>
+<rect x="0" y="0" width="210" height="210" rx="6" fill="url(#cg2102f6123)"/>
+<circle cx="111.3" cy="86.1" r="42.0" fill="none"
+  stroke="#ffffff" stroke-width="1.7" opacity="0.49500000000000005"/>
+<path d="M31.5 149.1 L180.6 149.1" stroke="#ffffff"
+  stroke-width="1.3" opacity="0.315"/>
+<path d="M31.5 168.0 L136.5 168.0" stroke="#ffffff"
+  stroke-width="1.3" opacity="0.198"/></svg>
+    <div style="min-width:0">
+      <div style="font-size:40px;font-weight:600;overflow:hidden;
+        white-space:nowrap;text-overflow:ellipsis">Blue in Green</div>
+      <div style="font-size:27px;color:rgba(242,243,244,.55);margin-top:6px">
+        Miles Davis<br>Kind of Blue · 1959</div>
+    </div>
+  </div>
+
+  <div class="kacheln" style="grid-template-columns:repeat(3,1fr);
+    gap:9px;margin-top:24px;position:relative">
+    <div class="kach bib" style="height:108px;font-size:20px">
+      <span>Sammlung · 240</span></div>
+    <div class="kach" style="height:108px;font-size:20px"><span>A Love Supreme</span></div><div class="kach" style="height:108px;font-size:20px"><span>Speak No Evil</span></div><div class="kach" style="height:108px;font-size:20px"><span>Maiden Voyage</span></div><div class="kach" style="height:108px;font-size:20px"><span>Blue Train</span></div><div class="kach" style="height:108px;font-size:20px"><span>Moanin’</span></div>
+  </div>
+</div>
+
+    <div class="zeiten" style="font-size:24px;margin-top:38px">
+      <span>02:14</span><span>05:37</span></div>
+    <div style="margin-top:14px"><div class="nut" style="position:relative;height:12px"><span class="kappe" style="top:-12px;height:36px;width:46px;left:calc(40% - 23px)"></span></div></div>
+
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;
+      margin-top:56px">
+      <div style="display:flex;width:100%;gap:30px;align-items:flex-end"><div style="flex:1;display:flex;flex-direction:column;
+      align-items:center;gap:10px">
+      <div class="nut" style="width:12px;height:250px">
+        <span class="kappe" style="left:-12px;width:36px;
+          height:34px;bottom:calc(30% - 17px)"></span>
+      </div>
+      <span class="band" style="font-size:20px">60</span></div><div style="flex:1;display:flex;flex-direction:column;
+      align-items:center;gap:10px">
+      <div class="nut" style="width:12px;height:250px">
+        <span class="kappe" style="left:-12px;width:36px;
+          height:34px;bottom:calc(62% - 17px)"></span>
+      </div>
+      <span class="band" style="font-size:20px">250</span></div><div style="flex:1;display:flex;flex-direction:column;
+      align-items:center;gap:10px">
+      <div class="nut" style="width:12px;height:250px">
+        <span class="kappe" style="left:-12px;width:36px;
+          height:34px;bottom:calc(48% - 17px)"></span>
+      </div>
+      <span class="band" style="font-size:20px">1k</span></div><div style="flex:1;display:flex;flex-direction:column;
+      align-items:center;gap:10px">
+      <div class="nut" style="width:12px;height:250px">
+        <span class="kappe" style="left:-12px;width:36px;
+          height:34px;bottom:calc(70% - 17px)"></span>
+      </div>
+      <span class="band" style="font-size:20px">4k</span></div><div style="flex:1;display:flex;flex-direction:column;
+      align-items:center;gap:10px">
+      <div class="nut" style="width:12px;height:250px">
+        <span class="kappe" style="left:-12px;width:36px;
+          height:34px;bottom:calc(38% - 17px)"></span>
+      </div>
+      <span class="band" style="font-size:20px">12k</span></div></div>
+    </div>
+
+    <div style="margin-top:52px"><div style="display:flex;gap:18px"><div class="pad weiss" style="width:156px;height:128px"><svg width="46" height="46" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#26292c" stroke-width="2" fill="#26292c" stroke-linejoin="round"/></svg></div><div class="pad orange" style="width:300px;height:128px"><svg width="55" height="55" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#1a0d03"/><rect x="14" y="5" width="4" height="14" fill="#1a0d03"/></svg></div><div class="pad weiss" style="width:156px;height:128px"><svg width="46" height="46" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#26292c" stroke-width="2" fill="#26292c" stroke-linejoin="round"/></svg></div><div class="pad" style="width:156px;height:128px"><svg width="46" height="46" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="#f2f3f4"/><rect x="8" y="4" width="3" height="16" rx="1" fill="#f2f3f4"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="#f2f3f4"/></svg></div></div></div>
+  </div>
+</div></div></body></html>
