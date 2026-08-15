@@ -23,14 +23,16 @@ SILBER = ('#f4f5f6', '#c8ccd0', '#6e7377')
 
 def _css(g):
     return f'''
-.stage{{background:linear-gradient(165deg,#1c1e20 0%,#0b0c0d 60%,#141618 100%);
+/* Die Front füllt die Bühne — man steht davor, nicht im Zimmer daneben */
+.stage{{background:linear-gradient(180deg,{GEHAEUSE} 0%,#0a0b0c 100%);
   font-family:{SANS};color:{WEISS}}}
-
-.front{{position:relative;background:linear-gradient(180deg,{GEHAEUSE} 0%,#0a0b0c 100%);
-  border-radius:{4 * g:.0f}px;
-  box-shadow:0 {24 * g:.0f}px {58 * g:.0f}px rgba(0,0,0,.65),
-             inset 0 {1 * g:.0f}px 0 rgba(255,255,255,.10)}}
+.stage::before{{content:"";position:absolute;inset:0;pointer-events:none;
+  box-shadow:inset 0 {1 * g:.0f}px 0 rgba(255,255,255,.10)}}
+.front{{position:absolute;inset:0;display:flex}}
 .anzeige{{background:{FRONT};box-shadow:inset 0 0 0 {1 * g:.0f}px rgba(255,255,255,.06)}}
+/* Hochkant füllen die beiden Instrumente den Platz, der übrig bleibt */
+.mess{{flex:1;min-height:0}}
+.mess svg{{flex:1;min-height:0;width:100%;height:100%}}
 
 /* Die Tastenspalte sitzt zwischen Anzeige und Ring, mit Fugen dazwischen */
 .spalte{{display:flex;flex-direction:column;justify-content:space-between;
@@ -55,12 +57,14 @@ def _css(g):
 '''
 
 
-def _spalte(g, breite, hoehe, zeichen):
+def _spalte(g, breite, hoehe, zeichen, stil=''):
     """Die kleinen Tasten am rechten Rand der Anzeige — wie im Foto sechs."""
     stk = [pausei(zeichen, WEISS), prev(zeichen, STUMM), nexti(zeichen, STUMM),
            mischen(zeichen, STUMM), biblio(zeichen, WEISS), lupe(zeichen, STUMM)]
-    return (f'<div class="spalte" style="width:{breite}px;height:{hoehe}px">'
-            + ''.join(f'<i style="height:{hoehe // len(stk)}px">{s}</i>' for s in stk)
+    hoch = f'height:{hoehe}px;' if hoehe else ''
+    fach = (f'height:{hoehe // len(stk)}px' if hoehe else 'flex:1')
+    return (f'<div class="spalte" style="width:{breite}px;{hoch}{stil}">'
+            + ''.join(f'<i style="{fach}">{s}</i>' for s in stk)
             + '</div>')
 
 
@@ -75,7 +79,7 @@ def _titelanzeige(g, pad, cover_px, gross, klein):
     return f'''<div class="anzeige" style="flex:1;min-width:0;padding:{pad};
   display:flex;gap:{int(30 * g)}px;align-items:flex-start">
   {cover(cover_px, int(cover_px * .02), '#8f2f22', '#2a0d08')}
-  <div style="flex:1;min-width:0;display:flex;flex-direction:column;height:{cover_px}px">
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column;align-self:stretch">
     <div style="font-size:{gross}px;font-weight:500;letter-spacing:-.01em">
       {A['titel']}</div>
     <div style="font-size:{klein * 1.25:.0f}px;color:{WEISS};margin-top:{int(4 * g)}px">
@@ -117,16 +121,20 @@ def _liste(g, schrift, klein):
         for i, (nr, t, d) in enumerate(A['tracks']))
 
 
-def _zeiger(g, pad, breite, hoehe, klein, liste=''):
-    """Die zweite Betriebsart: zwei Instrumente statt Cover und Balken."""
-    return f'''<div class="anzeige" style="flex:1;min-width:0;padding:{pad}">
-  <div style="display:flex;gap:{int(16 * g)}px">
+def _zeiger(g, pad, breite, hoehe, klein, liste='', stil='', hoch=False):
+    """Die zweite Betriebsart: zwei Instrumente statt Cover und Balken.
+
+    Hochkant stehen sie übereinander — nebeneinander bliebe die halbe Fläche leer.
+    """
+    return f'''<div class="anzeige" style="flex:1;min-width:0;padding:{pad};{stil}">
+  <div class="{'mess' if hoch else ''}" style="display:flex;gap:{int(16 * g)}px;
+    {'flex-direction:column' if hoch else ''}">
     {vumeter(breite, hoehe, '#e9e9e7', '#1a1a1a', '#3a3a3a', 'L', A['frac'])}
     {vumeter(breite, hoehe, '#e9e9e7', '#1a1a1a', '#3a3a3a', 'R', A['frac'] * .92)}
   </div>
 
-  <div style="font-size:{klein * 1.7:.0f}px;font-weight:500;margin-top:{int(30 * g)}px">
-    {A['titel']}</div>
+  <div style="font-size:{klein * 1.7:.0f}px;font-weight:500;
+    margin-top:{int(44 * g)}px">{A['titel']}</div>
   <div style="font-size:{klein}px;color:{STUMM};margin-top:{int(8 * g)}px">
     {A['interpret']} · {A['album']} · {A['jahr']}</div>
 
@@ -145,7 +153,7 @@ def _zeiger(g, pad, breite, hoehe, klein, liste=''):
     </span>
   </div>
 
-  {f'<div style="margin-top:{int(30 * g)}px">{liste}'
+  {f'<div style="margin-top:{int(40 * g)}px">{liste}'
     f'<div style="border-top:1px solid rgba(238,240,242,.12)"></div></div>' if liste else ''}
 </div>'''
 
@@ -154,19 +162,18 @@ def telefon():
     """Die Zeiger-Betriebsart — hochkant, wie man ein Gerät auf den Tisch stellt."""
     g = 1.0
     css = _css(g)
-    body = f'''<div style="position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;padding:80px 46px">
-  <div class="front" style="width:988px;padding:32px;display:flex;
-    flex-direction:column;gap:30px">
-    <div style="display:flex;gap:24px">
-      {_zeiger(g, '34px 34px 38px', 396, 268, 29, _liste(g, 28, 22))}
-      {_spalte(g, 96, 810, 38)}
+    body = f'''<div style="position:absolute;inset:0">
+  <div class="front" style="flex-direction:column;padding:40px;gap:36px">
+    <div style="display:flex;gap:26px;flex:1;min-height:0">
+      {_zeiger(g, '44px 42px 46px', 638, 400, 30, _liste(g, 29, 23),
+               'display:flex;flex-direction:column', hoch=True)}
+      {_spalte(g, 104, 0, 40, 'align-self:stretch')}
     </div>
     <div style="display:flex;align-items:center;justify-content:space-between;
-      padding:0 16px 10px">
-      <span style="font-family:{MONO};font-size:23px;letter-spacing:.22em;
+      padding:0 18px 12px;flex-shrink:0">
+      <span style="font-family:{MONO};font-size:24px;letter-spacing:.22em;
         text-transform:uppercase;color:{LEISE}">Musiklib</span>
-      {_ring(g, 230)}
+      {_ring(g, 260)}
     </div>
   </div>
 </div>'''
@@ -177,15 +184,11 @@ def rechner():
     """Die Titel-Betriebsart — die breite Front, wie sie im Rack steht."""
     g = .80
     css = _css(g)
-    body = f'''<div style="position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;padding:74px 56px">
-  <div class="front" style="width:1488px;padding:26px;display:flex;
-    align-items:stretch;gap:22px">
-    {_titelanzeige(g, '30px 34px', 300, 46, 23)}
-    {_spalte(g, 74, 360, 28)}
-    <div style="display:flex;align-items:center;padding-left:20px;
-      border-left:1px solid rgba(238,240,242,.08)">{_ring(g, 300)}</div>
-  </div>
+    body = f'''<div class="front" style="padding:34px;align-items:stretch;gap:26px">
+  {_titelanzeige(g, '44px 46px', 470, 56, 27)}
+  {_spalte(g, 86, 0, 32, 'align-self:stretch')}
+  <div style="display:flex;align-items:center;padding-left:26px;
+    border-left:1px solid rgba(238,240,242,.08)">{_ring(g, 420)}</div>
 </div>'''
     return css, body
 

@@ -105,19 +105,32 @@ def _bib(g, schrift, hoehe):
 def telefon():
     g = 1.0
     css = _css(g)
-    body = f'''<div style="position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;padding:150px 70px 130px">
-  {_bib(g, 21, 62)}
+    zeilen = ''.join(
+        f'<div style="display:flex;align-items:baseline;gap:18px;padding:14px 0;'
+        f'border-top:1px solid rgba(236,238,239,.12);font-size:30px;text-align:left'
+        f'{";color:" + WEISS if i == A["laeuft"] else ";color:" + STUMM}">'
+        f'<span style="font-family:{MONO};font-size:24px;'
+        f'color:{GRUEN if i == A["laeuft"] else LEISE}">{nr}</span>'
+        f'<span style="flex:1;overflow:hidden;white-space:nowrap;'
+        f'text-overflow:ellipsis">{t}</span>'
+        f'<span style="font-family:{MONO};font-size:24px;color:{LEISE}">{d}</span></div>'
+        for i, (nr, t, d) in enumerate(A['tracks']))
 
-  <div style="margin:auto 0">{_scheibe(g, 860, 30)}</div>
+    body = f'''<div style="position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;padding:96px 56px 104px">
+  {_bib(g, 22, 66)}
+
+  <div style="margin:auto 0">{_scheibe(g, 968, 32)}</div>
 
   <div style="width:100%;text-align:center">
-    <div style="font-size:54px;font-weight:600;letter-spacing:-.02em">{A['titel']}</div>
-    <div style="font-size:29px;color:{STUMM};margin-top:12px">
+    <div style="font-size:58px;font-weight:600;letter-spacing:-.02em">{A['titel']}</div>
+    <div style="font-size:30px;color:{STUMM};margin-top:12px">
       {A['interpret']} · {A['album']} · {A['jahr']}</div>
-    <div class="zeiten" style="font-size:25px;margin-top:44px">
+    <div style="margin-top:46px">{zeilen}
+      <div style="border-top:1px solid rgba(236,238,239,.12)"></div></div>
+    <div class="zeiten" style="font-size:26px;margin-top:42px">
       <span>{A['pos']}</span><span>{A['dauer']}</span></div>
-    <div style="margin-top:44px">{_transport(g, 106, 142, 46)}</div>
+    <div style="margin-top:42px">{_transport(g, 110, 148, 48)}</div>
   </div>
 </div>'''
     return css, body
@@ -137,20 +150,21 @@ def rechner():
         for i, (nr, t, d) in enumerate(A['tracks']))
 
     body = f'''<div style="position:absolute;inset:0;display:flex;align-items:center;
-  gap:86px;padding:70px 100px">
-  <div style="flex-shrink:0">{_scheibe(g, 700, 22)}</div>
+  gap:70px;padding:46px 70px">
+  <div style="flex-shrink:0">{_scheibe(g, 856, 24)}</div>
 
-  <div style="flex:1;min-width:0">
+  <div style="flex:1;min-width:0;align-self:stretch;display:flex;
+    flex-direction:column;padding:24px 0">
     {_bib(g, 15, 46)}
-    <div style="font-size:52px;font-weight:600;letter-spacing:-.02em;margin-top:24px">
-      {A['titel']}</div>
-    <div style="font-size:23px;color:{STUMM};margin-top:10px">
+    <div style="font-size:56px;font-weight:600;letter-spacing:-.02em;margin-top:auto;
+      padding-top:26px">{A['titel']}</div>
+    <div style="font-size:24px;color:{STUMM};margin-top:10px">
       {A['interpret']} · {A['album']} · {A['jahr']}</div>
-    <div style="margin-top:26px">{zeilen}
+    <div style="margin-top:auto;padding-top:26px">{zeilen}
       <div style="border-top:1px solid rgba(236,238,239,.12)"></div></div>
-    <div class="zeiten" style="font-size:19px;margin-top:26px">
+    <div class="zeiten" style="font-size:19px;margin-top:auto;padding-top:26px">
       <span>{A['pos']}</span><span>{A['dauer']}</span></div>
-    <div style="margin-top:26px;display:flex">{_transport(g, 82, 108, 32)}</div>
+    <div style="margin-top:24px;display:flex">{_transport(g, 86, 114, 34)}</div>
   </div>
 </div>'''
     return css, body

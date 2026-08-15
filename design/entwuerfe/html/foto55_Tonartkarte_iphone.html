@@ -3,13 +3,10 @@
 html,body{width:1080px;height:2340px;overflow:hidden}
 .stage{position:relative;width:1080px;height:2340px;overflow:hidden}
 
-.stage{background:linear-gradient(150deg,#c2c2c0 0%,#a6a6a4 52%,#bcbcba 100%);
-  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#f7f7f6}
-
-/* Die gelbe Karte liegt unter dem Riegel und schaut an zwei Seiten hervor */
-.karte{position:absolute;background:#d3b53c;
-  box-shadow:0 18px 40px rgba(60,50,10,.35),
-             inset 0 0 0 1px #a98d24}
+/* Die gelbe Karte ist die Bühne; der Riegel liegt darauf und läuft an zwei
+   Kanten aus dem Bild — wie im Foto, nur näher heran. */
+.stage{background:#d3b53c;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#f7f7f6}
+.karte{position:absolute;inset:0}
 .karte .kmark{position:absolute;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;text-transform:uppercase;
   letter-spacing:.18em;color:rgba(30,24,4,.62)}
 .karte .geist{position:absolute;font-weight:700;color:rgba(30,24,4,.16);
@@ -62,23 +59,22 @@ html,body{width:1080px;height:2340px;overflow:hidden}
   border:2px solid rgba(247,247,246,.5);color:#f7f7f6;
   text-transform:uppercase;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;letter-spacing:.14em}
 
-</style></head><body><div class="stage"><div style="position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;padding:70px 46px">
-  <div style="position:relative;width:932px">
-  <div class="karte" style="left:-46px;top:-92px;right:46px;bottom:-92px">
-    <span class="kmark" style="left:30px;top:26px;font-size:20px">musiklib.local</span>
-    <span class="kmark" style="right:76px;top:26px;font-size:20px">01</span>
-    <span class="geist" style="left:30px;top:130px;font-size:320px">C</span>
-    <span class="kmark" style="right:76px;bottom:26px;font-size:20px">Beta</span>
+</style></head><body><div class="stage"><div style="position:absolute;inset:0">
+  <div class="karte">
+    <span class="kmark" style="left:36px;top:30px;font-size:21px">musiklib.local</span>
+    <span class="kmark" style="right:36px;top:30px;font-size:21px">01</span>
+    <span class="geist" style="left:24px;top:120px;font-size:300px">C</span>
   </div>
 
-  <div class="riegel" style="position:relative;padding:56px 50px">
+  <div class="riegel" style="position:absolute;left:74px;top:158px;right:-40px;
+    bottom:-40px;padding:62px 56px;display:flex;flex-direction:column">
     <div style="display:flex;align-items:center;justify-content:space-between">
       <span class="bib" style="height:58px;padding:0 22px;gap:12px;font-size:19px"><svg width="24" height="24" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="#f7f7f6"/><rect x="8" y="4" width="3" height="16" rx="1" fill="#f7f7f6"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="#f7f7f6"/></svg>Sammlung · 240</span>
       <div style="display:flex;align-items:center;gap:16px"><div class="gitter" style="width:112px;height:56px"></div><div class="knopf" style="width:112px;height:68px;padding-top:21px"><span style="font-size:21px">60</span></div><div class="knopf" style="width:112px;height:68px;padding-top:21px"><span style="font-size:21px">1959</span></div></div>
     </div>
 
-    <div class="gross" style="font-size:118px;margin-top:52px">Blue in Green</div>
+    <div class="gross" style="font-size:118px;margin-top:auto;
+      padding-top:56px">Blue in Green</div>
     <div style="display:flex;align-items:center;gap:22px;margin-top:22px">
       <span class="pille" style="height:44px;padding:0 20px;font-size:19px">
         Titel 03 / 04</span>
@@ -90,16 +86,17 @@ html,body{width:1080px;height:2340px;overflow:hidden}
     <div class="zeiten" style="font-size:24px;margin-top:16px">
       <span>02:14</span><span>05:37</span></div>
 
-    <div style="margin-top:56px"><div style="display:grid;grid-template-columns:repeat(5,124px);gap:26px"><div class="rt" style="width:124px;height:124px;font-size:34px;box-shadow:0 0 0 3px #dcc23f;">01</div><div class="rt" style="width:124px;height:124px;font-size:34px;">02</div><div class="rt" style="width:124px;height:124px;font-size:34px;box-shadow:0 0 0 3px #e08a3c;">03</div><div class="rt" style="width:124px;height:124px;font-size:34px;box-shadow:0 0 0 3px #4a9fd8;">04</div><div class="rt" style="width:124px;height:124px;font-size:34px;">·</div><div class="rt" style="width:124px;height:124px;font-size:34px;">·</div><div class="rt" style="width:124px;height:124px;font-size:34px;">·</div><div class="rt" style="width:124px;height:124px;font-size:34px;">·</div><div class="rt" style="width:124px;height:124px;font-size:34px;">·</div><div class="rt" style="width:124px;height:124px;font-size:34px;">·</div></div></div>
+    <div style="margin-top:76px"><div style="display:grid;grid-template-columns:repeat(5,128px);gap:28px"><div class="rt" style="width:128px;height:128px;font-size:35px;box-shadow:0 0 0 3px #dcc23f;">01</div><div class="rt" style="width:128px;height:128px;font-size:35px;">02</div><div class="rt" style="width:128px;height:128px;font-size:35px;box-shadow:0 0 0 3px #e08a3c;">03</div><div class="rt" style="width:128px;height:128px;font-size:35px;box-shadow:0 0 0 3px #4a9fd8;">04</div><div class="rt" style="width:128px;height:128px;font-size:35px;">·</div><div class="rt" style="width:128px;height:128px;font-size:35px;">·</div><div class="rt" style="width:128px;height:128px;font-size:35px;">·</div><div class="rt" style="width:128px;height:128px;font-size:35px;">·</div><div class="rt" style="width:128px;height:128px;font-size:35px;">·</div><div class="rt" style="width:128px;height:128px;font-size:35px;">·</div></div></div>
 
-    <div style="display:flex;align-items:center;gap:26px;margin-top:56px">
+    <div style="display:flex;align-items:center;gap:26px;margin-top:auto;
+      padding-top:58px;padding-right:60px">
       <div class="rund" style="width:104px;height:104px"><svg width="42" height="42" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#f7f7f6" stroke-width="2" fill="#f7f7f6" stroke-linejoin="round"/></svg></div>
       <div class="spiel" style="flex:1;height:104px;gap:20px;font-size:26px;
         letter-spacing:.24em;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace"><svg width="38" height="38" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#f7f7f6"/><rect x="14" y="5" width="4" height="14" fill="#f7f7f6"/></svg>Pause</div>
       <div class="rund" style="width:104px;height:104px"><svg width="42" height="42" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#f7f7f6" stroke-width="2" fill="#f7f7f6" stroke-linejoin="round"/></svg></div>
     </div>
 
-    <div class="klein" style="font-size:18px;margin-top:44px">Musiklib · lokale Sammlung · kein Netz · kein Konto · keine Werbung<br>Alben werden beim Einlesen aus den Dateien gelesen, nicht aus dem Netz<br>Fortsetzung: weiter · Zufall: aus · Wiederholen: aus</div>
-  </div>
+    <div class="klein" style="font-size:18px;margin-top:auto;
+      padding-top:44px;padding-bottom:52px">Musiklib · lokale Sammlung · kein Netz · kein Konto · keine Werbung<br>Alben werden beim Einlesen aus den Dateien gelesen, nicht aus dem Netz<br>Fortsetzung: weiter · Zufall: aus · Wiederholen: aus</div>
   </div>
 </div></div></body></html>

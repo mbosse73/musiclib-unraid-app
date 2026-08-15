@@ -25,13 +25,12 @@ BAENDER = [('60', .30), ('250', .62), ('1k', .48), ('4k', .70), ('12k', .38)]
 
 def _css(g):
     return f'''
-.stage{{background:linear-gradient(160deg,#e9eaec 0%,#c9ccd0 54%,#dfe1e4 100%);
+/* Das Pult füllt die Bühne — man sitzt davor, nicht daneben */
+.stage{{background:linear-gradient(168deg,{PULT_H} 0%,{PULT} 18%,#0f1012 100%);
   font-family:{SANS};color:{WEISS}}}
-
-.pult{{position:relative;border-radius:{20 * g:.0f}px;
-  background:linear-gradient(168deg,{PULT_H} 0%,{PULT} 18%,#0f1012 100%);
-  box-shadow:0 {30 * g:.0f}px {70 * g:.0f}px rgba(30,34,40,.45),
-             inset 0 {2 * g:.0f}px 0 rgba(255,255,255,.14)}}
+.stage::before{{content:"";position:absolute;inset:0;pointer-events:none;
+  box-shadow:inset 0 {2 * g:.0f}px 0 rgba(255,255,255,.14)}}
+.pult{{position:absolute;inset:0;display:flex}}
 
 .schirm{{position:relative;overflow:hidden;background:{SCHIRM};
   border-radius:{12 * g:.0f}px;
@@ -72,10 +71,10 @@ KACHELN = ['A Love Supreme', 'Speak No Evil', 'Maiden Voyage', 'Blue Train',
            'Moanin’', 'Waltz for Debby', 'Idle Moments', 'Page One']
 
 
-def _schirm(g, pad, cover_px, nr_px, klein, kachel_px, kachel_s, spalten):
+def _schirm(g, pad, cover_px, nr_px, klein, kachel_px, kachel_s, spalten, reihen=2):
     kacheln = ''.join(
         f'<div class="kach" style="height:{kachel_px}px;font-size:{kachel_s}px">'
-        f'<span>{n}</span></div>' for n in KACHELN[:spalten * 2 - 1])
+        f'<span>{n}</span></div>' for n in KACHELN[:spalten * reihen - 1])
     return f'''<div class="schirm" style="padding:{pad}">
   <span class="nr" style="right:{int(-14 * g)}px;top:{int(-10 * g)}px;
     font-size:{nr_px}px">{A['tracks'][A['laeuft']][0]}</span>
@@ -135,22 +134,18 @@ def _pads(g, hoehe, spiel_b, klein_b, luecke, zeichen):
 def telefon():
     g = 1.0
     css = _css(g)
-    body = f'''<div style="position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;padding:74px 46px">
-  <div class="pult" style="width:988px;padding:44px 42px 52px">
-    {_schirm(g, '38px 36px 40px', 210, 240, 27, 108, 20, 3)}
+    body = f'''<div class="pult" style="flex-direction:column;padding:56px 46px 64px">
+  {_schirm(g, '44px 40px 46px', 264, 300, 29, 150, 22, 3, 3)}
 
-    <div class="zeiten" style="font-size:24px;margin-top:38px">
-      <span>{A['pos']}</span><span>{A['dauer']}</span></div>
-    <div style="margin-top:14px">{_zeitschieber(g, 12, 46)}</div>
+  <div class="zeiten" style="font-size:25px;margin-top:auto;padding-top:56px">
+    <span>{A['pos']}</span><span>{A['dauer']}</span></div>
+  <div style="margin-top:14px">{_zeitschieber(g, 12, 48)}</div>
 
-    <div style="display:flex;align-items:flex-end;justify-content:space-between;
-      margin-top:56px">
-      {_schieber(g, 250, 12, 34, 20)}
-    </div>
-
-    <div style="margin-top:52px">{_pads(g, 128, 300, 156, 18, 46)}</div>
+  <div style="display:flex;align-items:flex-end;margin-top:56px">
+    {_schieber(g, 800, 12, 36, 21)}
   </div>
+
+  <div style="margin-top:60px">{_pads(g, 152, 320, 168, 20, 50)}</div>
 </div>'''
     return css, body
 
@@ -158,23 +153,19 @@ def telefon():
 def rechner():
     g = .80
     css = _css(g)
-    body = f'''<div style="position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;padding:52px 62px">
-  <div class="pult" style="width:1476px;padding:38px 40px;display:flex;gap:44px">
-    <div style="width:600px;flex-shrink:0">
-      {_schirm(g, '30px 30px 32px', 168, 196, 21, 84, 15, 3)}
-      <div class="zeiten" style="font-size:18px;margin-top:24px">
-        <span>{A['pos']}</span><span>{A['dauer']}</span></div>
-      <div style="margin-top:10px">{_zeitschieber(g, 10, 38)}</div>
-    </div>
+    body = f'''<div class="pult" style="padding:44px 48px;gap:48px">
+  <div style="width:700px;flex-shrink:0;display:flex;flex-direction:column">
+    {_schirm(g, '34px 34px 36px', 196, 230, 23, 112, 16, 3, 3)}
+    <div class="zeiten" style="font-size:19px;margin-top:auto;padding-top:26px">
+      <span>{A['pos']}</span><span>{A['dauer']}</span></div>
+    <div style="margin-top:10px">{_zeitschieber(g, 10, 40)}</div>
+  </div>
 
-    <div style="flex:1;min-width:0;display:flex;flex-direction:column;
-      justify-content:space-between">
-      <div style="display:flex;justify-content:center">
-        {_schieber(g, 262, 10, 28, 16)}</div>
-      <div style="margin-top:34px;display:flex;justify-content:center">
-        {_pads(g, 104, 262, 128, 15, 38)}</div>
-    </div>
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+    <div style="display:flex;flex:1;min-height:0;align-items:flex-end">
+      {_schieber(g, 330, 10, 30, 17)}</div>
+    <div style="margin-top:40px;display:flex;justify-content:center">
+      {_pads(g, 128, 300, 148, 17, 44)}</div>
   </div>
 </div>'''
     return css, body

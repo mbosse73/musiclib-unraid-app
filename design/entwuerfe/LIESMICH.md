@@ -60,12 +60,34 @@ zwei Zuständen, und dort gilt dieselbe Regel wie bei 44.
   das Telefon die eine Betriebsart (die Zeiger) und der Rechner die andere (Cover
   und Balken).
 
+### Vollflächig statt Gerät auf dem Tisch
+
+Die erste Fassung dieser dreizehn zeigte das jeweilige Gerät als *Gegenstand*:
+ein Kasten mit Schlagschatten, um ihn herum eine graue Wand. Auf einem 1080 ×
+2340 grossen Blatt blieb dabei die Hälfte der Fläche leer. Sie sind deshalb
+alle umgebaut worden — **das Material ist jetzt die Bühne selbst**: der grüne
+Kunststoff von 49, das Orange von 50, das gebürstete Blech von 54 und die gelbe
+Karte von 55 reichen bis an alle vier Kanten. Bei 55 läuft der schwarze Riegel
+absichtlich rechts und unten aus dem Bild, wie ein näher herangeholtes Foto.
+
+Der so gewonnene Platz ist nicht leer geblieben, sondern trägt jetzt Inhalt:
+jedes Blatt zeigt zusätzlich die Titel des Albums, 47 einen zweiten datierten
+Block mit zwölf Neuzugängen, 52 achtunddreissig statt vierundzwanzig Kacheln,
+57 neun statt sechs. Wo doch Fläche übrig blieb, ist sie **eine** bewusste
+Lücke statt vier verteilter — Flächen wie das Blech von 54 oder das Deck von 59
+haben in Wirklichkeit ebenfalls freie Stellen, und die tragen den Eindruck von
+Material.
+
 Zwei Beobachtungen aus diesem Satz:
 
 - **Zwei Vorlagen brachten die Bibliothek schon mit.** In 54 ist die vierte
   Metalltaste im Foto ein Listenzeichen, in 51 ist die grüne Beschriftung die
   einzige Farbe auf dem ganzen Gerät. Wo die Vorlage einen solchen Platz
   vorgibt, ist der Zugang keine Zutat mehr, sondern gehört zum Gerät.
+- **Vollflächig heisst nicht randlos.** Die Blätter behalten ihre Fassung: 49
+  seine Rippen oben und unten, 59 die beiden Chromleisten, 51 die Fuge zwischen
+  Glas und Tastenfeld. Nur der Tisch, auf dem das Gerät vorher stand, ist weg —
+  er war nie Teil des Entwurfs.
 - **Die Spulfläche ist der schwierigste Teil der Übertragung.** Kein einziges
   Foto zeigt eine Fortschrittsanzeige, die Musik meint — es sind Temperaturen,
   Uhrzeiten, Frequenzen, Pegel. Jedes Blatt musste dafür etwas umdeuten: die

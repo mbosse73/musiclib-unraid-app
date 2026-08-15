@@ -25,6 +25,12 @@ ZULETZT = [
     ('Herbie Hancock', 'Maiden Voyage'),
     ('Cannonball Adderley', 'Somethin’ Else'),
     ('Sonny Rollins', 'Saxophone Colossus'),
+    ('Charles Mingus', 'Mingus Ah Um'),
+    ('Eric Dolphy', 'Out to Lunch'),
+    ('Lee Morgan', 'The Sidewinder'),
+    ('Horace Silver', 'Song for My Father'),
+    ('Art Blakey', 'Moanin’'),
+    ('Grant Green', 'Idle Moments'),
 ]
 
 

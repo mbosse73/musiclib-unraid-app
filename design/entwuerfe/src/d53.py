@@ -25,13 +25,12 @@ KUPPEL = ('#ffb15a', '#f0610b', '#8c2f04')
 
 def _css(g):
     return f'''
-.stage{{background:linear-gradient(155deg,#c7c9cb 0%,#9fa2a5 46%,#bcbfc2 100%);
+/* Das Modul ist die Bühne: Korpus bis an alle vier Kanten */
+.stage{{background:linear-gradient(168deg,{KORPUS_H} 0%,{KORPUS} 26%,#141618 100%);
   font-family:{SANS};color:{WEISS}}}
-
-.modul{{position:relative;border-radius:{26 * g:.0f}px;
-  background:linear-gradient(168deg,{KORPUS_H} 0%,{KORPUS} 26%,#141618 100%);
-  box-shadow:0 {28 * g:.0f}px {62 * g:.0f}px rgba(20,22,24,.5),
-             inset 0 {2 * g:.0f}px 0 rgba(255,255,255,.16)}}
+.stage::before{{content:"";position:absolute;inset:0;pointer-events:none;
+  box-shadow:inset 0 {2 * g:.0f}px 0 rgba(255,255,255,.16)}}
+.modul{{position:absolute;inset:0;display:flex}}
 
 /* Das Fenster liegt tiefer als das Gehäuse */
 .fenster{{background:{FENSTER};border-radius:{14 * g:.0f}px;
@@ -94,17 +93,18 @@ def _knoepfe(g, breite, hoehe, schrift, luecke):
             f'<span style="font-size:{schrift}px">{A["jahr"]}</span></div></div>')
 
 
-def _fenster(g, pad, klein, zahl_px, wort_px, kuppel_b):
-    return f'''<div class="fenster" style="padding:{pad}">
+def _fenster(g, pad, klein, zahl_px, wort_px, kuppel_b, stil=''):
+    return f'''<div class="fenster" style="padding:{pad};{stil}">
   <div class="zeile" style="font-size:{klein}px">
     <span>{A['titel']}<br>{A['tracks'][A['laeuft']][0]}</span>
     <span style="text-align:right">{A['dauer']}<br>An</span>
   </div>
-  <div class="zahl" style="font-size:{zahl_px}px;margin-top:{int(26 * g)}px">
-    {A['pos'].replace(':', '.')}</div>
-  <div style="display:flex;justify-content:center;margin-top:{int(26 * g)}px">
+  <div class="zahl" style="font-size:{zahl_px}px;margin-top:auto;
+    padding-top:{int(26 * g)}px">{A['pos'].replace(':', '.')}</div>
+  <div style="display:flex;justify-content:center;margin-top:{int(34 * g)}px">
     {_kuppel(kuppel_b, A['frac'])}</div>
-  <div class="wort" style="font-size:{wort_px}px;margin-top:{int(16 * g)}px">titel</div>
+  <div class="wort" style="font-size:{wort_px}px;margin-top:{int(16 * g)}px;
+    margin-bottom:auto">titel</div>
 </div>'''
 
 
@@ -130,18 +130,32 @@ def _bib(g, schrift):
 def telefon():
     g = 1.0
     css = _css(g)
-    body = f'''<div style="position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;padding:80px 60px">
-  <div class="modul" style="width:940px;padding:52px 54px 62px">
-    <div style="display:flex;align-items:center;justify-content:space-between">
-      {_bib(g, 22)}
-      {_knoepfe(g, 148, 74, 22, 22)}
-    </div>
+    zeilen = ''.join(
+        f'<div style="display:flex;align-items:baseline;gap:18px;padding:14px 0;'
+        f'border-top:1px solid rgba(240,241,242,.12);font-size:29px'
+        f'{";color:" + WEISS if i == A["laeuft"] else ";color:" + STUMM}">'
+        f'<span style="font-family:{MONO};font-size:23px;color:{LEISE}">{nr}</span>'
+        f'<span style="flex:1;overflow:hidden;white-space:nowrap;'
+        f'text-overflow:ellipsis">{t}</span>'
+        f'<span style="font-family:{MONO};font-size:23px;color:{LEISE}">{d}</span></div>'
+        for i, (nr, t, d) in enumerate(A['tracks']))
 
-    <div style="margin-top:48px">{_fenster(g, '46px 44px 40px', 25, 168, 27, 520)}</div>
-
-    <div style="margin-top:56px">{_tasten(g, 130, 168, 40)}</div>
+    body = f'''<div class="modul" style="flex-direction:column;padding:64px 56px 72px">
+  <div style="display:flex;align-items:center;justify-content:space-between;
+    flex-shrink:0">
+    {_bib(g, 23)}
+    {_knoepfe(g, 156, 78, 23, 24)}
   </div>
+
+  <div style="margin-top:52px;flex:1;min-height:0;display:flex">
+    {_fenster(g, '54px 48px 46px', 26, 176, 28, 560,
+              'flex:1;display:flex;flex-direction:column')}
+  </div>
+
+  <div style="margin-top:46px;flex-shrink:0">{zeilen}
+    <div style="border-top:1px solid rgba(240,241,242,.12)"></div></div>
+
+  <div style="margin-top:52px;flex-shrink:0">{_tasten(g, 134, 172, 42)}</div>
 </div>'''
     return css, body
 
@@ -158,28 +172,26 @@ def rechner():
         f'<span style="font-family:{MONO};font-size:17px;color:{LEISE}">{d}</span></div>'
         for i, (nr, t, d) in enumerate(A['tracks']))
 
-    body = f'''<div style="position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;padding:56px 74px">
-  <div class="modul" style="width:1452px;padding:44px 48px;display:flex;gap:52px;
-    align-items:center">
-    <div style="width:430px;flex-shrink:0">
-      {_fenster(g, '34px 32px 30px', 18, 118, 20, 366)}
+    body = f'''<div class="modul" style="padding:52px 56px;gap:56px;
+  align-items:stretch">
+    <div style="width:470px;flex-shrink:0;display:flex">
+      {_fenster(g, '40px 36px 34px', 19, 128, 21, 396,
+                'flex:1;display:flex;flex-direction:column')}
     </div>
 
-    <div style="flex:1;min-width:0">
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column">
       <div style="display:flex;align-items:center;justify-content:space-between">
         {_bib(g, 16)}
         {_knoepfe(g, 112, 56, 16, 18)}
       </div>
-      <div style="font-size:44px;font-weight:300;margin-top:26px;letter-spacing:-.01em">
-        {A['titel']}</div>
-      <div style="font-size:22px;color:{STUMM};margin-top:8px">
+      <div style="font-size:48px;font-weight:300;margin-top:auto;
+        padding-top:30px;letter-spacing:-.01em">{A['titel']}</div>
+      <div style="font-size:23px;color:{STUMM};margin-top:8px">
         {A['interpret']} · {A['album']}</div>
-      <div style="margin-top:22px">{zeilen}
+      <div style="margin-top:30px">{zeilen}
         <div style="border-top:1px solid rgba(240,241,242,.12)"></div></div>
-      <div style="margin-top:30px">{_tasten(g, 96, 124, 30)}</div>
+      <div style="margin-top:auto;padding-top:34px">{_tasten(g, 104, 134, 32)}</div>
     </div>
-  </div>
 </div>'''
     return css, body
 

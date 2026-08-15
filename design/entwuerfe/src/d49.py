@@ -23,14 +23,13 @@ LEISE = 'rgba(246,247,245,.26)'
 
 def _css(g):
     return f'''
-.stage{{background:linear-gradient(150deg,#c9cdc6 0%,#9aa096 44%,#c6cac3 100%);
+/* Das Gehäuse ist die ganze Fläche: der Kunststoff liegt auf der Bühne selbst,
+   nicht als Gerät auf einem Tisch. */
+.stage{{background:linear-gradient(168deg,{GRUEN_H} 0%,{GRUEN} 24%,{GRUEN_D} 100%);
   font-family:{SANS};color:{WEISS}}}
-
-/* Das Gehäuse: Kunststoff mit weicher Kante und einem hellen Grat oben */
-.schale{{position:relative;border-radius:{26 * g:.0f}px;
-  background:linear-gradient(168deg,{GRUEN_H} 0%,{GRUEN} 24%,{GRUEN_D} 100%);
-  box-shadow:0 {26 * g:.0f}px {60 * g:.0f}px rgba(30,40,20,.42),
-             inset 0 {2 * g:.0f}px 0 rgba(255,255,255,.45)}}
+.stage::before{{content:"";position:absolute;inset:0;pointer-events:none;
+  box-shadow:inset 0 {3 * g:.0f}px 0 rgba(255,255,255,.45),
+             inset 0 {-3 * g:.0f}px {30 * g:.0f}px rgba(20,30,10,.28)}}
 
 /* Die Rippen der Oberseite — im Foto das einzige Muster am ganzen Block */
 .rippen{{border-radius:{8 * g:.0f}px;
@@ -99,35 +98,34 @@ def _liste(g, schrift, klein):
 def telefon():
     g = 1.0
     css = _css(g)
-    body = f'''<div style="position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;padding:70px 44px">
-  <div class="schale" style="width:992px;padding:40px 40px 52px">
-    <div class="rippen" style="height:64px;margin:6px 0 40px"></div>
+    body = f'''<div style="position:absolute;inset:0;display:flex;flex-direction:column;
+  padding:46px 40px 52px">
+  <div class="rippen" style="height:84px;flex-shrink:0"></div>
 
-    <div class="glas" style="padding:92px 62px 76px">
-      <div style="display:flex;justify-content:center">{_bib(g, 28)}</div>
+  <div class="glas" style="flex:1;min-height:0;margin:40px 0;padding:96px 66px 84px;
+    display:flex;flex-direction:column">
+    <div style="display:flex;justify-content:center">{_bib(g, 29)}</div>
 
-      <div class="uhr" style="font-size:292px;text-align:center;margin-top:40px">
-        {A['pos']}</div>
+    <div class="uhr" style="font-size:340px;text-align:center;margin-top:auto">
+      {A['pos']}</div>
 
-      <div class="zeile" style="font-size:52px;text-align:center;margin-top:52px">
-        {A['interpret']}</div>
-      <div class="zeile klein" style="font-size:40px;text-align:center;margin-top:16px">
-        Jetzt: {A['titel']}</div>
+    <div class="zeile" style="font-size:56px;text-align:center;margin-top:56px">
+      {A['interpret']}</div>
+    <div class="zeile klein" style="font-size:42px;text-align:center;margin-top:18px">
+      Jetzt: {A['titel']}</div>
 
-      <div class="bahn" style="height:4px;margin-top:76px">
-        <i style="width:{A['frac'] * 100:.0f}%"></i></div>
-      <div class="zeiten" style="font-size:25px;margin-top:20px">
-        <span>{A['album']} · {A['jahr']}</span><span>{A['dauer']}</span></div>
+    <div class="bahn" style="height:4px;margin-top:76px">
+      <i style="width:{A['frac'] * 100:.0f}%"></i></div>
+    <div class="zeiten" style="font-size:26px;margin-top:22px">
+      <span>{A['album']} · {A['jahr']}</span><span>{A['dauer']}</span></div>
 
-      <div style="margin-top:70px">{_transport(g, 100, 140, 46)}</div>
+    <div style="margin-top:64px">{_transport(g, 106, 148, 48)}</div>
 
-      <div style="margin-top:70px">{_liste(g, 30, 24)}
-        <div style="border-top:1px solid rgba(246,247,245,.14)"></div></div>
-    </div>
-
-    <div class="rippen" style="height:30px;margin-top:40px;opacity:.55"></div>
+    <div style="margin-top:72px">{_liste(g, 31, 25)}
+      <div style="border-top:1px solid rgba(246,247,245,.14)"></div></div>
   </div>
+
+  <div class="rippen" style="height:44px;flex-shrink:0;opacity:.55"></div>
 </div>'''
     return css, body
 
@@ -136,34 +134,31 @@ def rechner():
     g = .78
     css = _css(g)
     zeilen = _liste(g, 21, 17)
-    body = f'''<div style="position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;padding:56px 70px">
-  <div class="schale" style="width:1440px;padding:26px;display:flex;gap:26px">
-    <div class="rippen quer" style="width:52px;flex-shrink:0"></div>
+    body = f'''<div style="position:absolute;inset:0;display:flex;gap:26px;padding:26px">
+  <div class="rippen quer" style="width:60px;flex-shrink:0"></div>
 
-    <div class="glas" style="flex:1;min-width:0;padding:44px 52px 42px;display:flex;
-      gap:56px;align-items:center">
-      <div style="flex-shrink:0">
-        {_bib(g, 19)}
-        <div class="uhr" style="font-size:176px;margin-top:20px">{A['pos']}</div>
-        <div class="zeiten" style="font-size:18px;margin-top:14px;width:430px">
-          <span>{A['album']} · {A['jahr']}</span><span>{A['dauer']}</span></div>
-        <div class="bahn" style="height:3px;margin-top:12px;width:430px">
-          <i style="width:{A['frac'] * 100:.0f}%"></i></div>
-        <div style="margin-top:34px;width:430px">{_transport(g, 68, 94, 30)}</div>
-      </div>
-
-      <div style="flex:1;min-width:0">
-        <div class="zeile" style="font-size:40px">{A['interpret']}</div>
-        <div class="zeile klein" style="font-size:26px;margin-top:10px">
-          Jetzt: {A['titel']}</div>
-        <div style="margin-top:24px">{zeilen}
-          <div style="border-top:1px solid rgba(246,247,245,.14)"></div></div>
-      </div>
+  <div class="glas" style="flex:1;min-width:0;padding:52px 60px 50px;display:flex;
+    gap:64px;align-items:stretch">
+    <div style="width:520px;flex-shrink:0;display:flex;flex-direction:column">
+      {_bib(g, 20)}
+      <div class="uhr" style="font-size:212px;margin-top:auto">{A['pos']}</div>
+      <div class="zeiten" style="font-size:19px;margin-top:22px">
+        <span>{A['album']} · {A['jahr']}</span><span>{A['dauer']}</span></div>
+      <div class="bahn" style="height:3px;margin-top:12px">
+        <i style="width:{A['frac'] * 100:.0f}%"></i></div>
+      <div style="margin-top:auto;padding-top:40px">{_transport(g, 74, 102, 32)}</div>
     </div>
 
-    <div class="rippen quer" style="width:52px;flex-shrink:0"></div>
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+      <div class="zeile" style="font-size:46px">{A['interpret']}</div>
+      <div class="zeile klein" style="font-size:28px;margin-top:10px">
+        Jetzt: {A['titel']}</div>
+      <div style="margin-top:auto;padding-top:32px">{zeilen}
+        <div style="border-top:1px solid rgba(246,247,245,.14)"></div></div>
+    </div>
   </div>
+
+  <div class="rippen quer" style="width:60px;flex-shrink:0"></div>
 </div>'''
     return css, body
 

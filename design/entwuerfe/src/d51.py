@@ -25,13 +25,10 @@ GRUEN = '#31b356'
 
 def _css(g):
     return f'''
-.stage{{background:linear-gradient(150deg,#f4f4f2 0%,#dcdcda 50%,#ececeb 100%);
+/* Das Gerät füllt die Bühne: oben Glas, unten Tasten, dazwischen nichts */
+.stage{{background:linear-gradient(180deg,{BLECH} 0%,{BLECH_D} 100%);
   font-family:{SANS};color:#2c2e30}}
-
-.geraet{{position:relative;border-radius:{22 * g:.0f}px;overflow:hidden;
-  background:linear-gradient(180deg,{BLECH} 0%,{BLECH_D} 100%);
-  box-shadow:0 {26 * g:.0f}px {60 * g:.0f}px rgba(40,44,48,.28),
-             inset 0 {1 * g:.0f}px 0 rgba(255,255,255,.9)}}
+.geraet{{position:absolute;inset:0;display:flex;flex-direction:column}}
 
 /* Die Glasfläche endet nicht mit einer Kante, sondern mit der Fortschrittslinie */
 .glas{{position:relative;background:{GLAS};color:{WEISS}}}
@@ -54,8 +51,21 @@ def _css(g):
 '''
 
 
-def _glas(g, pad, marke_px, zahl_px, klein_px):
-    return f'''<div class="glas" style="padding:{pad}">
+def _liste(g, schrift, klein):
+    return ''.join(
+        f'<div style="display:flex;align-items:baseline;gap:{int(16 * g)}px;'
+        f'padding:{int(11 * g)}px 0;border-top:1px solid rgba(244,245,244,.14);'
+        f'font-size:{schrift}px'
+        f'{";color:" + WEISS if i == A["laeuft"] else ";color:" + STUMM}">'
+        f'<span style="font-family:{MONO};font-size:{klein}px;color:{LEISE}">{nr}</span>'
+        f'<span style="flex:1;overflow:hidden;white-space:nowrap;'
+        f'text-overflow:ellipsis">{t}</span>'
+        f'<span style="font-family:{MONO};font-size:{klein}px;color:{LEISE}">{d}</span></div>'
+        for i, (nr, t, d) in enumerate(A['tracks']))
+
+
+def _glas(g, pad, marke_px, zahl_px, klein_px, liste='', stil=''):
+    return f'''<div class="glas" style="padding:{pad};{stil}">
   <div style="display:flex;align-items:flex-start;justify-content:space-between">
     <div>
       <div class="marke" style="font-size:{marke_px}px">Spielt</div>
@@ -68,8 +78,8 @@ def _glas(g, pad, marke_px, zahl_px, klein_px):
     </div>
   </div>
 
-  <div class="zahl" style="font-size:{zahl_px}px;margin-top:{int(18 * g)}px">
-    {A['pos']}</div>
+  <div class="zahl" style="font-size:{zahl_px}px;margin-top:auto;
+    padding-top:{int(18 * g)}px">{A['pos']}</div>
 
   <div style="font-size:{klein_px * 1.5:.0f}px;margin-top:{int(20 * g)}px;
     font-weight:300">{A['titel']}</div>
@@ -80,15 +90,18 @@ def _glas(g, pad, marke_px, zahl_px, klein_px):
     margin-top:{int(18 * g)}px">
     <span>{A['pos']}</span><span>{A['dauer']}</span></div>
 
+  {f'<div style="margin-top:{int(44 * g)}px">{liste}'
+    f'<div style="border-top:1px solid rgba(244,245,244,.14)"></div></div>' if liste else ''}
+
   <span class="bahn"><i style="width:{A['frac'] * 100:.0f}%"></i></span>
 </div>'''
 
 
-def _feld(g, hoehe, schrift, zeichen, spalten='repeat(3,1fr)'):
+def _feld(g, hoehe, schrift, zeichen, spalten='repeat(3,1fr)', stil=''):
     """Die Tastenreihen. Die grüne Taste ist die Sammlung — wie °C|°F im Foto."""
     fuge = max(2, int(3 * g))
     return f'''<div class="feld" style="grid-template-columns:{spalten};
-  gap:{fuge}px;padding:{fuge}px 0 0">
+  gap:{fuge}px;padding:{fuge}px 0 0;{stil}">
   <div class="k zeichen" style="height:{hoehe}px">{mischen(zeichen, GRAU)}</div>
   <div class="k gruen" style="height:{hoehe}px;font-size:{schrift}px;
     letter-spacing:{2 * g:.1f}px">{biblio(zeichen, GRUEN)}Sammlung · {A['sammlung']}</div>
@@ -110,12 +123,11 @@ def _feld(g, hoehe, schrift, zeichen, spalten='repeat(3,1fr)'):
 def telefon():
     g = 1.0
     css = _css(g)
-    body = f'''<div style="position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;padding:80px 56px">
-  <div class="geraet" style="width:968px">
-    {_glas(g, '78px 66px 62px', 24, 216, 32)}
-    {_feld(g, 176, 22, 46, 'repeat(3,1fr)')}
-  </div>
+    zeilen = _liste(g, 27, 22)
+    body = f'''<div class="geraet">
+  {_glas(g, '110px 70px 74px', 26, 268, 34, zeilen,
+         'flex:1;min-height:0;display:flex;flex-direction:column')}
+  {_feld(g, 214, 24, 50, 'repeat(3,1fr)', 'flex-shrink:0')}
 </div>'''
     return css, body
 
@@ -123,29 +135,23 @@ def telefon():
 def rechner():
     g = .78
     css = _css(g)
-    zeilen = ''.join(
-        f'<div style="display:flex;align-items:baseline;gap:16px;padding:10px 0;'
-        f'border-top:1px solid rgba(244,245,244,.14);font-size:20px'
-        f'{";color:" + WEISS if i == A["laeuft"] else ";color:" + STUMM}">'
-        f'<span style="font-family:{MONO};font-size:16px;color:{LEISE}">{nr}</span>'
-        f'<span style="flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">{t}</span>'
-        f'<span style="font-family:{MONO};font-size:16px;color:{LEISE}">{d}</span></div>'
-        for i, (nr, t, d) in enumerate(A['tracks']))
+    zeilen = _liste(g, 20, 16)
 
-    body = f'''<div style="position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;padding:60px 76px">
-  <div class="geraet" style="width:1448px;display:grid;
-    grid-template-columns:1fr 520px">
-    <div style="position:relative">{_glas(g, '52px 48px 46px', 18, 168, 24)}</div>
-    <div style="background:{GLAS};padding:52px 44px 46px;color:{WEISS};
-      border-left:3px solid {BLECH_D}">
-      <div class="marke" style="font-size:18px">Album</div>
-      <div style="font-size:30px;font-weight:300;margin-top:12px">{A['album']}</div>
-      <div style="margin-top:20px">{zeilen}
+    body = f'''<div class="geraet">
+  <div style="flex:1;min-height:0;display:grid;grid-template-columns:1fr 560px">
+    {_glas(g, '62px 56px 54px', 19, 200, 26, '',
+           'display:flex;flex-direction:column')}
+    <div style="background:{GLAS};padding:62px 50px 54px;color:{WEISS};
+      border-left:3px solid {BLECH_D};display:flex;flex-direction:column">
+      <div class="marke" style="font-size:19px">Album</div>
+      <div style="font-size:34px;font-weight:300;margin-top:12px">{A['album']}</div>
+      <div style="font-size:21px;color:{STUMM};margin-top:8px">
+        {A['interpret']} · {A['jahr']}</div>
+      <div style="margin-top:auto;padding-top:26px">{zeilen}
         <div style="border-top:1px solid rgba(244,245,244,.14)"></div></div>
     </div>
-    <div style="grid-column:1/-1">{_feld(g, 132, 17, 36)}</div>
   </div>
+  {_feld(g, 178, 18, 40, 'repeat(3,1fr)', 'flex-shrink:0')}
 </div>'''
     return css, body
 

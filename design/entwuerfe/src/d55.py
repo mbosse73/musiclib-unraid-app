@@ -23,13 +23,10 @@ RING = ('#e08a3c', '#dcc23f', '#4a9fd8')   # läuft, davor, danach
 
 def _css(g):
     return f'''
-.stage{{background:linear-gradient(150deg,#c2c2c0 0%,#a6a6a4 52%,#bcbcba 100%);
-  font-family:{SANS};color:{WEISS}}}
-
-/* Die gelbe Karte liegt unter dem Riegel und schaut an zwei Seiten hervor */
-.karte{{position:absolute;background:{KARTE};
-  box-shadow:0 {18 * g:.0f}px {40 * g:.0f}px rgba(60,50,10,.35),
-             inset 0 0 0 {1 * g:.0f}px {KARTE_D}}}
+/* Die gelbe Karte ist die Bühne; der Riegel liegt darauf und läuft an zwei
+   Kanten aus dem Bild — wie im Foto, nur näher heran. */
+.stage{{background:{KARTE};font-family:{SANS};color:{WEISS}}}
+.karte{{position:absolute;inset:0}}
 .karte .kmark{{position:absolute;font-family:{MONO};text-transform:uppercase;
   letter-spacing:.18em;color:rgba(30,24,4,.62)}}
 .karte .geist{{position:absolute;font-weight:700;color:rgba(30,24,4,.16);
@@ -126,23 +123,22 @@ KLEIN = ('Musiklib · lokale Sammlung · kein Netz · kein Konto · keine Werbun
 def telefon():
     g = 1.0
     css = _css(g)
-    body = f'''<div style="position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;padding:70px 46px">
-  <div style="position:relative;width:932px">
-  <div class="karte" style="left:-46px;top:-92px;right:46px;bottom:-92px">
-    <span class="kmark" style="left:30px;top:26px;font-size:20px">musiklib.local</span>
-    <span class="kmark" style="right:76px;top:26px;font-size:20px">01</span>
-    <span class="geist" style="left:30px;top:130px;font-size:320px">C</span>
-    <span class="kmark" style="right:76px;bottom:26px;font-size:20px">Beta</span>
+    body = f'''<div style="position:absolute;inset:0">
+  <div class="karte">
+    <span class="kmark" style="left:36px;top:30px;font-size:21px">musiklib.local</span>
+    <span class="kmark" style="right:36px;top:30px;font-size:21px">01</span>
+    <span class="geist" style="left:24px;top:120px;font-size:300px">C</span>
   </div>
 
-  <div class="riegel" style="position:relative;padding:56px 50px">
+  <div class="riegel" style="position:absolute;left:74px;top:158px;right:-40px;
+    bottom:-40px;padding:62px 56px;display:flex;flex-direction:column">
     <div style="display:flex;align-items:center;justify-content:space-between">
       {_bib(g, 19, 58)}
       {_kopfzeile(g, 112, 68, 21, 112, 56)}
     </div>
 
-    <div class="gross" style="font-size:118px;margin-top:52px">{A['titel']}</div>
+    <div class="gross" style="font-size:118px;margin-top:auto;
+      padding-top:56px">{A['titel']}</div>
     <div style="display:flex;align-items:center;gap:22px;margin-top:22px">
       <span class="pille" style="height:44px;padding:0 20px;font-size:19px">
         Titel {A['tracks'][A['laeuft']][0]} / 04</span>
@@ -154,17 +150,18 @@ def telefon():
     <div class="zeiten" style="font-size:24px;margin-top:16px">
       <span>{A['pos']}</span><span>{A['dauer']}</span></div>
 
-    <div style="margin-top:56px">{_tasten(g, 124, 34, 26, 5)}</div>
+    <div style="margin-top:76px">{_tasten(g, 128, 35, 28, 5)}</div>
 
-    <div style="display:flex;align-items:center;gap:26px;margin-top:56px">
+    <div style="display:flex;align-items:center;gap:26px;margin-top:auto;
+      padding-top:58px;padding-right:60px">
       <div class="rund" style="width:104px;height:104px">{prev(42, WEISS)}</div>
       <div class="spiel" style="flex:1;height:104px;gap:20px;font-size:26px;
         letter-spacing:.24em;font-family:{MONO}">{pausei(38, WEISS)}Pause</div>
       <div class="rund" style="width:104px;height:104px">{nexti(42, WEISS)}</div>
     </div>
 
-    <div class="klein" style="font-size:18px;margin-top:44px">{KLEIN}</div>
-  </div>
+    <div class="klein" style="font-size:18px;margin-top:auto;
+      padding-top:44px;padding-bottom:52px">{KLEIN}</div>
   </div>
 </div>'''
     return css, body
@@ -174,15 +171,14 @@ def rechner():
     g = .78
     css = _css(g)
     body = f'''<div style="position:absolute;inset:0">
-  <div class="karte" style="left:64px;top:56px;right:150px;bottom:104px">
-    <span class="kmark" style="left:26px;top:22px;font-size:15px">musiklib.local</span>
-    <span class="kmark" style="right:26px;top:22px;font-size:15px">01</span>
-    <span class="geist" style="left:26px;top:96px;font-size:250px">C</span>
-    <span class="kmark" style="right:26px;bottom:22px;font-size:15px">Beta</span>
+  <div class="karte">
+    <span class="kmark" style="left:30px;top:24px;font-size:16px">musiklib.local</span>
+    <span class="kmark" style="right:30px;top:24px;font-size:16px">01</span>
+    <span class="geist" style="left:22px;top:86px;font-size:230px">C</span>
   </div>
 
-  <div class="riegel" style="position:absolute;left:150px;top:104px;right:64px;
-    bottom:56px;padding:44px 48px;display:flex;gap:52px">
+  <div class="riegel" style="position:absolute;left:132px;top:96px;right:-40px;
+    bottom:-40px;padding:52px 56px;display:flex;gap:56px">
     <div style="flex:1;min-width:0;display:flex;flex-direction:column">
       <div class="gross" style="font-size:92px">{A['titel']}</div>
       <div style="display:flex;align-items:center;gap:18px;margin-top:18px">
@@ -194,12 +190,13 @@ def rechner():
         <i style="width:{A['frac'] * 100:.0f}%"></i></div>
       <div class="zeiten" style="font-size:18px;margin-top:12px">
         <span>{A['pos']}</span><span>{A['dauer']}</span></div>
-      <div style="margin-top:34px">{_tasten(g, 92, 26, 20, 4)}</div>
-      <div class="klein" style="font-size:14px;margin-top:auto">{KLEIN}</div>
+      <div style="margin-top:auto;padding-top:36px">{_tasten(g, 100, 28, 22, 4)}</div>
+      <div class="klein" style="font-size:14px;margin-top:auto;
+        padding-bottom:44px">{KLEIN}</div>
     </div>
 
-    <div style="width:330px;flex-shrink:0;display:flex;flex-direction:column;
-      align-items:flex-end">
+    <div style="width:360px;flex-shrink:0;display:flex;flex-direction:column;
+      align-items:flex-end;padding-right:56px;padding-bottom:52px">
       {_kopfzeile(g, 92, 56, 17, 92, 46)}
       <div style="margin-top:auto;width:100%">
         <div class="spiel" style="height:104px;gap:18px;font-size:22px;

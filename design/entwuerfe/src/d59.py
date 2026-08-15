@@ -23,13 +23,10 @@ FENSTER = '#17181a'
 
 def _css(g):
     return f'''
-.stage{{background:linear-gradient(160deg,#5c5f63 0%,#3a3d40 55%,#4c4f53 100%);
+/* Die Frontplatte ist die Bühne, oben und unten von einer Chromleiste begrenzt */
+.stage{{background:linear-gradient(180deg,{BLECH} 0%,{BLECH_D} 100%);
   font-family:{SANS};color:{TINTE}}}
-
-.geraet{{position:relative;background:linear-gradient(180deg,{BLECH} 0%,{BLECH_D} 100%);
-  border-radius:{5 * g:.0f}px;
-  box-shadow:0 {26 * g:.0f}px {60 * g:.0f}px rgba(0,0,0,.5),
-             inset 0 {1 * g:.0f}px 0 #fff}}
+.geraet{{position:absolute;inset:0;display:flex;flex-direction:column}}
 
 /* Chromleiste: drei Streifen, hell-dunkel-hell — mehr braucht es nicht */
 .chrom{{background:linear-gradient(180deg,{CHROM[0]} 0%,{CHROM[1]} 46%,
@@ -100,12 +97,14 @@ def _kipp(g, breite, hoehe, hebel, schrift, name, an):
 
 
 def _klappe(g, breite, hoehe, wort_px):
-    band = kassette(int(breite * .62), int(breite * .62 * .62), '#2f3336', '#d9702c')
-    return f'''<div class="klappe" style="width:{breite}px;height:{hoehe}px;
+    band = kassette(int(breite * .80), int(breite * .80 * .62), '#2f3336', '#d9702c')
+    hoch = f'height:{hoehe}px;' if hoehe else 'align-self:stretch;'
+    return f'''<div class="klappe" style="width:{breite}px;{hoch}
   padding:{int(20 * g)}px;display:flex;flex-direction:column;align-items:center;
   justify-content:center;gap:{int(18 * g)}px">
   <span class="wort" style="font-size:{wort_px}px">Kind of Blue</span>
-  <div class="sicht" style="width:{int(breite * .78)}px;height:{int(hoehe * .46)}px">
+  <div class="sicht" style="width:{int(breite * .88)}px;
+    height:{int(hoehe * .46) if hoehe else int(breite * .62)}px">
     {band}</div>
   <span class="wort" style="font-size:{wort_px}px">Auto weiter</span>
 </div>'''
@@ -143,42 +142,41 @@ def _zeilen(g, schrift, klein):
 def telefon():
     g = 1.0
     css = _css(g)
-    body = f'''<div style="position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;padding:80px 50px">
-  <div class="geraet" style="width:980px">
-    <div class="chrom" style="height:8px"></div>
-    <div style="padding:46px 44px 52px">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between">
-        {_klappe(g, 560, 400, 21)}
-        <div style="display:flex;flex-direction:column;align-items:center;gap:26px">
-          {vumeter(300, 150, '#f4f3ef', '#1a1a1a', '#3a3a3a', '', A['frac'])}
-          <div style="display:flex;gap:34px">
-            {_kipp(g, 46, 96, 16, 17, 'Zufall', False)}
-            {_kipp(g, 46, 96, 16, 17, 'Wdh.', True)}
-          </div>
+    body = f'''<div class="geraet">
+  <div class="chrom" style="height:10px;flex-shrink:0"></div>
+  <div style="flex:1;min-height:0;padding:56px 48px 64px;display:flex;
+    flex-direction:column">
+    <div style="display:flex;align-items:stretch;justify-content:space-between;
+      flex:1;min-height:0">
+      {_klappe(g, 590, 0, 22)}
+      <div style="display:flex;flex-direction:column;align-items:center;gap:30px">
+        {vumeter(320, 160, '#f4f3ef', '#1a1a1a', '#3a3a3a', '', A['frac'])}
+        <div style="display:flex;gap:36px">
+          {_kipp(g, 48, 100, 17, 18, 'Zufall', False)}
+          {_kipp(g, 48, 100, 17, 18, 'Wdh.', True)}
         </div>
       </div>
-
-      <div style="margin-top:46px">{_skala(g, 34, 25, 10)}</div>
-      <div class="zeiten" style="font-size:24px;margin-top:16px">
-        <span>{A['pos']}</span><span>{A['dauer']}</span></div>
-
-      <div style="margin-top:44px;font-size:52px;font-weight:700;letter-spacing:-.02em">
-        {A['titel']}</div>
-      <div style="font-size:28px;color:{STUMM};margin-top:10px">
-        {A['interpret']} · {A['jahr']}</div>
-
-      <div style="margin-top:40px">{_zeilen(1.0, 30, 24)}
-        <div style="border-top:1px solid rgba(47,46,43,.20)"></div></div>
-
-      <div style="display:flex;align-items:center;justify-content:space-between;
-        margin-top:44px">
-        {_tasten(g, 116, 96, 42, 20)}
-        {_bib(g, 20, 68)}
-      </div>
     </div>
-    <div class="chrom" style="height:8px"></div>
+
+    <div style="margin-top:56px">{_skala(g, 44, 26, 12)}</div>
+    <div class="zeiten" style="font-size:25px;margin-top:16px">
+      <span>{A['pos']}</span><span>{A['dauer']}</span></div>
+
+    <div style="margin-top:56px;font-size:56px;font-weight:700;
+      letter-spacing:-.02em">{A['titel']}</div>
+    <div style="font-size:29px;color:{STUMM};margin-top:10px">
+      {A['interpret']} · {A['jahr']}</div>
+
+    <div style="margin-top:42px">{_zeilen(1.0, 31, 25)}
+      <div style="border-top:1px solid rgba(47,46,43,.20)"></div></div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;
+      margin-top:auto;padding-top:48px">
+      {_tasten(g, 122, 100, 44, 22)}
+      {_bib(g, 21, 72)}
+    </div>
   </div>
+  <div class="chrom" style="height:10px;flex-shrink:0"></div>
 </div>'''
     return css, body
 
@@ -187,43 +185,40 @@ def rechner():
     g = .78
     css = _css(g)
     zeilen = _zeilen(g, 21, 17)
-    body = f'''<div style="position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;padding:64px 64px">
-  <div class="geraet" style="width:1472px">
-    <div class="chrom" style="height:7px"></div>
-    <div style="padding:34px 38px 38px;display:flex;gap:38px">
-      {_klappe(g, 420, 330, 16)}
+    body = f'''<div class="geraet">
+  <div class="chrom" style="height:8px;flex-shrink:0"></div>
+  <div style="flex:1;min-height:0;padding:44px 48px 48px;display:flex;gap:44px">
+      {_klappe(g, 470, 0, 17)}
 
-      <div style="flex:1;min-width:0">
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
         <div style="display:flex;align-items:flex-start;gap:30px">
           <div style="flex:1;min-width:0">
             <div style="font-size:40px;font-weight:700;letter-spacing:-.02em">
               {A['titel']}</div>
             <div style="font-size:21px;color:{STUMM};margin-top:8px">
               {A['interpret']} · {A['album']} · {A['jahr']}</div>
-            <div style="margin-top:14px">{zeilen}
+            <div style="margin-top:16px">{zeilen}
               <div style="border-top:1px solid rgba(47,46,43,.20)"></div></div>
           </div>
-          {vumeter(240, 120, '#f4f3ef', '#1a1a1a', '#3a3a3a', '', A['frac'])}
+          {vumeter(260, 130, '#f4f3ef', '#1a1a1a', '#3a3a3a', '', A['frac'])}
         </div>
 
-        <div style="margin-top:26px">{_skala(g, 26, 19, 8)}</div>
-        <div class="zeiten" style="font-size:18px;margin-top:12px">
+        <div style="margin-top:auto;padding-top:30px">{_skala(g, 34, 20, 9)}</div>
+        <div class="zeiten" style="font-size:19px;margin-top:12px">
           <span>{A['pos']}</span><span>{A['dauer']}</span></div>
 
         <div style="display:flex;align-items:center;justify-content:space-between;
-          margin-top:26px">
-          <div style="display:flex;align-items:center;gap:30px">
-            {_tasten(g, 88, 70, 32, 15)}
-            {_kipp(g, 36, 72, 13, 13, 'Zufall', False)}
-            {_kipp(g, 36, 72, 13, 13, 'Wdh.', True)}
+          margin-top:auto;padding-top:30px">
+          <div style="display:flex;align-items:center;gap:32px">
+            {_tasten(g, 94, 76, 34, 16)}
+            {_kipp(g, 38, 78, 14, 14, 'Zufall', False)}
+            {_kipp(g, 38, 78, 14, 14, 'Wdh.', True)}
           </div>
-          {_bib(g, 15, 52)}
+          {_bib(g, 16, 56)}
         </div>
       </div>
-    </div>
-    <div class="chrom" style="height:7px"></div>
   </div>
+  <div class="chrom" style="height:8px;flex-shrink:0"></div>
 </div>'''
     return css, body
 

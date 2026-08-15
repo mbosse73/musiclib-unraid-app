@@ -22,13 +22,12 @@ TINTE = '#3a1a06'
 
 def _css(g):
     return f'''
-.stage{{background:linear-gradient(155deg,#dfe0dc 0%,#b7b9b4 52%,#d6d8d3 100%);
+/* Der Kunststoffkasten ist die Bühne selbst — kein Gerät auf einem Tisch */
+.stage{{background:linear-gradient(168deg,{ORANGE_H} 0%,{ORANGE} 30%,{ORANGE_D} 100%);
   font-family:{SANS};color:{TINTE}}}
-
-.kasten{{position:relative;border-radius:{30 * g:.0f}px;
-  background:linear-gradient(168deg,{ORANGE_H} 0%,{ORANGE} 30%,{ORANGE_D} 100%);
-  box-shadow:0 {30 * g:.0f}px {66 * g:.0f}px rgba(60,30,10,.42),
-             inset 0 {3 * g:.0f}px 0 rgba(255,255,255,.42)}}
+.stage::before{{content:"";position:absolute;inset:0;pointer-events:none;
+  box-shadow:inset 0 {4 * g:.0f}px 0 rgba(255,255,255,.42),
+             inset 0 {-4 * g:.0f}px {36 * g:.0f}px rgba(60,30,10,.30)}}
 
 /* Das Fenster ist eingelassen, nicht aufgesetzt */
 .fenster{{background:{FENSTER};border-radius:{12 * g:.0f}px;
@@ -136,37 +135,35 @@ def _zeilen(g, schrift, klein):
 def telefon():
     g = 1.0
     css = _css(g)
-    body = f'''<div style="position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;padding:70px 54px">
-  <div class="kasten" style="width:996px;padding:56px 52px 62px">
-    <div style="display:flex;align-items:center;justify-content:space-between">
-      {_bib(g, 21, 66)}
-      <span class="marke" style="font-size:25px;letter-spacing:5px">Musiklib</span>
-    </div>
-
-    <div style="display:flex;align-items:center;gap:34px;margin-top:52px">
-      <div class="fenster" style="flex:1;min-width:0;padding:44px 30px">
-        {_blaetter(g, 272, 400, 230, 64, 27)}
-      </div>
-      {_knopf(g, 140)}
-    </div>
-
-    <div style="margin-top:62px;font-size:56px;font-weight:700;letter-spacing:-.02em">
-      {A['titel']}</div>
-    <div style="font-size:30px;color:rgba(58,26,6,.68);margin-top:12px">
-      {A['interpret']} · {A['album']} · {A['jahr']}</div>
-
-    <div class="bahn" style="height:10px;margin-top:40px">
-      <i style="width:{A['frac'] * 100:.0f}%"></i></div>
-    <div class="zeiten" style="font-size:25px;margin-top:16px">
-      <span>{A['pos']}</span><span>{A['dauer']}</span></div>
-
-    <div style="margin-top:46px">{_zeilen(g, 30, 24)}
-      <div style="border-top:1px solid rgba(58,26,6,.18)"></div></div>
-
-    <div style="margin-top:54px;display:flex;justify-content:center">
-      {_tasten(g, 100, 28)}</div>
+    body = f'''<div style="position:absolute;inset:0;display:flex;flex-direction:column;
+  padding:76px 58px 84px">
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    {_bib(g, 21, 68)}
+    <span class="marke" style="font-size:26px;letter-spacing:5px">Musiklib</span>
   </div>
+
+  <div style="display:flex;align-items:center;gap:36px;margin-top:auto">
+    <div class="fenster" style="flex:1;min-width:0;padding:48px 32px">
+      {_blaetter(g, 300, 470, 262, 70, 29)}
+    </div>
+    {_knopf(g, 150)}
+  </div>
+
+  <div style="margin-top:auto;padding-top:70px;font-size:60px;font-weight:700;
+    letter-spacing:-.02em">{A['titel']}</div>
+  <div style="font-size:31px;color:rgba(58,26,6,.68);margin-top:12px">
+    {A['interpret']} · {A['album']} · {A['jahr']}</div>
+
+  <div class="bahn" style="height:10px;margin-top:40px">
+    <i style="width:{A['frac'] * 100:.0f}%"></i></div>
+  <div class="zeiten" style="font-size:26px;margin-top:16px">
+    <span>{A['pos']}</span><span>{A['dauer']}</span></div>
+
+  <div style="margin-top:52px">{_zeilen(g, 31, 25)}
+    <div style="border-top:1px solid rgba(58,26,6,.18)"></div></div>
+
+  <div style="margin-top:56px;display:flex;justify-content:center">
+    {_tasten(g, 106, 30)}</div>
 </div>'''
     return css, body
 
@@ -175,34 +172,32 @@ def rechner():
     g = .76
     css = _css(g)
     zeilen = _zeilen(g, 21, 17)
-    body = f'''<div style="position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;padding:52px 64px">
-  <div class="kasten" style="width:1472px;padding:38px 42px;display:flex;gap:46px;
+    body = f'''<div style="position:absolute;inset:0;display:flex;gap:52px;
+  align-items:stretch;padding:48px 54px">
+  <div class="fenster" style="flex-shrink:0;padding:34px 26px;display:flex;
     align-items:center">
-    <div class="fenster" style="flex-shrink:0;padding:30px 24px">
-      {_blaetter(g, 186, 228, 142, 46, 19)}
-    </div>
-
-    <div style="flex:1;min-width:0">
-      <div style="display:flex;align-items:center;justify-content:space-between">
-        {_bib(g, 15, 46)}
-        <span class="marke" style="font-size:17px;letter-spacing:4px">Musiklib</span>
-      </div>
-      <div style="margin-top:22px;font-size:42px;font-weight:700;letter-spacing:-.02em">
-        {A['titel']}</div>
-      <div style="font-size:22px;color:rgba(58,26,6,.68);margin-top:8px">
-        {A['interpret']} · {A['album']} · {A['jahr']}</div>
-      <div style="margin-top:18px">{zeilen}
-        <div style="border-top:1px solid rgba(58,26,6,.18)"></div></div>
-      <div class="bahn" style="height:8px;margin-top:24px">
-        <i style="width:{A['frac'] * 100:.0f}%"></i></div>
-      <div class="zeiten" style="font-size:18px;margin-top:12px">
-        <span>{A['pos']}</span><span>{A['dauer']}</span></div>
-      <div style="margin-top:24px">{_tasten(g, 68, 20)}</div>
-    </div>
-
-    {_knopf(g, 116)}
+    {_blaetter(g, 232, 330, 186, 54, 21)}
   </div>
+
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      {_bib(g, 16, 50)}
+      <span class="marke" style="font-size:18px;letter-spacing:4px">Musiklib</span>
+    </div>
+    <div style="margin-top:auto;padding-top:30px;font-size:48px;font-weight:700;
+      letter-spacing:-.02em">{A['titel']}</div>
+    <div style="font-size:23px;color:rgba(58,26,6,.68);margin-top:8px">
+      {A['interpret']} · {A['album']} · {A['jahr']}</div>
+    <div style="margin-top:auto;padding-top:26px">{zeilen}
+      <div style="border-top:1px solid rgba(58,26,6,.18)"></div></div>
+    <div class="bahn" style="height:8px;margin-top:auto">
+      <i style="width:{A['frac'] * 100:.0f}%"></i></div>
+    <div class="zeiten" style="font-size:19px;margin-top:12px">
+      <span>{A['pos']}</span><span>{A['dauer']}</span></div>
+    <div style="margin-top:26px">{_tasten(g, 74, 22)}</div>
+  </div>
+
+  <div style="display:flex;align-items:center;flex-shrink:0">{_knopf(g, 150)}</div>
 </div>'''
     return css, body
 

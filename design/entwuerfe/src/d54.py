@@ -23,18 +23,14 @@ SILBER = ('#fbfaf9', '#d6d2ce', '#a19c97')
 
 def _css(g):
     return f'''
-.stage{{background:linear-gradient(150deg,#2a2422 0%,#171313 55%,#241d1b 100%);
+/* Gebürstetes Blech, und zwar die ganze Fläche: ein Verlauf plus feine
+   Striche in Laufrichtung */
+.stage{{background:linear-gradient(158deg,{BLECH_H} 0%,{BLECH} 42%,{BLECH_D} 100%);
   font-family:{SANS};color:{TINTE}}}
-
-/* Gebürstetes Blech: ein Verlauf plus feine Striche in Laufrichtung */
-.platte{{position:relative;overflow:hidden;border-radius:{34 * g:.0f}px;
-  background:linear-gradient(158deg,{BLECH_H} 0%,{BLECH} 42%,{BLECH_D} 100%);
-  box-shadow:0 {30 * g:.0f}px {70 * g:.0f}px rgba(0,0,0,.55),
-             inset 0 {2 * g:.0f}px 0 rgba(255,255,255,.75),
-             inset 0 {-2 * g:.0f}px 0 rgba(0,0,0,.18)}}
-.platte::before{{content:"";position:absolute;inset:0;opacity:.28;pointer-events:none;
+.stage::before{{content:"";position:absolute;inset:0;opacity:.28;pointer-events:none;
   background:repeating-linear-gradient(112deg,rgba(255,255,255,.5) 0 1px,
     rgba(0,0,0,.05) 1px 3px)}}
+.platte{{position:absolute;inset:0;display:flex}}
 
 /* Schiene: links gefüllt, rechts dunkel — wie der Schieber im Foto */
 .schiene{{position:relative;display:flex;align-items:center}}
@@ -105,33 +101,28 @@ def _zeilen(g, schrift, klein):
 def telefon():
     g = 1.0
     css = _css(g)
-    body = f'''<div style="position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;padding:80px 54px">
-  <div class="platte" style="width:972px;padding:76px 72px 84px">
-    <div style="position:relative">
-      {_schiene(g, 10, 78, .48, laut(34, '#3a3330'))}
+    body = f'''<div class="platte" style="flex-direction:column;padding:90px 76px 96px">
+  {_schiene(g, 10, 82, .48, laut(36, '#3a3330'))}
 
-      <div class="zeile" style="font-size:56px;margin-top:64px">
-        {A['interpret']} / {A['titel']}</div>
-      <div class="zeile" style="font-size:29px;color:{STUMM};font-weight:500;
-        margin-top:14px">{A['album']} · {A['jahr']}</div>
+  <div class="zeile" style="font-size:62px;margin-top:auto;padding-top:76px">
+    {A['interpret']} / {A['titel']}</div>
+  <div class="zeile" style="font-size:30px;color:{STUMM};font-weight:500;
+    margin-top:14px">{A['album']} · {A['jahr']}</div>
 
-      <div style="margin-top:64px">{_tasten(g, 152, 176, 34)}</div>
+  <div style="margin-top:74px">{_tasten(g, 162, 190, 36)}</div>
 
-      <div class="dauer" style="font-size:34px;margin-top:60px">
-        Dauer: {A['pos']} / {A['dauer']}</div>
+  <div class="dauer" style="font-size:36px;margin-top:74px">
+    Dauer: {A['pos']} / {A['dauer']}</div>
 
-      <div style="margin-top:34px">{_schiene(g, 8, 46, A['frac'])}</div>
+  <div style="margin-top:36px">{_schiene(g, 8, 48, A['frac'])}</div>
 
-      <div style="display:flex;justify-content:space-between;font-family:{MONO};
-        font-size:23px;color:{STUMM};margin-top:14px">
-        <span>Titel {A['tracks'][A['laeuft']][0]} von 04</span>
-        <span>Sammlung · {A['sammlung']}</span></div>
+  <div style="display:flex;justify-content:space-between;font-family:{MONO};
+    font-size:24px;color:{STUMM};margin-top:14px">
+    <span>Titel {A['tracks'][A['laeuft']][0]} von 04</span>
+    <span>Sammlung · {A['sammlung']}</span></div>
 
-      <div style="margin-top:52px">{_zeilen(g, 30, 24)}
-        <div style="border-top:1px solid rgba(36,26,22,.22)"></div></div>
-    </div>
-  </div>
+  <div style="margin-top:auto;padding-top:54px">{_zeilen(g, 31, 25)}
+    <div style="border-top:1px solid rgba(36,26,22,.22)"></div></div>
 </div>'''
     return css, body
 
@@ -140,30 +131,26 @@ def rechner():
     g = .78
     css = _css(g)
     zeilen = _zeilen(g, 21, 17)
-    body = f'''<div style="position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;padding:60px 78px">
-  <div class="platte" style="width:1444px;padding:52px 60px;display:flex;gap:60px;
-    align-items:center">
-    <div style="flex:1;min-width:0;position:relative">
-      {_schiene(g, 8, 58, .48, laut(25, '#3a3330'))}
-      <div class="zeile" style="font-size:44px;margin-top:38px">
-        {A['interpret']} / {A['titel']}</div>
-      <div class="zeile" style="font-size:22px;color:{STUMM};font-weight:500;
-        margin-top:10px">{A['album']} · {A['jahr']}</div>
-      <div style="margin-top:40px">{_tasten(g, 112, 132, 26)}</div>
-      <div class="dauer" style="font-size:25px;margin-top:38px">
-        Dauer: {A['pos']} / {A['dauer']}</div>
-      <div style="margin-top:22px">{_schiene(g, 7, 36, A['frac'])}</div>
-    </div>
+    body = f'''<div class="platte" style="padding:64px 72px;gap:66px;align-items:stretch">
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+    {_schiene(g, 8, 62, .48, laut(26, '#3a3330'))}
+    <div class="zeile" style="font-size:50px;margin-top:auto;padding-top:44px">
+      {A['interpret']} / {A['titel']}</div>
+    <div class="zeile" style="font-size:23px;color:{STUMM};font-weight:500;
+      margin-top:10px">{A['album']} · {A['jahr']}</div>
+    <div style="margin-top:auto;padding-top:44px">{_tasten(g, 122, 144, 28)}</div>
+    <div class="dauer" style="font-size:27px;margin-top:auto;padding-top:42px">
+      Dauer: {A['pos']} / {A['dauer']}</div>
+    <div style="margin-top:24px">{_schiene(g, 7, 38, A['frac'])}</div>
+  </div>
 
-    <div style="width:470px;flex-shrink:0;position:relative">
-      <div style="font-family:{MONO};font-size:16px;letter-spacing:.18em;
-        text-transform:uppercase;color:{STUMM}">Sammlung · {A['sammlung']}</div>
-      <div style="font-size:30px;font-weight:800;margin-top:12px;letter-spacing:-.02em">
-        {A['album']}</div>
-      <div style="margin-top:20px">{zeilen}
-        <div style="border-top:1px solid rgba(36,26,22,.22)"></div></div>
-    </div>
+  <div style="width:490px;flex-shrink:0;display:flex;flex-direction:column">
+    <div style="font-family:{MONO};font-size:17px;letter-spacing:.18em;
+      text-transform:uppercase;color:{STUMM}">Sammlung · {A['sammlung']}</div>
+    <div style="font-size:34px;font-weight:800;margin-top:12px;letter-spacing:-.02em">
+      {A['album']}</div>
+    <div style="margin:auto 0">{zeilen}
+      <div style="border-top:1px solid rgba(36,26,22,.22)"></div></div>
   </div>
 </div>'''
     return css, body

@@ -30,6 +30,9 @@ KACHELN = [
     'The Sidewinder', 'Song for My Father', 'Page One', 'Idle Moments',
     'Point of Departure', 'Unit Structures', 'Free for All', 'Search for the New Land',
     'Sketches of Spain', 'Milestones', 'Round About Midnight', 'Workin’',
+    'Giant Steps', 'Crescent', 'Ascension', 'Meditations',
+    'The Black Saint', 'Mingus Mingus', 'Let My Children Hear', 'Pithecanthropus',
+    'Somethin’ Cool', 'Lady in Satin', 'Ella in Berlin', 'At Carnegie Hall',
 ]
 GRUENE = {1, 4, 9, 17, 22}   # zuletzt dazugekommen
 LAEUFT = 0
@@ -41,9 +44,8 @@ def _css(g):
   font-family:{SANS};color:{WEISS}}}
 
 /* Der Rahmen ist Blech, nicht Rand: er hat eine helle Oberkante */
-.tafel{{position:relative;background:{RAHMEN};border-radius:{8 * g:.0f}px;
-  box-shadow:0 {24 * g:.0f}px {56 * g:.0f}px rgba(0,0,0,.6),
-             inset 0 {2 * g:.0f}px 0 {RAHMEN_H},
+.tafel{{position:relative;background:{RAHMEN};
+  box-shadow:inset 0 {3 * g:.0f}px 0 {RAHMEN_H},
              inset 0 0 0 {2 * g:.0f}px rgba(0,0,0,.45)}}
 
 .gitter{{display:grid}}
@@ -75,15 +77,17 @@ def _css(g):
 '''
 
 
-def _gitter(g, spalten, anzahl, hoehe, schrift):
+def _gitter(g, spalten, anzahl, hoehe, schrift, stil=''):
     stk = []
     for i in range(anzahl):
         name = KACHELN[i % len(KACHELN)]
         art = ('bernstein' if i == LAEUFT else 'gruen' if i in GRUENE else 'tot')
-        stk.append(f'<div class="kachel {art}" style="height:{hoehe}px;'
+        hoch = f'height:{hoehe}px;' if hoehe else ''
+        stk.append(f'<div class="kachel {art}" style="{hoch}'
                    f'font-size:{schrift}px;padding:0 {int(6 * g)}px">{name}</div>')
+    auto = '' if hoehe else 'grid-auto-rows:1fr;'
     return (f'<div class="gitter" style="grid-template-columns:repeat({spalten},1fr);'
-            f'gap:{max(3, int(5 * g))}px">{"".join(stk)}</div>')
+            f'{auto}gap:{max(3, int(5 * g))}px;{stil}">{"".join(stk)}</div>')
 
 
 def _leiste(g, hoehe, schrift, zeichen):
@@ -108,26 +112,27 @@ def _lampen(g, hoehe, n=32):
 def telefon():
     g = 1.0
     css = _css(g)
-    body = f'''<div style="position:absolute;inset:0;display:flex;flex-direction:column;
-  justify-content:center;padding:96px 52px">
+    body = f'''<div style="position:absolute;inset:0;display:flex;flex-direction:column">
   <div style="display:flex;align-items:baseline;justify-content:space-between;
-    margin-bottom:26px">
+    padding:52px 44px 26px;flex-shrink:0">
     <span class="schild" style="font-size:23px">Musiklib · Bestand</span>
     <span class="schild" style="font-size:23px">{A['sammlung']} Alben</span>
   </div>
 
-  <div class="tafel" style="padding:26px">
-    {_gitter(g, 4, 32, 140, 22)}
-    <div style="margin-top:26px">{_lampen(g, 20)}</div>
-    <div class="zeiten" style="font-size:24px;margin-top:16px">
+  <div class="tafel" style="flex:1;min-height:0;padding:26px;display:flex;
+    flex-direction:column">
+    {_gitter(g, 4, 36, None, 22, 'flex:1;min-height:0')}
+    <div style="margin-top:26px;flex-shrink:0">{_lampen(g, 22)}</div>
+    <div class="zeiten" style="font-size:24px;margin-top:16px;flex-shrink:0">
       <span>{A['pos']}</span><span>{A['dauer']}</span></div>
-    <div style="margin-top:26px">{_leiste(g, 122, 22, 44)}</div>
+    <div style="margin-top:26px;flex-shrink:0">{_leiste(g, 126, 22, 44)}</div>
   </div>
 
-  <div style="margin-top:34px;font-size:48px;font-weight:700;letter-spacing:-.02em">
-    {A['titel']}</div>
-  <div style="font-size:28px;color:rgba(236,238,240,.6);margin-top:10px">
-    {A['interpret']} · {A['album']} · {A['jahr']}</div>
+  <div style="padding:34px 44px 52px;flex-shrink:0">
+    <div style="font-size:50px;font-weight:700;letter-spacing:-.02em">{A['titel']}</div>
+    <div style="font-size:28px;color:rgba(236,238,240,.6);margin-top:10px">
+      {A['interpret']} · {A['album']} · {A['jahr']}</div>
+  </div>
 </div>'''
     return css, body
 
@@ -135,23 +140,24 @@ def telefon():
 def rechner():
     g = .74
     css = _css(g)
-    body = f'''<div style="position:absolute;inset:0;display:flex;gap:52px;
-  padding:56px 66px;align-items:center">
-  <div class="tafel" style="flex:1;min-width:0;padding:20px">
-    {_gitter(g, 7, 28, 104, 16)}
-    <div style="margin-top:20px">{_lampen(g, 15, 40)}</div>
+    body = f'''<div style="position:absolute;inset:0;display:flex">
+  <div class="tafel" style="flex:1;min-width:0;padding:22px;display:flex;
+    flex-direction:column">
+    {_gitter(g, 7, 42, None, 16, 'flex:1;min-height:0')}
+    <div style="margin-top:20px;flex-shrink:0">{_lampen(g, 16, 40)}</div>
   </div>
 
-  <div style="width:400px;flex-shrink:0">
+  <div style="width:440px;flex-shrink:0;padding:56px 48px;display:flex;
+    flex-direction:column">
     <span class="schild" style="font-size:16px">Läuft gerade</span>
     <div style="font-size:42px;font-weight:700;letter-spacing:-.02em;margin-top:14px">
       {A['titel']}</div>
     <div style="font-size:23px;color:rgba(236,238,240,.6);margin-top:10px">
       {A['interpret']}<br>{A['album']} · {A['jahr']}</div>
-    <div class="zeiten" style="font-size:19px;margin-top:26px">
+    <div class="zeiten" style="font-size:19px;margin-top:auto">
       <span>{A['pos']}</span><span>{A['dauer']}</span></div>
     <div style="margin-top:14px">{_lampen(g, 14, 24)}</div>
-    <div style="margin-top:30px">{_leiste(g, 92, 15, 32)}</div>
+    <div style="margin-top:30px">{_leiste(g, 100, 15, 32)}</div>
   </div>
 </div>'''
     return css, body

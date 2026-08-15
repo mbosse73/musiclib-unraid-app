@@ -163,14 +163,14 @@ def telefon():
     g = 1.0
     css = _css(g)
     body = f'''<div style="position:absolute;inset:0;display:flex;flex-direction:column">
-  <div style="padding:88px 66px 0">
-    <div style="display:flex;justify-content:flex-end;margin-bottom:24px">{_bib(g, 21, 64)}</div>
+  <div style="padding:76px 66px 0">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:22px">{_bib(g, 21, 64)}</div>
     {_kopf(g, 172, 'Blue in', 'Green')}
   </div>
 
-  <div style="margin-top:38px;line-height:0">{_laden(1080, 1170)}</div>
+  <div style="margin-top:24px;line-height:0">{_laden(1080, 1330)}</div>
 
-  <div style="padding:36px 66px 84px">{_tafel(g, 948, 52, 27, 96, 132)}</div>
+  <div style="margin-top:auto;padding:0 66px 66px">{_tafel(g, 948, 52, 27, 96, 132)}</div>
 </div>'''
     return css, body
 
