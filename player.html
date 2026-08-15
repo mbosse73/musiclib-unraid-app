@@ -318,8 +318,8 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
 .dp.voll .geraet{position:relative;width:var(--S);height:var(--S);flex:none;
   --td:calc(var(--S) * .66);--arm:calc(var(--S) * .38);--lg:calc(var(--S) * .065);
   --tx:41%;--ty:50%;--sx:93%;--alx:85%;--aly:13%}
-.dp.voll .unten{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;
-  padding:0 clamp(20px,5vw,46px) 30px}
+.dp.voll .unten{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0 clamp(20px,5vw,46px) calc(env(safe-area-inset-bottom,0px) + 30px)}
 .dp.voll .text{padding:0;--tg:clamp(20px,3.2vh,28px)}
 .dp.voll .transport{padding-top:26px}
 
@@ -1453,7 +1453,9 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
 .aa .qz .d{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
 .aa .qz.an .t{color:var(--ink);font-weight:600}
 .aa .qz.an .nr{color:var(--accent)}
-.aa .tasten{display:flex;gap:14px;padding:14px 52px calc(env(safe-area-inset-bottom,0px) + 20px) 22px;
+/* Beidseitig derselbe Rand: die Reihe steht mittig, und rechts bleibt der
+   Wechsler frei — deshalb 52px statt der 22px der Tafel darueber. */
+.aa .tasten{display:flex;gap:14px;padding:14px 52px calc(env(safe-area-inset-bottom,0px) + 20px);
   flex:none}
 .aa .taste{flex:1;height:clamp(64px,11vh,86px);border-radius:22px;background:var(--karte-papier);
   display:grid;place-items:center}
@@ -1521,8 +1523,16 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
 .kl .zeile.an .knopf{color:var(--accent-ink);
   box-shadow:inset -3px -3px 8px var(--hell),inset 4px 4px 10px var(--dunkel)}
 .kl .strich{width:16px;height:3px;border-radius:2px;background:currentColor;display:block}
-.kl .fussz{text-align:center;font-size:11px;color:var(--ink-3);padding-right:44px;
-  padding:0 0 calc(env(safe-area-inset-bottom,0px) + 12px);flex:none}
+.kl .fussalb{text-align:center;font-size:11px;color:var(--ink-3);flex:none;padding:0 26px 10px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kl .fussz{flex:none;display:flex;align-items:center;justify-content:center;gap:22px;
+  padding:0 0 calc(env(safe-area-inset-bottom,0px) + 16px)}
+.kl .fussz button{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;
+  color:var(--ink-2);background:var(--karte);
+  box-shadow:-4px -4px 10px var(--hell),5px 5px 12px var(--dunkel)}
+.kl .fussz button:active{box-shadow:inset -3px -3px 8px var(--hell),inset 4px 4px 10px var(--dunkel)}
+.kl .fussz .haupt{width:66px;height:66px;color:var(--accent-ink);
+  box-shadow:-6px -6px 14px var(--hell),7px 7px 18px var(--dunkel)}
 </style>
 </head>
 <body>
@@ -4109,11 +4119,11 @@ layout({
         <div class="zeiten"><span data-jetzt>0:00</span><span data-ende>−0:00</span></div>
       </div>
       <div class="liste" data-liste></div>
+      <div class="fussalb" data-alb></div>
       <div class="fussz">
-        <button data-prev aria-label="Vorheriger Titel">${I.prev(15)}</button>
-        <button data-pp aria-label="Abspielen">${I.play(15)}</button>
-        <button data-next aria-label="Nächster Titel">${I.next(15)}</button>
-        · <span data-alb></span>
+        <button data-prev aria-label="Vorheriger Titel">${I.prev(21)}</button>
+        <button class="haupt" data-pp aria-label="Abspielen">${I.play(24)}</button>
+        <button data-next aria-label="Nächster Titel">${I.next(21)}</button>
       </div>` + telBibHTML;
 
     const q = s => w.querySelector(s);
@@ -4129,7 +4139,7 @@ layout({
       const t = d.track, a = d.album;
       if (!t){ letzteQ = null; liste.innerHTML = ''; return; }
       const spielt = d.playing;
-      q('[data-pp]').innerHTML = spielt ? I.pause(15) : I.play(15);
+      q('[data-pp]').innerHTML = spielt ? I.pause(24) : I.play(24);
       const kennung = d.queue.join();
       if (letzteQ !== kennung){
         letzteQ = kennung;
