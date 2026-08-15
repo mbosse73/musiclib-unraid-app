@@ -22,18 +22,17 @@ eigenständige Skins umgesetzt werden (Empfehlung siehe Abschnitt 2).
 
 ## 1. Empfohlenes Vorgehen
 
-1. **Einen Entwurf als Pilot wählen.** Gut geeignet, weil strukturell repräsentativ und
-   ohne Spezialgrafik: `foto30_iPod-Weiss` (Liste + Now-Playing + Steuerkreuz) oder
-   `foto35_Music-Sounds-Better` (reduziert, typografisch).
+1. **Einen Entwurf als Pilot wählen.** Der Eigentümer hat entschieden:
+   `foto35_Music-Sounds-Better` (reduziert, typografisch) — siehe `AUSWAHL.md`.
 2. Den Piloten sauber in Komponenten zerlegen (Abschnitt 3) und mit echten Daten verbinden.
-3. Erst wenn der Pilot steht, weitere Entwürfe als **Themes** ergänzen — nicht alle 22 auf
+3. Erst wenn der Pilot steht, weitere Entwürfe als **Themes** ergänzen — nicht alle zwölf auf
    einmal.
 
 ---
 
 ## 2. Architekturvorschlag: ein Player, viele Skins
 
-Die 22 Konzepte unterscheiden sich stark in Optik, aber kaum in Funktion. Sie teilen
+Die Konzepte unterscheiden sich stark in Optik, aber kaum in Funktion. Sie teilen
 dieselben Bausteine. Deshalb:
 
 - **Ein** Player-Kern (Zustand, Queue, Transport, Fortschritt) — frei von Optik.
@@ -90,9 +89,8 @@ Die Entwürfe sind rein visuell. Bei der Umsetzung mindestens:
 - Fortschrittsbalken als `role="slider"` mit `aria-valuenow` / `aria-valuemin` /
   `aria-valuemax` und Bedienbarkeit per Pfeiltasten.
 - Sichtbarer Fokusring — mehrere Skins sind sehr kontrastarm gestaltet.
-- Kontraste prüfen. Einige Skins (z. B. `foto29_Rewind-Deck`, `foto32_Seattle-Skeuo`)
-  nutzen dunkles Grau auf Schwarz und liegen als reine Deko unter 4,5:1. Für Text, der
-  gelesen werden muss, dort nachschärfen.
+- Kontraste prüfen. Wo ein Skin dunkles Grau auf Schwarz setzt, liegt das als reine Deko
+  unter 4,5:1. Für Text, der gelesen werden muss, dort nachschärfen.
 - `prefers-reduced-motion` beachten, falls Laufschrift oder rotierende Platte animiert wird.
 
 ---

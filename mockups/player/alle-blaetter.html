@@ -1627,14 +1627,6 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
   border-radius:2px;background:var(--licht);z-index:2;
   transform-origin:50% calc(var(--rd,86px) / 2 - 7px)}
 
-/* ── Vorwahltasten (nur Variante 2) ── */
-.we .vorwahl{display:none;gap:8px;flex:none}
-.we.bak .vorwahl{display:flex}
-.we .vorwahl button{width:52px;height:34px;border-radius:2px;font-family:var(--mono);font-size:11px;
-  color:#3A2E1E;background:linear-gradient(180deg,#E4DAC2,#C3B69A);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 3px 7px rgba(0,0,0,.45)}
-.we .vorwahl button.an{background:linear-gradient(180deg,var(--licht),#C9A455)}
-
 /* ── Bibliothek: die Stationsliste hinter einer Taste ── */
 .we .bib{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;
   padding:var(--pad,30px);background:rgba(20,18,16,.95);backdrop-filter:blur(3px);
@@ -1666,24 +1658,6 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 .we .bib .bz.an{box-shadow:inset 0 0 0 1.5px var(--licht)}
 .we .bib .bfuss{flex:none;padding-top:12px}
 
-/* ══ Variante 2: Bakelit statt Blech ══════════════════════════════════════
-   Dieselbe Mechanik, anderes Material. Katalin ist marmoriert: drei weiche
-   radiale Verläufe über einem warmen Braun, mehr braucht es nicht.        */
-.we.bak{
-  --gehaeuse:#4A3524; --gehaeuse-2:#2E2016; --glas:#F6EEDB; --glas-2:#E2D2AC;
-  --licht:#F0C868; --zeiger:#9E3B2B;
-  background:
-    radial-gradient(60% 50% at 18% 12%,rgba(196,150,96,.55),transparent 60%),
-    radial-gradient(50% 60% at 82% 30%,rgba(120,74,40,.55),transparent 62%),
-    radial-gradient(70% 60% at 40% 92%,rgba(90,58,32,.6),transparent 66%),
-    linear-gradient(160deg,var(--gehaeuse),var(--gehaeuse-2))}
-.we.bak .skala{box-shadow:inset 0 0 0 1px rgba(0,0,0,.45),inset 0 2px 14px rgba(0,0,0,.24),
-  0 0 0 6px rgba(255,255,255,.06),0 12px 30px rgba(0,0,0,.5)}
-.we.bak .transport button{background:linear-gradient(180deg,#6B4E33,#3E2C1D)}
-.we.bak .bereiche button{background:linear-gradient(180deg,#6B4E33,#3E2C1D)}
-.we.bak .bereiche button.an{background:linear-gradient(180deg,var(--licht),#C99A45)}
-.we.bak .trieb .rad{background:repeating-conic-gradient(from 0deg,#8A6B4A 0 2.2deg,#4A3524 2.2deg 4.4deg),
-  #5E452F}
 @media (prefers-reduced-motion:reduce){.we .bib{transition:none}}
 /* ── Blatt 16 ── */
 
@@ -2360,10 +2334,11 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
 .tx .bib .bz.an::after{border-color:var(--lampe)}
 .tx .bib .bfuss{flex:none;padding-top:14px}
 
-/* ══ Variante 2: Filz auf Terrazzo ════════════════════════════════════════
-   Der Stoff wird dichter (Filz hat keine Fadenrichtung, nur Flusen), der
-   Grund wird eine Terrazzoplatte: vierzehn Sprenkel aus radialen Verläufen.
-   Der Pegel ist dann keine Lampe mehr, sondern eine Stickerei.             */
+/* ══ Filz auf Terrazzo ════════════════════════════════════════════════════
+   Der Stoff ist dicht (Filz hat keine Fadenrichtung, nur Flusen), der Grund
+   eine Terrazzoplatte: vierzehn Sprenkel aus radialen Verläufen. Der Pegel
+   ist keine Lampe, sondern eine Stickerei. Die Grundregeln stehen oben unter
+   .tx — diese Fassung setzt nur die Farben und den Grund neu.              */
 .tx.fz{
   --grund:#D9D4C8; --grund-2:#C6C0B2; --stoff:#7C8B84; --stoff-2:#5F6E68;
   --leder:#3E4A45; --leder-2:#2C3733; --naht:#E6E1D3; --kordel:#E6E1D3;
@@ -2401,7 +2376,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
   <header class="kopf">
     <div>
       <div class="caps">Musiklib · Entwürfe für ipad.html und pc.html</div>
-      <h1>Siebzehn Blätter, <em>neunundzwanzig</em> Spieler</h1>
+      <h1>Siebzehn Blätter, <em>siebenundzwanzig</em> Spieler</h1>
       <p class="lede">Aus dreizehn Vorlagen und sechsundzwanzig Entwürfen ist eine <b>engere Wahl</b>
       geworden: zehn Blätter, fünfzehn Varianten. Drei Blätter sind ganz gestrichen, fünf weitere
       Varianten einzeln — sie stehen in der Vorgeschichte des Zweigs, falls doch noch eine
@@ -2487,7 +2462,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
         <th>Geräte</th></tr>
       <tr><td><b>15 Weltempfänger</b></td><td class="mit">Feinskala; das Band <b>wählt</b></td>
         <td>Nachbaralben auf dem Band</td><td>Ein lesbares, beschriftetes Skalenband</td>
-        <td>iPad quer · PC</td></tr>
+        <td>iPad quer</td></tr>
       <tr><td><b>16 Fallblatt</b></td><td>Die laufende Zeile selbst</td>
         <td>Die ganze Warteschlange und der Anschluss</td><td>Eine Tafel, die stehen bleibt</td>
         <td>iPad quer · PC</td></tr>
@@ -2502,7 +2477,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
         <td>iPad hoch</td></tr>
       <tr><td><b>20 Bespannung</b></td><td>Die Kordel, Knoten an den Titelgrenzen</td>
         <td>Titel, Pegel, Lage in der Schlange</td><td>Ein Möbel mit einem Schild</td>
-        <td>PC · iPad quer</td></tr>
+        <td>iPad quer</td></tr>
     </table>
   </div>
 
@@ -2538,7 +2513,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
   </div>
 
   <footer><span>Musiklib — Spieler-Entwürfe</span>
-    <span>engere Wahl · 10 Blätter · 15 Varianten &nbsp;·&nbsp; zweite Reihe · 6 Blätter · 12 Varianten</span></footer>
+    <span>engere Wahl · 10 Blätter · 15 Varianten &nbsp;·&nbsp; zweite Reihe · 6 Blätter · 10 Varianten</span></footer>
 </div>
 <div class="seite blatt-abschnitt" id="blatt02">
   <header class="kopf">
@@ -3494,7 +3469,7 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
   <div class="regel"></div>
 
   <section class="entwurf">
-    <div class="ekopf"><h2>Variante 1 · Skalenband</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
+    <div class="ekopf"><h2>Skalenband</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
     <p class="etext">Gebürstetes Gehäuse, Glasskala, zwei geriffelte Triebe. Das Band trägt acht Stationen;
     zwischen ihnen legt sich ein Rauschmuster über das Glas, das erst verschwindet, wenn eine Station
     eingerastet ist. <b>Gespult wird nicht hier</b>, sondern auf der schmalen Feinskala darunter — die
@@ -3513,31 +3488,6 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
       <div><dt>Ruhezustand</dt><dd>Ein beleuchtetes Band mit Namen — <b>lesbar, ohne zu spielen</b></dd></div>
       <div><dt>Schwäche</dt><dd>Bei 400 Alben ist eine Station 4 px breit: es braucht Grob- und Feintrieb</dd></div>
       <div><dt>Aufwand</dt><dd>mittel — ein verschobenes Band, ein Rastwert, sonst nichts</dd></div>
-    </dl>
-  </section>
-
-  <section class="entwurf">
-    <div class="ekopf"><h2>Variante 2 · Katalin</h2><span class="marke geraet">PC · 1440 × 900</span></div>
-    <p class="etext">Dieselbe Mechanik in <b>Bakelit</b>: marmoriertes Braun aus drei radialen Verläufen,
-    cremefarbene Tasten, bernsteinfarbene Skalenlampe. Am Schreibtisch ist Platz für fünf
-    <b>Vorwahltasten</b> — die letzten fünf Alben, ohne Umweg über das Band. Das ist die Antwort auf die
-    Schwäche der ersten Variante: Wer ein Album kennt, stimmt es nicht ab, er drückt es.
-    <span class="probier"><b>Ausprobieren:</b> eine Vorwahltaste drücken; die Skala fährt hörbar sichtbar
-    dorthin, statt zu springen.</span></p>
-    <div class="buehne">
-      <div class="rahmen pc">
-        <div class="schirm">
-          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
-          <div class="flaeche"><div class="we bak" id="b15v2"></div></div>
-        </div>
-      </div>
-    </div>
-    <dl class="zettel">
-      <div><dt>Material</dt><dd>Katalin — drei radiale Verläufe, <b>kein Bild</b></dd></div>
-      <div><dt>Ohne Tippen sichtbar</dt><dd>Nachbaralben plus fünf Vorwahlen</dd></div>
-      <div><dt>Ruhezustand</dt><dd>Wie ein Radio, das aus ist: Band lesbar, Lampe dunkel</dd></div>
-      <div><dt>Hochkant</dt><dd>Trägt nicht — das Band braucht Breite</dd></div>
-      <div><dt>Nähe zu Blatt 11</dt><dd>gering: dort dreht man <em>Zeit</em>, hier <em>Sammlung</em></dd></div>
     </dl>
   </section>
 
@@ -3962,9 +3912,9 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
     <div>
       <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 20 · zweite Reihe</div>
       <h1>Bespannung</h1>
-      <p class="lede">Kein Gerätezitat, sondern ein <b>Materialentwurf</b>: Bespannstoff, Leder, eine
-      gespannte Kordel. Nichts hat einen harten Rand, jede Fläche ist genäht. Der Pegel leuchtet
-      <b>durch das Gewebe</b> — er ist das einzige Licht auf dem Blatt.</p>
+      <p class="lede">Kein Gerätezitat, sondern ein <b>Materialentwurf</b>: Filz, Leder, eine gespannte
+      Kordel auf einer Terrazzoplatte. Nichts hat einen harten Rand, jede Fläche ist genäht — und es gibt
+      <b>kein Licht</b> auf dem Blatt: Der Pegel ist eine Stickerei.</p>
       <p style="margin-top:22px"><a class="zurueck" href="#verzeichnis">← alle Blätter</a></p>
     </div>
     <figure class="vorlage">
@@ -3986,38 +3936,13 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
   <div class="regel"></div>
 
   <section class="entwurf">
-    <div class="ekopf"><h2>Variante 1 · Bespannung</h2><span class="marke geraet">PC · 1440 × 900</span></div>
-    <p class="etext">Ein Lederschild trägt Titel und Album, daneben steht der Pegel hinter dem Stoff. Die
-    Kordel darunter ist die Spulleiste: Die Lederperle sitzt auf der Position, die Knoten sind die
-    <b>Titelgrenzen</b>. Alle Knöpfe sind runde Lederscheiben mit Naht — es gibt auf dem ganzen Blatt
-    keine gerade Kante außer der Kordel.
-    <span class="probier"><b>Ausprobieren:</b> die Perle über einen Knoten hinweg ziehen; der Pegel
-    läuft weiter, weil er am Ton hängt und nicht am Titel.</span></p>
-    <div class="buehne">
-      <div class="rahmen pc">
-        <div class="schirm">
-          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
-          <div class="flaeche"><div class="tx" id="b20v1"></div></div>
-        </div>
-      </div>
-    </div>
-    <dl class="zettel">
-      <div><dt>Womit gespult wird</dt><dd>Die <b>Kordel</b>, Knoten an jeder Titelgrenze</dd></div>
-      <div><dt>Ohne Tippen sichtbar</dt><dd>Ein Titel, der Pegel, die Lage in der Warteschlange</dd></div>
-      <div><dt>Ruhezustand</dt><dd>Eine Stoffplatte mit einem Schild — ein Möbel, kein Bildschirm</dd></div>
-      <div><dt>Schwäche</dt><dd>Der Pegel ist der einzige echte Grund für WebAudio (siehe unten)</dd></div>
-      <div><dt>Aufwand</dt><dd>gering — Stoff, Naht und Perle sind sechs Regeln</dd></div>
-    </dl>
-  </section>
-
-  <section class="entwurf">
-    <div class="ekopf"><h2>Variante 2 · Filz auf Terrazzo</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
-    <p class="etext">Der Stoff wird <b>Filz</b> — kein Gewebe, nur Flusen, also keine zwei Fadenrichtungen
-    mehr — und liegt auf einer <b>Terrazzoplatte</b> aus vierzehn Sprenkeln. Damit verschwindet auch das
-    Licht: Der Pegel ist hier eine Stickerei, helle Stiche im Filz, ohne Schein. Das ist der Gegenbeweis
-    zur ersten Variante — derselbe Entwurf hält auch <b>ohne eine einzige leuchtende Fläche</b>.
-    <span class="probier"><b>Ausprobieren:</b> anhalten. Im Licht der ersten Variante geht der Pegel aus,
-    im Filz bleibt die Stickerei stehen — genau richtig, denn Fäden erlöschen nicht.</span></p>
+    <div class="ekopf"><h2>Filz auf Terrazzo</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
+    <p class="etext">Der Stoff ist <b>Filz</b> — kein Gewebe, nur Flusen, also keine zwei Fadenrichtungen
+    — und liegt auf einer <b>Terrazzoplatte</b> aus vierzehn Sprenkeln. Es gibt kein Licht auf dem ganzen
+    Blatt: Der Pegel ist eine Stickerei, helle Stiche im Filz, ohne Schein. Das ist der Beweis, dass der
+    Entwurf auch <b>ohne eine einzige leuchtende Fläche</b> hält.
+    <span class="probier"><b>Ausprobieren:</b> anhalten. Die Stickerei bleibt stehen — genau richtig,
+    denn Fäden erlöschen nicht.</span></p>
     <div class="buehne">
       <div class="rahmen ipad-quer">
         <div class="schirm"><div class="tx fz" id="b20v2"></div></div>
@@ -4408,7 +4333,7 @@ const SKIZZEN = {
 
 const ZWEITE = [
   ['15','weltempfaenger','Weltempfänger',
-   'Auf dem Band liegen die Alben. Abstimmen ist Suchen, dazwischen rauscht es.',['iPad quer','PC']],
+   'Auf dem Band liegen die Alben. Abstimmen ist Suchen, dazwischen rauscht es.',['iPad quer']],
   ['16','fallblatt','Fallblatt',
    'Die Warteschlange als Abfahrtstafel; beim Wechsel klappen die Zeichen um.',['iPad quer','PC']],
   ['17','leuchttisch','Leuchttisch',
@@ -4418,7 +4343,7 @@ const ZWEITE = [
   ['19','rechenscheibe','Rechenscheibe',
    'Das Album als Ring um eine Achse, die rote Ablesemarke steht still.',['iPad hoch']],
   ['20','bespannung','Bespannung',
-   'Stoff, Leder, eine gespannte Kordel — der Pegel leuchtet durchs Gewebe.',['PC','iPad quer']],
+   'Filz, Leder, eine gespannte Kordel auf Terrazzo — der Pegel ist gestickt.',['iPad quer']],
 ];
 
 const karte = (nr, datei, name, bild, vorlage, text, ger) => `
@@ -6056,7 +5981,6 @@ const geraetHTML = `
       <button data-next>${I.next(17)}</button>
       <button data-bib title="Stationsliste">${I.list(17)}</button>
     </div>
-    <div class="vorwahl" data-vorwahl></div>
     <div class="fuell"></div>
     <div class="triebe">
       <div class="trieb">
@@ -6189,15 +6113,6 @@ function verdrahte(wurzel, deck, stil, opt){
     bandZeichnen(); stelle();
   });
 
-  if (opt.vorwahl){
-    const vw = ALBUMS.slice(0, 5);
-    $('[data-vorwahl]').innerHTML = vw.map((a,i) =>
-      `<button data-vw="${a.id}">P${i+1}</button>`).join('');
-    $$('[data-vw]').forEach(btn => btn.onclick = () => {
-      const i = reihe.findIndex(a => a.id === btn.dataset.vw);
-      if (i >= 0) fahreZu(i);
-    });
-  }
 
   $('[data-pp]').onclick = () => deck.toggle();
   $('[data-next]').onclick = () => deck.next();
@@ -6254,10 +6169,7 @@ function verdrahte(wurzel, deck, stil, opt){
 }
 
 verdrahte(document.getElementById('b15v1'), new Deck('par', {qi:0, pos:180, speed:8}),
-  {'--sh':'280px','--fh':'54px','--bsp':'2'}, {bandbreite:2600, abstand:260, vorwahl:false});
-verdrahte(document.getElementById('b15v2'), new Deck('koe', {qi:1, pos:90, speed:8}),
-  {'--sh':'330px','--pad':'34px','--tg':'30px','--rd':'92px','--bsp':'3','--fh':'58px'},
-  {bandbreite:3200, abstand:320, vorwahl:true});
+  {'--sh':'280px','--fh':'54px','--bsp':'2'}, {bandbreite:2600, abstand:260});
 })();
 
 })();/* ── Blatt 16 ── */
@@ -6920,8 +6832,6 @@ function verdrahte(wurzel, deck, stil){
   deck.render();
 }
 
-verdrahte(document.getElementById('b20v1'), new Deck('koe', {qi:0, pos:150, speed:8}),
-  {'--bsp':'3'});
 verdrahte(document.getElementById('b20v2'), new Deck('ohi', {qi:1, pos:80, speed:8}),
   {'--bsp':'2','--pad':'30px','--sw':'360px','--tg':'28px','--tb':'56px','--ph':'16px'});
 })();

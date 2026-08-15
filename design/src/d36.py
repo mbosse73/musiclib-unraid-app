@@ -4,6 +4,7 @@ from spiral import spiral_vinyl
 from designs3 import add, hb, pbar
 
 # Foto 36 — Song-Poster im SCHWARZEN Galerierahmen (Wand), Spiraltext = Albumtitel
+# Auf dem Telefon ist der Rahmen entfallen: dort ist das Blatt selbst das Plakat.
 WALL='#e4e2de'; FRAME='#141414'; PAPER='#ffffff'; INK='#111111'; SUB='#9a9a97'; RED='#e0453a'
 
 def ctrl(size,ic,ring=False):
@@ -11,11 +12,14 @@ def ctrl(size,ic,ring=False):
     return (f'<div style="width:{size}px;height:{size}px;border-radius:50%;{b}'
             f'display:flex;align-items:center;justify-content:center">{ic}</div>')
 
-def poster(w, scale=1.0):
+def bogen(w, scale=1.0):
+    """Der Inhalt des Plakats: Platte, Titel, Balken, Zeiten, Tasten, Fusszeile.
+
+    Sechs Bloecke, die als direkte Kinder einer Spalte stehen — im Rahmen tragen
+    ihre eigenen Abstaende die Hoehe, ueber das ganze Blatt verteilt sie
+    `justify-content:space-between` zusaetzlich auf die freie Flaeche."""
     s=lambda v: v*scale
-    return f'''<div style="background:{FRAME};padding:{s(26):.0f}px;box-shadow:0 {s(26):.0f}px {s(60):.0f}px rgba(0,0,0,.34)">
-      <div style="background:{PAPER};padding:{s(40):.0f}px {s(36):.0f}px {s(34):.0f}px">
-        <div style="display:flex;justify-content:center">{spiral_vinyl(w)}</div>
+    return f'''<div style="display:flex;justify-content:center">{spiral_vinyl(w)}</div>
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-top:{s(30):.0f}px">
           <div><div style="font-family:{SANS};font-weight:800;font-size:{s(40):.0f}px;color:{INK}">Kind of Blue</div>
             <div style="font-family:{SANS};font-size:{s(22):.0f}px;color:{SUB};margin-top:{s(6):.0f}px">Miles Davis · 1959</div></div>
@@ -27,11 +31,20 @@ def poster(w, scale=1.0):
           {ctrl(s(72),pausei(int(s(30)),INK),True)}
           {ctrl(s(44),nexti(int(s(26)),INK))}{ctrl(s(40),repeat(int(s(24)),INK))}
           {ctrl(s(44),libicon(int(s(26)),RED))}</div>
-        <div style="text-align:center;font-family:{SANS};font-size:{s(19):.0f}px;color:{INK};margin-top:{s(26):.0f}px;letter-spacing:1px">Aus meiner Sammlung — 240 Alben</div>
+        <div style="text-align:center;font-family:{SANS};font-size:{s(19):.0f}px;color:{INK};margin-top:{s(26):.0f}px;letter-spacing:1px">Aus meiner Sammlung — 240 Alben</div>'''
+
+def poster(w, scale=1.0):
+    """Gerahmt an der Wand — so haengt das Plakat auf dem Rechner-Blatt."""
+    s=lambda v: v*scale
+    return f'''<div style="background:{FRAME};padding:{s(26):.0f}px;box-shadow:0 {s(26):.0f}px {s(60):.0f}px rgba(0,0,0,.34)">
+      <div style="background:{PAPER};padding:{s(40):.0f}px {s(36):.0f}px {s(34):.0f}px">
+        {bogen(w, scale)}
       </div></div>'''
 
-ph=f'''<div style="position:absolute;inset:0;background:{WALL};display:flex;align-items:center;justify-content:center;padding:24px 22px">
-  <div style="width:100%">{poster(840,1.12)}</div></div>'''
+# Telefon: kein Rahmen, keine Wand — das Papier ist der Bildschirm.
+ph=f'''<div style="position:absolute;inset:0;background:{PAPER};padding:76px 56px 64px;
+  display:flex;flex-direction:column;justify-content:space-between">
+  {bogen(900, 1.55)}</div>'''
 
 pc=f'''<div style="position:absolute;inset:0;background:{WALL};display:flex;align-items:center;gap:60px;padding:44px 70px">
   <div style="flex-shrink:0">{poster(430,0.78)}</div>

@@ -9,7 +9,11 @@ Namensschema wie im Paket, mit einem Buchstaben hinter der Nummer:
 
 Alle Dateien hier sind **aus dem Original erzeugt, nicht von Hand nachgebaut** —
 jede unterscheidet sich vom gelieferten Blatt in wenigen Zeilen, damit ein
-`diff` gegen `design/html/` die Änderung vollständig zeigt.
+`diff` gegen `design/html/` die Änderung vollständig zeigt. Für 36 und 37
+erledigt das `_ableiten.py` (`python3 _ableiten.py`): es liest die aktuellen
+Blätter aus `../html/` und wendet die beiden Handgriffe darauf an. Wer am
+Original etwas ändert, lässt danach dieses Skript laufen — sonst zeigt der
+`diff` plötzlich mehr als die gewollte Abweichung.
 
 ## 31 Vinyl Rote Tasten — nur PC
 
@@ -19,23 +23,6 @@ Die drei roten Tasten standen linksbündig unter einer Fortschrittsleiste, die
 
 Das iPhone-Blatt ist unverändert und liegt deshalb nicht hier — dort gilt
 weiterhin `design/html/foto31_Vinyl-Rote-Tasten_iphone.html`.
-
-## 33 Glass Musiknote — zwei Fassungen zur Auswahl
-
-Im Original liegen drei Farbscheiben (`linear-gradient(150deg,#f2703c,#e0455f)`)
-mit nur 2 px Weichzeichnung hinter der Milchglaskarte. Auf beiden Plattformen
-sitzt mindestens eine davon genau unter der Titelliste und den Zeitangaben —
-dort verliert die weiße Schrift ihren Halt.
-
-| Datei | Was anders ist |
-|---|---|
-| `foto33a_Glass-Musiknote-Ohne_*` | Die drei Scheiben sind ersatzlos entfernt. Übrig bleibt die Milchglaskarte auf Anthrazit — vollständig lesbar, aber ohne jede Farbe. |
-| `foto33b_Glass-Musiknote-Dezent_*` | Gleiche Lage, gleiche Farbe, gleiche Größe. Nur `filter:blur(2px)` wird zu `filter:blur(90px);opacity:.72` — aus der Scheibe wird ein Schein. |
-
-Für 33b wurden drei Stärken gegeneinander angesehen: 90 px/72 %, 100 px/62 %
-und 120 px/55 %. Die beiden weicheren sind zwar am besten lesbar, nehmen dem
-Entwurf aber fast die ganze Farbe; 90 px/72 % hält den warmen Ton und lässt die
-Zeiten trotzdem klar stehen.
 
 ## 36 / 37 Song-Poster schwarz und weiß — beide Plattformen
 
@@ -51,3 +38,8 @@ Zwei Änderungen, je Blatt:
    Mitte zu verschieben.
 
 Die iPhone-Blätter bekommen nur Änderung 1; ihre Tastenreihe war schon mittig.
+
+Seit die beiden Telefon-Blätter das ganze Blatt füllen (kein Rahmen bei 36, der
+Rahmen als Blattrand bei 37), sitzt der QR-Code dort nicht mehr neben dem
+Albumtitel im Papier, sondern neben dem Titel auf dem Bildschirm — die Änderung
+bleibt aber dieselbe: der Block fällt ersatzlos weg, der Titel rückt nach.

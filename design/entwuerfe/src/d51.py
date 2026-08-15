@@ -132,31 +132,7 @@ def telefon():
     return css, body
 
 
-def rechner():
-    g = .78
-    css = _css(g)
-    zeilen = _liste(g, 20, 16)
-
-    body = f'''<div class="geraet">
-  <div style="flex:1;min-height:0;display:grid;grid-template-columns:1fr 560px">
-    {_glas(g, '62px 56px 54px', 19, 200, 26, '',
-           'display:flex;flex-direction:column')}
-    <div style="background:{GLAS};padding:62px 50px 54px;color:{WEISS};
-      border-left:3px solid {BLECH_D};display:flex;flex-direction:column">
-      <div class="marke" style="font-size:19px">Album</div>
-      <div style="font-size:34px;font-weight:300;margin-top:12px">{A['album']}</div>
-      <div style="font-size:21px;color:{STUMM};margin-top:8px">
-        {A['interpret']} · {A['jahr']}</div>
-      <div style="margin-top:auto;padding-top:26px">{zeilen}
-        <div style="border-top:1px solid rgba(244,245,244,.14)"></div></div>
-    </div>
-  </div>
-  {_feld(g, 178, 18, 40, 'repeat(3,1fr)', 'flex-shrink:0')}
-</div>'''
-    return css, body
-
-
 def bau():
-    for art, fn in (('iphone', telefon), ('pc', rechner)):
-        css, body = fn()
-        yield schreibe('51', 'Tastenfeld', art, css, body)
+    # Nur das Telefon: das Querformat ist auf Wunsch des Eigentuemers entfallen.
+    css, body = telefon()
+    yield schreibe('51', 'Tastenfeld', 'iphone', css, body)

@@ -1,7 +1,10 @@
-# Music Player — Design-Paket (44 Entwürfe)
+# Music Player — Design-Paket (23 Entwürfe)
 
-Übergabepaket für das **musiclib**-Repo. Enthält 22 Player-Konzepte, jeweils als
-**iPhone-Variante (Hochformat)** und **PC-Variante (Querformat)** — 44 Entwürfe insgesamt.
+Übergabepaket für das **musiclib**-Repo. Geliefert waren 22 Player-Konzepte, jeweils als
+**iPhone-Variante (Hochformat)** und **PC-Variante (Querformat)**. Geblieben sind die
+**12 Konzepte, die gebaut werden** — 23 Entwürfe, weil **18 Akai-747** nur im Querformat
+existiert. Die zehn übrigen sind auf Wunsch des Eigentümers samt Dateien entfernt; welche
+das waren und warum, steht in `AUSWAHL.md`, die Dateien selbst in der Git-Historie.
 
 Jeder Entwurf ist aus einem realen Referenzfoto (Hardware oder Grafik) abgeleitet und als
 **pixelgenaues, in sich geschlossenes HTML** vorhanden. Das HTML ist die verbindliche Quelle:
@@ -17,8 +20,8 @@ musicplayer-designs/
 ├─ IMPLEMENTATION_BRIEF.md    ← Arbeitsauftrag für den umsetzenden Agenten / Entwickler
 ├─ SPEC.md                    ← Entwurf für Entwurf: Komponenten, Zustände, Bibliotheks-Zugang
 ├─ tokens.json                ← Design-Tokens (Farben, Schrift, Radien) je Entwurf
-├─ previews/                  ← 44 PNGs, 2× Auflösung (Referenzbilder zum Abgleich)
-├─ html/                      ← 44 eigenständige HTML-Dateien (die eigentliche Quelle)
+├─ previews/                  ← 23 PNGs, 2× Auflösung (Referenzbilder zum Abgleich)
+├─ html/                      ← 23 eigenständige HTML-Dateien (die eigentliche Quelle)
 └─ src/                       ← Python-Generator, der die HTML erzeugt (optional)
 ```
 
@@ -26,10 +29,10 @@ musicplayer-designs/
 
 `fotoNN_Konzeptname_plattform`
 
-- `NN` = Nummer des Referenzfotos (17–38)
+- `NN` = Nummer des Referenzfotos (18, 22, 24–27, 31, 34–38)
 - `plattform` = `iphone` (1080 × 2340) oder `pc` (1600 × 1000)
 
-Beispiel: `foto28_Rewind-Boombox_iphone.html` ↔ `foto28_Rewind-Boombox_iphone.png`
+Beispiel: `foto27_Stereo-60_iphone.html` ↔ `foto27_Stereo-60_iphone.png`
 
 ---
 
@@ -37,7 +40,7 @@ Beispiel: `foto28_Rewind-Boombox_iphone.html` ↔ `foto28_Rewind-Boombox_iphone.
 
 ```bash
 # Einen Entwurf im Browser ansehen
-open html/foto30_iPod-Weiss_pc.html
+open html/foto35_Music-Sounds-Better_pc.html
 
 # Alle Entwürfe nebeneinander
 python3 -m http.server 8000 --directory html
@@ -66,7 +69,7 @@ Wellenform, Icons) sind **inline SVG** und damit frei skalier- und einfärbbar.
 
 ---
 
-## Verbindliche Regeln, die in allen 44 Entwürfen gelten
+## Verbindliche Regeln, die in allen 23 Entwürfen gelten
 
 1. **Jeder Entwurf ist vollständig bedienbar gedacht.** Vorhanden sind immer:
    Zurück · Play · Pause · Weiter, ein Fortschrittsbalken mit Position, sowie
@@ -98,9 +101,13 @@ Wellenform, Icons) sind **inline SVG** und damit frei skalier- und einfärbbar.
 
 ```bash
 cd src
-pip install playwright
-python3 renderall.py     # schreibt PNGs nach ../previews
+python3 baualle.py                    # schreibt die HTML nach ../html
+pip install playwright                # nur fuer die Vorschaubilder
+python3 baualle.py --vorschau         # schreibt zusätzlich PNGs nach ../previews
+python3 baualle.py --vorschau 18 35   # nur diese Nummern neu aufnehmen
 ```
 
 Der Generator ist Python + Playwright/Chromium. Er ist beigelegt, damit Varianten
 schnell durchgespielt werden können — für die Umsetzung im Repo wird er nicht gebraucht.
+Die HTML-Dateien bleiben die verbindliche Quelle; `baualle.py` ist der Weg, sie nach
+einer Änderung am Generator zurückzugewinnen.
