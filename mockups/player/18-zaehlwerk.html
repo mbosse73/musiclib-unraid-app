@@ -1,0 +1,357 @@
+<title>18 · Zählwerk</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 18 — Vorlage: ein Diktiergerät der achtziger Jahre (Grundig
+   Stenorette, Anrufbeantworter). Cremefarbener Kunststoff, ein dunkles
+   Sichtfenster mit vier mechanischen Ziffernrollen, eine ockerfarbene Taste
+   mit Druckpunkt.
+   Genommen: die Position als Zählerstand statt als Balken. Ein Zählwerk sagt
+   nicht, wie weit es noch ist — es sagt, wo man ist, und genau das notiert
+   man sich. Gespult wird, indem man das Zählwerk hochdreht.
+   ══════════════════════════════════════════════════════════════════════════ */
+.zw{
+  --gehaeuse:#E6DFCE; --gehaeuse-2:#D3CAB4; --naht:rgba(90,78,58,.22);
+  --fenster:#211E1A; --fenster-2:#100F0D; --ziffer:#F0EADA;
+  --tinte:#2C2721; --tinte-2:#6E6455; --ocker:#D89A2C; --ocker-2:#B87B18;
+  --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
+  height:100%;overflow:hidden;position:relative;display:flex;flex-direction:column;
+  font-family:var(--sans);color:var(--tinte);
+  background:
+    repeating-linear-gradient(112deg,rgba(255,255,255,.16) 0 1px,transparent 1px 3px),
+    repeating-linear-gradient(22deg,rgba(90,78,58,.06) 0 1px,transparent 1px 4px),
+    linear-gradient(168deg,var(--gehaeuse),var(--gehaeuse-2))}
+.zw *{font-family:inherit}
+.zw .kap{font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--tinte-2)}
+
+/* ── Kopf ── */
+.zw .kopfz{flex:none;display:flex;align-items:center;justify-content:space-between;
+  padding:2px 22px 14px}
+.zw .kopfz .marke{font-family:var(--serif);font-size:15px;letter-spacing:.06em}
+.zw .taste-klein{width:42px;height:42px;border-radius:6px;display:grid;place-items:center;
+  color:var(--tinte-2);background:linear-gradient(180deg,#F2ECDC,#DCD3BC);
+  box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 -1px 0 var(--naht) inset,0 2px 4px rgba(90,78,58,.25)}
+.zw .taste-klein:active{transform:translateY(1px);box-shadow:0 1px 3px rgba(90,78,58,.3) inset}
+
+/* ── Sichtfenster mit Rollen: die Spulfläche ── */
+.zw .fenster{flex:none;margin:0 22px;border-radius:4px;padding:var(--fp,16px) 14px;position:relative;
+  cursor:ns-resize;touch-action:none;display:flex;align-items:center;justify-content:center;gap:4px;
+  background:linear-gradient(180deg,var(--fenster),var(--fenster-2));
+  box-shadow:inset 0 3px 10px rgba(0,0,0,.8),inset 0 0 0 1px rgba(0,0,0,.5),
+    0 1px 0 rgba(255,255,255,.7)}
+.zw .rolle{width:var(--rw,44px);height:var(--rh,60px);overflow:hidden;position:relative;
+  border-radius:2px;background:linear-gradient(180deg,#35302A,#1A1815 48%,#35302A)}
+.zw .rolle .streifen{position:absolute;left:0;right:0;top:0;
+  transition:transform .22s cubic-bezier(.25,.9,.3,1)}
+.zw .rolle .streifen span{height:var(--rh,60px);display:grid;place-items:center;font-family:var(--mono);
+  font-size:var(--zg,34px);color:var(--ziffer);font-variant-numeric:tabular-nums}
+.zw .rolle::after{content:'';position:absolute;left:0;right:0;top:50%;height:1px;
+  background:rgba(0,0,0,.55);pointer-events:none}
+.zw .fenster .punkt{width:5px;height:5px;border-radius:50%;background:var(--ocker);align-self:flex-end;
+  margin-bottom:12px;opacity:0}
+.zw .fenster.laeuft .punkt{opacity:1}
+.zw .fensterschild{flex:none;display:flex;justify-content:space-between;padding:8px 24px 0}
+
+/* ── Titelblock ── */
+.zw .mitte{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;
+  padding:0 24px;gap:10px}
+.zw .mitte .t{font-family:var(--serif);font-size:var(--tg,26px);line-height:1.22;letter-spacing:-.01em;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.zw .mitte .s{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--tinte-2)}
+.zw .haar{height:1px;background:var(--naht);position:relative;margin-top:6px}
+.zw .haar i{position:absolute;left:0;top:-1px;height:3px;background:var(--ocker)}
+.zw .mitte .stand{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;
+  color:var(--tinte-2);font-variant-numeric:tabular-nums}
+
+/* ── Tastenfeld ── */
+.zw .tasten{flex:none;padding:0 22px 20px;display:flex;align-items:center;gap:12px}
+.zw .taste{flex:1;height:var(--th,58px);border-radius:6px;display:grid;place-items:center;
+  color:var(--tinte-2);background:linear-gradient(180deg,#F2ECDC,#DCD3BC);
+  box-shadow:0 1px 0 rgba(255,255,255,.85) inset,0 -2px 0 var(--naht) inset,
+    0 3px 6px rgba(90,78,58,.28)}
+.zw .taste:active{transform:translateY(2px);
+  box-shadow:0 1px 4px rgba(90,78,58,.35) inset,0 -1px 0 var(--naht) inset}
+.zw .taste.gross{flex:1.5;height:var(--thg,72px);color:#3A2A08;
+  background:linear-gradient(180deg,#EBB04A,var(--ocker));
+  box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 -3px 0 var(--ocker-2) inset,
+    0 4px 8px rgba(90,78,58,.35)}
+.zw .taste.gross:active{transform:translateY(3px);
+  box-shadow:0 2px 6px rgba(120,80,10,.5) inset,0 -1px 0 var(--ocker-2) inset}
+
+/* ── Kassettenfach: die Sammlung ── */
+.zw .bib{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;
+  background:linear-gradient(168deg,var(--gehaeuse),var(--gehaeuse-2));
+  transform:translateY(100%);transition:transform .26s cubic-bezier(.3,.9,.3,1)}
+.zw .bib.auf{transform:none}
+.zw .bib .bkopf{flex:none;padding:14px 20px 12px;display:flex;align-items:center;gap:12px}
+.zw .bib h2{font-family:var(--serif);font-size:19px;font-weight:400;flex:1}
+.zw .bib .suchfeld{flex:none;display:flex;align-items:center;gap:9px;height:40px;padding:0 13px;
+  margin:0 20px 12px;border-radius:4px;background:rgba(255,255,255,.5);
+  box-shadow:inset 0 1px 3px rgba(90,78,58,.28),inset 0 0 0 1px rgba(255,255,255,.6)}
+.zw .bib .suchfeld input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  font-size:15px;color:var(--tinte)}
+.zw .bib .suchfeld input::placeholder{color:var(--tinte-2)}
+.zw .bib .bliste{flex:1;min-height:0;overflow:hidden;padding:0 20px}
+.zw .bib .bz{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;
+  padding:9px 0;border-bottom:1px solid var(--naht);cursor:pointer}
+.zw .bib .bz .pl{width:36px;height:36px;border-radius:2px;display:grid;place-items:center;color:#fff;
+  font-family:var(--serif);font-size:15px}
+.zw .bib .bz .m{min-width:0}
+.zw .bib .bz .m>span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.zw .bib .bz .t{font-size:14px}
+.zw .bib .bz .s{font-size:10.5px;color:var(--tinte-2)}
+.zw .bib .bz .z{font-family:var(--mono);font-size:11px;color:var(--tinte-2)}
+.zw .bib .bz.an .t{color:var(--ocker-2);font-weight:600}
+.zw .bib .bfuss{flex:none;padding:10px 20px 22px}
+
+/* ══ Variante 2: Graupappe ════════════════════════════════════════════════
+   Kein Kunststoff, kein Ocker: Karton mit Blindprägung. Alles, was hier ein
+   Knopf ist, ist nur ein Schatten — geprägt, nicht gedruckt. Die einzige
+   Auszeichnung ist ein Stanzloch.                                          */
+.zw.pp{
+  --gehaeuse:#B9B4AA; --gehaeuse-2:#A29D93; --naht:rgba(50,46,40,.30);
+  --tinte:#2A2723; --tinte-2:#5E5850; --ocker:#3A352E; --ocker-2:#26231E;
+  --fenster:#2E2B26; --fenster-2:#1E1C19; --ziffer:#E8E4DA}
+.zw.pp .taste,.zw.pp .taste-klein{background:linear-gradient(180deg,#C6C1B7,#ADA89E);
+  box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 -2px 0 var(--naht) inset,
+    0 2px 4px rgba(40,36,30,.28)}
+.zw.pp .taste.gross{color:#EDEAE2;background:linear-gradient(180deg,#4A453D,#332F29);
+  border-radius:50%;flex:none;width:var(--thg,72px);
+  box-shadow:0 1px 0 rgba(255,255,255,.18) inset,0 -2px 0 rgba(0,0,0,.4) inset,
+    0 3px 7px rgba(40,36,30,.4)}
+.zw.pp .tasten{justify-content:center}
+.zw.pp .haar i{background:var(--tinte)}
+.zw.pp .fenster{box-shadow:inset 0 4px 12px rgba(0,0,0,.75),inset 0 0 0 1px rgba(0,0,0,.5),
+  0 1px 0 rgba(255,255,255,.5)}
+@media (prefers-reduced-motion:reduce){.zw .bib,.zw .rolle .streifen{transition:none}}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 18 · zweite Reihe</div>
+      <h1>Zählwerk</h1>
+      <p class="lede">Ein Telefon, das sich wie ein Diktiergerät anfasst. Die Position ist <b>kein
+      Balken, sondern ein Zählerstand</b> — vier mechanische Ziffernrollen hinter einem dunklen Fenster.
+      Gespult wird, indem man das Zählwerk mit dem Daumen hochdreht; die ockerfarbene Taste hat einen
+      Druckpunkt.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <svg viewBox="0 0 300 200" fill="none" stroke="currentColor" stroke-width="1.4">
+        <rect x="86" y="12" width="128" height="176" rx="12"/>
+        <rect x="102" y="32" width="96" height="34" rx="3"/>
+        <path d="M126 32v34M150 32v34M174 32v34M102 49h96" stroke-dasharray="3 4"/>
+        <path d="M104 84h68M104 96h50"/>
+        <rect x="102" y="120" width="40" height="18" rx="3"/>
+        <rect x="150" y="120" width="48" height="18" rx="3"/>
+        <circle cx="150" cy="164" r="16"/><path d="M144 158l14 6-14 6z" fill="currentColor" stroke="none"/>
+        <rect x="102" y="152" width="24" height="24" rx="3"/>
+        <rect x="182" y="152" width="16" height="24" rx="3"/>
+      </svg>
+      <figcaption>Vorlage · Diktiergerät, gezeichnet</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Stenorette</h2><span class="marke geraet">iPhone hoch · 390 × 844</span></div>
+    <p class="etext">Cremefarbener Kunststoff mit Narbung, ein Fenster, drei Tasten und eine große. Der
+    Zählerstand ist die <b>Position in der ganzen Warteschlange</b>, nicht im Titel — und in der Sammlung
+    steht neben jedem Album, auf welchem Stand es endet. Wer sich eine Stelle merken will, merkt sich
+    eine Zahl.
+    <span class="probier"><b>Ausprobieren:</b> im Fenster nach oben oder unten ziehen — die Rollen laufen
+    mit. Die große Taste hat Weg: sie sinkt beim Drücken ein.</span></p>
+    <div class="buehne">
+      <div class="rahmen telefon">
+        <div class="schirm"><div class="kerbe"></div><div class="zw" id="v1"></div><div class="griff"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Womit gespult wird</dt><dd>Das <b>Zählwerk selbst</b>, senkrecht mit dem Daumen</dd></div>
+      <div><dt>Ohne Tippen sichtbar</dt><dd>Ein Titel, ein Zählerstand, sonst nichts</dd></div>
+      <div><dt>Ruhezustand</dt><dd>Ein Gerät, das aus ist — der Zählerstand bleibt stehen</dd></div>
+      <div><dt>Schwäche</dt><dd>Vier Ziffern sind 2:46 Stunden; danach läuft es über</dd></div>
+      <div><dt>Aufwand</dt><dd>gering — vier verschobene Streifen</dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Graupappe</h2><span class="marke geraet">iPhone hoch · 390 × 844</span></div>
+    <p class="etext">Dasselbe Gerät aus <b>Graupappe mit Blindprägung</b>: keine Farbe, keine Beschriftung
+    außer der geprägten. Die große Taste ist ein Stanzloch, alles andere ist Schatten. Das ist der
+    Gegenversuch zur ersten Variante — <b>ob ein Gerät ohne einen einzigen Farbakzent noch bedienbar
+    ist</b>. Antwort: ja, solange die Prägung tief genug ist und die laufende Zeile fett steht.
+    <span class="probier"><b>Ausprobieren:</b> dieselben Griffe. Der Unterschied ist nur Material —
+    genau das soll das Blatt zeigen.</span></p>
+    <div class="buehne">
+      <div class="rahmen telefon">
+        <div class="schirm"><div class="kerbe"></div><div class="zw pp" id="v2"></div><div class="griff"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Material</dt><dd>Karton, Prägung aus zwei Innenschatten</dd></div>
+      <div><dt>Akzent</dt><dd><b>Keiner.</b> Auszeichnung nur über Fett und Schatten</dd></div>
+      <div><dt>Ruhezustand</dt><dd>Ein Stück Pappe — im besten Sinn unaufdringlich</dd></div>
+      <div><dt>Schwäche</dt><dd>Ohne Akzent fehlt die Antwort auf „was ist gerade an?"</dd></div>
+      <div><dt>Nähe zu Blatt 05</dt><dd>Ruhe verwandt, Griff nicht: dort Schiene, hier <b>Rolle</b></dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Eine Ziffernrolle ist ein Streifen aus zehn Zeichen</b> mit
+      <code>translateY(-ziffer · 10%)</code> — <b>nicht</b> <code>-ziffer · 100%</code>: Prozente beziehen
+      sich auf die Höhe des Streifens, nicht auf eine Zeile, und ein Zehntel davon ist eine Ziffer. Der
+      einzige Sonderfall ist der Überlauf von 9 auf 0: Dort wird die Transition für einen Bildaufbau
+      abgeschaltet, sonst dreht die Rolle rückwärts durch alle Ziffern.</span></li>
+      <li><span><b>Der Zählerstand ist <code>gpos</code>, nicht <code>pos</code>.</b> Er zählt über die
+      ganze Warteschlange, wie ein Bandzählwerk über die ganze Kassette. In der Sammlung steht deshalb
+      neben jedem Album sein Endstand; in einer Titelliste wäre es <code>offs</code>, das der Deck
+      ohnehin liefert.</span></li>
+      <li><span><b>Senkrecht spulen braucht <code>touch-action:none</code></b> auf dem Fenster, sonst
+      scrollt iOS die Seite statt das Zählwerk zu drehen. Auf dem Telefon ist das der Unterschied
+      zwischen einem Griff und einem Ärgernis.</span></li>
+      <li><span><b>Der Druckpunkt ist zwei Zeilen CSS.</b> <code>:active</code> verschiebt die Taste um
+      2 px nach unten und dreht den Innenschatten um. Ohne diese zwei Zeilen ist es ein Rechteck; mit
+      ihnen eine Taste.</span></li>
+      <li><span><b>Die Graupappe ist der Beweis für die Tokenregel.</b> Sie ändert nur Variablen —
+      dieselbe Regel, nach der in <code>mobile.html</code> jede Farbe durch einen Token geht, bis hin zu
+      Schatten und Schleier.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für player.html (Ziel: telefon)</span><span>Blatt 18 · Zählwerk</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+
+const ZIFFERN = '0123456789'.split('').map(z => `<span>${z}</span>`).join('');
+
+/* Eine Rolle setzen. Der Streifen ist zehn Zeichen hoch, ein Zeichen also
+   10 % von ihm — translateY rechnet in Prozent der eigenen Höhe, nicht in
+   Zeilen. Rückwärts (9 → 0) ohne Transition, sonst dreht die Rolle einmal
+   quer durch alle Ziffern zurück. */
+function rolle(el, ziffer){
+  const alt = el.dataset.z === undefined ? null : Number(el.dataset.z);
+  const s = el.firstElementChild;
+  const y = `translateY(-${ziffer * 10}%)`;
+  if (alt !== null && ziffer < alt){
+    s.style.transition = 'none';
+    s.style.transform = y;
+    void s.offsetWidth;                       // Umbruch erzwingen
+    s.style.transition = '';
+  } else {
+    s.style.transform = y;
+  }
+  el.dataset.z = ziffer;
+}
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Kassetten</h2>
+      <button class="taste-klein" data-bib-zu>${I.x(17)}</button>
+    </div>
+    <label class="suchfeld">${I.search(16)}
+      <input type="search" placeholder="Suchen …" data-suche></label>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss kap" data-btreffer></div>
+  </div>`;
+
+const geraetHTML = `
+  <div class="sbar" style="color:#2C2721"><span>9:41</span><div class="ic">${I.vol(15)}</div></div>
+
+  <div class="kopfz">
+    <span class="marke">Musiklib</span>
+    <button class="taste-klein" data-bib title="Kassetten">${I.grid(17)}</button>
+  </div>
+
+  <div class="fenster" data-fenster>
+    <div class="rolle"><div class="streifen">${ZIFFERN}</div></div>
+    <div class="rolle"><div class="streifen">${ZIFFERN}</div></div>
+    <div class="rolle"><div class="streifen">${ZIFFERN}</div></div>
+    <div class="rolle"><div class="streifen">${ZIFFERN}</div></div>
+    <span class="punkt"></span>
+  </div>
+  <div class="fensterschild">
+    <span class="kap">Zählwerk</span>
+    <span class="kap" data-zustand></span>
+  </div>
+
+  <div class="mitte">
+    <div class="s" data-interpret></div>
+    <div class="t" data-titel></div>
+    <div class="haar"><i data-haar></i></div>
+    <div class="stand">
+      <span data-album></span>
+      <span data-rest></span>
+    </div>
+  </div>
+
+  <div class="tasten">
+    <button class="taste" data-prev>${I.prev(18)}</button>
+    <button class="taste gross" data-pp>${I.pause(24)}</button>
+    <button class="taste" data-next>${I.next(18)}</button>
+  </div>` + bibHTML;
+
+function verdrahte(wurzel, deck, stil){
+  const $  = s => wurzel.querySelector(s);
+  const $$ = s => [...wurzel.querySelectorAll(s)];
+  wurzel.innerHTML = geraetHTML;
+  Object.entries(stil).forEach(([k,v]) => wurzel.style.setProperty(k, v));
+
+  $('[data-pp]').onclick   = () => deck.toggle();
+  $('[data-next]').onclick = () => deck.next();
+  $('[data-prev]').onclick = () => deck.prev();
+
+  /* Spulen am Zählwerk: senkrecht, umgekehrt (nach unten ziehen = vorwärts),
+     angewandt erst beim Loslassen wäre falsch — hier soll man die Rollen
+     laufen sehen, also gilt jede Bewegung sofort. */
+  bindDrag($('[data-fenster]'), f => deck.seekGlobal(f * deck.total),
+    {achse:'y', umgekehrt:false});
+
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="pl" style="background:${grad(a)}">${ini(a)}</span>
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)} · ${a.y}</span></span>
+        <span class="z">${String(Math.round(albDur(a))).padStart(4,'0')}</span></div>`,
+    leer: '<div class="bz" style="border:none"><span class="s">Nichts gefunden.</span></div>',
+  });
+
+  let letzterTitel = null;
+  deck.onRender = d => {
+    const t = d.track, a = d.album;
+    if (letzterTitel !== t.id){
+      letzterTitel = t.id;
+      $('[data-titel]').textContent = t.t;
+      $('[data-interpret]').textContent = a.ar;
+      $('[data-album]').textContent = `${a.t} · ${d.qi+1}/${d.queue.length}`;
+      bib.markiere();
+    }
+    const stand = Math.floor(d.gpos) % 10000;
+    const ziffern = String(stand).padStart(4,'0');
+    $$('.rolle').forEach((el,i) => rolle(el, Number(ziffern[i])));
+    $('[data-fenster]').classList.toggle('laeuft', d.playing);
+    $('[data-zustand]').textContent = d.playing ? 'Wiedergabe' : 'Pause';
+    $('[data-haar]').style.width = (d.frac*100).toFixed(2) + '%';
+    $('[data-rest]').textContent = '−' + fmt(d.rest);
+    $('[data-pp]').innerHTML = d.playing ? I.pause(24) : I.play(24);
+  };
+  deck.render();
+}
+
+verdrahte(document.getElementById('v1'), new Deck('ohi', {qi:0, pos:96, speed:8}), {});
+verdrahte(document.getElementById('v2'), new Deck('sat', {qi:2, pos:40, speed:8}),
+  {'--zg':'32px','--rw':'42px','--rh':'56px','--tg':'25px'});
+})();
+</script>

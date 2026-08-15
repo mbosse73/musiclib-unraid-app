@@ -1,0 +1,534 @@
+<title>15 · Weltempfänger</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 15 — Vorlage: ein Weltempfänger (Braun T1000, Sony ICF-SW). Eine
+   beleuchtete Glasskala, ein Faden, der den Zeiger zieht, zwei geriffelte
+   Triebe rechts, darunter die Wellenbereiche.
+   Genommen: das Modell, nicht das Blech. Auf dem Band liegen keine
+   Frequenzen, sondern die Alben — Suchen heißt Abstimmen, und zwischen zwei
+   Alben rauscht es. Der Wellenbereich ist die Sortierung: dasselbe Band,
+   anders geordnet. Gespult wird auf der zweiten, feinen Skala darunter.
+   ══════════════════════════════════════════════════════════════════════════ */
+.we{
+  --gehaeuse:#2A2723; --gehaeuse-2:#1C1A17; --front:#3A3631;
+  --glas:#F3EBD8; --glas-2:#D8CBA9; --tinte:#241E18; --tinte-2:#6B6155;
+  --zeiger:#C0392B; --licht:#E8C87A; --kante:rgba(255,255,255,.14);
+  --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
+  height:100%;overflow:hidden;position:relative;display:flex;flex-direction:column;
+  gap:var(--gap,22px);padding:var(--pad,30px);font-family:var(--sans);color:#EDE7DA;
+  background:linear-gradient(176deg,var(--gehaeuse),var(--gehaeuse-2))}
+.we *{font-family:inherit}
+.we .kap{font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:#9C9384}
+
+/* ── Kopfzeile ── */
+.we .zeile{display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex:none}
+.we .marke{font-family:var(--serif);font-size:17px;letter-spacing:.02em;color:#CFC6B2}
+
+/* ── Skalenband: das Glas, hinter dem sich die Sammlung schiebt ── */
+.we .skala{flex:none;height:var(--sh,196px);position:relative;overflow:hidden;cursor:grab;
+  touch-action:none;border-radius:3px;
+  background:linear-gradient(180deg,var(--glas),var(--glas-2));
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.5),inset 0 2px 14px rgba(0,0,0,.28),
+    0 10px 26px rgba(0,0,0,.45)}
+.we .skala:active{cursor:grabbing}
+.we .skala .band{position:absolute;top:0;bottom:0;left:0;width:var(--bw,2200px);
+  will-change:transform}
+.we .station{position:absolute;top:0;bottom:0;width:180px;margin-left:-90px;text-align:center;
+  padding-top:20px;color:var(--tinte)}
+.we .station .n{font-family:var(--serif);font-size:15px;line-height:1.25;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.we .station .a{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tinte-2);
+  margin-top:5px}
+.we .station .strich{position:absolute;left:50%;bottom:0;width:1px;height:36px;
+  background:var(--tinte);opacity:.8}
+.we .station .punkt{position:absolute;left:50%;bottom:36px;width:9px;height:9px;margin-left:-4.5px;
+  border-radius:50%;border:1px solid var(--tinte);background:transparent}
+.we .station.an .punkt{background:var(--zeiger);border-color:var(--zeiger)}
+/* Feinstriche zwischen den Stationen — Skalenoptik, ohne Bedeutung */
+.we .skala .striche{position:absolute;left:0;right:0;bottom:0;height:22px;opacity:.5;
+  background:repeating-linear-gradient(90deg,var(--tinte) 0 1px,transparent 1px 22px)}
+.we .skala .zeiger{position:absolute;left:50%;top:0;bottom:0;width:2px;margin-left:-1px;
+  background:var(--zeiger);box-shadow:0 0 9px rgba(192,57,43,.6);z-index:3}
+.we .skala .zeiger::after{content:'';position:absolute;left:-5px;top:0;border-left:6px solid transparent;
+  border-right:6px solid transparent;border-top:9px solid var(--zeiger)}
+.we .skala .rauschen{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;
+  background:repeating-linear-gradient(74deg,rgba(36,30,24,.22) 0 1px,transparent 1px 3px),
+    repeating-linear-gradient(-66deg,rgba(36,30,24,.16) 0 1px,transparent 1px 4px)}
+.we .skala .lampe{position:absolute;left:0;right:0;top:0;height:60%;z-index:1;pointer-events:none;
+  background:radial-gradient(120% 100% at 50% 0%,rgba(232,200,122,.55),transparent 70%)}
+
+/* ── Anzeige: was gerade eingerastet ist ── */
+.we .anzeige{flex:none;display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
+.we .anzeige .t{font-family:var(--serif);font-size:var(--tg,27px);line-height:1.15;letter-spacing:-.01em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.we .anzeige .s{margin-top:5px;font-size:12.5px;color:#9C9384;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.we .anzeige .uhr{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--licht);
+  font-variant-numeric:tabular-nums;flex:none}
+
+/* ── Feinskala: hier wird gespult ── */
+.we .fein{flex:none;height:var(--fh,44px);position:relative;cursor:pointer;touch-action:none;
+  border-radius:2px;background:linear-gradient(180deg,#131211,#1E1C19);
+  box-shadow:inset 0 1px 5px rgba(0,0,0,.8),inset 0 0 0 1px rgba(255,255,255,.07)}
+.we .fein .teil{position:absolute;top:0;bottom:0;width:1px;background:rgba(255,255,255,.30)}
+.we .fein .teil.k{background:rgba(255,255,255,.13);top:auto;height:9px;bottom:0}
+.we .fein i{position:absolute;left:0;top:0;bottom:0;background:rgba(232,200,122,.16);
+  border-right:2px solid var(--licht);pointer-events:none}
+.we .fein .griff{position:absolute;top:-4px;bottom:-4px;width:3px;margin-left:-1.5px;border-radius:2px;
+  background:var(--licht);box-shadow:0 0 10px rgba(232,200,122,.7);pointer-events:none}
+
+/* ── Untere Reihe: Bereiche, Transport, Triebe ── */
+.we .unten{flex:1;min-height:0;display:flex;align-items:center;gap:var(--ug,28px)}
+.we .bereiche{display:flex;gap:9px;flex:none}
+.we .bereiche button{padding:8px 13px;border-radius:2px;font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:#9C9384;background:linear-gradient(180deg,#494440,#302C29);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.13),0 3px 8px rgba(0,0,0,.5)}
+.we .bereiche button.an{color:#241E18;background:linear-gradient(180deg,var(--licht),#C9A455);
+  box-shadow:inset 0 -1px 0 rgba(0,0,0,.3)}
+.we .transport{display:flex;gap:10px;flex:none}
+.we .transport button{width:var(--tb,48px);height:var(--tb,48px);border-radius:50%;display:grid;
+  place-items:center;color:#CFC6B2;background:linear-gradient(180deg,#494440,#2B2825);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 4px 10px rgba(0,0,0,.5)}
+.we .transport button.pp{color:var(--licht)}
+.we .transport button:active{box-shadow:inset 0 2px 6px rgba(0,0,0,.6)}
+.we .fuell{flex:1;min-width:0}
+.we .triebe{display:flex;gap:var(--ug,28px);flex:none;align-items:center}
+.we .trieb{display:flex;flex-direction:column;align-items:center;gap:8px}
+.we .trieb .rad{width:var(--rd,86px);height:var(--rd,86px);border-radius:50%;cursor:grab;
+  touch-action:none;position:relative;
+  background:repeating-conic-gradient(from 0deg,#6E6862 0 2.2deg,#3A3631 2.2deg 4.4deg),#4A4540;
+  box-shadow:0 0 0 1px rgba(255,255,255,.12),0 8px 18px rgba(0,0,0,.55),
+    inset 0 0 22px rgba(0,0,0,.5)}
+.we .trieb .rad:active{cursor:grabbing}
+.we .trieb .rad::after{content:'';position:absolute;inset:26%;border-radius:50%;
+  background:linear-gradient(160deg,#57524C,#2D2A27);box-shadow:inset 0 1px 0 rgba(255,255,255,.16)}
+.we .trieb .rad .kerbe{position:absolute;left:50%;top:7px;width:3px;height:13px;margin-left:-1.5px;
+  border-radius:2px;background:var(--licht);z-index:2;
+  transform-origin:50% calc(var(--rd,86px) / 2 - 7px)}
+
+/* ── Vorwahltasten (nur Variante 2) ── */
+.we .vorwahl{display:none;gap:8px;flex:none}
+.we.bak .vorwahl{display:flex}
+.we .vorwahl button{width:52px;height:34px;border-radius:2px;font-family:var(--mono);font-size:11px;
+  color:#3A2E1E;background:linear-gradient(180deg,#E4DAC2,#C3B69A);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 3px 7px rgba(0,0,0,.45)}
+.we .vorwahl button.an{background:linear-gradient(180deg,var(--licht),#C9A455)}
+
+/* ── Bibliothek: die Stationsliste hinter einer Taste ── */
+.we .bib{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;
+  padding:var(--pad,30px);background:rgba(20,18,16,.95);backdrop-filter:blur(3px);
+  opacity:0;pointer-events:none;transform:translateY(12px);transition:opacity .2s,transform .2s}
+.we .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.we .bib .bkopf{display:flex;align-items:center;gap:18px;margin-bottom:18px;flex:none}
+.we .bib h2{font-family:var(--serif);font-size:21px;font-weight:400;flex:none}
+.we .bib .suchfeld{flex:1;min-width:0;display:flex;align-items:center;gap:10px;height:44px;padding:0 15px;
+  border-radius:2px;background:linear-gradient(180deg,#131211,#1E1C19);
+  box-shadow:inset 0 1px 5px rgba(0,0,0,.8),inset 0 0 0 1px rgba(255,255,255,.08)}
+.we .bib .suchfeld input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:#EDE7DA;font-size:15px}
+.we .bib .suchfeld input::placeholder{color:#7C7566}
+.we .bib .zu{width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center;
+  color:#CFC6B2;background:linear-gradient(180deg,#494440,#2B2825);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.15)}
+.we .bib .bliste{flex:1;min-height:0;overflow:hidden;display:grid;
+  grid-template-columns:repeat(var(--bsp,2),1fr);gap:8px 14px;align-content:start}
+.we .bib .bz{display:flex;align-items:center;gap:13px;padding:10px 13px;border-radius:2px;cursor:pointer;
+  background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07)}
+.we .bib .bz:hover{background:rgba(255,255,255,.09)}
+.we .bib .bz .pl{width:38px;height:38px;border-radius:2px;flex:none;display:grid;place-items:center;
+  color:#fff;font-family:var(--serif);font-size:16px}
+.we .bib .bz .m{flex:1;min-width:0}
+.we .bib .bz .m>span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.we .bib .bz .t{font-size:13.5px}
+.we .bib .bz .s{font-size:11px;color:#9C9384}
+.we .bib .bz .kh{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--licht);flex:none}
+.we .bib .bz.an{box-shadow:inset 0 0 0 1.5px var(--licht)}
+.we .bib .bfuss{flex:none;padding-top:12px}
+
+/* ══ Variante 2: Bakelit statt Blech ══════════════════════════════════════
+   Dieselbe Mechanik, anderes Material. Katalin ist marmoriert: drei weiche
+   radiale Verläufe über einem warmen Braun, mehr braucht es nicht.        */
+.we.bak{
+  --gehaeuse:#4A3524; --gehaeuse-2:#2E2016; --glas:#F6EEDB; --glas-2:#E2D2AC;
+  --licht:#F0C868; --zeiger:#9E3B2B;
+  background:
+    radial-gradient(60% 50% at 18% 12%,rgba(196,150,96,.55),transparent 60%),
+    radial-gradient(50% 60% at 82% 30%,rgba(120,74,40,.55),transparent 62%),
+    radial-gradient(70% 60% at 40% 92%,rgba(90,58,32,.6),transparent 66%),
+    linear-gradient(160deg,var(--gehaeuse),var(--gehaeuse-2))}
+.we.bak .skala{box-shadow:inset 0 0 0 1px rgba(0,0,0,.45),inset 0 2px 14px rgba(0,0,0,.24),
+  0 0 0 6px rgba(255,255,255,.06),0 12px 30px rgba(0,0,0,.5)}
+.we.bak .transport button{background:linear-gradient(180deg,#6B4E33,#3E2C1D)}
+.we.bak .bereiche button{background:linear-gradient(180deg,#6B4E33,#3E2C1D)}
+.we.bak .bereiche button.an{background:linear-gradient(180deg,var(--licht),#C99A45)}
+.we.bak .trieb .rad{background:repeating-conic-gradient(from 0deg,#8A6B4A 0 2.2deg,#4A3524 2.2deg 4.4deg),
+  #5E452F}
+@media (prefers-reduced-motion:reduce){.we .bib{transition:none}}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 15 · zweite Reihe</div>
+      <h1>Weltempfänger</h1>
+      <p class="lede">Der einzige Entwurf, in dem <b>Suchen und Spulen dieselbe Geste sind</b>: Auf dem
+      beleuchteten Band liegen nicht Frequenzen, sondern die Alben. Man schiebt das Glas, bis eines unter
+      dem roten Zeiger einrastet — dazwischen rauscht es. Die Wellenbereiche sind die Sortierung.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <svg viewBox="0 0 300 200" fill="none" stroke="currentColor" stroke-width="1.4">
+        <rect x="12" y="20" width="276" height="160" rx="5"/>
+        <rect x="28" y="38" width="188" height="66" rx="2"/>
+        <path d="M28 88h188M40 88v-9M60 88v-14M80 88v-9M100 88v-14M120 88v-9M140 88v-14M160 88v-9
+                 M180 88v-14M200 88v-9"/>
+        <path d="M132 34v74" stroke-width="2.4"/>
+        <circle cx="248" cy="66" r="24"/><circle cx="248" cy="66" r="9"/>
+        <path d="M248 42v8"/>
+        <rect x="28" y="122" width="188" height="14" rx="2"/>
+        <path d="M28 156h34M70 156h34M112 156h34M154 156h34" stroke-width="4"/>
+        <circle cx="248" cy="140" r="16"/><circle cx="248" cy="140" r="5"/>
+      </svg>
+      <figcaption>Vorlage · Weltempfänger, gezeichnet</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Skalenband</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
+    <p class="etext">Gebürstetes Gehäuse, Glasskala, zwei geriffelte Triebe. Das Band trägt acht Stationen;
+    zwischen ihnen legt sich ein Rauschmuster über das Glas, das erst verschwindet, wenn eine Station
+    eingerastet ist. <b>Gespult wird nicht hier</b>, sondern auf der schmalen Feinskala darunter — die
+    zeigt das ganze Album mit Strichen an den Titelgrenzen.
+    <span class="probier"><b>Ausprobieren:</b> das Glas seitwärts ziehen (oder am linken Trieb drehen),
+    dann <em>Jahr</em> antippen — dasselbe Band, neu geordnet. Auf der Feinskala ziehen spult über
+    Titelgrenzen hinweg.</span></p>
+    <div class="buehne">
+      <div class="rahmen ipad-quer">
+        <div class="schirm"><div class="we" id="v1"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Womit gespult wird</dt><dd>Feinskala unter der Anzeige; das Band <b>wählt</b>, es spult nicht</dd></div>
+      <div><dt>Ohne Tippen sichtbar</dt><dd>Drei bis vier Nachbaralben, links und rechts vom laufenden</dd></div>
+      <div><dt>Ruhezustand</dt><dd>Ein beleuchtetes Band mit Namen — <b>lesbar, ohne zu spielen</b></dd></div>
+      <div><dt>Schwäche</dt><dd>Bei 400 Alben ist eine Station 4 px breit: es braucht Grob- und Feintrieb</dd></div>
+      <div><dt>Aufwand</dt><dd>mittel — ein verschobenes Band, ein Rastwert, sonst nichts</dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Katalin</h2><span class="marke geraet">PC · 1440 × 900</span></div>
+    <p class="etext">Dieselbe Mechanik in <b>Bakelit</b>: marmoriertes Braun aus drei radialen Verläufen,
+    cremefarbene Tasten, bernsteinfarbene Skalenlampe. Am Schreibtisch ist Platz für fünf
+    <b>Vorwahltasten</b> — die letzten fünf Alben, ohne Umweg über das Band. Das ist die Antwort auf die
+    Schwäche der ersten Variante: Wer ein Album kennt, stimmt es nicht ab, er drückt es.
+    <span class="probier"><b>Ausprobieren:</b> eine Vorwahltaste drücken; die Skala fährt hörbar sichtbar
+    dorthin, statt zu springen.</span></p>
+    <div class="buehne">
+      <div class="rahmen pc">
+        <div class="schirm">
+          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
+          <div class="flaeche"><div class="we bak" id="v2"></div></div>
+        </div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Material</dt><dd>Katalin — drei radiale Verläufe, <b>kein Bild</b></dd></div>
+      <div><dt>Ohne Tippen sichtbar</dt><dd>Nachbaralben plus fünf Vorwahlen</dd></div>
+      <div><dt>Ruhezustand</dt><dd>Wie ein Radio, das aus ist: Band lesbar, Lampe dunkel</dd></div>
+      <div><dt>Hochkant</dt><dd>Trägt nicht — das Band braucht Breite</dd></div>
+      <div><dt>Nähe zu Blatt 11</dt><dd>gering: dort dreht man <em>Zeit</em>, hier <em>Sammlung</em></dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Das Band ist eine Zahl, kein Scrollcontainer.</b> Die Abstimmung ist ein Wert
+      <code>p</code> zwischen 0 und n−1; die Stationen stehen an festen x-Positionen, das Band wird um
+      <code>-(x(p) − Mitte)</code> verschoben. Beim Loslassen wird auf <code>Math.round(p)</code>
+      gerastet — das ist die ganze Mechanik.</span></li>
+      <li><span><b>Das Rauschen ist der Abstand zur nächsten Station.</b>
+      <code>opacity = min(1, 2.4 · |p − round(p)|)</code>. Ohne diese Rückmeldung fühlt sich das Ziehen
+      an wie eine Liste; mit ihr wie ein Gerät.</span></li>
+      <li><span><b>Wellenbereich = <code>SORTIERUNGEN</code>.</b> Die drei Tasten sind dieselben Sortierungen
+      wie in <code>player.html</code>, unter demselben Schlüssel <code>musiklib:sort</code>. Nach dem
+      Umsortieren muss <code>p</code> auf den <em>neuen</em> Index des laufenden Albums gesetzt werden,
+      sonst springt das Band unter dem Zeiger weg.</span></li>
+      <li><span><b>Bei 400 Alben trägt das Band allein nicht.</b> Ein Grobtrieb (ein Buchstabe je
+      Umdrehung) und ein Feintrieb wären nötig — oder das Band zeigt nur die aktuelle Sortiergruppe.
+      Das ist der offene Entwurfspunkt dieses Blatts, nicht ein Detail.</span></li>
+      <li><span><b>Kein neues Feld in <code>library.json</code>.</b> Stationen sind Alben, Striche auf der
+      Feinskala sind <code>offs</code> aus der Warteschlange.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für player.html</span><span>Blatt 15 · Weltempfänger</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+
+const BEREICHE = [
+  {id:'artist', name:'Interpret', f:(a,b) => a.ar.localeCompare(b.ar,'de') || a.t.localeCompare(b.t,'de')},
+  {id:'title',  name:'Titel',     f:(a,b) => a.t.localeCompare(b.t,'de')},
+  {id:'year',   name:'Jahr',      f:(a,b) => b.y - a.y},
+];
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Stationsliste</h2>
+      <label class="suchfeld">${I.search(17)}
+        <input type="search" placeholder="Album, Interpret oder Titel suchen …" data-suche></label>
+      <button class="zu" data-bib-zu>${I.x(17)}</button>
+    </div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss kap" data-btreffer></div>
+  </div>`;
+
+const geraetHTML = `
+  <div class="zeile">
+    <span class="marke">Musiklib</span>
+    <span class="kap" data-bereichname>Interpret</span>
+  </div>
+
+  <div class="skala" data-skala>
+    <div class="lampe"></div>
+    <div class="band" data-band></div>
+    <div class="striche"></div>
+    <div class="rauschen" data-rauschen></div>
+    <div class="zeiger"></div>
+  </div>
+
+  <div class="anzeige">
+    <div style="min-width:0">
+      <div class="t" data-titel></div>
+      <div class="s" data-unter></div>
+    </div>
+    <div class="uhr"><span data-jetzt></span> · <span data-ende></span></div>
+  </div>
+
+  <div class="fein" data-fein>
+    <i data-feinfuell></i>
+    <span class="griff" data-feingriff></span>
+  </div>
+
+  <div class="unten">
+    <div class="bereiche" data-bereiche></div>
+    <div class="transport">
+      <button data-prev>${I.prev(17)}</button>
+      <button class="pp" data-pp>${I.pause(19)}</button>
+      <button data-next>${I.next(17)}</button>
+      <button data-bib title="Stationsliste">${I.list(17)}</button>
+    </div>
+    <div class="vorwahl" data-vorwahl></div>
+    <div class="fuell"></div>
+    <div class="triebe">
+      <div class="trieb">
+        <div class="rad" data-grob><span class="kerbe" data-grobkerbe></span></div>
+        <span class="kap">Abstimmung</span>
+      </div>
+      <div class="trieb">
+        <div class="rad" data-lautrad><span class="kerbe" data-lautkerbe></span></div>
+        <span class="kap">Lautstärke</span>
+      </div>
+    </div>
+  </div>` + bibHTML;
+
+/* Relatives Drehen: nur die Winkeldifferenz zählt, wie an einem echten Trieb. */
+function bindTrieb(el, cb){
+  let letzter = null;
+  const w = ev => {
+    const r = el.getBoundingClientRect();
+    return Math.atan2(ev.clientY - (r.top + r.height/2), ev.clientX - (r.left + r.width/2)) * 180/Math.PI;
+  };
+  el.addEventListener('pointerdown', ev => {
+    letzter = w(ev); el.setPointerCapture(ev.pointerId); ev.preventDefault(); });
+  el.addEventListener('pointermove', ev => {
+    if (letzter === null) return;
+    const jetzt = w(ev);
+    let d = jetzt - letzter;
+    if (d > 180) d -= 360; if (d < -180) d += 360;
+    letzter = jetzt;
+    cb(d / 360);
+  });
+  const los = () => letzter = null;
+  el.addEventListener('pointerup', los);
+  el.addEventListener('pointercancel', los);
+}
+
+function verdrahte(wurzel, deck, stil, opt){
+  const $  = s => wurzel.querySelector(s);
+  const $$ = s => [...wurzel.querySelectorAll(s)];
+  wurzel.innerHTML = geraetHTML;
+  Object.entries(stil).forEach(([k,v]) => wurzel.style.setProperty(k, v));
+
+  const BW = opt.bandbreite, ABST = opt.abstand;
+  let bereich = BEREICHE[0];
+  let reihe = ALBUMS.slice().sort(bereich.f);
+  let p = reihe.findIndex(a => a.id === deck.album.id);   // Abstimmung, 0 … n−1
+  let ziehend = false, fahrt = null;
+
+  const xVon = i => (BW - (reihe.length-1)*ABST)/2 + i*ABST;
+
+  const bandZeichnen = () => {
+    $('[data-band]').style.width = BW + 'px';
+    $('[data-band]').innerHTML = reihe.map((a,i) => `
+      <div class="station" data-alb="${a.id}" style="left:${xVon(i)}px">
+        <div class="n">${esc(a.t)}</div>
+        <div class="a">${esc(a.ar)}</div>
+        <span class="punkt"></span><span class="strich"></span>
+      </div>`).join('');
+  };
+
+  const stelle = () => {
+    const mitte = $('[data-skala]').clientWidth / 2;
+    const x = xVon(clamp(p, 0, reihe.length-1));
+    $('[data-band]').style.transform = `translateX(${(mitte - x).toFixed(1)}px)`;
+    const ab = Math.abs(p - Math.round(p));
+    $('[data-rauschen]').style.opacity = Math.min(1, ab * 2.4).toFixed(3);
+    $('[data-grobkerbe]').style.transform = `rotate(${(p * 140 % 360).toFixed(1)}deg)`;
+    [...$('[data-band]').children].forEach((el,i) =>
+      el.classList.toggle('an', i === Math.round(p) && ab < .12));
+  };
+
+  const raste = () => {
+    p = clamp(Math.round(p), 0, reihe.length-1);
+    stelle();
+    const a = reihe[p];
+    if (a.id !== deck.album.id){
+      deck.queue = a.tr.map((_,i) => `${a.id}-${i}`);
+      deck.qi = 0; deck.pos = 0; deck.playing = true; deck.render();
+    }
+  };
+
+  /* Vorwahltaste: nicht springen, sondern hinfahren — das Band ist ein Gerät. */
+  const fahreZu = ziel => {
+    if (fahrt) cancelAnimationFrame(fahrt);
+    const schritt = () => {
+      const d = ziel - p;
+      if (Math.abs(d) < .01){ p = ziel; raste(); fahrt = null; return; }
+      p += d * .18; stelle();
+      fahrt = requestAnimationFrame(schritt);
+    };
+    schritt();
+  };
+
+  /* Das Glas schieben: der Weg des Fingers, nicht seine Lage. Ein Pixel Zug
+     ist ein Pixel Band — deshalb hier kein bindDrag, das gibt 0…1 zurück. */
+  (() => {
+    const el = $('[data-skala]');
+    let letzteX = null;
+    el.addEventListener('pointerdown', ev => {
+      letzteX = ev.clientX; ziehend = true;
+      el.setPointerCapture(ev.pointerId); ev.preventDefault();
+    });
+    el.addEventListener('pointermove', ev => {
+      if (letzteX === null) return;
+      p = clamp(p - (ev.clientX - letzteX) / ABST, 0, reihe.length-1);
+      letzteX = ev.clientX;
+      stelle();
+    });
+    const los = () => { if (letzteX === null) return; letzteX = null; ziehend = false; raste(); };
+    el.addEventListener('pointerup', los);
+    el.addEventListener('pointercancel', los);
+  })();
+  let rastZeit = null;
+  bindTrieb($('[data-grob]'), d => {
+    p = clamp(p + d * 2.2, 0, reihe.length-1); stelle();
+    clearTimeout(rastZeit); rastZeit = setTimeout(raste, 260);
+  });
+  bindTrieb($('[data-lautrad]'), d => deck.setVol(deck.vol + d * 1.6));
+
+  /* Wellenbereiche = Sortierung. Nach dem Umsortieren zeigt der Zeiger
+     weiterhin auf dasselbe Album, nicht auf dieselbe Stelle. */
+  $('[data-bereiche]').innerHTML = BEREICHE.map((b,i) =>
+    `<button data-bereich="${b.id}"${i===0?' class="an"':''}>${b.name}</button>`).join('');
+  $$('[data-bereich]').forEach(btn => btn.onclick = () => {
+    bereich = BEREICHE.find(b => b.id === btn.dataset.bereich);
+    $$('[data-bereich]').forEach(x => x.classList.toggle('an', x === btn));
+    $('[data-bereichname]').textContent = bereich.name;
+    const laufend = deck.album.id;
+    reihe = ALBUMS.slice().sort(bereich.f);
+    p = reihe.findIndex(a => a.id === laufend);
+    bandZeichnen(); stelle();
+  });
+
+  if (opt.vorwahl){
+    const vw = ALBUMS.slice(0, 5);
+    $('[data-vorwahl]').innerHTML = vw.map((a,i) =>
+      `<button data-vw="${a.id}">P${i+1}</button>`).join('');
+    $$('[data-vw]').forEach(btn => btn.onclick = () => {
+      const i = reihe.findIndex(a => a.id === btn.dataset.vw);
+      if (i >= 0) fahreZu(i);
+    });
+  }
+
+  $('[data-pp]').onclick = () => deck.toggle();
+  $('[data-next]').onclick = () => deck.next();
+  $('[data-prev]').onclick = () => deck.prev();
+  bindDrag($('[data-fein]'), f => deck.seekGlobal(f * deck.total));
+
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="pl" style="background:${grad(a)}">${ini(a)}</span>
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)} · ${a.y}</span></span>
+        <span class="kh">${fmtLang(albDur(a))}</span></div>`,
+    leer: '<div class="bz" style="box-shadow:none;background:none"><span class="s">Nichts gefunden.</span></div>',
+  });
+
+  bandZeichnen(); stelle();
+
+  let letzterTitel = null, letztesAlbum = null;
+  deck.onRender = d => {
+    const t = d.track, a = d.album;
+    if (letzterTitel !== t.id){
+      letzterTitel = t.id;
+      $('[data-titel]').textContent = t.t;
+      $('[data-unter]').textContent = `${a.ar} — ${a.t} · Titel ${d.qi+1} von ${d.queue.length}`;
+      /* Titelgrenzen auf der Feinskala: dieselben offs wie in der Warteschlange */
+      const o = d.offs, ges = d.total;
+      $('[data-fein]').querySelectorAll('.teil').forEach(el => el.remove());
+      o.forEach((s,i) => {
+        const el = document.createElement('span');
+        el.className = 'teil' + (i === 0 ? ' k' : '');
+        el.style.left = (s/ges*100).toFixed(2) + '%';
+        $('[data-fein]').appendChild(el);
+      });
+    }
+    if (letztesAlbum !== a.id){
+      letztesAlbum = a.id; bib.markiere();
+      if (!ziehend && !fahrt){
+        const i = reihe.findIndex(x => x.id === a.id);
+        if (i >= 0 && Math.round(p) !== i){ p = i; stelle(); }
+      }
+      $$('[data-vw]').forEach(b => b.classList.toggle('an', b.dataset.vw === a.id));
+    }
+    const g = d.gpos / d.total;
+    $('[data-jetzt]').textContent = fmt(d.pos);
+    $('[data-ende]').textContent  = '−' + fmt(d.rest);
+    $('[data-feinfuell]').style.width  = (g*100).toFixed(2) + '%';
+    $('[data-feingriff]').style.left   = (g*100).toFixed(2) + '%';
+    $('[data-pp]').innerHTML = d.playing ? I.pause(19) : I.play(19);
+    $('[data-lautkerbe]').style.transform = `rotate(${(-140 + d.vol*280).toFixed(1)}deg)`;
+  };
+  deck.render();
+}
+
+verdrahte(document.getElementById('v1'), new Deck('par', {qi:0, pos:180, speed:8}),
+  {'--sh':'280px','--fh':'54px','--bsp':'2'}, {bandbreite:2600, abstand:260, vorwahl:false});
+verdrahte(document.getElementById('v2'), new Deck('koe', {qi:1, pos:90, speed:8}),
+  {'--sh':'330px','--pad':'34px','--tg':'30px','--rd':'92px','--bsp':'3','--fh':'58px'},
+  {bandbreite:3200, abstand:320, vorwahl:true});
+})();
+</script>

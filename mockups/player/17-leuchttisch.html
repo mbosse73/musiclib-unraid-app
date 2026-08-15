@@ -1,0 +1,353 @@
+<title>17 · Leuchttisch</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 17 — Vorlage: ein Leuchttisch mit Diarahmen und einer Fadenlupe,
+   daneben ein Filmstreifen. Milchglas von unten beleuchtet, Karton, Fettstift.
+   Genommen: der Ruhezustand. Jeder andere Entwurf ist ausgeschaltet, wenn
+   nichts läuft — dieser ist dann ein Tisch voller Cover. Der Spieler ist die
+   Lupe in der Ecke, gespult wird am Filmstreifen, der unter ihr durchläuft.
+   ══════════════════════════════════════════════════════════════════════════ */
+.lt{
+  --raum:#23242A; --raum-2:#17181C; --glas:#F4F3EE; --glas-2:#E2E2DA;
+  --karton:#D9D2C4; --karton-2:#C3BAA8; --tinte:#2A2622; --tinte-2:#6F675B;
+  --fett:#2F4F8A; --licht:#C9A96E;
+  --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
+  height:100%;overflow:hidden;position:relative;display:flex;gap:var(--gap,24px);
+  padding:var(--pad,26px);font-family:var(--sans);color:#E7E5DE;
+  background:linear-gradient(168deg,var(--raum),var(--raum-2))}
+.lt *{font-family:inherit}
+.lt .kap{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:#8A8478}
+
+/* ── linke Spalte: Lupe, Streifen, Transport ── */
+.lt .pult{width:var(--pw,380px);flex:none;display:flex;flex-direction:column;gap:18px;min-height:0}
+.lt .lupe{width:var(--lw,380px);height:var(--lw,380px);flex:none;border-radius:50%;position:relative;
+  overflow:hidden;
+  box-shadow:0 0 0 10px rgba(255,255,255,.07),0 0 0 11px rgba(0,0,0,.5),0 24px 50px rgba(0,0,0,.55),
+    inset 0 0 60px rgba(0,0,0,.35)}
+.lt .lupe .bild{position:absolute;inset:0}
+.lt .lupe .glanz{position:absolute;inset:0;
+  background:radial-gradient(70% 55% at 30% 18%,rgba(255,255,255,.34),transparent 62%)}
+.lt .lupe .text{position:absolute;left:0;right:0;bottom:0;padding:26px 34px 30px;text-align:center;
+  background:linear-gradient(180deg,transparent,rgba(0,0,0,.68))}
+.lt .lupe .t{font-family:var(--serif);font-size:var(--tg,22px);line-height:1.25;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.lt .lupe .s{margin-top:6px;font-size:11.5px;color:#CFCABE;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+/* Fadenkreuz der Lupe: zwei kurze Striche oben und unten, keine Naht quer
+   durchs Glas — die volle Linie sah aus wie ein Sprung. */
+.lt .lupe .marke{position:absolute;left:50%;top:0;bottom:0;width:1px;margin-left:-.5px}
+.lt .lupe .marke::before,.lt .lupe .marke::after{content:'';position:absolute;left:0;width:1px;
+  height:18px;background:rgba(255,255,255,.5)}
+.lt .lupe .marke::before{top:12px} .lt .lupe .marke::after{bottom:12px}
+
+/* Filmstreifen — die Spulfläche */
+.lt .streifen{flex:none;height:var(--sh,86px);position:relative;cursor:ew-resize;touch-action:none;
+  border-radius:2px;overflow:hidden;background:#0E0F12;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)}
+.lt .streifen .perf{position:absolute;left:0;right:0;height:13px;
+  background:repeating-linear-gradient(90deg,transparent 0 7px,rgba(255,255,255,.72) 7px 15px,
+    transparent 15px 22px)}
+.lt .streifen .perf.o{top:5px} .lt .streifen .perf.u{bottom:5px}
+.lt .streifen .kader{position:absolute;top:22px;bottom:22px;left:0;display:flex}
+.lt .streifen .kad{flex:none;border-right:1px solid rgba(0,0,0,.6);position:relative;overflow:hidden;
+  display:grid;place-items:center;padding:0 6px}
+.lt .streifen .kad span{font-size:9.5px;letter-spacing:.06em;color:rgba(255,255,255,.82);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.lt .streifen .kad.an{box-shadow:inset 0 0 0 1.5px var(--licht)}
+.lt .streifen .fadenkreuz{position:absolute;left:50%;top:0;bottom:0;width:1px;margin-left:-.5px;
+  background:var(--licht);z-index:3;box-shadow:0 0 8px rgba(201,169,110,.8)}
+
+.lt .fuss{flex:none;display:flex;align-items:center;gap:12px}
+.lt .fuss .uhr{font-family:var(--mono);font-size:12px;color:#9C968A;font-variant-numeric:tabular-nums;
+  flex:1}
+.lt .fuss button{width:var(--tb,46px);height:var(--tb,46px);border-radius:50%;display:grid;
+  place-items:center;color:#E7E5DE;background:rgba(255,255,255,.08);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.13)}
+.lt .fuss button.pp{color:var(--raum);background:var(--licht)}
+.lt .fuss button:active{transform:translateY(1px)}
+
+/* ── rechte Spalte: der Leuchttisch ── */
+.lt .tisch{flex:1;min-width:0;display:flex;flex-direction:column;gap:14px}
+.lt .suchzeile{flex:none;display:flex;align-items:center;gap:12px;height:44px;padding:0 15px;
+  border-radius:2px;background:rgba(255,255,255,.07);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.lt .suchzeile input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:#E7E5DE;font-size:14.5px}
+.lt .suchzeile input::placeholder{color:#8A8478}
+.lt .platte{flex:1;min-height:0;border-radius:3px;padding:var(--tp,20px);overflow:hidden;
+  display:grid;grid-template-columns:repeat(var(--sp,4),1fr);gap:var(--tg2,18px);align-content:start;
+  background:linear-gradient(180deg,var(--glas),var(--glas-2));
+  box-shadow:inset 0 0 40px rgba(255,255,255,.7),0 0 60px rgba(255,255,255,.06),
+    0 14px 34px rgba(0,0,0,.4)}
+.lt .dia{background:linear-gradient(160deg,var(--karton),var(--karton-2));padding:8px 8px 0;
+  border-radius:1px;cursor:pointer;position:relative;
+  box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 3px 7px rgba(0,0,0,.22)}
+.lt .dia .fenster{aspect-ratio:1;position:relative;overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.3)}
+.lt .dia .fenster .ini{position:absolute;inset:0;display:grid;place-items:center;color:#fff;
+  font-family:var(--serif);font-size:30px;opacity:.9}
+.lt .dia .schild{padding:7px 2px 9px;text-align:center}
+.lt .dia .schild .t{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--fett);
+  line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.lt .dia .schild .s{margin-top:3px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--tinte-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lt .dia.an{box-shadow:0 0 0 2px var(--fett),0 6px 14px rgba(0,0,0,.3)}
+.lt .dia.an::after{content:'läuft';position:absolute;top:-9px;right:6px;font-size:8.5px;
+  letter-spacing:.18em;text-transform:uppercase;color:#fff;background:var(--fett);padding:2px 7px;
+  border-radius:1px}
+.lt .leerzeile{grid-column:1/-1;padding:20px 4px;font-size:13px;color:var(--tinte-2)}
+.lt .tischfuss{flex:none;display:flex;justify-content:space-between;gap:16px}
+
+/* ══ Variante 2: Cyanotypie ═══════════════════════════════════════════════
+   Kein zweites Gerät, ein anderes Verfahren: der Leuchttisch wird zur
+   Blaupause. Papier ist Preußischblau, das Licht ist Weiß — also kehrt sich
+   alles um, was auf dem Glas hell war.                                     */
+.lt.cy{
+  --raum:#0B1C2E; --raum-2:#06121F; --glas:#1B4A73; --glas-2:#123A5E;
+  --karton:#2A6390; --karton-2:#1D4E77; --fett:#EAF2F7; --licht:#9FD3F0; --tinte-2:#A9C6DA}
+.lt.cy .platte{box-shadow:inset 0 0 60px rgba(159,211,240,.22),0 0 70px rgba(43,110,160,.16),
+  0 14px 34px rgba(0,0,0,.5)}
+.lt.cy .dia{box-shadow:0 1px 0 rgba(255,255,255,.16) inset,0 3px 7px rgba(0,0,0,.35)}
+.lt.cy .dia .schild .t{color:var(--fett);font-style:italic}
+.lt.cy .dia.an::after{color:#0B1C2E;background:var(--fett)}
+.lt.cy .dia .fenster{filter:saturate(.15) sepia(.3) hue-rotate(165deg) contrast(1.1)}
+.lt.cy .fuss button.pp{color:#0B1C2E;background:var(--licht)}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 17 · zweite Reihe</div>
+      <h1>Leuchttisch</h1>
+      <p class="lede">Der einzige Entwurf, der auch <b>etwas ist, wenn nichts läuft</b>: ein beleuchteter
+      Tisch voller Diarahmen. Der Spieler ist die Lupe in der Ecke; darunter läuft der Filmstreifen des
+      Albums durch, und daran wird gespult. Die Farbe des Lichts kommt <b>aus dem Cover</b>.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <svg viewBox="0 0 300 200" fill="none" stroke="currentColor" stroke-width="1.4">
+        <rect x="14" y="26" width="272" height="150" rx="3"/>
+        <g>
+          <rect x="30" y="42" width="52" height="52"/><rect x="36" y="48" width="40" height="34"/>
+          <rect x="94" y="42" width="52" height="52"/><rect x="100" y="48" width="40" height="34"/>
+          <rect x="158" y="42" width="52" height="52"/><rect x="164" y="48" width="40" height="34"/>
+          <rect x="30" y="106" width="52" height="52"/><rect x="36" y="112" width="40" height="34"/>
+          <rect x="94" y="106" width="52" height="52"/><rect x="100" y="112" width="40" height="34"/>
+        </g>
+        <circle cx="232" cy="126" r="34"/><circle cx="232" cy="126" r="26"/>
+        <path d="M232 92v-10M198 126h-8"/>
+        <rect x="158" y="112" width="46" height="30"/>
+        <path d="M158 118h46M158 136h46" stroke-dasharray="2 4"/>
+      </svg>
+      <figcaption>Vorlage · Leuchttisch mit Lupe, gezeichnet</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Kontaktbogen</h2><span class="marke geraet">PC · 1440 × 900</span></div>
+    <p class="etext">Milchglas, Karton, Fettstift. Die Sammlung liegt offen — das ist der zweite Fall der
+    Regel aus <code style="font-family:var(--mono);font-size:13px">player.html</code>, in dem die Suchzeile
+    <b>direkt über der Liste</b> steht statt hinter einem Knopf, wie beim Kassettendeck am PC. Der
+    Filmstreifen unter der Lupe zeigt jeden Titel als Kader, so breit wie er lang ist.
+    <span class="probier"><b>Ausprobieren:</b> den Streifen ziehen — das Fadenkreuz bleibt stehen, der
+    Film läuft darunter durch, auch über Titelgrenzen. Ein Dia anklicken legt es unter die Lupe.</span></p>
+    <div class="buehne">
+      <div class="rahmen pc">
+        <div class="schirm">
+          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
+          <div class="flaeche"><div class="lt" id="v1"></div></div>
+        </div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Womit gespult wird</dt><dd>Der <b>Filmstreifen</b> läuft unter einem festen Fadenkreuz durch</dd></div>
+      <div><dt>Ohne Tippen sichtbar</dt><dd>Die ganze Sammlung, dazu jeder Titel des Albums</dd></div>
+      <div><dt>Ruhezustand</dt><dd><b>Der eigentliche Punkt:</b> ein Tisch voller Cover</dd></div>
+      <div><dt>Schwäche</dt><dd>Viele Cover heißt viele <code>/api/cover</code>-Aufrufe</dd></div>
+      <div><dt>Aufwand</dt><dd>mittel — der Streifen ist eine verschobene Flexzeile</dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Cyanotypie</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
+    <p class="etext">Dasselbe Möbel, anderes Verfahren: eine <b>Blaupause</b>. Preußischblau als Papier,
+    Weiß als Licht, die Cover entsättigt ins Blau gezogen. Auf dem iPad wird die Lupe kleiner und der
+    Tisch flacher: <b>zwei volle Reihen statt drei angeschnittener</b> — eine halbe Reihe am unteren Rand
+    sieht nach Fehler aus, nicht nach „da kommt noch was".
+    <span class="probier"><b>Ausprobieren:</b> im Suchfeld <em>Bach</em> eingeben — der Tisch wird
+    abgeräumt, ohne dass sich die Lupe ändert.</span></p>
+    <div class="buehne">
+      <div class="rahmen ipad-quer">
+        <div class="schirm"><div class="lt cy" id="v2"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Material</dt><dd>Cyanotypie — ein <code>filter</code> auf dem Cover, sonst Tokens</dd></div>
+      <div><dt>Ohne Tippen sichtbar</dt><dd>Zwei volle Reihen, groß genug für den Finger</dd></div>
+      <div><dt>Ruhezustand</dt><dd>Eine Blaupause an der Wand</dd></div>
+      <div><dt>Hochkant</dt><dd>Trägt: aus vier Spalten werden zwei, die Lupe wandert nach oben</dd></div>
+      <div><dt>Nähe zu Blatt 07</dt><dd>Farbe verwandt, Modell nicht: dort Nacht, hier <b>Papier</b></dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Die Lichtfarbe kommt aus dem Cover, nicht aus einer Tabelle.</b> Das Bild wird einmal
+      in ein 8 × 8-<code>&lt;canvas&gt;</code> gezeichnet und der Mittelwert ausgelesen. Das geht nur,
+      weil <code>/api/cover/{name}</code> <b>dieselbe Herkunft</b> hat wie die Seite — ein Bild von
+      fremder Herkunft würde das Canvas verunreinigen und <code>getImageData()</code> würfe. Hier im
+      Entwurf wird derselbe Weg mit dem Verlauf gegangen, den die Attrappe statt eines Covers
+      hat.</span></li>
+      <li><span><b>Der Kader ist so breit wie der Titel lang.</b> <code>width = d/total</code> — damit ist
+      der Streifen zugleich die Zeitachse, und das Fadenkreuz steht immer bei
+      <code>gpos/total</code>.</span></li>
+      <li><span><b>Offene Sammlung heißt: Suchzeile über der Liste.</b> Genau der Fall, den
+      <code>player.html</code> für „Werkstisch" und „Deck" schon vorsieht — kein neuer Sonderweg, nur ein
+      dritter Bewohner.</span></li>
+      <li><span><b>Zwölf Cover sind zwölf Anfragen.</b> Bei 400 Alben braucht dieser Entwurf als einziger
+      hier eine Sichtbarkeitsprüfung: <code>content-visibility:auto</code> auf dem Dia, wie
+      <code>.album</code> in <code>index.html</code>, und <code>loading="lazy"</code> auf dem
+      Bild.</span></li>
+      <li><span><b>Fettstift ohne Handschrift-Webfont.</b> Kursive Systemserife plus ein Blau, das nach
+      Kugelschreiber aussieht, reicht — eine Handschriftschrift von Google wäre auf einer NAS ohne
+      Internet ohnehin nicht da.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für player.html</span><span>Blatt 17 · Leuchttisch</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+
+/* ── Farbe aus dem Cover ───────────────────────────────────────────────────
+   Im echten Spieler steht hier ein <img src="/api/cover/…">, das nach dem
+   load-Ereignis mit drawImage in ein 8×8-Canvas gezeichnet wird. Weil das
+   Bild von derselben Herkunft kommt, darf getImageData() es lesen. Die
+   Attrappe hat kein Bild, also wird derselbe Weg mit dem Verlauf gegangen,
+   der hier das Cover vertritt — die Rechnung dahinter ist dieselbe. */
+const farbSpeicher = {};
+function farbeAus(a){
+  if (farbSpeicher[a.id]) return farbSpeicher[a.id];
+  const c = document.createElement('canvas');
+  c.width = c.height = 8;
+  const ctx = c.getContext('2d', {willReadFrequently:true});
+  const g = ctx.createLinearGradient(0, 0, 8, 8);
+  g.addColorStop(0, a.c[0]); g.addColorStop(1, a.c[1]);
+  ctx.fillStyle = g; ctx.fillRect(0, 0, 8, 8);
+  const d = ctx.getImageData(0, 0, 8, 8).data;
+  let r = 0, gr = 0, b = 0;
+  for (let i = 0; i < d.length; i += 4){ r += d[i]; gr += d[i+1]; b += d[i+2]; }
+  const n = d.length / 4;
+  return farbSpeicher[a.id] = `rgb(${Math.round(r/n)},${Math.round(gr/n)},${Math.round(b/n)})`;
+}
+
+const tischHTML = `
+  <div class="pult">
+    <div class="lupe" data-lupe>
+      <div class="bild" data-lupenbild></div>
+      <div class="glanz"></div>
+      <div class="marke"></div>
+      <div class="text">
+        <div class="t" data-titel></div>
+        <div class="s" data-unter></div>
+      </div>
+    </div>
+    <div class="streifen" data-streifen>
+      <div class="perf o"></div>
+      <div class="kader" data-kader></div>
+      <div class="perf u"></div>
+      <div class="fadenkreuz"></div>
+    </div>
+    <div class="fuss">
+      <span class="uhr"><span data-jetzt></span> · <span data-ende></span></span>
+      <button data-prev>${I.prev(17)}</button>
+      <button class="pp" data-pp>${I.pause(19)}</button>
+      <button data-next>${I.next(17)}</button>
+    </div>
+  </div>
+
+  <div class="tisch">
+    <label class="suchzeile">${I.search(17)}
+      <input type="search" placeholder="Album, Interpret oder Titel suchen …" data-suche></label>
+    <div class="platte" data-bibliothek></div>
+    <div class="tischfuss">
+      <span class="kap" data-btreffer></span>
+      <span class="kap" data-tischstand></span>
+    </div>
+  </div>`;
+
+function verdrahte(wurzel, deck, stil){
+  const $  = s => wurzel.querySelector(s);
+  wurzel.innerHTML = tischHTML;
+  Object.entries(stil).forEach(([k,v]) => wurzel.style.setProperty(k, v));
+
+  $('[data-pp]').onclick   = () => deck.toggle();
+  $('[data-next]').onclick = () => deck.next();
+  $('[data-prev]').onclick = () => deck.prev();
+
+  /* Der Tisch ist die Bibliothek — nur ohne Blende: hier ist nichts zugedeckt.
+     Deshalb bekommt bindBibliothek eine Blende, die nirgends hängt. */
+  const bib = bindBibliothek({
+    blende: document.createElement('div'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="dia" data-alb="${a.id}">
+        <div class="fenster" style="background:${grad(a)}"><span class="ini">${ini(a)}</span></div>
+        <div class="schild"><div class="t">${esc(a.t)}</div>
+          <div class="s">${esc(a.ar)} · ${a.y}</div></div></div>`,
+    leer: '<div class="leerzeile">Kein Dia auf dem Tisch.</div>',
+  });
+
+  /* Spulen: der Streifen läuft, das Fadenkreuz steht. */
+  bindDrag($('[data-streifen]'), f => deck.seekGlobal(f * deck.total));
+
+  let letztesAlbum = null, letzterTitel = null;
+  deck.onRender = d => {
+    const t = d.track, a = d.album;
+    if (letztesAlbum !== a.id){
+      letztesAlbum = a.id;
+      const farbe = farbeAus(a);
+      wurzel.style.setProperty('--licht', farbe);
+      $('[data-lupenbild]').style.background = grad(a);
+      $('[data-lupe]').style.boxShadow =
+        `0 0 0 10px rgba(255,255,255,.07),0 0 0 11px rgba(0,0,0,.5),
+         0 24px 50px rgba(0,0,0,.55),0 0 90px ${farbe}55,inset 0 0 60px rgba(0,0,0,.3)`;
+      $('[data-kader]').innerHTML = d.queue.map((id,i) =>
+        `<div class="kad" data-i="${i}" style="background:${grad(a)}">
+          <span>${esc(TRACKS[id].t)}</span></div>`).join('');
+      $('[data-tischstand]').textContent = `${a.tr.length} Titel · ${fmtLang(albDur(a))}`;
+      bib.markiere();
+    }
+    if (letzterTitel !== t.id){
+      letzterTitel = t.id;
+      $('[data-titel]').textContent = t.t;
+      $('[data-unter]').textContent = `${a.ar} — ${a.t}`;
+      [...$('[data-kader]').children].forEach((el,i) => el.classList.toggle('an', i === d.qi));
+    }
+    /* Der Streifen wird so verschoben, dass gpos unter dem Fadenkreuz liegt. */
+    const br = $('[data-streifen]').clientWidth;
+    $('[data-kader]').style.width = (br * 3) + 'px';
+    [...$('[data-kader]').children].forEach((el,i) =>
+      el.style.width = (TRACKS[d.queue[i]].d / d.total * br * 3) + 'px');
+    $('[data-kader]').style.transform =
+      `translateX(${(br/2 - d.gpos/d.total * br * 3).toFixed(1)}px)`;
+    $('[data-jetzt]').textContent = fmt(d.pos);
+    $('[data-ende]').textContent  = '−' + fmt(d.rest);
+    $('[data-pp]').innerHTML = d.playing ? I.pause(19) : I.play(19);
+  };
+  deck.render();
+}
+
+verdrahte(document.getElementById('v1'), new Deck('ryu', {qi:1, pos:60, speed:8}),
+  {'--sp':'4','--pw':'380px','--lw':'380px'});
+verdrahte(document.getElementById('v2'), new Deck('bac', {qi:0, pos:40, speed:8}),
+  {'--sp':'4','--pw':'320px','--lw':'320px','--tg':'20px','--tg2':'22px','--pad':'24px','--sh':'78px'});
+})();
+</script>

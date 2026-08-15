@@ -1,12 +1,15 @@
 """Baut aus mockups/player/ eine einzelne, in sich geschlossene HTML-Datei:
    _seite.css und _demo.js eingebettet, Vorlagenfotos als data:-URI verkleinert,
    IDs je Blatt eindeutig gemacht, damit alle dreizehn auf einer Seite laufen."""
-import base64, io, pathlib, re, urllib.parse
+import base64, io, os, pathlib, re, urllib.parse
 from PIL import Image
 
 QUELLE = pathlib.Path('/home/user/musiclib-unraid-app/mockups/player')
 FOTOS  = pathlib.Path('/home/user/musiclib-unraid-app/mckups_player')
 ZIEL   = pathlib.Path('/home/user/musiclib-unraid-app/mockups/player/alle-blaetter.html')
+# Fassung ohne <html>/<head>/<body> zum Veröffentlichen; der Pfad gehört nicht
+# ins Repo, also über die Umgebung. Ohne MUSIKLIB_ARTEFAKT landet sie in /tmp.
+ARTEFAKT = pathlib.Path(os.environ.get('MUSIKLIB_ARTEFAKT', '/tmp/musiklib-artefakt.html'))
 
 def daten_uri(pfad, breite=760):
     im = Image.open(pfad).convert('RGB')
@@ -113,6 +116,8 @@ ZIEL.write_text('<!doctype html>\n<html lang="de"><head><meta charset="utf-8">\n
                 + RUMPF.replace('</style>', '</style></head><body>', 1)
                 + '</body></html>\n')
 # 2. Fassung fürs Veröffentlichen (Gerüst kommt von außen)
-pathlib.Path('/tmp/claude-0/-home-user-musiclib-unraid-app/'
-             'fa937d59-b63b-5343-95a6-cb8e0b7803a8/scratchpad/artefakt.html').write_text(RUMPF)
+ARTEFAKT.parent.mkdir(parents=True, exist_ok=True)
+ARTEFAKT.write_text(RUMPF)
 print('geschrieben:', ZIEL, round(ZIEL.stat().st_size / 1024 / 1024, 2), 'MB')
+print('geschrieben:', ARTEFAKT, round(ARTEFAKT.stat().st_size / 1024 / 1024, 2), 'MB')
+print('Blätter:', ', '.join(nr for nr, _ in verzeichnis))

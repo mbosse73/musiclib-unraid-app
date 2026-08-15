@@ -1,0 +1,391 @@
+<title>16 · Fallblatt</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 16 — Vorlage: die Fallblattanzeige von Solari di Udine, wie sie in
+   Bahnhöfen hängt. Schwarze Lamellen in einem Alurahmen, eine gelbe Zeile
+   für den nächsten Zug, ein Rattern beim Wechsel.
+   Genommen: die Antwort auf die Frage „was sieht man, ohne zu tippen" —
+   hier die ganze Warteschlange als Tafel, und der Titelwechsel ist kein
+   Überblenden, sondern ein Umklappen einzelner Zeichen.
+   ══════════════════════════════════════════════════════════════════════════ */
+.fb{
+  --rahmen:#8A8D92; --rahmen-2:#5A5D63; --tafel:#131315; --lamelle:#1E1E21;
+  --schrift:#EFEFEA; --schrift-2:#8E8E88; --gelb:#E9C13C; --linie:rgba(255,255,255,.09);
+  --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
+  height:100%;overflow:hidden;position:relative;display:flex;flex-direction:column;
+  font-family:var(--sans);color:var(--schrift);padding:var(--pad,22px);gap:var(--gap,16px);
+  background:
+    repeating-linear-gradient(91deg,rgba(255,255,255,.04) 0 1px,rgba(0,0,0,.05) 1px 3px),
+    linear-gradient(158deg,var(--rahmen),var(--rahmen-2))}
+.fb *{font-family:inherit}
+.fb .kap{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:#2E3033}
+
+/* ── Rahmenzeile über der Tafel ── */
+.fb .oben{flex:none;display:flex;align-items:baseline;justify-content:space-between;gap:20px;
+  padding:0 4px}
+.fb .oben .stelle{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#2E3033}
+
+/* ── die Tafel ── */
+.fb .tafel{flex:1;min-height:0;display:flex;flex-direction:column;border-radius:3px;overflow:hidden;
+  background:var(--tafel);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.7),inset 0 2px 20px rgba(0,0,0,.7),
+    0 14px 34px rgba(0,0,0,.4)}
+.fb .kopfzeile{flex:none;display:grid;grid-template-columns:var(--spalten,64px 1fr 260px 96px 132px);
+  gap:14px;padding:10px var(--zp,20px);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--schrift-2);border-bottom:1px solid var(--linie)}
+/* Unter den belegten Zeilen bleibt die Tafel eine Tafel: leere Lamellenzeilen
+   im selben Raster, damit der Rest nicht wie ein abgeschnittener Kasten wirkt. */
+.fb .reihen{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;
+  background:repeating-linear-gradient(180deg,transparent 0 calc(var(--zh,58px) - 1px),
+    var(--linie) calc(var(--zh,58px) - 1px) var(--zh,58px))}
+.fb .rz{display:grid;grid-template-columns:var(--spalten,64px 1fr 260px 96px 132px);gap:14px;
+  align-items:center;padding:0 var(--zp,20px);height:var(--zh,58px);flex:none;position:relative;
+  border-bottom:1px solid var(--linie);cursor:pointer}
+.fb .rz .nr{font-family:var(--mono);font-size:13px;color:var(--schrift-2)}
+.fb .rz .tt{font-size:13px;letter-spacing:.02em;white-space:nowrap;overflow:hidden;min-width:0}
+.fb .rz .al{font-size:13px;color:var(--schrift-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.fb .rz .dau{font-family:var(--mono);font-size:13px;color:var(--schrift-2);
+  font-variant-numeric:tabular-nums}
+.fb .rz .st{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--schrift-2);
+  text-align:right}
+.fb .rz.gespielt{opacity:.42}
+.fb .rz.an{cursor:ew-resize;touch-action:none}
+.fb .rz.an .st{color:var(--gelb)}
+.fb .rz.an .nr,.fb .rz.an .dau{color:var(--gelb)}
+/* Der Fortschritt liegt hinter der laufenden Zeile — sie ist die Spulfläche. */
+.fb .rz .fuell{position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(233,193,60,.13);
+  border-right:2px solid var(--gelb);pointer-events:none;display:none}
+.fb .rz.an .fuell{display:block}
+
+/* ── Fallblatt-Zeichen ── */
+.fb .fl{display:inline-block;min-width:.62em;height:1.24em;line-height:1.24em;text-align:center;
+  vertical-align:top;position:relative;border-radius:1px;margin-right:1.5px;
+  background:linear-gradient(180deg,#2A2A2E 0 50%,var(--lamelle) 50% 100%);
+  transform-origin:50% 0;backface-visibility:hidden}
+.fb .fl::after{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.6)}
+.fb .fl.leer{background:none}
+.fb .fl.leer::after{display:none}
+@keyframes fbfall{0%{transform:rotateX(-88deg)}62%{transform:rotateX(6deg)}100%{transform:rotateX(0)}}
+.fb .fl.faellt{animation:fbfall .17s ease-out both}
+@media (prefers-reduced-motion:reduce){.fb .fl.faellt{animation:none}}
+
+/* ── Zielzeile: was läuft, groß ── */
+.fb .ziel{flex:none;padding:var(--zip,16px) var(--zp,20px);border-bottom:1px solid var(--linie);
+  background:linear-gradient(180deg,rgba(233,193,60,.10),transparent)}
+.fb .ziel .titel{font-size:var(--tg,30px);line-height:1.2;letter-spacing:.01em;color:var(--gelb);
+  white-space:nowrap;overflow:hidden}
+.fb .ziel .unter{margin-top:8px;font-size:12.5px;color:var(--schrift-2);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+
+/* ── Sockel ── */
+.fb .sockel{flex:none;display:flex;align-items:center;gap:16px;padding:0 4px}
+.fb .sockel .uhr{font-family:var(--mono);font-size:13px;letter-spacing:.1em;color:#2E3033;
+  font-variant-numeric:tabular-nums}
+.fb .sockel .fuellung{flex:1}
+.fb .sockel button{width:var(--tb,46px);height:var(--tb,46px);border-radius:3px;display:grid;
+  place-items:center;color:#22242A;background:linear-gradient(180deg,#C9CCD1,#9AA0A6);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 3px 8px rgba(0,0,0,.35)}
+.fb .sockel button:active{box-shadow:inset 0 2px 5px rgba(0,0,0,.4)}
+.fb .sockel button.pp{background:linear-gradient(180deg,#F0D370,#D9AE2C)}
+.fb .anschluss{font-size:11px;color:#2E3033;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  min-width:0}
+.fb .anschluss b{color:#14161A;font-weight:600}
+
+/* ── Bibliothek: die Tafel klappt auf eine Liste um ── */
+.fb .bib{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;padding:var(--pad,22px);
+  background:rgba(16,16,18,.96);opacity:0;pointer-events:none;transition:opacity .18s}
+.fb .bib.auf{opacity:1;pointer-events:auto}
+.fb .bib .bkopf{display:flex;align-items:center;gap:16px;margin-bottom:16px;flex:none}
+.fb .bib h2{font-size:19px;font-weight:600;letter-spacing:.04em;flex:none}
+.fb .bib .suchfeld{flex:1;min-width:0;display:flex;align-items:center;gap:10px;height:42px;padding:0 14px;
+  border-radius:2px;background:#08080A;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.fb .bib .suchfeld input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:var(--schrift);font-size:14.5px}
+.fb .bib .suchfeld input::placeholder{color:#6C6C68}
+.fb .bib .zu{width:42px;height:42px;border-radius:2px;flex:none;display:grid;place-items:center;
+  color:#22242A;background:linear-gradient(180deg,#C9CCD1,#9AA0A6)}
+.fb .bib .bliste{flex:1;min-height:0;overflow:hidden;display:grid;
+  grid-template-columns:repeat(var(--bsp,2),1fr);gap:0 20px;align-content:start}
+.fb .bib .bz{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;
+  padding:9px 6px;border-bottom:1px solid var(--linie);cursor:pointer}
+.fb .bib .bz:hover{background:rgba(255,255,255,.05)}
+.fb .bib .bz .pl{width:34px;height:34px;border-radius:2px;display:grid;place-items:center;color:#fff;
+  font-family:var(--serif);font-size:15px}
+.fb .bib .bz .m{min-width:0}
+.fb .bib .bz .m>span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fb .bib .bz .t{font-size:13.5px}
+.fb .bib .bz .s{font-size:11px;color:var(--schrift-2)}
+.fb .bib .bz .d{font-family:var(--mono);font-size:11px;color:var(--schrift-2)}
+.fb .bib .bz.an .t{color:var(--gelb)}
+.fb .bib .bfuss{flex:none;padding-top:12px;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--schrift-2)}
+
+/* ══ Variante 2: Emailleschild ════════════════════════════════════════════
+   Der Rahmen wird ein emailliertes Blech: tiefes Blau, weiße Schrift, an den
+   Ecken abgeplatzt. Die Abplatzer sind vier radiale Verläufe, sonst nichts —
+   ein Foto wäre größer als das ganze Blatt.                                */
+.fb.em{
+  --rahmen:#1E4A6B; --rahmen-2:#143349; --gelb:#F2E3C0; --tafel:#0E1B25; --lamelle:#16242F;
+  background:
+    radial-gradient(9px 7px at 6% 8%,#D8D2C4 60%,transparent 62%),
+    radial-gradient(7px 6px at 96% 14%,#D8D2C4 60%,transparent 62%),
+    radial-gradient(11px 8px at 3% 93%,#D8D2C4 60%,transparent 62%),
+    radial-gradient(6px 5px at 88% 97%,#D8D2C4 60%,transparent 62%),
+    linear-gradient(158deg,var(--rahmen),var(--rahmen-2));
+  box-shadow:inset 0 0 0 3px rgba(255,255,255,.14),inset 0 0 0 4px rgba(0,0,0,.35)}
+.fb.em .kap,.fb.em .oben .stelle,.fb.em .sockel .uhr,.fb.em .anschluss{color:#CFE0EC}
+.fb.em .anschluss b{color:#fff}
+.fb.em .sockel button{color:#12303F;background:linear-gradient(180deg,#E8EDF1,#B9C6D0)}
+.fb.em .sockel button.pp{background:linear-gradient(180deg,#F6EFDC,#DCCBA4)}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 16 · zweite Reihe</div>
+      <h1>Fallblatt</h1>
+      <p class="lede">Die Warteschlange <b>ist</b> die Anzeige: eine Abfahrtstafel, auf der jede Zeile ein
+      Titel ist. Beim Wechsel wird nichts überblendet — es klappen die Zeichen um, die sich geändert
+      haben. Gespult wird auf der gelben Zeile selbst.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <svg viewBox="0 0 300 200" fill="none" stroke="currentColor" stroke-width="1.4">
+        <rect x="14" y="16" width="272" height="168" rx="4"/>
+        <rect x="28" y="30" width="244" height="26" rx="2"/>
+        <path d="M28 82h244M28 108h244M28 134h244M28 160h244"/>
+        <path d="M28 69h244" stroke-dasharray="3 4"/>
+        <path d="M74 56v128M188 56v128M236 56v128"/>
+        <rect x="28" y="82" width="244" height="26" fill="currentColor" opacity=".14" stroke="none"/>
+        <path d="M40 43h18M64 43h26M96 43h14" stroke-width="3"/>
+        <path d="M40 95h20M66 95h30M100 95h16M196 95h24" stroke-width="3"/>
+      </svg>
+      <figcaption>Vorlage · Fallblattanzeige, gezeichnet</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Abfahrtstafel</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
+    <p class="etext">Alurahmen, schwarze Lamellen, eine gelbe Zeile. Oben steht groß, was läuft; darunter
+    die ganze Warteschlange mit Nummer, Titel, Album, Dauer und Zustand. Der <b>Anschluss</b> unten ist
+    das Album, das nach dem letzten Titel kommt — genau das, was
+    <code style="font-family:var(--mono);font-size:13px">musiklib:fortsetzung</code> mit
+    <em>weiter</em> meint, nur sichtbar statt versteckt.
+    <span class="probier"><b>Ausprobieren:</b> auf der gelben Zeile nach rechts ziehen — das ist die
+    Spulleiste. Eine andere Zeile antippen springt dorthin, und die Zeichen fallen um.</span></p>
+    <div class="buehne">
+      <div class="rahmen ipad-quer">
+        <div class="schirm"><div class="fb" id="v1"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Womit gespult wird</dt><dd>Die <b>laufende Zeile selbst</b> — sie ist Anzeige und Griff</dd></div>
+      <div><dt>Ohne Tippen sichtbar</dt><dd>Die ganze Warteschlange <b>und</b> was danach kommt</dd></div>
+      <div><dt>Ruhezustand</dt><dd>Eine lesbare Tafel: was zuletzt lief, steht noch da</dd></div>
+      <div><dt>Schwäche</dt><dd>Kein Cover. Wer nach Bildern sucht, ist hier falsch</dd></div>
+      <div><dt>Aufwand</dt><dd>gering — eine Liste, ein <code>rotateX</code>, keine Grafik</dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Emaille</h2><span class="marke geraet">PC · 1440 × 900</span></div>
+    <p class="etext">Derselbe Mechanismus in einem <b>emaillierten Blechschild</b>: tiefes Blau, weiße
+    Schrift, an vier Stellen abgeplatzt. Am Schreibtisch ist Platz für mehr Zeilen, also steht hier die
+    Warteschlange <em>und</em> die Sammlung nebeneinander — die Tafel bleibt trotzdem eine Tafel.
+    <span class="probier"><b>Ausprobieren:</b> die Bibliothekstaste rechts unten; die Sammlung ist
+    dieselbe Tafel, nur mit Alben statt Titeln.</span></p>
+    <div class="buehne">
+      <div class="rahmen pc">
+        <div class="schirm">
+          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
+          <div class="flaeche"><div class="fb em" id="v2"></div></div>
+        </div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Material</dt><dd>Emailleblech, Abplatzer aus vier radialen Verläufen</dd></div>
+      <div><dt>Farbe</dt><dd>Gelb wird Elfenbein — auf Blau wäre Gelb Verkehrszeichen</dd></div>
+      <div><dt>Ruhezustand</dt><dd>Ein Schild an der Wand; nichts blinkt, nichts dreht sich</dd></div>
+      <div><dt>Hochkant</dt><dd>Trägt sogar besser als quer — eine Tafel ist hoch</dd></div>
+      <div><dt>Nähe zu Blatt 10</dt><dd>gering: dort Weißraum, hier <b>Dichte</b></dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Umklappen ist ein Vergleich, keine Animation aller Zeichen.</b>
+      <code>blatt(el, text)</code> merkt sich den alten Text und setzt die Klasse nur auf die Stellen, die
+      sich geändert haben — mit <code>animation-delay: i·16ms</code>. Klappt alles gleichzeitig, sieht es
+      aus wie ein Blinken; klappt nur der Unterschied, sieht es aus wie Solari.</span></li>
+      <li><span><b>Die laufende Zeile ist die Spulfläche</b> (<code>data-spulen</code>). Das ist die
+      billigste Antwort auf die Regel aus <code>player.html</code>, dass jedes Layout eine markierte
+      Spulfläche braucht: Sie existiert ohnehin schon als Zeile.</span></li>
+      <li><span><b>Die Tafel braucht eine feste Zeilenzahl.</b> Bei einem Album mit 30 Titeln muss sie
+      scrollen oder kürzen — ein Bahnhof zeigt auch nicht alle Züge des Tages. Sinnvoll: die laufende
+      Zeile bleibt in der oberen Hälfte stehen, der Rest schiebt sich durch.</span></li>
+      <li><span><b>Der Anschluss kostet nichts.</b> Das nächste Album ist
+      <code>ALBUMS[(i+1) % n]</code> in Sammlungsreihenfolge — dieselbe Rechnung, die
+      <code>naechstesAlbum()</code> in <code>player.html</code> schon macht.</span></li>
+      <li><span><b>Nur Systemschriften.</b> Eine Fallblattanzeige will eine schmale Grotesk; ohne Webfont
+      nimmt man die des Systems und gewinnt den Charakter über <code>letter-spacing</code> und die
+      Lamelle, nicht über die Schnittform.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für player.html</span><span>Blatt 16 · Fallblatt</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+
+/* Ein Feld aus Lamellen. Beim Setzen fällt nur um, was sich geändert hat. */
+function blatt(el, text, breite){
+  const neu = String(text).toUpperCase();
+  const alt = el.dataset.text || '';
+  if (neu === alt && el.children.length) return;
+  el.dataset.text = neu;
+  const n = breite || neu.length;
+  let html = '';
+  for (let i = 0; i < n; i++){
+    const z = neu[i] || ' ';
+    const gleich = (alt[i] || ' ') === z;
+    const leer = z === ' ';
+    html += `<span class="fl${leer ? ' leer' : ''}${gleich ? '' : ' faellt'}"
+      style="animation-delay:${(i*16)}ms">${z === ' ' ? '&nbsp;' : esc(z)}</span>`;
+  }
+  el.innerHTML = html;
+}
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Sammlung</h2>
+      <label class="suchfeld">${I.search(17)}
+        <input type="search" placeholder="Album, Interpret oder Titel suchen …" data-suche></label>
+      <button class="zu" data-bib-zu>${I.x(17)}</button>
+    </div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss" data-btreffer></div>
+  </div>`;
+
+const tafelHTML = `
+  <div class="oben">
+    <span class="stelle">Musiklib · Warteschlange</span>
+    <span class="stelle" data-stand></span>
+  </div>
+
+  <div class="tafel">
+    <div class="ziel">
+      <div class="titel" data-flapTitel></div>
+      <div class="unter" data-unter></div>
+    </div>
+    <div class="kopfzeile">
+      <span>Nr</span><span>Titel</span><span>Album</span><span>Dauer</span><span>Zustand</span>
+    </div>
+    <div class="reihen" data-reihen></div>
+  </div>
+
+  <div class="sockel">
+    <span class="uhr"><span data-jetzt></span> / <span data-gesamt></span></span>
+    <span class="anschluss" data-anschluss></span>
+    <span class="fuellung"></span>
+    <button data-prev>${I.prev(17)}</button>
+    <button class="pp" data-pp>${I.pause(19)}</button>
+    <button data-next>${I.next(17)}</button>
+    <button data-bib title="Sammlung">${I.list(17)}</button>
+  </div>` + bibHTML;
+
+function verdrahte(wurzel, deck, stil, opt){
+  const $  = s => wurzel.querySelector(s);
+  const $$ = s => [...wurzel.querySelectorAll(s)];
+  wurzel.innerHTML = tafelHTML;
+  Object.entries(stil).forEach(([k,v]) => wurzel.style.setProperty(k, v));
+
+  $('[data-pp]').onclick   = () => deck.toggle();
+  $('[data-next]').onclick = () => deck.next();
+  $('[data-prev]').onclick = () => deck.prev();
+
+  const bib = bindBibliothek({
+    knopf: $('[data-bib]'), zu: $('[data-bib-zu]'), blende: $('[data-bib-blende]'),
+    feld: $('[data-suche]'), liste: $('[data-bibliothek]'), treffer: $('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">
+        <span class="pl" style="background:${grad(a)}">${ini(a)}</span>
+        <span class="m"><span class="t">${esc(a.t)}</span>
+          <span class="s">${esc(a.ar)} · ${a.y}</span></span>
+        <span class="d">${fmtLang(albDur(a))}</span></div>`,
+    leer: '<div class="bz" style="border:none"><span class="s">Nichts gefunden.</span></div>',
+  });
+
+  /* Zeilen neu bauen, wenn sich die Warteschlange ändert — nicht je Sekunde. */
+  let signatur = null;
+  const zeilen = d => {
+    const sig = d.queue.join(',');
+    if (sig === signatur) return;
+    signatur = sig;
+    $('[data-reihen]').innerHTML = d.queue.map((id,i) => {
+      const t = TRACKS[id], a = albOf(t);
+      return `<div class="rz" data-i="${i}">
+          <span class="fuell" data-fuell></span>
+          <span class="nr">${String(i+1).padStart(2,'0')}</span>
+          <span class="tt" data-flap></span>
+          <span class="al">${esc(a.t)}</span>
+          <span class="dau">${fmt2(t.d)}</span>
+          <span class="st" data-st></span>
+        </div>`;
+    }).join('');
+    /* Ein Griff je Zeile, zwei Bedeutungen: Tippen springt, Ziehen spult —
+       und Ziehen gilt nur auf der laufenden Zeile. Dieselbe Trennung wie am
+       Rand in mobile.html, hier mit 6 px Schwelle. */
+    [...$('[data-reihen]').children].forEach((el,i) => {
+      blatt(el.querySelector('[data-flap]'), TRACKS[d.queue[i]].t, opt.breite);
+      bindDrag(el, (f, phase) => {
+        if (phase === 'tap'){ if (i !== deck.qi) deck.jump(i); return; }
+        if (i === deck.qi) deck.seek(f);
+      }, {schwelle:6});
+    });
+  };
+
+  let letzterTitel = null;
+  deck.onRender = d => {
+    const t = d.track, a = d.album;
+    zeilen(d);
+    if (letzterTitel !== t.id){
+      letzterTitel = t.id;
+      blatt($('[data-flapTitel]'), t.t, opt.zielbreite);
+      $('[data-unter]').textContent = `${a.ar} — ${a.t} · ${a.y} · Titel ${d.qi+1} von ${d.queue.length}`;
+      bib.markiere();
+      const i = ALBUMS.findIndex(x => x.id === a.id);
+      const n = ALBUMS[(i+1) % ALBUMS.length];
+      $('[data-anschluss]').innerHTML =
+        `Anschluss: <b>${esc(n.t)}</b> · ${esc(n.ar)}`;
+    }
+    [...$('[data-reihen]').children].forEach((el,i) => {
+      el.classList.toggle('an', i === d.qi);
+      el.classList.toggle('gespielt', i < d.qi);
+      el.querySelector('[data-st]').textContent =
+        i < d.qi ? 'gespielt' : i === d.qi ? (d.playing ? 'läuft' : 'hält') : 'folgt';
+      if (i === d.qi) el.querySelector('[data-fuell]').style.width = (d.frac*100).toFixed(2) + '%';
+    });
+    $('[data-jetzt]').textContent  = fmt(d.gpos);
+    $('[data-gesamt]').textContent = fmt(d.total);
+    $('[data-stand]').textContent  = `${d.queue.length} Titel · ${fmtLang(d.total)}`;
+    $('[data-pp]').innerHTML = d.playing ? I.pause(19) : I.play(19);
+  };
+  deck.render();
+}
+
+verdrahte(document.getElementById('v1'), new Deck('kob', {qi:1, pos:120, speed:8}),
+  {'--bsp':'2'}, {breite:26, zielbreite:22});
+verdrahte(document.getElementById('v2'), new Deck('blu', {qi:2, pos:64, speed:8}),
+  {'--pad':'26px','--zh':'62px','--tg':'34px','--zp':'26px','--bsp':'3',
+   '--spalten':'70px 1fr 300px 110px 150px'}, {breite:30, zielbreite:26});
+})();
+</script>
