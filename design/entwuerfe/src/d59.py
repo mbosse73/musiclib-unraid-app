@@ -139,48 +139,6 @@ def _zeilen(g, schrift, klein):
         for i, (nr, t, d) in enumerate(A['tracks']))
 
 
-def telefon():
-    g = 1.0
-    css = _css(g)
-    body = f'''<div class="geraet">
-  <div class="chrom" style="height:10px;flex-shrink:0"></div>
-  <div style="flex:1;min-height:0;padding:56px 48px 64px;display:flex;
-    flex-direction:column">
-    <div style="display:flex;align-items:stretch;justify-content:space-between;
-      flex:1;min-height:0">
-      {_klappe(g, 590, 0, 22)}
-      <div style="display:flex;flex-direction:column;align-items:center;gap:30px">
-        {vumeter(320, 160, '#f4f3ef', '#1a1a1a', '#3a3a3a', '', A['frac'])}
-        <div style="display:flex;gap:36px">
-          {_kipp(g, 48, 100, 17, 18, 'Zufall', False)}
-          {_kipp(g, 48, 100, 17, 18, 'Wdh.', True)}
-        </div>
-      </div>
-    </div>
-
-    <div style="margin-top:56px">{_skala(g, 44, 26, 12)}</div>
-    <div class="zeiten" style="font-size:25px;margin-top:16px">
-      <span>{A['pos']}</span><span>{A['dauer']}</span></div>
-
-    <div style="margin-top:56px;font-size:56px;font-weight:700;
-      letter-spacing:-.02em">{A['titel']}</div>
-    <div style="font-size:29px;color:{STUMM};margin-top:10px">
-      {A['interpret']} · {A['jahr']}</div>
-
-    <div style="margin-top:42px">{_zeilen(1.0, 31, 25)}
-      <div style="border-top:1px solid rgba(47,46,43,.20)"></div></div>
-
-    <div style="display:flex;align-items:center;justify-content:space-between;
-      margin-top:auto;padding-top:48px">
-      {_tasten(g, 122, 100, 44, 22)}
-      {_bib(g, 21, 72)}
-    </div>
-  </div>
-  <div class="chrom" style="height:10px;flex-shrink:0"></div>
-</div>'''
-    return css, body
-
-
 def rechner():
     g = .78
     css = _css(g)
@@ -224,6 +182,6 @@ def rechner():
 
 
 def bau():
-    for art, fn in (('iphone', telefon), ('pc', rechner)):
-        css, body = fn()
-        yield schreibe('59', 'Skalenblech', art, css, body)
+    # Nur der Rechner: das Hochformat ist auf Wunsch des Eigentuemers entfallen.
+    css, body = rechner()
+    yield schreibe('59', 'Skalenblech', 'pc', css, body)

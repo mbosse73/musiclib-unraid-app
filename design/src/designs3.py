@@ -91,7 +91,6 @@ d17()
 # 18 · AKAI 747 dbx (weiss/silber, rote LED-Anzeige, symmetrisch, Holz)
 # =========================================================================
 def d18():
-    WOOD='linear-gradient(180deg,#6b3f22,#43261300)'
     PANEL='linear-gradient(180deg,#f4f4f2,#d9d9d6 50%,#eaeae7 60%,#c6c6c2)'
     LED='#ff2a12'
     def sqbtn(ic,lab,lampcolor=None):
@@ -102,33 +101,14 @@ def d18():
     counter=lambda fs:f'''<div style="background:#160604;border-radius:6px;padding:12px 26px;box-shadow:inset 0 3px 9px #000;display:inline-block">
       <span style="font-family:{MONO};color:{LED};font-size:{fs}px;letter-spacing:8px;text-shadow:0 0 14px rgba(255,42,18,.85)">0:54:23</span></div>'''
     def reels(s,gap): return f'<div style="display:flex;gap:{gap}px;justify-content:center">{bigreel(s,face="#fbfbfa",tape="#3a3a38",rim="#d2d2ce")}{bigreel(s,face="#fbfbfa",tape="#3a3a38",rim="#d2d2ce")}</div>'
-    headcover=f'''<div style="background:linear-gradient(180deg,#eeeeeb,#d0d0cc);border:1.5px solid #b4b4b0;border-radius:6px;padding:14px 30px;text-align:center;box-shadow:inset 0 2px 2px #fff">
-      <span style="font-family:{SANS};font-weight:700;letter-spacing:5px;font-size:24px;color:#33332f">AKAI</span>
-      <span style="font-family:{SANS};font-size:16px;letter-spacing:2px;color:#7a7a74;margin-left:14px">4-TRACK STEREO TAPE DECK</span></div>'''
     vustrip=lambda w,h:f'''<div style="background:#f2ecd0;border:1.5px solid #b9b39a;border-radius:5px;padding:10px;display:flex;gap:10px">
       {vumeter(w,h,'#f7f2dc','#2a2a26','#6b6b62','L',0.55)}{vumeter(w,h,'#f7f2dc','#2a2a26','#6b6b62','R',0.68)}</div>'''
-    ph=f'''<div style="position:absolute;inset:0;background:{WOOD};background-color:#5c3a20;padding:26px">
-      <div style="height:100%;background:{PANEL};border-radius:10px;padding:30px 26px;display:flex;flex-direction:column;box-shadow:0 12px 34px rgba(0,0,0,.5),inset 0 3px 4px #fff">
-        {reels(432,24)}
-        <div style="display:flex;align-items:center;gap:16px;margin-top:22px">
-          <div style="flex:1;height:3px;background:#b6b6b2"></div>{counter(40)}<div style="flex:1;height:3px;background:#b6b6b2"></div></div>
-        <div style="margin-top:20px">{headcover}</div>
-        <div style="margin-top:26px;text-align:center">
-          <div style="font-family:{SANS};font-size:46px;font-weight:600;color:#2b2b28">Autobahn</div>
-          <div style="font-family:{SANS};font-size:23px;color:#6f6f6a;margin-top:6px">Kraftwerk · Reel B — 4 Track</div></div>
-        <div style="margin-top:20px">{pbar(38,'#bcbcb8','#d63a1e',8,knob=22,kc='#fbfbfa')}{hb('00:54','07:12','#6f6f6a',21,MONO,1,10)}</div>
-        <div style="display:flex;justify-content:center;margin-top:22px">{vustrip(230,140)}</div>
-        <div style="display:flex;gap:12px;margin-top:auto">
-          {sqbtn(rew(34,'#3a3a36'),'REW')}{sqbtn(tri(36,'#3a3a36'),'PLAY','#2ecc40')}{sqbtn(pausei(34,'#3a3a36'),'PAUSE','#f5c400')}
-          {sqbtn(ffwd(34,'#3a3a36'),'F.FWD')}{sqbtn('<div style="width:22px;height:22px;background:#3a3a36"></div>','STOP')}
-          {sqbtn(eject(34,'#d63a1e'),'LIBRARY')}</div>
-      </div></div>'''
     pc=f'''<div style="position:absolute;inset:0;background-color:#5c3a20;padding:24px">
       <div style="height:100%;background:{PANEL};border-radius:10px;padding:26px 34px;display:flex;flex-direction:column;box-shadow:0 12px 34px rgba(0,0,0,.5),inset 0 3px 4px #fff">
-        <div style="display:flex;align-items:center;gap:34px">
-          <div style="display:flex;flex-direction:column">{reels(300,22)}<div style="margin-top:16px">{''.join(f'<div style="display:flex;justify-content:space-between;padding:11px 4px;border-bottom:1px solid #bcbcb8;font-family:{SANS};font-size:20px;color:{"#2b2b28" if i==1 else "#7f7f7a"}"><span>{n}</span><span style="flex:1;text-align:left;margin-left:18px">{t}</span><span>{d}</span></div>' for i,(n,t,d) in enumerate([('01','Autobahn','7:12'),('02','Kometenmelodie','6:20'),('03','Mitternacht','3:44')]))}</div></div>
-          <div style="flex:1;display:flex;flex-direction:column;gap:14px;align-items:center">
-            {counter(38)}{headcover}{vustrip(210,120)}</div>
+        <div style="display:flex;align-items:center;gap:34px;flex:1;min-height:0">
+          <div style="display:flex;flex-direction:column;align-self:flex-start">{reels(300,22)}<div style="margin-top:16px">{''.join(f'<div style="display:flex;justify-content:space-between;padding:11px 4px;border-bottom:1px solid #bcbcb8;font-family:{SANS};font-size:20px;color:{"#2b2b28" if i==1 else "#7f7f7a"}"><span>{n}</span><span style="flex:1;text-align:left;margin-left:18px">{t}</span><span>{d}</span></div>' for i,(n,t,d) in enumerate([('01','Autobahn','7:12'),('02','Kometenmelodie','6:20'),('03','Mitternacht','3:44')]))}</div></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:34px;align-items:center;justify-content:center">
+            {counter(52)}{vustrip(392,244)}</div>
         </div>
         <div style="display:flex;align-items:flex-end;gap:40px;margin-top:auto">
           <div style="flex:1">
@@ -140,7 +120,7 @@ def d18():
             {sqbtn(ffwd(32,'#3a3a36'),'F.FWD')}{sqbtn('<div style="width:20px;height:20px;background:#3a3a36"></div>','STOP')}
             {sqbtn(eject(32,'#d63a1e'),'LIBRARY')}</div>
         </div></div></div>'''
-    add('18','Akai-747','iphone',ph); add('18','Akai-747','pc',pc)
+    add('18','Akai-747','pc',pc)   # kein Hochformat: auf Wunsch des Eigentuemers entfallen
 d18()
 
 # =========================================================================
@@ -914,55 +894,5 @@ def d32():
       </div></div>'''
     add('32','Seattle-Skeuo','iphone',ph); add('32','Seattle-Skeuo','pc',pc)
 d32()
-
-# =========================================================================
-# 33 · Glassmorphism (dunkel, Musiknote, orange/rote Farbwolken)
-# =========================================================================
-def d33():
-    BG='#141416'; OR1='#f2703c'; OR2='#e0455f'
-    glass='background:rgba(255,255,255,.10);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.20);box-shadow:0 22px 60px rgba(0,0,0,.45)'
-    blob=lambda x,y,s,c1,c2:f'<div style="position:absolute;left:{x}px;top:{y}px;width:{s}px;height:{s}px;border-radius:50%;background:linear-gradient(150deg,{c1},{c2});filter:blur(2px)"></div>'
-    def gbtn(ic,size=76,solid=False):
-        return f'''<div style="width:{size}px;height:{size}px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-        background:rgba(255,255,255,{'.22' if solid else '.10'});border:1px solid rgba(255,255,255,.25)">{ic}</div>'''
-    ph=f'''<div style="position:absolute;inset:0;background:{BG};overflow:hidden">
-      {blob(520,180,420,OR1,OR2)}{blob(60,1180,460,OR1,OR2)}{blob(700,1700,300,OR2,OR1)}
-      <div style="position:absolute;inset:70px 60px;border-radius:34px;{glass};padding:56px 46px;display:flex;flex-direction:column">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <span style="font-family:{SANS};font-size:22px;letter-spacing:4px;color:rgba(255,255,255,.65)">NOW PLAYING</span>
-          {gbtn(libicon(28,'#fff'),56)}</div>
-        <div style="border-radius:26px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);aspect-ratio:1;margin-top:34px;display:flex;align-items:center;justify-content:center">
-          <svg width="300" height="300" viewBox="0 0 24 24"><path d="M9 18V5l10-2v13" stroke="#fff" stroke-width="1.6" fill="none"/><circle cx="6.5" cy="18" r="3" fill="#fff"/><circle cx="16.5" cy="16" r="3" fill="#fff"/></svg></div>
-        <div style="text-align:center;margin-top:34px">
-          <div style="font-family:{SANS};font-size:52px;font-weight:600;color:#fff">Music</div>
-          <div style="font-family:{SANS};font-size:24px;color:rgba(255,255,255,.62);margin-top:8px">Ambient Collection · Vol. 3</div></div>
-        <div style="margin-top:auto">
-          {pbar(46,'rgba(255,255,255,.22)','#fff',5,knob=20,kc='#fff')}
-          {hb('02:12','04:48','rgba(255,255,255,.55)',21,SANS,1,14)}
-          <div style="display:flex;justify-content:center;align-items:center;gap:34px;margin-top:32px">
-            {gbtn(shuffle(26,'rgba(255,255,255,.8)'),64)}{gbtn(prev(30,'#fff'),80)}
-            {gbtn(tri(38,'#fff'),110,True)}{gbtn(nexti(30,'#fff'),80)}{gbtn(repeat(26,'rgba(255,255,255,.8)'),64)}</div>
-        </div></div></div>'''
-    pc=f'''<div style="position:absolute;inset:0;background:{BG};overflow:hidden">
-      {blob(980,60,420,OR1,OR2)}{blob(120,560,380,OR1,OR2)}{blob(1250,640,300,OR2,OR1)}
-      <div style="position:absolute;inset:60px 80px;border-radius:30px;{glass};padding:48px 54px;display:flex;gap:56px;align-items:center">
-        <div style="width:420px;height:420px;border-radius:26px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <svg width="230" height="230" viewBox="0 0 24 24"><path d="M9 18V5l10-2v13" stroke="#fff" stroke-width="1.6" fill="none"/><circle cx="6.5" cy="18" r="3" fill="#fff"/><circle cx="16.5" cy="16" r="3" fill="#fff"/></svg></div>
-        <div style="flex:1;display:flex;flex-direction:column">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <span style="font-family:{SANS};font-size:20px;letter-spacing:4px;color:rgba(255,255,255,.65)">NOW PLAYING</span>
-            {gbtn(libicon(26,'#fff'),52)}</div>
-          <div style="font-family:{SANS};font-size:72px;font-weight:600;color:#fff;margin-top:16px">Music</div>
-          <div style="font-family:{SANS};font-size:24px;color:rgba(255,255,255,.62);margin-top:6px">Ambient Collection · Vol. 3</div>
-          <div style="margin-top:26px">
-            {''.join(f'<div style="display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.12);font-family:{SANS};font-size:21px;color:rgba(255,255,255,{".95" if i==1 else ".55"})"><span>{n}</span><span style="flex:1;text-align:left;margin-left:18px">{t}</span><span>{d}</span></div>' for i,(n,t,d) in enumerate([('01','Drift','3:40'),('02','Music','4:48'),('03','Aurora','5:02')]))}</div>
-          {pbar(46,'rgba(255,255,255,.22)','#fff',5,mt=24,knob=18,kc='#fff')}
-          {hb('02:12','04:48','rgba(255,255,255,.55)',20,SANS,1,12)}
-          <div style="display:flex;align-items:center;gap:26px;margin-top:26px">
-            {gbtn(shuffle(24,'rgba(255,255,255,.8)'),58)}{gbtn(prev(28,'#fff'),72)}
-            {gbtn(tri(34,'#fff'),96,True)}{gbtn(nexti(28,'#fff'),72)}{gbtn(repeat(24,'rgba(255,255,255,.8)'),58)}</div>
-        </div></div></div>'''
-    add('33','Glass-Musiknote','iphone',ph); add('33','Glass-Musiknote','pc',pc)
-d33()
 
 print('V3 A-D:', len(D))

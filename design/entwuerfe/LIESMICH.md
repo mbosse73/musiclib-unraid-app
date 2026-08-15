@@ -1,9 +1,11 @@
-# Eigene Entwürfe: siebzehn Spieler aus `player2/` und `player3/`
+# Eigene Entwürfe: zwölf Spieler aus `player2/` und `player3/`
 
-Siebzehn Entwürfe, gebaut aus den Fotos in `player2/` (vier, Nummern 39–46) und
-`player3/` (dreizehn, Nummern 47–59) im Wurzelverzeichnis. Sie sind
-kein Teil des gelieferten Design-Pakets, halten sich aber an dessen Regeln, weil
-sie am Ende durch dieselbe Portierung gehen sollen:
+Zwölf Entwürfe, gebaut aus den Fotos in `player2/` (vier, Nummern 39–46) und
+`player3/` (acht, Nummern 48–59) im Wurzelverzeichnis. Ursprünglich waren es
+siebzehn; **47, 49, 52, 54 und 55 sind auf Wunsch des Eigentümers samt Dateien
+wieder entfernt worden**, ebenso das Hochformat von 59. Sie sind kein Teil des
+gelieferten Design-Pakets, halten sich aber an dessen Regeln, weil sie am Ende
+durch dieselbe Portierung gehen sollen:
 
 - **eigenständiges HTML**, kein Framework, keine externen Dateien, keine
   Webfonts, keine Bilddateien — alles CSS und inline SVG;
@@ -30,90 +32,78 @@ Fotos erhalten.
 
 ## Woraus was entstanden ist — `player3/`
 
-Fünfzehn Fotos, dreizehn Blätter: zweimal zeigen zwei Fotos dasselbe Gerät in
-zwei Zuständen, und dort gilt dieselbe Regel wie bei 44.
+Fünfzehn Fotos, ursprünglich dreizehn Blätter, davon acht geblieben.
 
 | Nr | Name | Foto | Was die Vorlage hergibt | Bibliotheks-Zugang |
 |---|---|---|---|---|
-| 47 | Redaktionsblatt | 00.34.48 | Weisses Papier, fetter Schriftzug, datierte Textblöcke, alles unterstrichen | Schwarzer Block oben rechts |
 | 48 | Siebdruck | 08.38.27 | Dreifarben-Plakat: oranger Grund, gelbe Versalien, Holzschnitt | Gelbe Pille oben rechts |
-| 49 | Weckdock | 08.39.08 + 09.26.59 | Grüner Kunststoffblock (Gehäuse) und schwarzes Radiodisplay (Inhalt) | Zeile über der grossen Zahl |
 | 50 | Fallblatt | 08.39.21 | Oranger Klappzahlenwecker, zwei Fallblätter, Drehknopf | Weisse Pille oben links |
 | 51 | Tastenfeld | 08.43.15 | Thermostat: oben Glas, das anzeigt, unten Quadrate, die bedienen | Die grüne Taste |
-| 52 | Meldetafel | 08.43.56 | Störmeldetafel: beschriftete Leuchtkacheln in dunklem Rahmen | Grüne Breitkachel |
 | 53 | Fokusmodul | 08.48.50 | Schwarzes Modul, geriffelte Knöpfe, orange leuchtende Halbkuppel | Vierte Gummitaste |
-| 54 | Roséblech | 08.52.20 | Roségoldene Platte, Schieber, vier Metalltasten, Dauer als Text | Vierte Metalltaste (im Foto schon eine Liste) |
-| 55 | Tonartkarte | 08.56.30 | Schwarzer Riegel auf gelber Karte, riesiges Wort, runde Tasten mit Ringen | Umrisspille oben links |
 | 56 | Punktring | 08.58.02 | Runde Scheibe mit einem Kranz grüner Leuchtpunkte | Umrisspille über der Scheibe |
 | 57 | Mischpult | 09.12.56 | Bedienpult: Bildschirm mit Kacheln, Schieber, oranges Pad | Orange Kachel |
-| 58 | Zeigerfront | 09.18.44 + 09.20.06 | Dieselbe Front, einmal Titelanzeige, einmal zwei Zeigerinstrumente | Fünftes Zeichen der Tastenspalte |
-| 59 | Skalenblech | 09.25.44 | Weisses Deck mit Chromkanten, Kassettenklappe, Senderskala | Chrompille unten rechts |
+| 58 | Zeigerfront | 09.18.44 + 09.20.06 | Dieselbe Front, einmal Titelanzeige, einmal zwei Zeigerinstrumente | Fünftes Zeichen der Tastenspalte bzw. -zeile |
+| 59 | Skalenblech | 09.25.44 | Weisses Deck mit Chromkanten, Kassettenklappe, Senderskala (**nur PC**) | Chrompille unten rechts |
 
-**Zwei Fotos, ein Entwurf — zweimal:**
-
-- **49** nimmt vom grünen Dock (08.39.08) nur das Gehäuse und vom schwarzen
-  Radiodisplay (09.26.59) nur den Inhalt. Das ist keine Notlösung, sondern das,
-  was die Fotos hergeben: das eine zeigt eine Form ohne brauchbare Anzeige, das
-  andere eine Anzeige ohne Form.
-- **58** zeigt in beiden Fotos dieselbe Verstärkerfront mit derselben
-  Tastenspalte und demselben Ring — nur die Anzeige wechselt. Wie bei 44 bekommt
-  das Telefon die eine Betriebsart (die Zeiger) und der Rechner die andere (Cover
-  und Balken).
+**Zwei Fotos, ein Entwurf:** **58** zeigt in beiden Fotos dieselbe
+Verstärkerfront mit derselben Tastenreihe und demselben Ring — nur die Anzeige
+wechselt. Wie bei 44 bekommt jede Plattform eine Betriebsart, und **welche wohin
+geht, entscheidet das Format**: das Telefon zeigt Cover und Titel, weil ein Cover
+quadratisch ist und im Hochformat die ganze Breite bekommt; der Rechner zeigt die
+beiden Zeigerinstrumente, weil sie **nebeneinander** stehen und dafür das
+Querformat brauchen. Damit sie dort so gross wie möglich werden, liegt die
+Tastenspalte im Rechner-Blatt als Zeile unter der Anzeige statt als Spalte
+daneben — dieselben sechs Zeichen, dieselben Fugen, nur gedreht.
 
 ### Vollflächig statt Gerät auf dem Tisch
 
-Die erste Fassung dieser dreizehn zeigte das jeweilige Gerät als *Gegenstand*:
+Die erste Fassung dieser Blätter zeigte das jeweilige Gerät als *Gegenstand*:
 ein Kasten mit Schlagschatten, um ihn herum eine graue Wand. Auf einem 1080 ×
 2340 grossen Blatt blieb dabei die Hälfte der Fläche leer. Sie sind deshalb
-alle umgebaut worden — **das Material ist jetzt die Bühne selbst**: der grüne
-Kunststoff von 49, das Orange von 50, das gebürstete Blech von 54 und die gelbe
-Karte von 55 reichen bis an alle vier Kanten. Bei 55 läuft der schwarze Riegel
-absichtlich rechts und unten aus dem Bild, wie ein näher herangeholtes Foto.
+alle umgebaut worden — **das Material ist jetzt die Bühne selbst**: das Orange
+von 50 und das weisse Deck von 59 reichen bis an alle vier Kanten, und bei 48
+läuft die Schraffur absichtlich aus dem Bild, wie ein näher herangeholtes Foto.
 
 Der so gewonnene Platz ist nicht leer geblieben, sondern trägt jetzt Inhalt:
-jedes Blatt zeigt zusätzlich die Titel des Albums, 47 einen zweiten datierten
-Block mit zwölf Neuzugängen, 52 achtunddreissig statt vierundzwanzig Kacheln,
-57 neun statt sechs. Wo doch Fläche übrig blieb, ist sie **eine** bewusste
-Lücke statt vier verteilter — Flächen wie das Blech von 54 oder das Deck von 59
-haben in Wirklichkeit ebenfalls freie Stellen, und die tragen den Eindruck von
-Material.
+jedes Blatt zeigt zusätzlich die Titel des Albums, 57 neun Kacheln statt sechs
+und lange Pultschieber. Wo doch Fläche übrig blieb, ist sie **eine** bewusste
+Lücke statt vier verteilter — Flächen wie das Deck von 59 haben in Wirklichkeit
+ebenfalls freie Stellen, und die tragen den Eindruck von Material.
 
-Zwei Beobachtungen aus diesem Satz:
+Drei Beobachtungen aus diesem Satz:
 
-- **Zwei Vorlagen brachten die Bibliothek schon mit.** In 54 ist die vierte
-  Metalltaste im Foto ein Listenzeichen, in 51 ist die grüne Beschriftung die
-  einzige Farbe auf dem ganzen Gerät. Wo die Vorlage einen solchen Platz
-  vorgibt, ist der Zugang keine Zutat mehr, sondern gehört zum Gerät.
-- **Vollflächig heisst nicht randlos.** Die Blätter behalten ihre Fassung: 49
-  seine Rippen oben und unten, 59 die beiden Chromleisten, 51 die Fuge zwischen
-  Glas und Tastenfeld. Nur der Tisch, auf dem das Gerät vorher stand, ist weg —
-  er war nie Teil des Entwurfs.
+- **Eine Vorlage brachte die Bibliothek schon mit.** In 51 ist die grüne
+  Beschriftung die einzige Farbe auf dem ganzen Gerät. Wo die Vorlage einen
+  solchen Platz vorgibt, ist der Zugang keine Zutat mehr, sondern gehört zum
+  Gerät.
+- **Vollflächig heisst nicht randlos.** Die Blätter behalten ihre Fassung: 59
+  die beiden Chromleisten, 51 die Fuge zwischen Glas und Tastenfeld. Nur der
+  Tisch, auf dem das Gerät vorher stand, ist weg — er war nie Teil des Entwurfs.
 - **Die Spulfläche ist der schwierigste Teil der Übertragung.** Kein einziges
   Foto zeigt eine Fortschrittsanzeige, die Musik meint — es sind Temperaturen,
   Uhrzeiten, Frequenzen, Pegel. Jedes Blatt musste dafür etwas umdeuten: die
   Skala von 59 zeigt Minuten statt Kilohertz, die Kuppel von 53 den Titel statt
-  den Fokus, die Lampenreihe von 52 die Zeit statt eine Störung. Genau an dieser
-  Stelle entscheidet sich, ob ein Entwurf ein Spieler wird oder ein Bild bleibt.
+  den Fokus. Genau an dieser Stelle entscheidet sich, ob ein Entwurf ein Spieler
+  wird oder ein Bild bleibt.
 
-## 43 Sonnenglas — sechs Scheiben
+## 43 Sonnenglas — drei Scheiben
 
-Von 43 gibt es fünf zusätzliche Fassungen. **Die Farbe bleibt in allen gleich**
+Von 43 gibt es zwei zusätzliche Fassungen. **Die Farbe bleibt in allen gleich**
 (dasselbe Abendrot); was sich ändert, ist allein die Scheibe: ihre **Dicke** und
 ihre **Oberfläche**.
 
 | Nr | Name | Dicke | Oberfläche |
 |---|---|---|---|
 | 43 | Sonnenglas | 26 px · 13 % | leicht satiniert (die Vorlage) |
-| 43a | Milchglas | 64 px · 26 % | satiniert, weicher Lichtverlauf oben |
 | 43b | Klarglas | 3 px · 5 % | poliert, harter Spiegelstreifen quer |
-| 43c | Mattglas | 48 px · 30 % | geätzt, Korn 14 %, gar kein Glanz |
 | 43f | Rauchglas | 12 px · 36 % | poliert, **dunkel getönt statt weiss** |
-| 43h | Vitrinenglas | 46 px · 15 % · Fase 20 px | poliert wie 43b, **aber ohne Spiegelstreifen** |
 
-Die Buchstaben d, e und g sind frei: dort standen *Riffelglas* (gegossen,
-gerippt), *Blockglas* (130 px, milchig) und *Schliffglas* (klar, Licht von
-links), alle drei wieder entfernt. Ihre Buchstaben werden nicht neu vergeben,
-damit ein Blick auf eine ältere Aufnahme eindeutig bleibt.
+Die Buchstaben a, c, d, e, g und h sind frei: dort standen *Milchglas* (64 px,
+satiniert), *Mattglas* (48 px, geätzt), *Riffelglas* (gegossen, gerippt),
+*Blockglas* (130 px, milchig), *Schliffglas* (klar, Licht von links) und
+*Vitrinenglas* (46 px, poliert ohne Spiegelstreifen) — alle wieder entfernt.
+Ihre Buchstaben werden nicht neu vergeben, damit ein Blick auf eine ältere
+Aufnahme eindeutig bleibt.
 
 Wie die Rezepte gebaut sind: `blur` ist die Dicke, `weiss` die Eigenfarbe,
 `rand`/`kante` die Kanten. Die Oberfläche liegt in zwei Pseudo-Lagen darüber —
@@ -123,30 +113,25 @@ setzt zusätzlich einen Innenring, der die Materialstärke an der Kante zeigt;
 `licht` dreht diesen Ring in eine Richtung, und `schatten` überschreibt den
 Schlagschatten mit eigenem Versatz.
 
-Drei Dinge, die die Reihe gezeigt hat:
+Zwei Dinge, die die Reihe gezeigt hat — auch die gestrichenen Fassungen zählen
+dazu, sie stehen in der Git-Historie:
 
 - **Dicke und Oberfläche sind nicht unabhängig.** Dickes Glas streut und wird
-  milchig (43a, 43e); poliertes Glas spiegelt stattdessen und braucht deshalb
-  wenig Weichzeichnung, sonst hebt sich der Streifen nicht ab (43b, 43f).
-- **Geätztes Glas verträgt keinen Glanz.** In 43c ist beides abgeschaltet und
-  nur Korn übrig — sobald ein Verlauf dazukommt, sieht es wieder nach Kunststoff
-  aus statt nach Glas.
-- **Rauchglas dreht die Richtung um.** Alle anderen hellen die Karte auf, 43f
+  milchig; poliertes Glas spiegelt stattdessen und braucht deshalb wenig
+  Weichzeichnung, sonst hebt sich der Streifen nicht ab (43b, 43f).
+- **Rauchglas dreht die Richtung um.** Die anderen hellen die Karte auf, 43f
   dunkelt sie ab. Weisse Schrift wird dadurch kontrastreicher, nicht schwächer —
   es ist die einzige Fassung, die auch über einem hellen Himmel noch trüge.
-- **Poliert ist die Kante, nicht der Reflex.** 43h nimmt 43b als Vorlage, lässt
-  den Spiegelstreifen weg und wird um ein Vielfaches dicker. Was bleibt, ist die
-  harte helle Kante — und genau die trägt den Eindruck „poliert". Der Streifen
-  war Zierde, die Kante ist die Aussage. Gegen 43a (fast gleich dick) steht 43h
-  deshalb klarer und schärfer da, obwohl beide milchig sind.
 
-Alle sechs liegen in einer Datei (`d43.py`); `FASSUNGEN` hält je Fassung nur
-noch das Glasrezept, Himmel und Coverfarben sind gemeinsam. Eine siebte anzulegen
+Alle drei liegen in einer Datei (`d43.py`); `FASSUNGEN` hält je Fassung nur
+noch das Glasrezept, Himmel und Coverfarben sind gemeinsam. Eine vierte anzulegen
 ist ein Eintrag in diesem Wörterbuch, sonst nichts.
 
 **Ein Foto aus `player2/` ist nicht verwertet:** 23.56.39 ist ein 15 KB grosses
 Vorschaubild, auf dem nur eine Ecke mit einem „A" zu erkennen ist. Daraus lässt
-sich keine Bildsprache ableiten. Aus `player3/` ist jedes Foto verwertet.
+sich keine Bildsprache ableiten. Aus `player3/` war zunächst jedes Foto
+verwertet; nach dem Streichen von 47, 49, 52, 54 und 55 sind sieben der fünfzehn
+Fotos nicht mehr durch ein Blatt vertreten.
 
 Die Übertragung folgt in jedem Fall demselben Gedanken: **nicht das Foto
 nachzeichnen, sondern seine Bausprache übernehmen** und den ganzen Spieler
@@ -154,26 +139,34 @@ daraus bauen. Bei 39 heisst das, dass der Schalter nicht *neben* der Wiedergabe
 sitzt, sondern *die* Wiedergabe ist; bei 46, dass der Fortschritt ein gezogener
 Strich ist und kein Balken.
 
-39, 46, 47, 48 und 52 gehen auf Grafiken oder Geräte ohne jede Wiedergabe
-zurück; dort ist mehr erfunden als übertragen. 43, 44, 54 und 58 waren dagegen
-schon fast fertige Oberflächen — die sind eher Port als Entwurf.
+39, 46 und 48 gehen auf Grafiken ohne jede Wiedergabe zurück; dort ist mehr
+erfunden als übertragen. 43, 44 und 58 waren dagegen schon fast fertige
+Oberflächen — die sind eher Port als Entwurf.
 
 ## Verworfen
 
-Vier weitere Entwürfe sind auf Wunsch des Eigentümers wieder entfernt worden:
-**40 Neonschild**, **41 Sonntagsblatt**, **42 Druckgrafik** und
-**45 Kassettenhaufen**. Anders als bei den gestrichenen Blättern des Pakets sind
-hier auch die Dateien weg — sie waren Entwürfe, keine Lieferung. In der
-Git-Historie stehen sie im Commit „Acht Spieler aus den Fotos in player2".
+Auf Wunsch des Eigentümers wieder entfernt, in zwei Runden. Anders als bei den
+gestrichenen Blättern des Pakets sind hier auch die Dateien weg — sie waren
+Entwürfe, keine Lieferung.
+
+- Aus `player2/`: **40 Neonschild**, **41 Sonntagsblatt**, **42 Druckgrafik**,
+  **45 Kassettenhaufen**. In der Git-Historie im Commit „Acht Spieler aus den
+  Fotos in player2".
+- Aus `player3/`: **47 Redaktionsblatt**, **49 Weckdock**, **52 Meldetafel**,
+  **54 Roséblech**, **55 Tonartkarte** — dazu das Hochformat von **59
+  Skalenblech**. In der Git-Historie im Commit „Dreizehn Spieler aus den Fotos
+  in player3" und in „player3: alle dreizehn Blaetter vollflaechig".
+- Von 43 die Fassungen **a Milchglas**, **c Mattglas** und **h Vitrinenglas**
+  (die Buchstaben d, e und g waren schon vorher frei geworden).
 
 ## Neu bauen
 
 ```bash
 cd design/entwuerfe/src
-python3 baualle.py          # schreibt alle 44 Dateien nach ../html/
+python3 baualle.py          # schreibt alle 27 Dateien nach ../html/
 ```
 
-`werkzeug.py` hält, was alle siebzehn teilen: das eine Beispielalbum, die Zeichen
+`werkzeug.py` hält, was alle zwölf teilen: das eine Beispielalbum, die Zeichen
 (Bibliothek, Lupe, Mischen, Wiederholen, Lautstärke), das abstrakte Cover, die
 Schallplatte, die Kassette und die Wellenform. Dokumentgerüst, Zeigerinstrument
 und die Transportzeichen kommen aus `../../src/lib.py`, also aus dem Paket selbst —
@@ -181,12 +174,13 @@ damit beide Sätze dieselbe Sprache sprechen und ein späterer Port nicht zwei
 Vokabulare lernen muss.
 
 Jede `dNN.py` liefert `telefon()` und `rechner()`, beide geben `(css, body)`
-zurück. Der Faktor `g` in `_css(g)` ist der einzige Unterschied zwischen den
+zurück; `bau()` entscheidet, welche davon geschrieben werden — bei 59 nur noch
+`rechner()`. Der Faktor `g` in `_css(g)` ist der einzige Unterschied zwischen den
 Plattformen bei den Maßen der Bauteile — die Anordnung ist je Plattform von Hand
 gesetzt, nicht skaliert.
 
 ## Was noch offen ist
 
-Diese siebzehn sind **Entwürfe zum Ansehen**, noch kein Layout in `player.html`.
+Diese zwölf sind **Entwürfe zum Ansehen**, noch kein Layout in `player.html`.
 Ob und welche davon portiert werden, steht in `design/AUSWAHL.md` — dort sind
 sie bisher nicht eingetragen, weil die Auswahl beim Eigentümer liegt.

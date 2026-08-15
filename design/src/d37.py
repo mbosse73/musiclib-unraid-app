@@ -3,7 +3,9 @@ from lib2 import *
 from spiral import spiral_vinyl
 from designs3 import add, hb, pbar
 
-# Foto 37 — Song-Poster im WEISSEN Rahmen, an die Wand gelehnt, waermerer Ton
+# Foto 37 — Song-Poster im WEISSEN Rahmen, an die Wand gelehnt, waermerer Ton.
+# Auf dem Telefon fuellt das Plakat das ganze Blatt; der weisse Rahmen bleibt,
+# er ist jetzt der Rand des Bildschirms.
 WALL='linear-gradient(180deg,#efece7 0%,#e6e2db 72%,#d6d0c6 72%,#cec7ba 100%)'
 FRAME='#fbfbf9'; PAPER='#ffffff'; INK='#1a1a18'; SUB='#a29e97'; RED='#e0453a'; ACC='#c9422e'
 
@@ -14,12 +16,10 @@ def pill(ic,lab=None,size=52,solid=False):
             f'background:{INK if solid else "transparent"};border:{"none" if solid else f"2px solid {INK}"};'
             f'display:flex;align-items:center;justify-content:center">{ic}</div>{t}</div>')
 
-def poster(w, scale=1.0):
+def bogen(w, scale=1.0):
+    """Der Inhalt des Plakats — sechs Bloecke als direkte Kinder einer Spalte."""
     s=lambda v: v*scale
-    return f'''<div style="background:{FRAME};padding:{s(30):.0f}px;border:1px solid #e2ded6;
-      box-shadow:0 {s(30):.0f}px {s(56):.0f}px rgba(90,80,66,.28)">
-      <div style="background:{PAPER};padding:{s(40):.0f}px {s(38):.0f}px {s(32):.0f}px">
-        <div style="display:flex;justify-content:center">{spiral_vinyl(w,label=RED)}</div>
+    return f'''<div style="display:flex;justify-content:center">{spiral_vinyl(w,label=RED)}</div>
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-top:{s(30):.0f}px">
           <div><div style="font-family:{SANS};font-weight:800;font-size:{s(38):.0f}px;color:{INK}">Rumours</div>
             <div style="font-family:{SANS};font-size:{s(21):.0f}px;color:{SUB};margin-top:{s(5):.0f}px">Fleetwood Mac · 1977</div></div>
@@ -31,11 +31,23 @@ def poster(w, scale=1.0):
           {pill(tri(int(s(28)),'#fff'),None,s(70),True)}
           {pill(nexti(int(s(24)),INK),None,s(42))}{pill(repeat(int(s(22)),INK),None,s(38))}
           {pill(libicon(int(s(24)),ACC),None,s(42))}</div>
-        <div style="text-align:center;font-family:{SANS};font-size:{s(18):.0f}px;color:{SUB};margin-top:{s(24):.0f}px;letter-spacing:1px">Meine Plattensammlung · Regal B</div>
+        <div style="text-align:center;font-family:{SANS};font-size:{s(18):.0f}px;color:{SUB};margin-top:{s(24):.0f}px;letter-spacing:1px">Meine Plattensammlung · Regal B</div>'''
+
+def poster(w, scale=1.0):
+    """Gerahmt an die Wand gelehnt — so steht das Plakat auf dem Rechner-Blatt."""
+    s=lambda v: v*scale
+    return f'''<div style="background:{FRAME};padding:{s(30):.0f}px;border:1px solid #e2ded6;
+      box-shadow:0 {s(30):.0f}px {s(56):.0f}px rgba(90,80,66,.28)">
+      <div style="background:{PAPER};padding:{s(40):.0f}px {s(38):.0f}px {s(32):.0f}px">
+        {bogen(w, scale)}
       </div></div>'''
 
-ph=f'''<div style="position:absolute;inset:0;background:{WALL};display:flex;align-items:center;justify-content:center;padding:22px 20px">
-  <div style="width:100%">{poster(830,1.12)}</div></div>'''
+# Telefon: das Plakat fuellt das Blatt. Der weisse Rahmen bleibt als Rand stehen,
+# eine Haarlinie trennt ihn vom Papier — sonst faende das Auge die Kante nicht.
+ph=f'''<div style="position:absolute;inset:0;background:{FRAME};padding:26px">
+  <div style="height:100%;background:{PAPER};box-shadow:inset 0 0 0 1px #eae6de;
+    padding:66px 50px 58px;display:flex;flex-direction:column;justify-content:space-between">
+    {bogen(860, 1.48)}</div></div>'''
 
 pc=f'''<div style="position:absolute;inset:0;background:{WALL};display:flex;align-items:center;gap:64px;padding:40px 72px">
   <div style="flex-shrink:0">{poster(410,0.76)}</div>

@@ -55,15 +55,12 @@ def title(fs):
 
 ph=f'''<div style="position:absolute;inset:0;background:{TEAL};padding:26px">
 <div style="position:relative;height:100%;background:{NAVY};overflow:hidden;display:flex;flex-direction:column">
-  {bolt(40,60,70,OR,-12)}{bolt(880,40,80,CREAM,14)}{bolt(60,540,60,SAND,8)}{bolt(900,600,64,YEL,-10)}
-  <div style="position:relative;padding:52px 44px 0">
+  {bolt(40,60,70,OR,-12)}{bolt(880,40,80,CREAM,14)}{bolt(60,540,60,SAND,8)}{bolt(860,900,64,YEL,-10)}
+  <div style="position:relative;flex:1.25;display:flex;align-items:center;justify-content:center;padding:0 44px">
     {title(112)}
-    <div style="position:absolute;right:40px;top:250px">{star(190)}</div>
+    <div style="position:absolute;right:40px;top:56%">{star(190)}</div>
   </div>
-  <div style="position:relative;flex:1;margin-top:16px">
-    <div style="position:absolute;left:0;right:0;bottom:0;height:56%;background:{OR}"></div>
-    <div style="position:relative;display:flex;justify-content:center;align-items:flex-end;height:100%;padding-bottom:20px">{boombox(700)}</div>
-  </div>
+  <div style="position:relative;flex:1;background:{OR};display:flex;align-items:center;justify-content:center">{boombox(700)}</div>
   <div style="background:{CREAM};padding:34px 40px">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid {NAVY};padding-bottom:20px">
       <div><div style="font-family:{SANS};font-weight:800;font-size:40px;color:{TEAL};letter-spacing:1px">CORAL PARK</div>
@@ -84,12 +81,12 @@ ph=f'''<div style="position:absolute;inset:0;background:{TEAL};padding:26px">
 pc=f'''<div style="position:absolute;inset:0;background:{TEAL};padding:22px">
 <div style="position:relative;height:100%;background:{NAVY};overflow:hidden;display:flex">
   {bolt(30,40,58,OR,-12)}{bolt(660,30,64,CREAM,14)}{bolt(40,700,52,SAND,8)}
-  <div style="position:relative;width:740px;padding:40px 36px;display:flex;flex-direction:column">
-    {title(88)}
-    <div style="position:relative;flex:1;margin-top:14px">
-      <div style="position:absolute;left:-36px;right:-36px;bottom:-40px;height:62%;background:{OR}"></div>
-      <div style="position:relative;display:flex;justify-content:center;align-items:flex-end;height:100%">{boombox(520)}</div></div>
-    <div style="position:absolute;right:26px;top:150px">{star(150)}</div>
+  <div style="position:relative;width:740px;display:flex;flex-direction:column">
+    <div style="position:relative;flex:1;display:flex;align-items:center;justify-content:center;padding:0 36px">
+      {title(88)}
+      <div style="position:absolute;right:26px;top:56%">{star(150)}</div>
+    </div>
+    <div style="flex:0 0 46%;background:{OR};display:flex;justify-content:center;align-items:flex-end">{boombox(520)}</div>
   </div>
   <div style="flex:1;background:{CREAM};padding:40px 44px;display:flex;flex-direction:column">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid {NAVY};padding-bottom:20px">

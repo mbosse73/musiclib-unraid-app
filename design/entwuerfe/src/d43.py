@@ -6,13 +6,12 @@ unten steht der Horizont schwarz. Durch das Glas scheint beides gedämpft
 hindurch. Die Zeiten stehen als „verstrichen" und „−verbleibend", die
 Zufallstaste ist gelb, alles andere weiss.
 
-Sieben Fassungen bei **immer derselben Abendfarbe**. Was sich ändert, ist allein
-die Scheibe: ihre **Dicke** (von 3 px Weichzeichnung bis 130) und ihre
-**Oberfläche** — poliert, matt geätzt, rauchgetönt, geschliffen. Beides hängt
-zusammen: dickes Glas streut mehr und wird milchiger, poliertes spiegelt
-stattdessen, geätztes hat Korn und gar keinen Glanz. Die letzte Fassung zeigt,
-dass dick nicht milchig heissen muss: klares Glas verrät seine Stärke über die
-Kante und den Schatten, nicht über die Trübung.
+Drei Fassungen bei **immer derselben Abendfarbe**. Was sich ändert, ist allein
+die Scheibe: ihre **Dicke** (26 px Weichzeichnung, 3 px, 12 px) und ihre
+**Oberfläche** — leicht satiniert, poliert, rauchgetönt. Beides hängt zusammen:
+dickes Glas streut mehr und wird milchiger, poliertes spiegelt stattdessen und
+braucht deshalb wenig Weichzeichnung. Rauchglas dreht die Richtung um: es
+dunkelt die Karte ab, statt sie aufzuhellen.
 """
 from werkzeug import (A, biblio, mischen, nexti, pausei, prev, schreibe,
                       wiederholen, SANS, MONO)
@@ -37,24 +36,12 @@ FASSUNGEN = {
     '': _f('Sonnenglas', 'Die Vorlage — mittleres Glas, leicht satiniert',
            dict(blur=26, weiss=.13, rand=.24, kante=.34, saettigung=1.0)),
 
-    'a': _f('Milchglas', 'Dieselbe Scheibe, doppelt so dick',
-            dict(blur=64, weiss=.26, rand=.44, kante=.62, glanz=.22, saettigung=1.1)),
-
     'b': _f('Klarglas', 'Dünn und poliert — der Himmel bleibt scharf, das Glas spiegelt',
             dict(blur=3, weiss=.05, rand=.50, kante=.92, streif=.55, saettigung=1.05)),
-
-    'c': _f('Mattglas', 'Geätzt: kein Glanz, dafür Korn — Licht wird gestreut, nicht geworfen',
-            dict(blur=48, weiss=.30, rand=.16, kante=.20, koern=.14, saettigung=.85)),
 
     'f': _f('Rauchglas', 'Dunkel getönt und poliert — die Scheibe dämpft, statt aufzuhellen',
             dict(blur=12, weiss=.36, rand=.26, kante=.44, streif=.42, saettigung=1.15,
                  ton='rgba(18,10,8,'), stumm='rgba(255,255,255,.60)'),
-
-    # 43b als Vorlage: dieselbe polierte Kante, aber ohne den Spiegelstreifen
-    # und um ein Vielfaches dicker.
-    'h': _f('Vitrinenglas',
-            'Wie Klarglas poliert, aber ohne Spiegelstreifen und um ein Vielfaches dicker',
-            dict(blur=46, weiss=.15, rand=.62, kante=.98, saettigung=1.20, dicke=20)),
 }
 
 

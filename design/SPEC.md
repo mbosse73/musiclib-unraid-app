@@ -1,12 +1,13 @@
 # SPEC — Entwurf für Entwurf
 
-22 Konzepte, je eine iPhone- und eine PC-Variante. Bühnengröße: iPhone 1080 × 2340, PC 1600 × 1000.
+21 Konzepte, je eine iPhone- und eine PC-Variante — ausser **18**, das es nur als PC-Variante
+gibt. Bühnengröße: iPhone 1080 × 2340, PC 1600 × 1000.
 Alle Entwürfe enthalten Transport (Zurück/Play/Pause/Weiter), Fortschritt mit Zeiten und einen Bibliotheks-Zugang.
 
 | Nr. | Konzept | Charakter | Bibliotheks-Zugang | Besondere Bausteine |
 |---|---|---|---|---|
 | 17 | `Sony-Bandmaschine` | Bandmaschine, Nussbaum + Silberpanel, cremefarbene Tasten, zwei VU-Meter | Eject-Taste (LIBRARY) in der Tastenreihe | Bandspulen, VU-Meter, Zählwerk, Titelliste |
-| 18 | `Akai-747` | Silber-weisse Front, rote LED-Zeitanzeige, symmetrische Spulen, Holzwangen | Eject-Taste (LIBRARY) in der Tastenreihe | Bandspulen, LED-Zähler, VU-Paar, Lampen in Tasten |
+| 18 | `Akai-747` | Silber-weisse Front, mittig das rote LED-Zählwerk über dem grossen VU-Paar, symmetrische Spulen, Holzwangen (**nur PC**) | Eject-Taste (LIBRARY) in der Tastenreihe | Bandspulen, LED-Zähler, VU-Paar, Lampen in Tasten |
 | 19 | `On-Air-Leuchtkasten` | Leuchtkasten auf Backsteinwand, rote Lettern auf warmem Milchglas | Eigener Button LIBRARY als schwarze Platte | Leuchtkasten, Sendungsliste, Wellenform |
 | 20 | `Philips-Radio` | Mahagoni-Gehäuse, blaues Bedienfeld, Rattan-Gitter, Skalenanzeige | Eigener Button ARCHIV im blauen Panel | Tuning-Skala, Riffelknopf, Lautsprechergitter |
 | 21 | `Yamaha-Tuner` | Dunkles Holz, weisse Front, drei grosse Drehknöpfe, kleines VU | Eigener Button LIBRARY in der Tastenreihe | Skala, VU, drei Drehknöpfe, Titelliste |
@@ -21,11 +22,10 @@ Alle Entwürfe enthalten Transport (Zurück/Play/Pause/Weiter), Fortschritt mit 
 | 30 | `iPod-Weiss` | Weisse App-Optik, Punktraster-Gitter, Klickrad, orange Akzente | Bibliotheks-Icon im unteren Segment des Klickrads | Punktraster, Klickrad, Bibliotheksliste |
 | 31 | `Vinyl-Rote-Tasten` | Schallplatte auf Creme, rote Rundtasten, Slider mit Sprechblase | Eigene Kachel mit Bibliotheks-Icon oben rechts | Schallplatte, Slider mit Tooltip, Rundtasten |
 | 32 | `Seattle-Skeuo` | Schwarze Hardware-Optik, Kassette mit weissen Naben, grünes LCD | Materialtaste mit Bibliotheks-Icon | Kassette, LCD-Titelband, Metalltasten |
-| 33 | `Glass-Musiknote` | Milchglas-Karte auf Dunkel, orange-rote Farbwolken | Glaskreis mit Bibliotheks-Icon oben rechts | Glaskarte, Farbwolken, Kreis-Tasten |
 | 34 | `Retro-Party` | 70er-Poster, Strahlen in Petrol/Orange/Creme, Schallplatte, Rahmen | Rahmen-Button CRATE | Strahlen-Hintergrund, Schallplatte, Stempel, Rahmen-Tasten |
-| 35 | `Music-Sounds-Better` | Minimales weisses Poster, gesperrte Typo im Kasten, Schallplatte | Runder Button mit Bibliotheks-Icon | Typo-Kasten, Schallplatte, Kreis-Tasten |
-| 36 | `Song-Poster-Schwarz` | Gerahmtes Poster an der Wand, Spiraltext aus Albumtiteln, QR | Runder Button mit Bibliotheks-Icon neben Repeat | Spiral-Schallplatte, Tonarm, QR, Kreis-Tasten |
-| 37 | `Song-Poster-Weiss` | Weiss gerahmtes Poster, wärmerer Ton, Spiraltext aus Albumtiteln | Button SAMMLUNG rechts in der Tastenreihe | Spiral-Schallplatte, Tonarm, QR, beschriftete Tasten |
+| 35 | `Music-Sounds-Better` | Minimales weisses Poster, die Schallplatte allein — links (PC) bzw. im oberen Bereich (iPhone) zentriert | Runder Button mit Bibliotheks-Icon | Schallplatte, Titelliste, Kreis-Tasten |
+| 36 | `Song-Poster-Schwarz` | PC: gerahmtes Poster an der Wand. iPhone: das Plakat füllt das Blatt, der schwarze Rahmen entfällt. Spiraltext aus Albumtiteln, QR | Runder Button mit Bibliotheks-Icon neben Repeat | Spiral-Schallplatte, Tonarm, QR, Kreis-Tasten |
+| 37 | `Song-Poster-Weiss` | Weiss gerahmtes Poster, wärmerer Ton, Spiraltext aus Albumtiteln. iPhone: das Plakat füllt das Blatt, der weisse Rahmen wird zum Blattrand | Button SAMMLUNG rechts in der Tastenreihe | Spiral-Schallplatte, Tonarm, QR, beschriftete Tasten |
 | 38 | `World-Music-Day` | Festival-Plakat, Navy/Petrol/Orange, Boombox-Illustration, Blitze | Button LINE-UP am Ende der Tastenleiste | Boombox-Illustration, Blitze, Stern, Programmliste |
 
 ---
@@ -52,7 +52,6 @@ Vollständig maschinenlesbar in `tokens.json`. Kurzfassung:
 | 30 | `iPod-Weiss` | grund `#f2f0ed` · karte `#faf9f7` · tinte `#3a3a38` · akzent `#e8681a` |
 | 31 | `Vinyl-Rote-Tasten` | grund `#f2ede2` · tinte `#2e2b26` · rot `#c9403c` · linie `#ddd6c8` |
 | 32 | `Seattle-Skeuo` | gehaeuse `#1a1a1e` · lcd `#0d1a16` · gruen `#7fe8b0` · stahl `#5a5a60` |
-| 33 | `Glass-Musiknote` | grund `#141416` · wolke1 `#f2703c` · wolke2 `#e0455f` · glas `rgba(255,255,255,.10)` |
 | 34 | `Retro-Party` | grund `#e8e0c8` · petrol `#3d8a8a` · orange `#e0672a` · creme `#f2e9cf` · tinte `#2b2620` |
 | 35 | `Music-Sounds-Better` | grund `#ffffff` · tinte `#141414` · rot `#c0272d` · linie `#e6e6e3` |
 | 36 | `Song-Poster-Schwarz` | wand `#e4e2de` · rahmen `#141414` · papier `#ffffff` · label `#e0453a` |
@@ -73,6 +72,12 @@ oder frei gewählte Texte der Nutzerin.
 
 **29 und 32** sind sehr dunkel gehalten. Beschriftungen, die tatsächlich gelesen werden
 müssen, brauchen bei der Umsetzung mehr Kontrast als im Entwurf (siehe Brief, Abschnitt 5).
+
+**35, 36, 37, 38 und 18** sind nach der Lieferung auf Wunsch des Eigentümers geändert worden:
+bei **35** ist der Typo-Kasten über der Schallplatte weg und die Platte dafür zentriert; bei
+**36 und 37** füllt das Plakat auf dem Telefon das ganze Blatt; bei **38** stehen Titel und
+Radio jeweils mittig in ihrem Farbfeld; bei **18** ist der AKAI-Schriftzug weg, Zählwerk und
+VU-Paar stehen mittig auf der rechten Hälfte und sind grösser. **33** ist ganz entfallen.
 
 **30** ist der strukturell vollständigste Entwurf (Bibliotheksliste + Now-Playing +
 Steuerkreuz) und eignet sich gut als Pilot für die Zerlegung in Komponenten.
