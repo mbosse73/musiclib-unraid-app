@@ -1619,6 +1619,45 @@ def test_day_ring_is_concentric_with_the_disc(tagseite):
         f".ring muss Breite, Hoehe und Ecke selbst nennen, hat aber {ausgeschrieben}")
 
 
+def test_day_disc_stays_centred_under_a_long_track_title(tagseite):
+    """Ein langer Titel darf die Scheibe nicht aus der Mitte schieben.
+
+    Die Karte ist ein Raster, und ein Rasterkind ist von sich aus mindestens
+    so breit wie sein laengster unumbrechbarer Inhalt. Die Titelzeile laeuft
+    mit white-space:nowrap — ohne min-width:0 an den beiden Reihen wurde die
+    einzige Spalte dadurch breiter als der Schirm, und die Scheibe stand in
+    deren Mitte statt in seiner: auf dem iPhone halb ausserhalb des Bildes.
+    Der Titel wird zur Laufzeit gesetzt, damit die Sammlung der uebrigen
+    Tests unveraendert bleibt.
+    """
+    tagseite.evaluate("""() => {
+      deck.track.t = 'Crush With Eyeliner '
+        + '(live from the National Bowl, Milton Keynes, 30 July 1995)';
+      zeichne();
+    }""")
+    tagseite.wait_for_timeout(100)
+
+    lage = tagseite.evaluate("""() => {
+      const k = document.getElementById('knopf').getBoundingClientRect();
+      const r = document.querySelector('.ring').getBoundingClientRect();
+      const t = document.getElementById('tl');
+      return {schirm: innerWidth,
+              knopf: (k.left + k.right) / 2,
+              ringLinks: r.left, ringRechts: r.right,
+              zeileRechts: t.getBoundingClientRect().right,
+              gekuerzt: t.scrollWidth > t.clientWidth,
+              breite: document.documentElement.scrollWidth};
+    }""")
+    assert abs(lage["knopf"] - lage["schirm"] / 2) < 1, (
+        f"Scheibe steht bei {lage['knopf']}, Schirmmitte ist {lage['schirm'] / 2}")
+    assert lage["ringLinks"] >= 0 and lage["ringRechts"] <= lage["schirm"], (
+        "Ring haengt ueber den Bildrand hinaus")
+    # Die Zeile wird gekuerzt, statt die Spalte aufzuziehen.
+    assert lage["gekuerzt"], "Titelzeile wird nicht gekuerzt"
+    assert lage["zeileRechts"] <= lage["schirm"]
+    assert lage["breite"] <= lage["schirm"], "Die Seite ist breiter als der Schirm"
+
+
 def test_day_page_never_autoplays(tagseite):
     """Wiederhergestellt wird die Stelle, gespielt wird erst auf den Knopf."""
     tagseite.wait_for_timeout(300)
@@ -1706,12 +1745,21 @@ def test_day_queue_starts_over_at_the_end_of_the_album(tagseite):
 
 
 def test_day_change_waits_for_the_running_track(tagseite):
-    """Mitternacht schneidet keinen Titel ab."""
+    """Mitternacht schneidet keinen Titel ab.
+
+    Der naechste Tag wird aus der echten Uhr abgeleitet, nicht hingeschrieben:
+    ein festes Datum ist genau an diesem einen Tag im Jahr kein naechster Tag
+    mehr, und der Test wurde rot, ohne dass sich etwas geaendert hatte.
+    """
     vorher = tagseite.evaluate("albumJetzt.id")
     tagseite.click("#knopf")
     tagseite.wait_for_function("!ton.paused", timeout=5000)
 
-    tagseite.evaluate("heute = () => new Date(2026, 7, 15, 9, 0)")   # naechster Tag
+    morgen = tagseite.evaluate("""() => {
+      const d = heute(); d.setDate(d.getDate() + 1); d.setHours(9, 0, 0, 0);
+      heute = () => new Date(d);
+      return tagesSchluessel();
+    }""")
     tagseite.evaluate("pruefeTag()")
     assert tagseite.evaluate("tagWartet") is True
     assert tagseite.evaluate("albumJetzt.id") == vorher, "der laufende Titel wird zu Ende gespielt"
@@ -1719,7 +1767,7 @@ def test_day_change_waits_for_the_running_track(tagseite):
     tagseite.evaluate("ton.dispatchEvent(new Event('ended'))")
     tagseite.wait_for_function("id => albumJetzt.id !== id", arg=vorher, timeout=5000)
     assert tagseite.evaluate(
-        "JSON.parse(localStorage.getItem('musiklib:tag')).datum") == "2026-08-15"
+        "JSON.parse(localStorage.getItem('musiklib:tag')).datum") == morgen
     tagseite.evaluate("ton.pause()")
 
 

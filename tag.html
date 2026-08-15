@@ -58,6 +58,15 @@ a{color:var(--zinnober)}
   padding:calc(env(safe-area-inset-top) + 20px) calc(env(safe-area-inset-right) + var(--rand))
           calc(env(safe-area-inset-bottom) + 34px) calc(env(safe-area-inset-left) + var(--rand));
 }
+/* Beide Reihen brauchen min-width:0. Ein Rasterkind ist von sich aus
+   mindestens so breit wie sein laengster unumbrechbarer Inhalt, und die
+   Titelzeile im Fuss laeuft mit white-space:nowrap — ein langer Titel
+   ("… live from the National Bowl, Milton Keynes") machte damit die einzige
+   Spalte breiter als den Schirm. Der Fuss schnitt dann ohne Auslassungs-
+   punkte am Bildrand ab, und die Scheibe stand nicht mehr in der Mitte des
+   Schirms, sondern in der Mitte dieser zu breiten Spalte — halb ausserhalb.
+   Dieselbe Falle wie bei den Rasterkarten in mobile.html. */
+.karte > *{min-width:0}
 
 /* Korn: das Papier der Vorlage ist nicht glatt. Liegt ueber allem und faengt
    nichts ab — sonst waere der Knopf nicht mehr zu treffen. */
