@@ -79,12 +79,12 @@ Farbe, unterschiedliche Glasdicke und -oberfläche, siehe LIESMICH); welche davo
 gilt, ist offen.
 
 Aus den fünfzehn Fotos in `player3/` sind zunächst dreizehn weitere entstanden;
-nach der Durchsicht durch den Eigentümer sind acht davon geblieben —
-48 Siebdruck, 50 Fallblatt, 51 Tastenfeld, 53 Fokusmodul, 56 Punktring,
-57 Mischpult, 58 Zeigerfront, 59 Skalenblech (nur PC). 58 fasst zwei Fotos
-desselben Geräts zusammen, wie es 44 schon vormacht.
+nach der Durchsicht durch den Eigentümer sind sechs davon geblieben —
+48 Siebdruck, 50 Fallblatt, 51 Tastenfeld (nur Telefon), 53 Fokusmodul,
+56 Punktring, 58 Zeigerfront. 58 fasst zwei Fotos desselben Geräts zusammen,
+wie es 44 schon vormacht.
 
-Alle zwölf liegen unter
+Alle zehn liegen unter
 `design/entwuerfe/`, halten dieselben Regeln ein wie das Paket und sind bisher
 **nicht** Teil der Auswahl oben: welche davon gebaut werden, ist noch nicht
 entschieden. Begründung je Entwurf in `design/entwuerfe/LIESMICH.md`.

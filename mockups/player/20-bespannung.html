@@ -126,10 +126,11 @@
 .tx .bib .bz.an::after{border-color:var(--lampe)}
 .tx .bib .bfuss{flex:none;padding-top:14px}
 
-/* ══ Variante 2: Filz auf Terrazzo ════════════════════════════════════════
-   Der Stoff wird dichter (Filz hat keine Fadenrichtung, nur Flusen), der
-   Grund wird eine Terrazzoplatte: vierzehn Sprenkel aus radialen Verläufen.
-   Der Pegel ist dann keine Lampe mehr, sondern eine Stickerei.             */
+/* ══ Filz auf Terrazzo ════════════════════════════════════════════════════
+   Der Stoff ist dicht (Filz hat keine Fadenrichtung, nur Flusen), der Grund
+   eine Terrazzoplatte: vierzehn Sprenkel aus radialen Verläufen. Der Pegel
+   ist keine Lampe, sondern eine Stickerei. Die Grundregeln stehen oben unter
+   .tx — diese Fassung setzt nur die Farben und den Grund neu.              */
 .tx.fz{
   --grund:#D9D4C8; --grund-2:#C6C0B2; --stoff:#7C8B84; --stoff-2:#5F6E68;
   --leder:#3E4A45; --leder-2:#2C3733; --naht:#E6E1D3; --kordel:#E6E1D3;
@@ -168,9 +169,9 @@
     <div>
       <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 20 · zweite Reihe</div>
       <h1>Bespannung</h1>
-      <p class="lede">Kein Gerätezitat, sondern ein <b>Materialentwurf</b>: Bespannstoff, Leder, eine
-      gespannte Kordel. Nichts hat einen harten Rand, jede Fläche ist genäht. Der Pegel leuchtet
-      <b>durch das Gewebe</b> — er ist das einzige Licht auf dem Blatt.</p>
+      <p class="lede">Kein Gerätezitat, sondern ein <b>Materialentwurf</b>: Filz, Leder, eine gespannte
+      Kordel auf einer Terrazzoplatte. Nichts hat einen harten Rand, jede Fläche ist genäht — und es gibt
+      <b>kein Licht</b> auf dem Blatt: Der Pegel ist eine Stickerei.</p>
       <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
     </div>
     <figure class="vorlage">
@@ -192,38 +193,13 @@
   <div class="regel"></div>
 
   <section class="entwurf">
-    <div class="ekopf"><h2>Variante 1 · Bespannung</h2><span class="marke geraet">PC · 1440 × 900</span></div>
-    <p class="etext">Ein Lederschild trägt Titel und Album, daneben steht der Pegel hinter dem Stoff. Die
-    Kordel darunter ist die Spulleiste: Die Lederperle sitzt auf der Position, die Knoten sind die
-    <b>Titelgrenzen</b>. Alle Knöpfe sind runde Lederscheiben mit Naht — es gibt auf dem ganzen Blatt
-    keine gerade Kante außer der Kordel.
-    <span class="probier"><b>Ausprobieren:</b> die Perle über einen Knoten hinweg ziehen; der Pegel
-    läuft weiter, weil er am Ton hängt und nicht am Titel.</span></p>
-    <div class="buehne">
-      <div class="rahmen pc">
-        <div class="schirm">
-          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
-          <div class="flaeche"><div class="tx" id="v1"></div></div>
-        </div>
-      </div>
-    </div>
-    <dl class="zettel">
-      <div><dt>Womit gespult wird</dt><dd>Die <b>Kordel</b>, Knoten an jeder Titelgrenze</dd></div>
-      <div><dt>Ohne Tippen sichtbar</dt><dd>Ein Titel, der Pegel, die Lage in der Warteschlange</dd></div>
-      <div><dt>Ruhezustand</dt><dd>Eine Stoffplatte mit einem Schild — ein Möbel, kein Bildschirm</dd></div>
-      <div><dt>Schwäche</dt><dd>Der Pegel ist der einzige echte Grund für WebAudio (siehe unten)</dd></div>
-      <div><dt>Aufwand</dt><dd>gering — Stoff, Naht und Perle sind sechs Regeln</dd></div>
-    </dl>
-  </section>
-
-  <section class="entwurf">
-    <div class="ekopf"><h2>Variante 2 · Filz auf Terrazzo</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
-    <p class="etext">Der Stoff wird <b>Filz</b> — kein Gewebe, nur Flusen, also keine zwei Fadenrichtungen
-    mehr — und liegt auf einer <b>Terrazzoplatte</b> aus vierzehn Sprenkeln. Damit verschwindet auch das
-    Licht: Der Pegel ist hier eine Stickerei, helle Stiche im Filz, ohne Schein. Das ist der Gegenbeweis
-    zur ersten Variante — derselbe Entwurf hält auch <b>ohne eine einzige leuchtende Fläche</b>.
-    <span class="probier"><b>Ausprobieren:</b> anhalten. Im Licht der ersten Variante geht der Pegel aus,
-    im Filz bleibt die Stickerei stehen — genau richtig, denn Fäden erlöschen nicht.</span></p>
+    <div class="ekopf"><h2>Filz auf Terrazzo</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
+    <p class="etext">Der Stoff ist <b>Filz</b> — kein Gewebe, nur Flusen, also keine zwei Fadenrichtungen
+    — und liegt auf einer <b>Terrazzoplatte</b> aus vierzehn Sprenkeln. Es gibt kein Licht auf dem ganzen
+    Blatt: Der Pegel ist eine Stickerei, helle Stiche im Filz, ohne Schein. Das ist der Beweis, dass der
+    Entwurf auch <b>ohne eine einzige leuchtende Fläche</b> hält.
+    <span class="probier"><b>Ausprobieren:</b> anhalten. Die Stickerei bleibt stehen — genau richtig,
+    denn Fäden erlöschen nicht.</span></p>
     <div class="buehne">
       <div class="rahmen ipad-quer">
         <div class="schirm"><div class="tx fz" id="v2"></div></div>
@@ -378,8 +354,6 @@ function verdrahte(wurzel, deck, stil){
   deck.render();
 }
 
-verdrahte(document.getElementById('v1'), new Deck('koe', {qi:0, pos:150, speed:8}),
-  {'--bsp':'3'});
 verdrahte(document.getElementById('v2'), new Deck('ohi', {qi:1, pos:80, speed:8}),
   {'--bsp':'2','--pad':'30px','--sw':'360px','--tg':'28px','--tb':'56px','--ph':'16px'});
 })();

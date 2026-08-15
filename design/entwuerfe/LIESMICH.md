@@ -1,11 +1,11 @@
-# Eigene Entwürfe: zwölf Spieler aus `player2/` und `player3/`
+# Eigene Entwürfe: zehn Spieler aus `player2/` und `player3/`
 
-Zwölf Entwürfe, gebaut aus den Fotos in `player2/` (vier, Nummern 39–46) und
-`player3/` (acht, Nummern 48–59) im Wurzelverzeichnis. Ursprünglich waren es
-siebzehn; **47, 49, 52, 54 und 55 sind auf Wunsch des Eigentümers samt Dateien
-wieder entfernt worden**, ebenso das Hochformat von 59. Sie sind kein Teil des
-gelieferten Design-Pakets, halten sich aber an dessen Regeln, weil sie am Ende
-durch dieselbe Portierung gehen sollen:
+Zehn Entwürfe, gebaut aus den Fotos in `player2/` (vier, Nummern 39–46) und
+`player3/` (sechs, Nummern 48–58) im Wurzelverzeichnis. Ursprünglich waren es
+siebzehn; **47, 49, 52, 54, 55, 57 und 59 sind auf Wunsch des Eigentümers samt
+Dateien wieder entfernt worden**, und von **51** ist das Querformat weg. Sie
+sind kein Teil des gelieferten Design-Pakets, halten sich aber an dessen Regeln,
+weil sie am Ende durch dieselbe Portierung gehen sollen:
 
 - **eigenständiges HTML**, kein Framework, keine externen Dateien, keine
   Webfonts, keine Bilddateien — alles CSS und inline SVG;
@@ -32,18 +32,16 @@ Fotos erhalten.
 
 ## Woraus was entstanden ist — `player3/`
 
-Fünfzehn Fotos, ursprünglich dreizehn Blätter, davon acht geblieben.
+Fünfzehn Fotos, ursprünglich dreizehn Blätter, davon sechs geblieben.
 
 | Nr | Name | Foto | Was die Vorlage hergibt | Bibliotheks-Zugang |
 |---|---|---|---|---|
 | 48 | Siebdruck | 08.38.27 | Dreifarben-Plakat: oranger Grund, gelbe Versalien, Holzschnitt | Gelbe Pille oben rechts |
 | 50 | Fallblatt | 08.39.21 | Oranger Klappzahlenwecker, zwei Fallblätter, Drehknopf | Weisse Pille oben links |
-| 51 | Tastenfeld | 08.43.15 | Thermostat: oben Glas, das anzeigt, unten Quadrate, die bedienen | Die grüne Taste |
+| 51 | Tastenfeld | 08.43.15 | Thermostat: oben Glas, das anzeigt, unten Quadrate, die bedienen (**nur Telefon**) | Die grüne Taste |
 | 53 | Fokusmodul | 08.48.50 | Schwarzes Modul, geriffelte Knöpfe, orange leuchtende Halbkuppel | Vierte Gummitaste |
 | 56 | Punktring | 08.58.02 | Runde Scheibe mit einem Kranz grüner Leuchtpunkte | Umrisspille über der Scheibe |
-| 57 | Mischpult | 09.12.56 | Bedienpult: Bildschirm mit Kacheln, Schieber, oranges Pad | Orange Kachel |
 | 58 | Zeigerfront | 09.18.44 + 09.20.06 | Dieselbe Front, einmal Titelanzeige, einmal zwei Zeigerinstrumente | Fünftes Zeichen der Tastenspalte bzw. -zeile |
-| 59 | Skalenblech | 09.25.44 | Weisses Deck mit Chromkanten, Kassettenklappe, Senderskala (**nur PC**) | Chrompille unten rechts |
 
 **Zwei Fotos, ein Entwurf:** **58** zeigt in beiden Fotos dieselbe
 Verstärkerfront mit derselben Tastenreihe und demselben Ring — nur die Anzeige
@@ -61,13 +59,12 @@ Die erste Fassung dieser Blätter zeigte das jeweilige Gerät als *Gegenstand*:
 ein Kasten mit Schlagschatten, um ihn herum eine graue Wand. Auf einem 1080 ×
 2340 grossen Blatt blieb dabei die Hälfte der Fläche leer. Sie sind deshalb
 alle umgebaut worden — **das Material ist jetzt die Bühne selbst**: das Orange
-von 50 und das weisse Deck von 59 reichen bis an alle vier Kanten, und bei 48
-läuft die Schraffur absichtlich aus dem Bild, wie ein näher herangeholtes Foto.
+von 50 reicht bis an alle vier Kanten, und bei 48 läuft die Schraffur absichtlich
+aus dem Bild, wie ein näher herangeholtes Foto.
 
 Der so gewonnene Platz ist nicht leer geblieben, sondern trägt jetzt Inhalt:
-jedes Blatt zeigt zusätzlich die Titel des Albums, 57 neun Kacheln statt sechs
-und lange Pultschieber. Wo doch Fläche übrig blieb, ist sie **eine** bewusste
-Lücke statt vier verteilter — Flächen wie das Deck von 59 haben in Wirklichkeit
+jedes Blatt zeigt zusätzlich die Titel des Albums. Wo doch Fläche übrig blieb,
+ist sie **eine** bewusste Lücke statt vier verteilter — echte Geräteflächen haben
 ebenfalls freie Stellen, und die tragen den Eindruck von Material.
 
 Drei Beobachtungen aus diesem Satz:
@@ -76,15 +73,16 @@ Drei Beobachtungen aus diesem Satz:
   Beschriftung die einzige Farbe auf dem ganzen Gerät. Wo die Vorlage einen
   solchen Platz vorgibt, ist der Zugang keine Zutat mehr, sondern gehört zum
   Gerät.
-- **Vollflächig heisst nicht randlos.** Die Blätter behalten ihre Fassung: 59
-  die beiden Chromleisten, 51 die Fuge zwischen Glas und Tastenfeld. Nur der
-  Tisch, auf dem das Gerät vorher stand, ist weg — er war nie Teil des Entwurfs.
+- **Vollflächig heisst nicht randlos.** Die Blätter behalten ihre Fassung: 51
+  die Fuge zwischen Glas und Tastenfeld, 50 die Kante des Klappzahlenwerks. Nur
+  der Tisch, auf dem das Gerät vorher stand, ist weg — er war nie Teil des
+  Entwurfs.
 - **Die Spulfläche ist der schwierigste Teil der Übertragung.** Kein einziges
   Foto zeigt eine Fortschrittsanzeige, die Musik meint — es sind Temperaturen,
   Uhrzeiten, Frequenzen, Pegel. Jedes Blatt musste dafür etwas umdeuten: die
-  Skala von 59 zeigt Minuten statt Kilohertz, die Kuppel von 53 den Titel statt
-  den Fokus. Genau an dieser Stelle entscheidet sich, ob ein Entwurf ein Spieler
-  wird oder ein Bild bleibt.
+  Kuppel von 53 zeigt den Titel statt den Fokus, der Punktkranz von 56 die Zeit
+  statt einen Pegel. Genau an dieser Stelle entscheidet sich, ob ein Entwurf ein
+  Spieler wird oder ein Bild bleibt.
 
 ## 43 Sonnenglas — drei Scheiben
 
@@ -130,8 +128,8 @@ ist ein Eintrag in diesem Wörterbuch, sonst nichts.
 **Ein Foto aus `player2/` ist nicht verwertet:** 23.56.39 ist ein 15 KB grosses
 Vorschaubild, auf dem nur eine Ecke mit einem „A" zu erkennen ist. Daraus lässt
 sich keine Bildsprache ableiten. Aus `player3/` war zunächst jedes Foto
-verwertet; nach dem Streichen von 47, 49, 52, 54 und 55 sind sieben der fünfzehn
-Fotos nicht mehr durch ein Blatt vertreten.
+verwertet; nach dem Streichen von 47, 49, 52, 54, 55, 57 und 59 sind neun der
+fünfzehn Fotos nicht mehr durch ein Blatt vertreten.
 
 Die Übertragung folgt in jedem Fall demselben Gedanken: **nicht das Foto
 nachzeichnen, sondern seine Bausprache übernehmen** und den ganzen Spieler
@@ -153,9 +151,10 @@ Entwürfe, keine Lieferung.
   **45 Kassettenhaufen**. In der Git-Historie im Commit „Acht Spieler aus den
   Fotos in player2".
 - Aus `player3/`: **47 Redaktionsblatt**, **49 Weckdock**, **52 Meldetafel**,
-  **54 Roséblech**, **55 Tonartkarte** — dazu das Hochformat von **59
-  Skalenblech**. In der Git-Historie im Commit „Dreizehn Spieler aus den Fotos
-  in player3" und in „player3: alle dreizehn Blaetter vollflaechig".
+  **54 Roséblech**, **55 Tonartkarte**, **57 Mischpult** und **59 Skalenblech** —
+  dazu das Querformat von **51 Tastenfeld**. In der Git-Historie im Commit
+  „Dreizehn Spieler aus den Fotos in player3" und in „player3: alle dreizehn
+  Blaetter vollflaechig".
 - Von 43 die Fassungen **a Milchglas**, **c Mattglas** und **h Vitrinenglas**
   (die Buchstaben d, e und g waren schon vorher frei geworden).
 
@@ -163,10 +162,10 @@ Entwürfe, keine Lieferung.
 
 ```bash
 cd design/entwuerfe/src
-python3 baualle.py          # schreibt alle 27 Dateien nach ../html/
+python3 baualle.py          # schreibt alle 23 Dateien nach ../html/
 ```
 
-`werkzeug.py` hält, was alle zwölf teilen: das eine Beispielalbum, die Zeichen
+`werkzeug.py` hält, was alle zehn teilen: das eine Beispielalbum, die Zeichen
 (Bibliothek, Lupe, Mischen, Wiederholen, Lautstärke), das abstrakte Cover, die
 Schallplatte, die Kassette und die Wellenform. Dokumentgerüst, Zeigerinstrument
 und die Transportzeichen kommen aus `../../src/lib.py`, also aus dem Paket selbst —
@@ -174,13 +173,13 @@ damit beide Sätze dieselbe Sprache sprechen und ein späterer Port nicht zwei
 Vokabulare lernen muss.
 
 Jede `dNN.py` liefert `telefon()` und `rechner()`, beide geben `(css, body)`
-zurück; `bau()` entscheidet, welche davon geschrieben werden — bei 59 nur noch
-`rechner()`. Der Faktor `g` in `_css(g)` ist der einzige Unterschied zwischen den
+zurück; `bau()` entscheidet, welche davon geschrieben werden — bei 51 nur noch
+`telefon()`. Der Faktor `g` in `_css(g)` ist der einzige Unterschied zwischen den
 Plattformen bei den Maßen der Bauteile — die Anordnung ist je Plattform von Hand
 gesetzt, nicht skaliert.
 
 ## Was noch offen ist
 
-Diese zwölf sind **Entwürfe zum Ansehen**, noch kein Layout in `player.html`.
+Diese zehn sind **Entwürfe zum Ansehen**, noch kein Layout in `player.html`.
 Ob und welche davon portiert werden, steht in `design/AUSWAHL.md` — dort sind
 sie bisher nicht eingetragen, weil die Auswahl beim Eigentümer liegt.
