@@ -56,6 +56,19 @@ wegbricht:
 Welche der beiden gebaut wird, ist noch nicht entschieden. Solange das offen
 ist, wird 33 nicht portiert.
 
+## Zweiter Satz: vier Entwürfe aus dem Ordner `player2/`
+
+Aus den Fotos in `player2/` sind vier Spieler entstanden — 39 Kippschalter,
+43 Sonnenglas, 44 Gerätezeile, 46 Malerblatt. Vier weitere (40 Neonschild,
+41 Sonntagsblatt, 42 Druckgrafik, 45 Kassettenhaufen) sind auf Wunsch wieder
+verworfen und samt Dateien entfernt. Von **43 gibt es sechs Fassungen** (gleiche
+Farbe, unterschiedliche Glasdicke, -oberfläche und Lichtführung, siehe LIESMICH); welche davon
+gilt, ist offen. Die verbliebenen
+liegen unter
+`design/entwuerfe/`, halten dieselben Regeln ein wie das Paket und sind bisher
+**nicht** Teil der Auswahl oben: welche davon gebaut werden, ist noch nicht
+entschieden. Begründung je Entwurf in `design/entwuerfe/LIESMICH.md`.
+
 ## Was das für die Bibliothek heißt
 
 Jeder Entwurf im Paket benennt, wo Sammlung und Suche hinkommen (`SPEC.md`,
