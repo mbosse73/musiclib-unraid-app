@@ -84,7 +84,11 @@ nach der Durchsicht durch den Eigentümer sind sechs davon geblieben —
 56 Punktring, 58 Zeigerfront. 58 fasst zwei Fotos desselben Geräts zusammen,
 wie es 44 schon vormacht.
 
-Alle zehn liegen unter
+Dazu kommt **60 Klimaxfront**, das als einziges kein Foto zur Vorlage hat,
+sondern ein benanntes Gerät: die Anzeige des Linn Klimax DSM, im Rechner-Blatt
+in Originalgrösse (1600 × 480).
+
+Alle elf liegen unter
 `design/entwuerfe/`, halten dieselben Regeln ein wie das Paket und sind bisher
 **nicht** Teil der Auswahl oben: welche davon gebaut werden, ist noch nicht
 entschieden. Begründung je Entwurf in `design/entwuerfe/LIESMICH.md`.
