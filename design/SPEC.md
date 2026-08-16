@@ -7,6 +7,13 @@ Geliefert waren 22. Die zehn, die der Eigentümer nicht bauen will, sind samt Da
 entfernt (17, 19, 20, 21, 23, 28, 29, 30, 32, 33) — sie stehen in der Git-Historie.
 Alle Entwürfe enthalten Transport (Zurück/Play/Pause/Weiter), Fortschritt mit Zeiten und einen Bibliotheks-Zugang.
 
+**Was hier bewusst nicht steht: die Bedienung.** Diese Blätter sind
+pixelgenaue Standbilder — kein Skript, keine Übergänge, keine Zustände. Was
+man anfasst, um zu spulen; wie ein gedrückter Knopf aussieht; ob und was sich
+bewegt, während gespielt wird — all das ist beim Portieren zu **entscheiden**,
+nicht abzulesen. Die gezeichneten Blätter unter `mockups/player/` sind darin
+das Gegenteil: die sind bedienbar und beantworten die Frage vorab.
+
 | Nr. | Konzept | Charakter | Bibliotheks-Zugang | Besondere Bausteine |
 |---|---|---|---|---|
 | 18 | `Akai-747` | Silber-weisse Front, mittig das rote LED-Zählwerk über dem grossen VU-Paar, symmetrische Spulen, Holzwangen (**nur PC**) | Eject-Taste (LIBRARY) in der Tastenreihe | Bandspulen, LED-Zähler, VU-Paar, Lampen in Tasten |
@@ -18,8 +25,8 @@ Alle Entwürfe enthalten Transport (Zurück/Play/Pause/Weiter), Fortschritt mit 
 | 31 | `Vinyl-Rote-Tasten` | Schallplatte auf Creme, rote Rundtasten, Slider mit Sprechblase | Eigene Kachel mit Bibliotheks-Icon oben rechts | Schallplatte, Slider mit Tooltip, Rundtasten |
 | 34 | `Retro-Party` | 70er-Poster, Strahlen in Petrol/Orange/Creme, Schallplatte, Rahmen | Rahmen-Button CRATE | Strahlen-Hintergrund, Schallplatte, Stempel, Rahmen-Tasten |
 | 35 | `Music-Sounds-Better` | Minimales weisses Poster, die Schallplatte allein — links (PC) bzw. im oberen Bereich (iPhone) zentriert | Runder Button mit Bibliotheks-Icon | Schallplatte, Titelliste, Kreis-Tasten |
-| 36 | `Song-Poster-Schwarz` | PC: gerahmtes Poster an der Wand. iPhone: das Plakat füllt das Blatt, der schwarze Rahmen entfällt. Spiraltext aus Albumtiteln, QR | Runder Button mit Bibliotheks-Icon neben Repeat | Spiral-Schallplatte, Tonarm, QR, Kreis-Tasten |
-| 37 | `Song-Poster-Weiss` | Weiss gerahmtes Poster, wärmerer Ton, Spiraltext aus Albumtiteln. iPhone: das Plakat füllt das Blatt, der weisse Rahmen wird zum Blattrand | Button SAMMLUNG rechts in der Tastenreihe | Spiral-Schallplatte, Tonarm, QR, beschriftete Tasten |
+| 36 | `Song-Poster-Schwarz` | PC: gerahmtes Poster an der Wand. iPhone: das Plakat füllt das Blatt, der schwarze Rahmen entfällt. Spiraltext aus Albumtiteln | Runder Button mit Bibliotheks-Icon neben Repeat | Spiral-Schallplatte, Tonarm, Kreis-Tasten |
+| 37 | `Song-Poster-Weiss` | Weiss gerahmtes Poster, wärmerer Ton, Spiraltext aus Albumtiteln. iPhone: das Plakat füllt das Blatt, der weisse Rahmen wird zum Blattrand | Button SAMMLUNG rechts in der Tastenreihe | Spiral-Schallplatte, Tonarm, beschriftete Tasten |
 | 38 | `World-Music-Day` | Festival-Plakat, Navy/Petrol/Orange, Boombox-Illustration, Blitze | Button LINE-UP am Ende der Tastenleiste | Boombox-Illustration, Blitze, Stern, Programmliste |
 
 ---

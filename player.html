@@ -1688,10 +1688,15 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
 .sf .fuell img,.zl .fuell img,.pf .fuell img,.ka .fuell img{position:absolute;inset:0;
   width:100%;height:100%;object-fit:cover}
 .sf .bild .ini{font-size:clamp(40px,9vh,74px);font-weight:700;color:rgba(255,255,255,.92)}
-/* Die Entwicklung: die Milchschicht liegt über dem Bild und geht mit der
-   Position zurück. Ein Wert, kein zweites Bild — --p kommt aus onRender. */
+/* Die Entwicklung: der Abzug kommt, während der Titel läuft. Das sind zwei
+   Dinge, nicht eines — die Milchschicht geht zurück, UND das Bild gewinnt
+   Farbe und Kontrast dazu. Nur die Schicht wegzunehmen wäre ein Vorhang,
+   der aufgeht; erst der Filter macht daraus eine Entwicklung.
+   Beides läuft über --p, den Stand im laufenden Titel, aus onRender. */
 .sf .schleier{position:absolute;inset:0;background:var(--milch);pointer-events:none;opacity:0}
-.sf.ent .schleier{opacity:calc(1 - min(1, var(--p) * 3.2))}
+.sf.ent .schleier{opacity:calc(1 - min(1, var(--p) * 5))}
+.sf.ent .fuell{filter:saturate(calc(min(1, var(--p) * 5)))
+  contrast(calc(.6 + min(.4, var(--p) * 2)))}
 .sf .meta{flex:none;padding:14px 4px 0;text-align:center;min-width:0}
 .sf .meta h1{font-size:clamp(17px,2.6vh,21px);font-weight:700;letter-spacing:-.01em;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1753,6 +1758,24 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
   --glas:transparent; --marker:transparent;
   --accent:#0E5C63; --accent-ink:#0A484E; --accent-soft:rgba(14,92,99,.09)}
 
+/* Milchglas ist nur Glas, wenn etwas dahinter liegt: das Cover, unscharf
+   und aufgehellt, über die ganze Fläche. Die Zeilen sind durchscheinend
+   (--glas), also scheint es durch sie hindurch — das ist der ganze Entwurf.
+   Der weisse Schleier gehört in denselben Stapel und ist fest, nicht aus
+   dem Bild abgeleitet: sonst kippt jedes zweite Album die Seite ins Graue.
+   „Programmheft" und „Die Spur" sind Papier und haben kein Dahinter. */
+.zl .wash{position:absolute;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.80),rgba(255,255,255,.86)),var(--cover,none);
+  background-size:cover;background-position:center;filter:blur(42px) saturate(1.25)}
+/* Kein transform:scale zum Kaschieren der weichen Blur-Kante: das Element
+   ragt dann aus dem Bildschirm, und genau danach schaut
+   test_phone_layout_builds_plays_and_stays_inside_the_screen. Unter einem
+   Schleier aus 80 % Weiss sieht man die Kante ohnehin nicht. */
+.zl.hef .wash,.zl.spu .wash{display:none}
+/* Nur Kopfzeile und Feld ueber den Schleier heben — die Blende NICHT: sie
+   ist absolut und liegt auf z-index 60, und ihr hier `relative` zu geben
+   macht sie zum Flex-Element, das die ganze Hoehe frisst. */
+.zl .kopfz,.zl .feld{position:relative;z-index:1}
 .zl .feld{flex:1;min-height:0;display:flex;flex-direction:column;
   padding:0 18px calc(env(safe-area-inset-bottom,0px) + 14px)}
 .zl .jetzt{flex:none;display:flex;align-items:center;gap:13px;padding:4px 4px 12px;min-width:0}
@@ -4719,6 +4742,12 @@ function bauAcht(w, deck, o){
          sonst wuerde ihn jede Fuellung wieder wegwerfen. */
       if (a) coverFuellung(q('[data-fuell]'), a);
       else q('[data-fuell]').innerHTML = '';
+      /* Milchglas legt dasselbe Bild unscharf hinter die Seite. Ohne Cover
+         bleibt --cover leer und der Schleier ist einfach eine helle Fläche. */
+      if (q('[data-wash]')){
+        const url = a && coverURL(a);
+        w.style.setProperty('--cover', url ? `url("${url}")` : 'none');
+      }
       bib.markiere();
     }
     if (letzter !== t.id){
@@ -4777,7 +4806,8 @@ layout({
 /* ── Familie „Zeilen" — Milchglas, Programmheft, Die Spur ──────────────── */
 const zeilenMarkup = (() => {
   const p = teile({});
-  return `${p.kopf}
+  return `<span class="wash" data-wash></span>
+    ${p.kopf}
     <div class="feld">
       <div class="links">
         <div class="jetzt">${p.bild}${p.meta}</div>
