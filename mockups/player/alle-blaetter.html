@@ -3789,8 +3789,8 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
     entwerfen, sondern die Stelle, an der man einen auswählt. Heute stehen dort fünfundzwanzig
     Ansichten als Textkacheln — Name, Gerät, ein Satz —, man wählt blind, und der Dialog schliesst
     sich sofort. Beide Blätter geben ihm eine <b>Voransicht</b> und räumen die Kolonne aus sieben
-    Abschnitten auf; sie tun es auf entgegengesetzte Weise. Es sind
-    <b>Vorschläge zur Auswahl</b>, keine Entscheidung.</p>
+    Abschnitten auf; sie tun es auf entgegengesetzte Weise. <b>Gebaut ist 27</b> — 26 bleibt
+    als das Argument stehen, gegen das gemessen wurde.</p>
   </div>
 
   <div class="gitter" id="gitter4"></div>
@@ -5842,6 +5842,14 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
       gefällt, der muss ihn wieder öffnen und die nächste raten. Dieses Blatt macht daraus einen
       <b>Schaukasten</b>: links die Liste, rechts das Stück, auf das man zeigt. Gewechselt wird
       erst auf Druck.</p>
+      <p class="lede" style="margin-top:14px;padding-left:14px;border-left:2px solid var(--line-2)">
+      <b>Nicht genommen</b> — gebaut ist Blatt 27. Drei Gründe, in dieser Reihenfolge: die
+      Voransicht hier verlangt, eine Auslage <i>zweimal gleichzeitig</i> zu bauen, also müsste
+      <code style="font-family:var(--mono);font-size:13px">deck.onRender</code> von einem Platz zu
+      einer Liste werden — die Stelle, an der alle fünfundzwanzig hängen. Eine Verkleinerung
+      verschweigt ausgerechnet den Griff, an dem sich diese Entwürfe entscheiden. Und am Telefon
+      bleiben gemessen drei Listenzeilen. Das Blatt bleibt stehen: es ist das Argument, gegen das
+      27 gemessen wurde.</p>
       <p style="margin-top:22px"><a class="zurueck" href="#verzeichnis">← alle Blätter</a></p>
     </div>
     <figure class="vorlage" style="padding:16px 16px 18px">
@@ -5957,6 +5965,13 @@ footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line-2);displ
       sondern die Ansicht selbst, sofort, über den ganzen Schirm — und unten eine Leiste, mit der
       man weiterblättert wie durch einen Filmstreifen. Am Ende <b>behalten</b> oder
       <b>abbrechen</b>. Der Dialog selbst schrumpft dabei auf zwei Zeilen.</p>
+      <p class="lede" style="margin-top:14px;padding-left:14px;border-left:2px solid var(--brass)">
+      <b>Dieser Vorschlag ist gebaut.</b> Er steht seit der Umsetzung in
+      <code style="font-family:var(--mono);font-size:13px">player.html</code>: das Tor im Dialog,
+      die Leiste, der nach Familien gegliederte Streifen, Pfeiltasten und die Regel, dass
+      Abbrechen Ansicht, Format <i>und</i> Akzent zurücklegt. Der alte Schalter „auch ungeeignete
+      zeigen" ist dabei ersatzlos entfallen — es gibt nichts mehr freizugeben. Was hier steht, ist
+      der Entwurf, nicht der Stand; die Umsetzung weicht in Kleinigkeiten ab.</p>
       <p style="margin-top:22px"><a class="zurueck" href="#verzeichnis">← alle Blätter</a></p>
     </div>
     <figure class="vorlage" style="padding:16px 16px 18px">
@@ -6577,10 +6592,10 @@ const DRITTE = [
    Aussehen — links Liste und Kasten, rechts Auslage und Leiste. */
 const VIERTE = [
   ['26','schaukasten','Schaukasten',
-   'Links die Liste, rechts die eine, auf die man zeigt. Gewechselt wird erst auf Druck.',
+   'Links die Liste, rechts die eine, auf die man zeigt. Gewechselt wird erst auf Druck. Nicht genommen.',
    ['PC','iPad','Telefon']],
   ['27','anprobe','Anprobe',
-   'Keine Verkleinerung: die Ansicht wird aufgesetzt, unten blättert eine Leiste weiter.',
+   'Keine Verkleinerung: die Ansicht wird aufgesetzt, unten blättert eine Leiste weiter. Gebaut.',
    ['PC','iPad','Telefon']],
 ];
 const SKIZZEN2 = {

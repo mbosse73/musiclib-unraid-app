@@ -1057,7 +1057,7 @@ def test_player_names_the_skipped_file(player):
 def test_player_settings_dialog_carries_every_group(player):
     """Der Dialog ist die Flaeche, die alle Layouts teilen — hier haengt alles."""
     player.evaluate("zeigeWahl(true)")
-    for auswahl in ("#wahlgitter [data-l]", "#wahlsort", "#wahlansicht", "#wahlscan",
+    for auswahl in ("#wahltor", "#wahlsort", "#wahlansicht", "#wahlscan",
                     "#wahlende [data-f]", "#wahlzufall [data-z]", "#wahlwach [data-w]"):
         assert player.locator(auswahl).count() >= 1, f"{auswahl} fehlt im Dialog"
     player.evaluate("zeigeWahl(false)")
@@ -1083,22 +1083,85 @@ def test_player_every_layout_declares_a_target(player):
     assert player.evaluate("LAYOUTS.every(L => typeof L.familie === 'string' && L.familie)")
 
 
-def test_player_chooser_shows_only_what_fits_and_can_be_unlocked(player):
-    player.evaluate("zeigeWahl(true)")
-    fuer_pc = player.evaluate("LAYOUTS.filter(L => L.ziele.includes('pc')).length")
-    assert player.locator("#wahlgitter [data-l]").count() == fuer_pc
+def test_player_tryon_strip_orders_by_fit_and_hides_nothing(player):
+    """Der Streifen zeigt *alle* Ansichten — die fuers Format gezeichneten
+    zuerst, nach Familie gruppiert, die uebrigen dahinter und gestrichelt.
 
-    player.click("#wahlziel [data-ziel='telefon']")
+    Damit entfaellt der alte Schalter „auch ungeeignete zeigen": es gibt
+    nichts mehr freizugeben. Ausgesperrt ist trotzdem niemand.
+    """
+    player.evaluate("anprobeStarten()")
+    assert player.locator("#anprobe").is_visible()
+
+    alle = len(layout_ids(player))
+    assert player.locator("#apstreifen [data-l]").count() == alle
+
+    fuer_pc = player.evaluate("LAYOUTS.filter(L => L.ziele.includes('pc')).length")
+    assert player.locator("#apstreifen .apkachel.fremd").count() == alle - fuer_pc
+    # Die gestrichelten stehen hinten, nicht dazwischen.
+    reihe = player.eval_on_selector_all(
+        "#apstreifen .apkachel", "e => e.map(x => x.classList.contains('fremd'))")
+    assert reihe == sorted(reihe), "die ungeeigneten stehen nicht am Ende"
+
+    # Jede Gruppe traegt eine Ueberschrift — 25 Kacheln in einer Reihe sind
+    # keine Ordnung. `familie` wird hier zum ersten Mal gerendert.
+    koepfe = player.eval_on_selector_all("#apstreifen .apglabel", "e => e.map(x => x.textContent)")
+    assert len(koepfe) >= 3 and koepfe[-1].startswith("Nicht für")
+
+    player.click("#apziel [data-ziel='telefon']")
     fuers_telefon = player.evaluate("LAYOUTS.filter(L => L.ziele.includes('telefon')).length")
     assert 1 <= fuers_telefon < fuer_pc, "sonst prueft der Test nichts"
-    assert player.locator("#wahlgitter [data-l]").count() == fuers_telefon
+    assert player.locator("#apstreifen [data-l]").count() == alle
+    assert player.locator("#apstreifen .apkachel.fremd").count() == alle - fuers_telefon
+    player.evaluate("anprobeAbbrechen()")
 
-    # Der Notausgang: gefiltert wird empfohlen, nicht erzwungen.
-    player.check("#wahlalle")
-    assert player.locator("#wahlgitter [data-l]").count() == len(layout_ids(player))
-    player.uncheck("#wahlalle")
-    assert player.locator("#wahlgitter [data-l]").count() == fuers_telefon
-    player.evaluate("zeigeWahl(false)")
+
+def test_player_tryon_wears_without_saving_and_cancel_puts_it_back(player):
+    """Der ganze Vorschlag in einem Test: Aufsetzen aendert die Ansicht
+    sofort, schreibt aber nichts; Abbrechen setzt zurueck; Behalten merkt."""
+    player.evaluate("setzeZiel('pc'); zeigeLayout('werkstisch')")
+    vorher = json.loads(player.evaluate("localStorage.getItem('musiklib:layout')"))
+    assert vorher["pc"] == "werkstisch"
+
+    player.evaluate("anprobeStarten(); anprobeAufsetzen('pult')")
+    player.wait_for_function("aktuell.id === 'pult'", timeout=5000)
+    # Aufgesetzt ist aufgesetzt — gespeichert ist es nicht.
+    assert json.loads(player.evaluate("localStorage.getItem('musiklib:layout')"))["pc"] \
+        == "werkstisch"
+    assert "noch nicht übernommen" in player.inner_text("#apsagt")
+
+    player.click("#apabbruch")
+    player.wait_for_function("aktuell.id === 'werkstisch'", timeout=5000)
+    assert player.locator("#anprobe").is_visible() is False
+
+    player.evaluate("anprobeStarten(); anprobeAufsetzen('pult')")
+    player.wait_for_function("aktuell.id === 'pult'", timeout=5000)
+    player.click("#apbehalten")
+    assert player.locator("#anprobe").is_visible() is False
+    assert json.loads(player.evaluate("localStorage.getItem('musiklib:layout')"))["pc"] == "pult"
+
+
+def test_player_tryon_survives_leaving_the_page(player):
+    """Wer die Seite in der Anprobe verlaesst, behaelt das Aufgesetzte —
+    sonst haelt er seine Einstellung fuer verlorengegangen."""
+    player.evaluate("setzeZiel('pc'); zeigeLayout('werkstisch')")
+    player.evaluate("anprobeStarten(); anprobeAufsetzen('turm')")
+    player.wait_for_function("aktuell.id === 'turm'", timeout=5000)
+    player.evaluate("dispatchEvent(new Event('pagehide'))")
+    assert json.loads(player.evaluate("localStorage.getItem('musiklib:layout')"))["pc"] == "turm"
+
+
+def test_player_tryon_playback_keeps_running_across_the_change(player):
+    """Der Grund, warum die Anprobe nichts kostet: das <audio> liegt
+    ausserhalb von #buehne, ein Wechsel beruehrt es nicht."""
+    player.evaluate("zeigeLayout('werkstisch'); deck.ladeAlbum(ALBUMS[0], 0)")
+    player.wait_for_function("!ton.paused", timeout=5000)
+    quelle = player.evaluate("ton.currentSrc")
+    player.evaluate("anprobeStarten(); anprobeAufsetzen('turm')")
+    player.wait_for_function("aktuell.id === 'turm'", timeout=5000)
+    assert player.evaluate("ton.currentSrc") == quelle
+    assert player.evaluate("!ton.paused")
+    player.evaluate("anprobeAbbrechen(); ton.pause()")
 
 
 def test_player_target_change_leaves_a_layout_that_stands_there(player):
@@ -1173,7 +1236,6 @@ def test_player_every_layout_offers_transport_seeking_and_settings(player):
     davon nachzuahmen prueft die Nachahmung, nicht die App. Dass gespult
     wird, deckt test_player_seeks_within_the_track fuer die Leisten ab.
     """
-    player.evaluate("setzeAlleZeigen(true)")
     for lid in layout_ids(player):
         player.evaluate("id => zeigeLayout(id)", lid)
         player.wait_for_selector("#buehne [data-pp]")
@@ -1199,7 +1261,6 @@ def test_player_every_layout_offers_transport_seeking_and_settings(player):
         knopf.click()
         assert player.locator("#wahl").is_visible(), f"{lid}: Einstellungen öffnen nicht"
         player.keyboard.press("Escape")
-    player.evaluate("setzeAlleZeigen(false)")
 
 
 # --------------------------------------------------------------------------
@@ -1340,12 +1401,12 @@ def test_phone_rail_seeks_across_a_track_boundary(telefon):
 
 def test_phone_accent_switches_and_survives_reload(telefon, server):
     telefon.evaluate("zeigeLayout('papier')")
-    telefon.evaluate("zeigeWahl(true)")
-    telefon.click("#wahlakzent [data-ak='petrol']")
+    telefon.evaluate("anprobeStarten()")
+    telefon.click("#apakzent [data-ak='petrol']")
+    telefon.click("#apbehalten")
     assert telefon.evaluate("localStorage.getItem('musiklib:akzent')") == '"petrol"'
     assert telefon.evaluate(
         "document.querySelector('#buehne > *').classList.contains('ak-petrol')")
-    telefon.evaluate("zeigeWahl(false)")
 
     telefon.reload(wait_until="domcontentloaded")
     telefon.wait_for_function("typeof aktuell !== 'undefined' && aktuell")
@@ -1354,9 +1415,9 @@ def test_phone_accent_switches_and_survives_reload(telefon, server):
 
     # Ein Akzent gehoert zum Layout: „Karte" laesst genau eine Farbe zu und
     # bietet deshalb keine Wahl an.
-    telefon.evaluate("zeigeLayout('karte'); zeigeWahl(true)")
-    assert telefon.locator("#wahlakzent").is_visible() is False
-    telefon.evaluate("zeigeWahl(false)")
+    telefon.evaluate("zeigeLayout('karte'); anprobeStarten()")
+    assert telefon.locator("#apakzent").is_visible() is False
+    telefon.evaluate("anprobeAbbrechen()")
 
 
 def test_phone_takes_over_the_old_mobile_settings(telefon, server):

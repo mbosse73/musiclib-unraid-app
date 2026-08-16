@@ -94,7 +94,17 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
   box-shadow:0 30px 80px rgba(20,18,14,.45)}
 .wahlkasten h2{font-size:22px;font-weight:500;letter-spacing:-.01em}
 .wahlkasten p{margin-top:6px;font-size:13px;color:#6B6155;max-width:62ch}
-.wahlgitter{margin-top:10px;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+/* Das Tor zur Anprobe. Es ersetzt das Gitter aus fuenfundzwanzig Textkacheln:
+   ausgewaehlt wird nicht mehr hier, sondern an der Ansicht selbst. */
+.wahltor{margin-top:10px;width:100%;display:flex;align-items:center;gap:14px;text-align:left;
+  border:1px solid rgba(36,30,24,.16);border-radius:2px;padding:13px 15px;
+  transition:background .15s}
+.wahltor:hover{background:rgba(36,30,24,.045)}
+.wahltor .sig{flex:none;color:#8A6534;display:flex}
+.wahltor .txt{flex:1;min-width:0}
+.wahltor .n{display:block;font-size:15.5px;font-weight:500}
+.wahltor .b{display:block;margin-top:4px;font-size:12.5px;color:#6B6155;line-height:1.5}
+.wahltor .pfeil{flex:none;font-size:20px;color:#A0968A;line-height:1}
 .wk{text-align:left;border:1px solid rgba(36,30,24,.16);border-radius:2px;padding:12px 13px 13px;
   display:block;transition:background .15s}
 .wk:hover{background:rgba(36,30,24,.045)}
@@ -123,9 +133,6 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
 .wahlwahlen select,.wahlwahlen input[type=search]{border:1px solid rgba(36,30,24,.22);
   border-radius:2px;padding:6px 8px;font-size:13px;color:#241E18;background:#fff}
 .wahlwahlen input[type=search]{min-width:min(260px,50vw)}
-.wahlwahlen .schalter{cursor:pointer;max-width:52ch;line-height:1.4}
-.wahlwahlen .schalter input{width:14px;height:14px;flex:none;accent-color:#8A6534;cursor:pointer}
-.wahlnote{margin-top:12px;font-size:12px;color:#6B6155;max-width:62ch}
 .wahlwahlen input[type=range]{flex:1;min-width:180px;max-width:340px;accent-color:#8A6534;
   height:22px;cursor:pointer}
 .wahlwahlen .stummknopf{border:1px solid rgba(36,30,24,.22);border-radius:2px;padding:6px 12px;
@@ -133,14 +140,6 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
 .wahlwahlen .stummknopf.an{border-color:#241E18;box-shadow:inset 0 0 0 1px #241E18}
 .wahlwahlen .lautwert{font-size:12.5px;color:#6B6155;font-variant-numeric:tabular-nums;
   min-width:4ch;text-align:right}
-.wahlakzente{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.wahlakzente[hidden]{display:none}
-.wahlakzente .kap{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#8A6534;
-  margin-right:2px}
-.wahlakzente button{display:flex;align-items:center;gap:7px;border:1px solid rgba(36,30,24,.18);
-  border-radius:2px;padding:6px 11px;font-size:12.5px}
-.wahlakzente button.an{border-color:#241E18;box-shadow:inset 0 0 0 1px #241E18}
-.wahlakzente button i{width:11px;height:11px;border-radius:50%;display:block;flex:none}
 .wahlstand{margin-top:12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
   font-size:12.5px;color:#6B6155}
 .wahlstand b{font-weight:600;color:#241E18;font-variant-numeric:tabular-nums}
@@ -156,6 +155,91 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
   font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace}
 .wahlskip ul[hidden]{display:none}
 .wahlskip li{padding:2px 0;word-break:break-all}
+
+/* ══ Die Anprobe ═══════════════════════════════════════════════════════════
+   Ausgewaehlt wird nicht mehr aus einer Liste von Namen, sondern an der
+   Sache: die Ansicht wird sofort aufgesetzt, in voller Groesse, mit dem
+   laufenden Titel darin. Unten blaettert ein Streifen weiter, am Ende steht
+   „Behalten" oder „Abbrechen".
+
+   Warum das billiger ist als eine Voransicht im Kasten: `zeigeLayout()` baut
+   eine Auslage schon immer auf und ab, und das <audio> liegt ausserhalb von
+   #buehne — der Wechsel kostet die Wiedergabe nichts. Eine Voransicht
+   dagegen hiesse, eine Auslage zweimal gleichzeitig zu bauen, und
+   `deck.onRender` ist ein einziger Platz.
+
+   Warum eine Verkleinerung hier ohnehin nichts taugte: diese Auslagen
+   entscheiden sich am Griff — Griffzone am Tonarm, Tastenbreite, Metallrad,
+   66 px Spulleiste. Ein verkleinertes Bild zeigt die Farbe und verschweigt
+   genau das.                                                              */
+.anprobe{position:fixed;inset:auto 0 0 0;z-index:290;pointer-events:none}
+.anprobe[hidden]{display:none}
+.apleiste{pointer-events:auto;background:rgba(251,249,245,.95);color:#241E18;
+  -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+  border-top:1px solid rgba(36,30,24,.24);box-shadow:0 -18px 44px rgba(20,18,14,.2);
+  padding-bottom:env(safe-area-inset-bottom)}
+.apkopf{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:11px 20px 0}
+.apname{font-size:16px;font-weight:500;flex:none}
+.apfam{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:#A0968A;flex:none}
+.apziel{display:flex;border:1px solid rgba(36,30,24,.22);border-radius:2px;overflow:hidden;
+  margin-left:auto;flex:none}
+.apziel button{padding:6px 12px;font-size:12px;color:#6B6155;
+  border-right:1px solid rgba(36,30,24,.22)}
+.apziel button:last-child{border-right:0}
+.apziel button.an{background:#241E18;color:#FBF9F5}
+.apziel button .n{font-size:10px;opacity:.7;margin-left:5px;font-variant-numeric:tabular-nums}
+.apakzent{display:flex;gap:6px;align-items:center;flex:none}
+.apakzent[hidden]{display:none}
+.apakzent button{width:22px;height:22px;border-radius:50%;border:1px solid rgba(36,30,24,.22)}
+.apakzent button.an{box-shadow:0 0 0 2px #FBF9F5,0 0 0 3.5px #241E18}
+
+/* Der Streifen ist nach Familien gegliedert — sonst ist er eine Reihe aus
+   fuenfundzwanzig, und fuenfundzwanzig ist keine Ordnung. Die letzte Gruppe
+   sind die, die fuer dieses Format nicht gezeichnet sind: gestrichelt, aber
+   da. Ausgesperrt wird niemand; man sieht beim Aufsetzen selbst, warum. */
+.apstreifen{display:flex;gap:20px;align-items:flex-end;overflow-x:auto;overflow-y:hidden;
+  padding:10px 20px 12px;scroll-behavior:smooth;scrollbar-width:none}
+.apstreifen::-webkit-scrollbar{display:none}
+.apgruppe{flex:none;display:flex;flex-direction:column;gap:5px}
+.apglabel{font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:#A0968A;
+  white-space:nowrap;padding-left:2px}
+.apkacheln{display:flex;gap:9px}
+.apkachel{flex:none;display:flex;flex-direction:column;align-items:center;gap:5px;color:#A0968A}
+.apkachel .bild{border:1px solid rgba(36,30,24,.22);background:#fff;display:grid;place-items:center;
+  border-radius:2px;transition:transform .16s,box-shadow .16s,border-color .16s}
+.apkachel .lab{font-size:10px;white-space:nowrap;max-width:92px;overflow:hidden;
+  text-overflow:ellipsis}
+.apkachel.an{color:#241E18}
+.apkachel.an .bild{border-color:#241E18;transform:scale(1.12);
+  box-shadow:0 10px 24px rgba(36,30,24,.2)}
+/* Die eingestellte traegt einen Strich unter dem Namen — ein Satzzeichen
+   hinter dem Namen laese sich als Tippfehler lesen. */
+.apkachel.gemerkt .lab{border-bottom:2px solid #8A6534;padding-bottom:1px}
+.apkachel.fremd .bild{border-style:dashed}
+
+.apfuss{display:flex;align-items:center;gap:12px;padding:0 20px 12px;flex-wrap:wrap}
+.apsagt{font-size:12px;color:#6B6155;flex:1;min-width:12ch;line-height:1.4}
+.apsagt b{color:#241E18;font-weight:600}
+.apsagt .aus{color:#8C2F1E}
+.aptasten{display:flex;gap:4px;flex:none}
+.aptasten kbd{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11px;
+  border:1px solid rgba(36,30,24,.22);border-radius:2px;padding:1px 5px;color:#A0968A}
+#apabbruch{border:1px solid rgba(36,30,24,.22);border-radius:2px;padding:9px 15px;font-size:13px;
+  color:#6B6155;flex:none}
+#apbehalten{background:#241E18;color:#FBF9F5;border-radius:2px;padding:10px 20px;font-size:13.5px;
+  font-weight:500;flex:none}
+
+/* Schmal: Format und Akzent unter den Namen, Tastenhinweis weg. */
+@media (max-width:560px){
+  .apkopf{gap:6px 10px;padding:10px 14px 0}
+  .apziel{margin-left:0;order:3;flex-basis:100%}
+  .apziel button{flex:1;text-align:center;padding:7px 6px}
+  .apstreifen{padding:9px 14px 10px;gap:14px}
+  .apfuss{padding:0 14px 12px;gap:9px}
+  .apsagt{flex-basis:100%;font-size:11.5px}
+  .aptasten{display:none}
+  #apbehalten{flex:1;text-align:center}
+}
 
 /* ── Zustaende vor dem ersten Ton ── */
 .hinweis{position:fixed;inset:0;z-index:150;display:grid;place-items:center;text-align:center;
@@ -1967,20 +2051,13 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
     <p>Eine Sammlung, viele Oberflächen. Was gespielt wird, läuft beim Wechsel weiter —
     nur das Gerät drumherum ist ein anderes.</p>
     <div class="wahlende">
-      <span class="wahlkap">Format</span>
-      <div class="wahlreihe" id="wahlziel"></div>
-    </div>
-    <div class="wahlende">
-      <span class="wahlkap">Ansicht</span>
-      <div class="wahlwahlen">
-        <label id="wahlfilterzeile" hidden>Suchen
-          <input type="search" id="wahlfilter" placeholder="Name oder Beschreibung"></label>
-        <label class="schalter"><input type="checkbox" id="wahlalle">
-          Auch Ansichten zeigen, die für dieses Format nicht gezeichnet sind</label>
-      </div>
-      <div class="wahlgitter" id="wahlgitter"></div>
-      <div class="wahlakzente" id="wahlakzent" hidden></div>
-      <p class="wahlnote" id="wahlnote"></p>
+      <span class="wahlkap">Aussehen</span>
+      <button class="wahltor" id="wahltor" type="button">
+        <span class="sig" id="wahltorsig"></span>
+        <span class="txt"><span class="n">Ansicht anprobieren</span>
+          <span class="b" id="wahltortext"></span></span>
+        <span class="pfeil" aria-hidden="true">›</span>
+      </button>
     </div>
     <div class="wahlende">
       <span class="wahlkap">Sammlung</span>
@@ -2019,6 +2096,29 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
     <div class="wahlfuss">
       <span>Taste <b>L</b> öffnet diese Liste · <a href="/tag">Album des Tages</a> · <a href="/klassisch">alte Schreibtischseite</a></span>
       <button type="button" id="wahlzu">Schließen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Die Anprobe. Sie liegt AUF der Ansicht, nicht davor: was oben steht, ist
+     die echte Auslage in echter Grösse, und sie spielt weiter. Deshalb ist
+     hier auch kein Schleier — verdeckt wird nur, was die Leiste selbst
+     bedeckt. Sie hat bewusst kein Kreuz: der Weg hinaus geht über „Behalten"
+     oder „Abbrechen", damit niemand in einem ungespeicherten Zustand landet. -->
+<div class="anprobe" id="anprobe" hidden>
+  <div class="apleiste" role="dialog" aria-label="Ansicht anprobieren">
+    <div class="apkopf">
+      <span class="apname" id="apname"></span>
+      <span class="apfam" id="apfam"></span>
+      <div class="apakzent" id="apakzent" hidden></div>
+      <div class="apziel" id="apziel"></div>
+    </div>
+    <div class="apstreifen" id="apstreifen"></div>
+    <div class="apfuss">
+      <span class="apsagt" id="apsagt"></span>
+      <span class="aptasten" aria-hidden="true"><kbd>←</kbd><kbd>→</kbd></span>
+      <button type="button" id="apabbruch">Abbrechen</button>
+      <button type="button" id="apbehalten">Behalten</button>
     </div>
   </div>
 </div>
@@ -2939,8 +3039,12 @@ let offeneBlenden = [];
    Titel aus seiner Liste (es bleiben Nummer und Dauer), und „Register"
    schiebt hochkant die Mitte der Platte aus dem Bild.
 
-   Ausgesperrt wird deshalb niemand: `alleZeigen` gibt die ganze Liste
-   wieder frei. Die Filterung ist eine Empfehlung, kein Zaun.            */
+   Ausgesperrt wird deshalb niemand: im Streifen der Anprobe stehen die
+   ungeeigneten hinter den geeigneten, gestrichelt statt versteckt. Die
+   Filterung ist eine Empfehlung, kein Zaun — und wer eine davon aufsetzt,
+   sieht in derselben Sekunde selbst, ob sie taugt. Das ist der Grund, warum
+   der frühere Schalter „alle Ansichten zeigen" (`musiklib:alleansichten`)
+   ersatzlos entfallen ist: es gibt nichts mehr freizugeben.             */
 const ZIELE = [
   {id:'telefon', name:'Telefon',      text:'Hochkant, in einer Hand, mit dem Daumen bedient.'},
   {id:'tablet',  name:'Tablet',       text:'iPad, hoch oder quer, mit dem Finger bedient.'},
@@ -2962,9 +3066,8 @@ function erkanntesZiel(){
   return matchMedia('(pointer:coarse)').matches ? 'tablet' : 'pc';
 }
 let ziel = istZiel(restore('ziel', null)) ? restore('ziel', null) : erkanntesZiel();
-let alleZeigen = restore('alleansichten', false) === true;
 
-const passtZumZiel = L => alleZeigen || ((L.ziele || []).includes(ziel));
+const passtZumZiel = L => (L.ziele || []).includes(ziel);
 const layoutsFuerZiel = () => LAYOUTS.filter(passtZumZiel);
 
 /* Die Wahl des Layouts liegt je Ziel unter demselben einen Schluessel — wie
@@ -3003,10 +3106,18 @@ function ersteWahl(){
       || (passend[0] || LAYOUTS[0]).id;
 }
 
-/* Was jetzt gebaut gehoert: das Gemerkte, solange es zum Ziel passt. */
+/* Was jetzt gebaut gehoert: das Gemerkte, wenn es das noch gibt — sonst die
+   erste Wahl fuer dieses Ziel.
+
+   Das Gemerkte gilt hier ohne Filter, und das ist Absicht: gemerkt wird nur,
+   was jemand in der Anprobe ausdruecklich behalten hat. Wer sich fuer eine
+   Ansicht entscheidet, die fuer sein Format nicht gezeichnet ist, hat sie
+   vorher in voller Groesse gesehen. Ihm dieselbe Wahl beim naechsten Laden
+   wieder wegzunehmen, waere Bevormundung. Gefiltert wird deshalb nur, was
+   noch niemand entschieden hat. */
 function layoutFuerZiel(){
   const L = LAYOUTS.find(x => x.id === gemerktesLayout());
-  return (L && passtZumZiel(L)) ? L.id : ersteWahl();
+  return L ? L.id : ersteWahl();
 }
 
 /* Akzente gehoeren zum Layout, nicht zur Seite: Messing auf Sand waere
@@ -3024,22 +3135,20 @@ function klasseFuer(L){
   return L.klasse + (a ? ' ak-' + a : '');
 }
 function setzeAkzent(id){
-  akzent = id; store('akzent', id);
+  akzent = id;
+  /* In der Anprobe wird nichts geschrieben — auch der Akzent nicht, sonst
+     liesse „Abbrechen" die Farbe stehen und nur die Form zurueckspringen. */
+  if (!anprobeLaeuft()) store('akzent', id);
   const w = buehne.firstElementChild;
   if (w && aktuell) w.className = klasseFuer(aktuell);
-  zeichneWahl();
+  zeichneWahl(); zeichneAnprobe();
 }
 
-function setzeZiel(z){
+function setzeZiel(z, o = {}){
   if (!istZiel(z) || z === ziel) return;
-  ziel = z; store('ziel', z);
-  zeigeLayout(layoutFuerZiel());     // merkt die Wahl gleich fuer das neue Ziel
-}
-function setzeAlleZeigen(v){
-  alleZeigen = !!v; store('alleansichten', alleZeigen);
-  const id = layoutFuerZiel();
-  if (!aktuell || aktuell.id !== id) zeigeLayout(id);
-  else zeichneWahl();
+  ziel = z;
+  if (o.merken !== false) store('ziel', z);
+  zeigeLayout(layoutFuerZiel(), o);   // merkt die Wahl gleich fuer das neue Ziel
 }
 
 /* ══ Layouts ═══════════════════════════════════════════════════════════════
@@ -4917,7 +5026,9 @@ const wechsler = document.getElementById('wechsler');
 const wahl = document.getElementById('wahl');
 let aktuell = null;
 
-function zeigeLayout(id){
+/* `merken:false` ist der ganze Unterschied zwischen Anprobieren und Waehlen.
+   Alles andere passiert ohnehin schon: aufbauen, abbauen, weiterspielen. */
+function zeigeLayout(id, o = {}){
   const L = LAYOUTS.find(x => x.id === id) || LAYOUTS[0];
   aktuell = L;
   offeneBlenden = [];
@@ -4934,8 +5045,9 @@ function zeigeLayout(id){
   if (meta && L.chrome[2]) meta.setAttribute('content', L.chrome[2]);
   L.bau(w, deck);
   deck.render();
-  merkeLayout(L.id);
+  if (o.merken !== false) merkeLayout(L.id);
   zeichneWahl();
+  zeichneAnprobe();
 }
 
 /* Die beiden Auswahlfelder werden einmal gefuellt; zeichneWahl() setzt danach
@@ -5020,11 +5132,171 @@ function zeichneBestand(){
 /* Die Filterzeile taucht erst auf, wenn sie gebraucht wird. Bei zwoelf
    Kacheln waere ein Suchfeld darueber Zierrat; ab etwa einem Dutzend faengt
    das Suchen an, sich zu lohnen. */
-const SICHTGRENZE = 12;
-const feldFilter = document.getElementById('wahlfilter');
-const schalterAlle = document.getElementById('wahlalle');
-feldFilter.oninput = () => zeichneWahl();
-schalterAlle.onchange = () => setzeAlleZeigen(schalterAlle.checked);
+/* ── Das Signet: die Familie als Strichbild ──────────────────────────────
+   `familie` steht seit Etappe 2 an jeder Auslage und wurde nirgends
+   gezeichnet. Hier bekommt es seine Aufgabe. Ein Rechteck ist die Flaeche,
+   die Striche sind, wo etwas steht — bei 46 px Breite waere alles andere
+   Grafik ohne Aussage. Eine neue Familie ohne Eintrag zeichnet nichts; das
+   ist kein Fehler, nur ein leeres Feld. */
+const SIGNETE = {
+ 'Die Platte':   '<circle cx="34" cy="31" r="17"/><circle cx="34" cy="31" r="4"/><path d="M74 13 60 36"/>',
+ 'Die Kassette': '<rect x="14" y="15" width="72" height="32" rx="2"/><circle cx="36" cy="31" r="6"/><circle cx="64" cy="31" r="6"/><path d="M22 54h56"/>',
+ 'Der Satz':     '<circle cx="26" cy="31" r="14"/><path d="M52 20h34M52 28h34M52 36h22"/><path d="M52 50h34"/>',
+ 'Das Rack':     '<rect x="12" y="12" width="46" height="26" rx="1"/><path d="M12 25h46"/><circle cx="76" cy="25" r="10"/><path d="M12 48h64"/>',
+ 'Das Pult':     '<path d="M12 20h40M12 30h40M12 40h26"/><rect x="12" y="50" width="40" height="5" rx="2"/><circle cx="74" cy="31" r="16"/>',
+ 'Das Möbel':    '<rect x="12" y="10" width="76" height="20" rx="1"/><circle cx="32" cy="20" r="6"/><circle cx="52" cy="20" r="6"/><rect x="12" y="36" width="76" height="20" rx="1"/><path d="M22 46h32"/>',
+ 'Das Telefon':  '<rect x="34" y="6" width="32" height="52" rx="4"/><rect x="40" y="12" width="20" height="18" rx="1"/><path d="M40 38h20M40 44h14"/><path d="M74 12v40"/>',
+ 'Sofortbild':   '<rect x="30" y="6" width="40" height="52" rx="1"/><rect x="35" y="11" width="30" height="26"/><path d="M38 44h24"/><circle cx="50" cy="52" r="4"/>',
+ 'Zeilen':       '<path d="M14 12h72M14 22h72M14 32h72M14 42h72M14 52h48"/>',
+ 'Platten':      '<rect x="20" y="6" width="60" height="16" rx="1"/><rect x="20" y="25" width="60" height="14" rx="1"/><circle cx="50" cy="32" r="4"/><rect x="20" y="42" width="60" height="16" rx="1"/>',
+ 'Block':        '<rect x="24" y="8" width="52" height="26" rx="1"/><path d="M28 40h44M31 47h38M34 54h32"/>',
+};
+function signet(fam, w = 46){
+  return `<svg viewBox="0 0 100 64" width="${w}" height="${Math.round(w * .64)}" fill="none"
+    stroke="currentColor" stroke-width="2.4" stroke-linecap="round"
+    aria-hidden="true">${SIGNETE[fam] || ''}</svg>`;
+}
+
+/* ── Die Anprobe ─────────────────────────────────────────────────────────
+   `anprobeVon` ist zugleich der Schalter (laeuft sie?) und das Gedaechtnis
+   (womit kam man herein?). Mit ihm zurueckgelegt werden Ziel und Akzent —
+   „Abbrechen" heisst: es bleibt, wie es war, und nicht nur halb. */
+/* `anprobe` ist die stille Globale aus der Kennung im Markup — wie `wahl`,
+   `buehne` und `wechsler` auch. Eine eigene Konstante davor haette hier eine
+   zeitliche Falle: `zeigeLayout()` zeichnet die Leiste mit und laeuft beim
+   Start frueher als jede Deklaration weiter unten. */
+var anprobeVon = null, anprobeZielVon = null, anprobeAkzentVon = null;
+function anprobeLaeuft(){ return anprobeVon !== null; }
+
+function anprobeStarten(){
+  if (anprobeLaeuft() || !aktuell) return;
+  anprobeVon = aktuell.id; anprobeZielVon = ziel; anprobeAkzentVon = akzent;
+  zeigeWahl(false);
+  anprobe.hidden = false;
+  zeichneAnprobe();
+}
+function anprobeEnde(){
+  anprobeVon = anprobeZielVon = anprobeAkzentVon = null;
+  anprobe.hidden = true;
+}
+function anprobeBehalten(){
+  if (!anprobeLaeuft()) return;
+  merkeLayout(aktuell.id);
+  store('ziel', ziel);
+  if (akzent !== null) store('akzent', akzent);
+  anprobeEnde();
+  zeichneWahl();
+}
+function anprobeAbbrechen(){
+  if (!anprobeLaeuft()) return;
+  const zurueck = anprobeVon, zielZurueck = anprobeZielVon, akZurueck = anprobeAkzentVon;
+  anprobeEnde();
+  ziel = zielZurueck; akzent = akZurueck;
+  if (aktuell.id !== zurueck) zeigeLayout(zurueck, {merken:false});
+  else { const w = buehne.firstElementChild; if (w) w.className = klasseFuer(aktuell); }
+  zeichneWahl();
+}
+/* Aufsetzen kostet einen Aufbau. Wer mit den Pfeiltasten durch fuenfundzwanzig
+   rauscht, soll nicht fuenfundzwanzig Auslagen bauen — gebaut wird der Stand
+   nach der letzten Taste. */
+var anprobeTimer = 0, anprobeZiel = null;
+function anprobeAufsetzen(id){
+  if (!LAYOUTS.some(L => L.id === id)) return;
+  anprobeZiel = id;
+  clearTimeout(anprobeTimer);
+  anprobeTimer = setTimeout(() => {
+    anprobeTimer = 0;
+    if (anprobeZiel && anprobeZiel !== aktuell.id) zeigeLayout(anprobeZiel, {merken:false});
+    else zeichneAnprobe();
+  }, 90);
+  zeichneAnprobe();          // Name und Streifen folgen sofort, der Aufbau gleich
+}
+/* Worauf die Anprobe gerade zeigt — waehrend des Entprellens ist das noch
+   nicht das Gebaute. */
+function anprobeAuf(){ return (anprobeTimer && anprobeZiel) || (aktuell && aktuell.id); }
+
+/* Die Reihenfolge im Streifen: erst die fuers Format gezeichneten, nach
+   Familie gruppiert, dann die uebrigen als eigene Gruppe. Genau diese Reihe
+   laufen auch die Pfeiltasten ab. */
+function anprobeReihe(){
+  return layoutsFuerZiel().concat(LAYOUTS.filter(L => !passtZumZiel(L)));
+}
+
+function zeichneAnprobe(){
+  if (anprobe.hidden) return;
+  const jetzt = anprobeAuf();
+  const L = LAYOUTS.find(x => x.id === jetzt) || aktuell;
+  const passt = passtZumZiel(L);
+  const gemerkt = gemerktesLayout();
+
+  document.getElementById('apname').textContent = L.name;
+  document.getElementById('apfam').textContent = L.familie || '';
+
+  document.getElementById('apziel').innerHTML = ZIELE.map(z => `
+    <button type="button" data-ziel="${z.id}" class="${z.id === ziel ? 'an' : ''}"
+      title="${esc(z.text)}">${esc(z.name)}<span class="n">${
+      LAYOUTS.filter(x => (x.ziele || []).includes(z.id)).length}</span></button>`).join('');
+  $$('#apziel [data-ziel]').forEach(el =>
+    el.onclick = () => setzeZiel(el.dataset.ziel, {merken:false}));
+
+  /* Der Akzent gehoert zur Ansicht, auf die man gerade schaut — bietet sie
+     keinen oder nur einen an, gibt es nichts zu waehlen. */
+  const akKasten = document.getElementById('apakzent');
+  const akListe = L.akzente || [];
+  akKasten.hidden = akListe.length < 2;
+  if (!akKasten.hidden){
+    const ak = akzentFuer(L);
+    akKasten.innerHTML = akListe.map(x => `
+      <button type="button" data-ak="${esc(x.id)}" class="${x.id === ak ? 'an' : ''}"
+        style="background:${esc(x.farbe)}" title="${esc(x.name)}"
+        aria-label="Akzent ${esc(x.name)}"></button>`).join('');
+    $$('#apakzent [data-ak]').forEach(el => el.onclick = () => setzeAkzent(el.dataset.ak));
+  }
+
+  /* Die Kachel hat das Seitenverhaeltnis des Formats, auf das man schaut. */
+  const mass = ziel === 'telefon' ? [42, 76] : ziel === 'tablet' ? [72, 54] : [84, 52];
+  const gruppen = [];
+  for (const L2 of anprobeReihe()){
+    const kopf = passtZumZiel(L2) ? L2.familie
+      : `Nicht für ${zielName(ziel)} gezeichnet`;
+    if (!gruppen.length || gruppen[gruppen.length - 1][0] !== kopf) gruppen.push([kopf, []]);
+    gruppen[gruppen.length - 1][1].push(L2);
+  }
+  document.getElementById('apstreifen').innerHTML = gruppen.map(([kopf, liste]) => `
+    <div class="apgruppe"><span class="apglabel">${esc(kopf)}</span>
+      <div class="apkacheln">${liste.map(x => `
+        <button class="apkachel${x.id === jetzt ? ' an' : ''}${
+          x.id === gemerkt ? ' gemerkt' : ''}${passtZumZiel(x) ? '' : ' fremd'}"
+          type="button" data-l="${x.id}" title="${esc(x.name + ' — ' + x.text)}">
+          <span class="bild" style="width:${mass[0]}px;height:${mass[1]}px">${
+            signet(x.familie, Math.round(mass[0] * .72))}</span>
+          <span class="lab">${esc(x.name)}</span></button>`).join('')}</div></div>`).join('');
+  $$('#apstreifen [data-l]').forEach(el => el.onclick = () => anprobeAufsetzen(el.dataset.l));
+
+  document.getElementById('apsagt').innerHTML = (
+      L.id === gemerkt && ziel === anprobeZielVon
+        ? `<b>${esc(L.name)}</b> ist die eingestellte Ansicht.`
+        : `Aufgesetzt: <b>${esc(L.name)}</b> — noch nicht übernommen.`)
+    + (passt ? '' : ` <span class="aus">Nicht für ${esc(zielName(ziel))} gezeichnet:`
+        + ' kann abgeschnitten, zu klein oder unbedienbar sein.</span>');
+
+  const k = document.querySelector('#apstreifen .apkachel.an');
+  if (k){
+    const s = document.getElementById('apstreifen');
+    s.scrollLeft = k.offsetLeft - (s.clientWidth - k.offsetWidth) / 2;
+  }
+}
+
+document.getElementById('wahltor').onclick = anprobeStarten;
+document.getElementById('apbehalten').onclick = anprobeBehalten;
+document.getElementById('apabbruch').onclick = anprobeAbbrechen;
+/* Wer die Seite waehrend der Anprobe verlaesst, behaelt das Aufgesetzte.
+   Sonst faende er beim naechsten Oeffnen die alte Ansicht vor und hielte
+   seine Einstellung fuer verlorengegangen. */
+addEventListener('pagehide', () => { if (anprobeLaeuft()) anprobeBehalten(); });
+addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden' && anprobeLaeuft()) anprobeBehalten();
+});
 
 function zeichneWahl(){
   feldSort.value = sortierung;
@@ -5032,65 +5304,15 @@ function zeichneWahl(){
   zeichneBestand();
   zeichneLautstaerke();
 
-  document.getElementById('wahlziel').innerHTML = ZIELE.map(z => {
-    const n = LAYOUTS.filter(L => (L.ziele || []).includes(z.id)).length;
-    return `<button class="wk${z.id === ziel ? ' an' : ''}" type="button" data-ziel="${z.id}">
-      <span class="n">${esc(z.name)}</span>
-      <span class="g">${n} ${n === 1 ? 'Ansicht' : 'Ansichten'}</span>
-      <span class="b">${esc(z.text)}</span>
-    </button>`;
-  }).join('');
-  $$('#wahlziel [data-ziel]').forEach(el => el.onclick = () => setzeZiel(el.dataset.ziel));
+  /* Das Tor sagt, wo man steht — nicht, was es alles gibt. Was es gibt,
+     zeigt die Anprobe, und zwar in echter Groesse. */
+  document.getElementById('wahltorsig').innerHTML = aktuell ? signet(aktuell.familie, 34) : '';
+  document.getElementById('wahltortext').textContent = aktuell
+    ? `Zurzeit „${aktuell.name}" auf ${zielName(ziel)}. `
+      + `${layoutsFuerZiel().length} von ${LAYOUTS.length} Ansichten sind dafür gezeichnet — `
+      + 'aufsetzen, ansehen, behalten.'
+    : '';
 
-  const fuerZiel = layoutsFuerZiel();
-  const q = feldFilter.value.trim().toLowerCase();
-  const sichtbar = q
-    ? fuerZiel.filter(L => (L.name+' '+L.geraet+' '+L.familie+' '+L.text).toLowerCase().includes(q))
-    : fuerZiel;
-
-  schalterAlle.checked = alleZeigen;
-  document.getElementById('wahlfilterzeile').hidden = fuerZiel.length <= SICHTGRENZE;
-
-  document.getElementById('wahlgitter').innerHTML = sichtbar.map(L => `
-    <button class="wk${aktuell && L.id === aktuell.id ? ' an' : ''}" type="button" data-l="${L.id}">
-      <span class="n">${esc(L.name)}</span>
-      <span class="g">${esc(L.geraet)}</span>
-      <span class="b">${esc(L.text)}</span>
-    </button>`).join('') || '';
-
-  /* Der Hinweis sagt, was die Liste verschweigt: warum sie kurz ist, und
-     was der Schalter daraus macht. */
-  const note = document.getElementById('wahlnote');
-  if (q && !sichtbar.length){
-    note.textContent = 'Keine Ansicht passt zu dieser Suche.';
-  } else if (alleZeigen){
-    note.textContent = `Alle ${LAYOUTS.length} Ansichten. Was nicht für ${zielName(ziel)} `
-      + 'gezeichnet ist, kann dort abgeschnitten, zu klein oder unbedienbar sein.';
-  } else if (!fuerZiel.length){
-    note.textContent = `Für ${zielName(ziel)} ist noch keine Ansicht gezeichnet.`;
-  } else {
-    note.textContent = `${fuerZiel.length} von ${LAYOUTS.length} Ansichten sind für `
-      + `${zielName(ziel)} gezeichnet und nachgemessen.`
-      + (ziel === 'telefon' ? ' Die eigene Handy-Oberfläche liegt weiterhin unter /mobil.' : '');
-  }
-
-  /* Der Akzent gehoert zur gewaehlten Ansicht — bietet sie keinen oder nur
-     einen an, gibt es auch nichts zu waehlen. */
-  const akKasten = document.getElementById('wahlakzent');
-  const liste = (aktuell && aktuell.akzente) || [];
-  akKasten.hidden = liste.length < 2;
-  if (!akKasten.hidden){
-    const jetzt = akzentFuer(aktuell);
-    akKasten.innerHTML = '<span class="kap">Akzent</span>' + liste.map(x => `
-      <button type="button" class="${x.id === jetzt ? 'an' : ''}" data-ak="${esc(x.id)}">
-        <i style="background:${esc(x.farbe)}"></i>${esc(x.name)}</button>`).join('');
-    $$('#wahlakzent [data-ak]').forEach(el => el.onclick = () => setzeAkzent(el.dataset.ak));
-  }
-
-  $$('#wahlgitter [data-l]').forEach(el => el.onclick = () => {
-    zeigeWahl(false);
-    zeigeLayout(el.dataset.l);
-  });
   document.getElementById('wahlende').innerHTML = FORTSETZUNGEN.map(f => `
     <button class="wk${f.id === fortsetzung ? ' an' : ''}" type="button" data-f="${f.id}">
       <span class="n">${esc(f.name)}</span>
@@ -5150,11 +5372,26 @@ addEventListener('pointerdown', weckeWechsler, {passive:true});
 addEventListener('keydown', ev => {
   const imFeld = ev.target && /^(INPUT|TEXTAREA)$/.test(ev.target.tagName);
   if (ev.key === 'Escape'){
+    if (anprobeLaeuft()){ anprobeAbbrechen(); return; }
     if (!wahl.hidden){ zeigeWahl(false); return; }
     offeneBlenden.forEach(fn => fn());
     return;
   }
   if (imFeld || ev.metaKey || ev.ctrlKey || ev.altKey) return;
+  /* Waehrend der Anprobe blaettern die Pfeile durch die Ansichten statt zu
+     spulen: die Leiste ist offen, die Absicht ist eindeutig. */
+  if (anprobeLaeuft()){
+    const reihe = anprobeReihe();
+    const i = reihe.findIndex(L => L.id === anprobeAuf());
+    if (ev.key === 'ArrowRight' || ev.key === 'ArrowLeft'){
+      ev.preventDefault();
+      const j = Math.min(reihe.length - 1,
+        Math.max(0, i + (ev.key === 'ArrowRight' ? 1 : -1)));
+      anprobeAufsetzen(reihe[j].id);
+      return;
+    }
+    if (ev.key === 'Enter'){ ev.preventDefault(); anprobeBehalten(); return; }
+  }
   switch (ev.key){
     case ' ': ev.preventDefault(); deck.toggle(); break;
     case 'ArrowRight': deck.setzePos(deck.pos + 5); break;
