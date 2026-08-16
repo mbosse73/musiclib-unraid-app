@@ -1203,13 +1203,19 @@ def test_player_every_layout_offers_transport_seeking_and_settings(player):
 
 
 # --------------------------------------------------------------------------
-# Spieler: die fuenf Oberflaechen vom Telefon
+# Spieler: die Oberflaechen vom Telefon
 #
 # Etappe 3 — was in mobile.html ein „Thema" war, ist hier eine Ansicht mit
 # Ziel „Telefon". Derselbe Unterbau, dieselbe Blende, dieselben Schluessel.
+#
+# Die acht aus mockups/acht-themen/ kamen spaeter dazu und zielen zusaetzlich
+# auf Tablet und PC; hochkant gelten fuer sie dieselben Zusagen wie fuer die
+# ersten fuenf, deshalb stehen sie in derselben Liste.
 # --------------------------------------------------------------------------
 
-TELEFON_LAYOUTS = ["papier", "wueste", "kissen", "karte", "kiesel"]
+TELEFON_LAYOUTS = ["papier", "wueste", "kissen", "karte", "kiesel",
+                   "abzug", "entwicklung", "milchglas", "programmheft", "spur",
+                   "emaille", "gespritzt", "kalender"]
 
 
 @pytest.fixture

@@ -28,7 +28,27 @@ dieser Datei selbst gemacht, gegen dieselbe Testsammlung wie alles andere.
 | `thema_gespritzt.jpg` | Gespritzt | `platten` | Dieselben Platten, aber genarbt — und der Knopf sitzt in einem Ring statt auf der Fläche |
 | `thema_kalender.jpg` | Abreißkalender | `block` | Der laufende Titel steht auf dem obersten Blatt, darunter der Stapel dessen, was noch kommt |
 
-## Warum sie nicht einfach eingebaut sind
+## Sie sind gebaut — hier steht, woraus
+
+**Alle acht sind inzwischen als Auslagen in `player.html` gebaut** (K19–K26 im
+Konzeptregister), jeweils fürs Telefon *und* fürs Querformat. Dieser Ordner ist
+damit nicht mehr die einzige Fassung, sondern die **Vorlage**: wer wissen will,
+wie eine dieser Erscheinungen ursprünglich aussah und warum sie so aussieht,
+liest hier nach und vergleicht.
+
+Was beim Portieren erhalten geblieben ist: die vier Formen. Aus `karte`,
+`liste`, `platten` und `block` sind vier Familien geworden — `.sf` Sofortbild
+(Der echte Abzug, Die Entwicklung), `.zl` Zeilen (Milchglaszeilen,
+Programmheft, Die Spur), `.pf` Platten (Emaille, Gespritzt) und `.ka` Block
+(Abreißkalender). Alle vier teilen sich **ein Markup**, genau wie hier: die
+Familie entscheidet, wo die sechs Bausteine sitzen, ein Thema innerhalb einer
+Familie ändert nur Material und Farbe.
+
+Was hinzukam: **das Querformat**. Die Vorlagen sind reine Telefonentwürfe; quer
+teilt sich die Fläche in zwei Spalten. Das ist die einzige Erfindung an der
+Portierung.
+
+## Warum es eine Portierung war und keine Wiederherstellung
 
 Diese Datei stammt **von vor der Konsolidierung**. Damals war das Telefon eine
 eigene Datei mit einer `THEMEN`-Liste; ein Thema trug eine Palette *und* eine
@@ -39,18 +59,13 @@ Seit Etappe 3 gilt das nicht mehr. Das Telefon bekommt sein Aussehen aus
 Wurzelverzeichnis ist nur noch die Rückfallseite unter `/mobil-alt`, die
 ohnehin verschwinden soll.
 
-Diese Datei über die heutige `mobile.html` zu kopieren wäre deshalb **keine
-Wiederherstellung, sondern ein Rückschritt**: die acht Erscheinungen lägen dann
-in einer Datei, die niemand mehr benutzt, und die heutige Rückfallseite wäre
-kaputt, weil hier noch die alte Architektur davorsteht.
-
-**Eine dieser acht zu benutzen heißt: sie als Auslage in `player.html` neu
-bauen** — ein CSS-Block auf einer eigenen Wurzelklasse plus ein
-`layout({id, name, ziele:['telefon'], klasse, bau(w, deck)})`. Genau diesen Weg
-sind *Papier*, *Desert Rose*, *Kissen*, *Karte* und *Kiesel* schon gegangen;
-das waren auch einmal Themen in `mobile.html`. Der Aufwand entspricht dem einer
-Portierung aus einem gezeichneten Blatt — nur liegt hier eine laufende Fassung
-als Vorlage daneben statt einer Zeichnung.
+Diese Datei über die heutige `mobile.html` zu kopieren wäre **kein
+Wiederherstellen, sondern ein Rückschritt** gewesen: die acht Erscheinungen
+lägen dann in einer Datei, die niemand mehr benutzt, und die heutige
+Rückfallseite wäre kaputt, weil hier noch die alte Architektur davorsteht.
+Deshalb sind sie neu gebaut worden — denselben Weg sind *Papier*, *Desert
+Rose*, *Kissen*, *Karte* und *Kiesel* schon gegangen; das waren auch einmal
+Themen in `mobile.html`.
 
 ## Wie man sie laufen sieht
 
@@ -106,6 +121,6 @@ Dazu die beiden, die es auf `main` geschafft haben und dort bis heute laufen:
 
 Diese Datei wird **nicht gepflegt**. Sie ist ein Stand von einem Tag, kein
 Zweitsystem. Wer an `mobile.html` im Wurzelverzeichnis etwas ändert, ändert
-hier nichts — und soll hier auch nichts ändern. Wenn eines der acht Themen
-gebaut wird, ist das Ergebnis eine Auslage in `player.html`, und diese Kopie
-bleibt trotzdem stehen, als Beleg dafür, wie die Vorlage aussah.
+hier nichts — und soll hier auch nichts ändern. Wer eine der acht Auslagen in
+`player.html` ändert, ändert hier ebenfalls nichts: der Ordner zeigt, **woraus**
+gebaut wurde, nicht was gebaut ist.

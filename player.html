@@ -1568,6 +1568,366 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
 .kl .fussz button:active{box-shadow:inset -3px -3px 8px var(--hell),inset 4px 4px 10px var(--dunkel)}
 .kl .fussz .haupt{width:66px;height:66px;color:var(--accent-ink);
   box-shadow:-6px -6px 14px var(--hell),7px 7px 18px var(--dunkel)}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Die acht Themen aus mockups/acht-themen/ — vier Familien
+
+   Sie kommen aus mobile.html von vor der Konsolidierung, wo ein Thema eine
+   Palette *und* eine Form trug und die Form entschied, wie „Jetzt läuft"
+   aufgebaut ist. Genau das ist hier erhalten geblieben: **ein Markup, vier
+   Familien**, und die Familie ordnet dieselben sechs Bausteine anders an
+   (`.bild`, `.meta`, `.bahn`, `.tast`, `.qliste`, `.kopfz`). Ein Thema
+   innerhalb einer Familie ist eine Modifikatorklasse und ändert Material und
+   Farbe, nicht die Anordnung — dieselbe Regel wie bei „Papier"/„Desert Rose".
+
+   Neu gegenüber der Vorlage ist das Querformat. Die Vorlagen waren reine
+   Telefonentwürfe; hochkant stapeln sich die Bausteine, quer teilt sich die
+   Fläche in zwei Spalten. Das steht in genau einem Block je Familie am Ende
+   der Familie, damit man die Umstellung an einer Stelle liest.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Gemeinsames: Kopfzeile und Blende ──────────────────────────────────
+   Die vier Familien teilen sich Kopfzeile und Sammlungsblende mit den fünf
+   Telefon-Auslagen; jede Wurzel färbt sie über ihre eigenen Merkmale. */
+.sf .kopfz,.zl .kopfz,.pf .kopfz,.ka .kopfz{display:flex;align-items:center;
+  justify-content:space-between;flex:none;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 22px 10px}
+.sf .kopfz .mitte,.zl .kopfz .mitte,.pf .kopfz .mitte,.ka .kopfz .mitte{font-size:11px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+.sf .rund,.zl .rund,.pf .rund,.ka .rund{width:40px;height:40px;border-radius:50%;display:grid;
+  place-items:center;color:var(--ink-2);background:var(--tint);
+  box-shadow:inset 0 0 0 1px var(--line)}
+
+.sf .bib,.zl .bib,.pf .bib,.ka .bib{position:absolute;inset:0;z-index:60;display:flex;
+  flex-direction:column;background:var(--paper);color:var(--ink);
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 22px calc(env(safe-area-inset-bottom,0px) + 10px);
+  opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .22s,transform .22s}
+.sf .bib.auf,.zl .bib.auf,.pf .bib.auf,.ka .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.sf .bkopf,.zl .bkopf,.pf .bkopf,.ka .bkopf{display:flex;align-items:center;gap:12px;flex:none}
+.sf .bkopf h2,.zl .bkopf h2,.pf .bkopf h2,.ka .bkopf h2{font-size:17px;font-weight:600;flex:none}
+.sf .suchfeld,.zl .suchfeld,.pf .suchfeld,.ka .suchfeld{flex:1;min-width:0;display:flex;
+  align-items:center;gap:9px;height:42px;padding:0 13px;border-radius:12px;background:var(--tint);
+  box-shadow:inset 0 0 0 1px var(--line)}
+.sf .suchfeld svg,.zl .suchfeld svg,.pf .suchfeld svg,.ka .suchfeld svg{color:var(--ink-4);flex:none}
+.sf .suchfeld input,.zl .suchfeld input,.pf .suchfeld input,.ka .suchfeld input{flex:1;min-width:0;
+  height:100%;background:none;border:none;outline:none;color:var(--ink);font-size:16px}
+.sf .suchfeld input::placeholder,.zl .suchfeld input::placeholder,
+.pf .suchfeld input::placeholder,.ka .suchfeld input::placeholder{color:var(--ink-4)}
+.sf .bzu,.zl .bzu,.pf .bzu,.ka .bzu{width:40px;height:40px;border-radius:50%;flex:none;display:grid;
+  place-items:center;color:var(--ink-3);background:var(--tint)}
+.sf .bliste,.zl .bliste,.pf .bliste,.ka .bliste{flex:1;min-height:0;overflow-y:auto;margin-top:12px;
+  -webkit-overflow-scrolling:touch;display:grid;gap:0 22px;
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));align-content:start}
+.sf .bz,.zl .bz,.pf .bz,.ka .bz{display:flex;align-items:center;gap:13px;padding:9px 2px;
+  cursor:pointer;border-bottom:1px solid var(--line);min-width:0}
+.sf .bz .cov,.zl .bz .cov,.pf .bz .cov,.ka .bz .cov{width:44px;height:44px;border-radius:8px;
+  flex:none;position:relative;overflow:hidden;display:grid;place-items:center}
+.sf .bz .cov img,.zl .bz .cov img,.pf .bz .cov img,.ka .bz .cov img{position:absolute;inset:0;
+  width:100%;height:100%;object-fit:cover}
+.sf .bz .cov .ini,.zl .bz .cov .ini,.pf .bz .cov .ini,.ka .bz .cov .ini{font-size:17px;
+  font-weight:700;color:rgba(255,255,255,.92)}
+.sf .bz .m,.zl .bz .m,.pf .bz .m,.ka .bz .m{flex:1;min-width:0}
+.sf .bz .m>span,.zl .bz .m>span,.pf .bz .m>span,.ka .bz .m>span{display:block}
+.sf .bz .t,.zl .bz .t,.pf .bz .t,.ka .bz .t{font-size:15px;font-weight:600;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.sf .bz .s,.zl .bz .s,.pf .bz .s,.ka .bz .s{font-size:12.5px;color:var(--ink-3);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.sf .bz .n,.zl .bz .n,.pf .bz .n,.ka .bz .n{font-size:11px;color:var(--ink-4);white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+.sf .bz.an .t,.zl .bz.an .t,.pf .bz.an .t,.ka .bz.an .t{color:var(--accent-ink)}
+.sf .bfuss,.zl .bfuss,.pf .bfuss,.ka .bfuss{flex:none;padding-top:9px;font-size:9.5px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--ink-4);grid-column:1/-1}
+
+/* Bausteine, die in allen vier gleich funktionieren und nur anders sitzen. */
+.sf .bahn,.zl .bahn,.pf .bahn,.ka .bahn{position:relative;height:26px;display:flex;
+  align-items:center;cursor:pointer;touch-action:none;flex:none}
+.sf .bahn i,.zl .bahn i,.pf .bahn i,.ka .bahn i{position:absolute;left:0;right:0;height:3px;
+  border-radius:2px;background:var(--line-2)}
+.sf .bahn b,.zl .bahn b,.pf .bahn b,.ka .bahn b{position:absolute;left:0;height:3px;
+  border-radius:2px;background:var(--accent);z-index:1}
+.sf .bahn u,.zl .bahn u,.pf .bahn u,.ka .bahn u{position:absolute;width:11px;height:11px;
+  border-radius:50%;background:var(--accent);transform:translateX(-50%);z-index:2}
+.sf .zeit,.zl .zeit,.pf .zeit,.ka .zeit{display:flex;justify-content:space-between;flex:none;
+  font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.sf .qz,.zl .qz,.pf .qz,.ka .qz{display:flex;align-items:center;gap:12px;cursor:pointer;
+  min-width:0}
+.sf .qz .nr,.zl .qz .nr,.pf .qz .nr,.ka .qz .nr{width:20px;flex:none;font-size:11px;
+  color:var(--ink-4);font-variant-numeric:tabular-nums}
+.sf .qz .t,.zl .qz .t,.pf .qz .t,.ka .qz .t{flex:1;min-width:0;font-size:14px;color:var(--ink-2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sf .qz .d,.zl .qz .d,.pf .qz .d,.ka .qz .d{flex:none;font-size:11px;color:var(--ink-4);
+  font-variant-numeric:tabular-nums}
+.sf .qz.an .t,.zl .qz.an .t,.pf .qz.an .t,.ka .qz.an .t{color:var(--ink);font-weight:600}
+.sf .qz.an .nr,.zl .qz.an .nr,.pf .qz.an .nr,.ka .qz.an .nr{color:var(--accent-ink)}
+
+/* ── 18/19 · Der echte Abzug und Die Entwicklung — Familie „Sofortbild" ──
+   Ein Bild mit breiter Kinnlade, gerade gelegt, rechte Winkel. Die Vorlage
+   liess unter der Kinnlade Fläche stehen; hier trägt sie die Warteschlange,
+   damit auf einem hohen Schirm kein leeres Drittel entsteht. */
+.sf{
+  --paper:#EDEDEB; --tint:#F7F7F5; --ink:#232326; --ink-2:#4F5356; --ink-3:#7A7D80;
+  --ink-4:#A6A8AA; --line:rgba(35,35,38,.10); --line-2:rgba(35,35,38,.20);
+  --karton:#FBFBFA; --milch:#CFD5DA;
+  --accent:#4A4E52; --accent-ink:#3A3E42; --accent-soft:rgba(74,78,82,.10);
+  --p:1;
+  background:var(--paper);color:var(--ink);height:100%;position:relative;overflow:hidden;
+  display:flex;flex-direction:column}
+.sf.ak-hochglanz{--accent:#1B1D1F; --accent-ink:#111213}
+.sf.ak-lacktropfen{--accent:#9C4A2E; --accent-ink:#7F3A22}
+.sf.ent{--paper:#EDEEF0; --tint:#F7F8F9; --ink:#22262A; --ink-2:#4B5157; --ink-3:#767B80;
+  --ink-4:#A2A6AA; --line:rgba(34,38,42,.10); --line-2:rgba(34,38,42,.20);
+  --karton:#FBFCFD; --accent:#2B3F58; --accent-ink:#1C2E44}
+
+.sf .feld{flex:1;min-height:0;display:flex;padding:4px 20px calc(env(safe-area-inset-bottom,0px) + 18px)}
+.sf .abzug{flex:1;min-width:0;min-height:0;background:var(--karton);display:flex;
+  flex-direction:column;padding:16px 16px 14px;
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 14px 34px rgba(35,35,38,.13)}
+.sf .bild{position:relative;flex:1;min-height:0;overflow:hidden;background:var(--milch)}
+.sf .fuell,.zl .fuell,.pf .fuell,.ka .fuell{position:absolute;inset:0;display:grid;
+  place-items:center;overflow:hidden}
+.sf .fuell img,.zl .fuell img,.pf .fuell img,.ka .fuell img{position:absolute;inset:0;
+  width:100%;height:100%;object-fit:cover}
+.sf .bild .ini{font-size:clamp(40px,9vh,74px);font-weight:700;color:rgba(255,255,255,.92)}
+/* Die Entwicklung: die Milchschicht liegt über dem Bild und geht mit der
+   Position zurück. Ein Wert, kein zweites Bild — --p kommt aus onRender. */
+.sf .schleier{position:absolute;inset:0;background:var(--milch);pointer-events:none;opacity:0}
+.sf.ent .schleier{opacity:calc(1 - min(1, var(--p) * 3.2))}
+.sf .meta{flex:none;padding:14px 4px 0;text-align:center;min-width:0}
+.sf .meta h1{font-size:clamp(17px,2.6vh,21px);font-weight:700;letter-spacing:-.01em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sf .meta .ar{margin-top:4px;font-size:12.5px;color:var(--ink-3);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.sf .bahn{margin:10px 4px 0}
+.sf .zeit{padding:0 4px}
+.sf .tast{flex:none;display:flex;align-items:center;justify-content:center;gap:26px;
+  padding:12px 0 10px}
+.sf .tast button{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+  color:var(--ink-2)}
+.sf .tast .haupt{width:60px;height:60px;background:var(--accent);color:var(--karton);
+  box-shadow:0 6px 16px var(--accent-soft)}
+.sf .danach{flex:1;min-height:0;border-top:1px solid var(--line);margin:0 4px;padding-top:8px;
+  overflow-y:auto}
+.sf .danach .kap{display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-4);padding-bottom:5px}
+.sf .qz{padding:6px 2px;border-bottom:1px solid var(--line)}
+
+/* Die Grundstellung steht VOR der Umstellung: gleiche Spezifitaet, also
+   gewinnt sonst die spaetere Regel und das Querformat kaeme nie an. */
+.sf .neben{display:none}
+@media (min-width:760px) and (orientation:landscape){
+  /* Quer liegt der Abzug links und behält sein Hochformat; die Kinnlade
+     trägt dann nur noch Titel und Transport, die Schlange steht daneben. */
+  .sf .feld{gap:30px;padding:4px 30px 26px}
+  .sf .abzug{flex:0 0 auto;width:min(46vw,520px);align-self:center;max-height:100%}
+  .sf .bild{flex:none;aspect-ratio:1}
+  .sf .danach{display:none}
+  .sf .neben{flex:1;min-width:0;display:flex;flex-direction:column;align-self:stretch;
+    padding:6px 0 4px}
+  .sf .neben .kap{flex:none;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--ink-4);padding-bottom:8px}
+  .sf .neben .qliste{flex:1;min-height:0;overflow-y:auto}
+  .sf .neben .qz{padding:9px 2px;border-bottom:1px solid var(--line)}
+}
+
+/* ── 20/21/22 · Milchglaszeilen, Programmheft, Die Spur — Familie „Zeilen" ──
+   Die Warteschlange *ist* der Bildschirm. Oben eine schmale Jetzt-Zeile,
+   unten Bahn und Transport; dazwischen nichts als Zeilen. */
+.zl{
+  --paper:#EFF3F5; --tint:#F8FBFC; --ink:#1E2428; --ink-2:#4A555C; --ink-3:#76828A;
+  --ink-4:#A3ADB4; --line:rgba(30,36,40,.10); --line-2:rgba(30,36,40,.18);
+  --glas:rgba(255,255,255,.58); --marker:transparent;
+  --accent:#1F5C9E; --accent-ink:#174B85; --accent-soft:rgba(31,92,158,.10);
+  background:var(--paper);color:var(--ink);height:100%;position:relative;overflow:hidden;
+  display:flex;flex-direction:column}
+.zl.ak-fluessig{--accent:#0E7C86; --accent-ink:#0A626A}
+.zl.ak-seeglas{--accent:#3F7A5E; --accent-ink:#31614A}
+.zl.ak-perlmutt{--accent:#7A6A9E; --accent-ink:#615584}
+.zl.ak-rauchquarz{--accent:#6B5A55; --accent-ink:#544744}
+.zl.hef{--paper:#FBFAF7; --tint:#F5F2EC; --ink:#241F1D; --ink-2:#57504A; --ink-3:#847C74;
+  --ink-4:#A79E92; --line:rgba(50,40,36,.12); --line-2:rgba(50,40,36,.26);
+  --glas:transparent; --marker:rgba(246,222,158,.62);
+  --accent:#9B1B30; --accent-ink:#7C1224; --accent-soft:rgba(155,27,48,.09)}
+.zl.hef.ak-kreide{--accent:#3E5B7A; --accent-ink:#31485F}
+.zl.spu{--paper:#F5F2EF; --tint:#FCFAF8; --ink:#1E2422; --ink-2:#4C5654; --ink-3:#79837F;
+  --ink-4:#A4ACA8; --line:rgba(30,36,34,.12); --line-2:rgba(30,36,34,.20);
+  --glas:transparent; --marker:transparent;
+  --accent:#0E5C63; --accent-ink:#0A484E; --accent-soft:rgba(14,92,99,.09)}
+
+.zl .feld{flex:1;min-height:0;display:flex;flex-direction:column;
+  padding:0 18px calc(env(safe-area-inset-bottom,0px) + 14px)}
+.zl .jetzt{flex:none;display:flex;align-items:center;gap:13px;padding:4px 4px 12px;min-width:0}
+.zl .bild{width:52px;height:52px;flex:none;border-radius:10px;position:relative;
+  overflow:hidden}
+.zl .bild .ini{font-size:21px;font-weight:700;color:rgba(255,255,255,.92)}
+.zl .meta{flex:1;min-width:0}
+.zl .meta h1{font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.zl .meta .ar{margin-top:3px;font-size:12.5px;color:var(--ink-3);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+/* Hochkant steht die Reihenfolge im Markup fuer das Querformat; hier holt
+   `order` den Transport ans untere Ende, wo er hingehoert. */
+.zl .jetzt{order:1}
+.zl .qliste{order:2;flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:7px}
+.zl .unten{order:3}
+.zl .qz{padding:11px 14px;border-radius:13px;background:var(--glas);
+  box-shadow:inset 0 0 0 1px var(--line)}
+.zl .qz.an{background:var(--marker,var(--glas));box-shadow:inset 0 0 0 1px var(--line-2)}
+/* Programmheft: gedruckte Liste statt Glasscheiben — kein Kasten, eine
+   Grundlinie, und der laufende Titel liegt unter dem Textmarker. */
+.zl.hef .qliste{gap:0}
+.zl.hef .qz{border-radius:3px;box-shadow:none;border-bottom:1px solid var(--line);
+  padding:11px 8px}
+.zl.hef .qz.an{box-shadow:none}
+.zl.hef .qz.an .nr::before{content:'✓';margin-right:5px;color:var(--accent-ink)}
+/* Die Spur: jede Zeile trägt ihren eigenen Stand als Linie unter dem Titel.
+   --z ist der Anteil dieser Zeile; nur die laufende hat einen zwischen 0
+   und 1, davor 1, danach 0. */
+.zl.spu .qliste{gap:0}
+.zl.spu .qz{position:relative;border-radius:0;background:none;box-shadow:none;
+  padding:13px 8px 15px;border-bottom:1px solid var(--line)}
+.zl.spu .qz::after{content:'';position:absolute;left:8px;bottom:6px;height:2px;
+  width:calc((100% - 16px) * var(--z,0));background:var(--accent);border-radius:1px}
+.zl .unten{flex:none;padding-top:12px}
+.zl .tast{display:flex;align-items:center;justify-content:center;gap:26px;padding:10px 0 0}
+.zl .tast button{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;
+  color:var(--ink-2);background:var(--tint);box-shadow:inset 0 0 0 1px var(--line)}
+.zl .tast .haupt{width:58px;height:58px;background:var(--accent);color:#fff;box-shadow:none}
+
+/* Die Grundstellung steht VOR der Umstellung: gleiche Spezifitaet, also
+   gewinnt sonst die spaetere Regel und das Querformat kaeme nie an. */
+.zl .links{display:contents}
+@media (min-width:760px) and (orientation:landscape){
+  /* Quer wandert alles, was nicht Zeile ist, in eine schmale linke Spalte —
+     die Zeilen behalten die ganze Höhe und werden nicht zu Streifen. */
+  .zl .feld{flex-direction:row;gap:34px;padding:2px 30px 24px}
+  .zl .links{flex:0 0 auto;width:min(34vw,340px);display:flex;flex-direction:column;
+    justify-content:center;gap:2px}
+  .zl .jetzt{flex-direction:column;align-items:flex-start;gap:16px;padding:0 0 18px}
+  .zl .bild{width:min(30vw,320px);height:auto;aspect-ratio:1;border-radius:14px}
+  .zl .bild .ini{font-size:clamp(30px,6vw,54px)}
+  .zl .meta h1{font-size:22px;white-space:normal;text-wrap:balance}
+  .zl .qliste{flex:1;min-width:0}
+  .zl .unten{padding-top:0}
+  .zl .tast{justify-content:flex-start}
+}
+
+/* ── 23/24 · Emaille und Gespritzt — Familie „Platten" ──────────────────
+   Drei Platten übereinander: Bild, Bedienung, Liste. Harte Kanten, tiefe
+   Farbe; „Gespritzt" narbt dieselben Platten und setzt den Knopf in einen
+   Ring statt auf die Fläche. */
+.pf{
+  --paper:#EAEEF2; --tint:#F7F9FB; --ink:#1F252C; --ink-2:#4A5260; --ink-3:#78818E;
+  --ink-4:#A3ABB6; --line:rgba(31,37,44,.10); --line-2:rgba(31,37,44,.18);
+  --platte:#FDFDFE; --kante:#D6DCE3; --narbe:none;
+  --accent:#1B4F8F; --accent-ink:#153F73; --accent-soft:rgba(27,79,143,.10);
+  background:var(--paper);color:var(--ink);height:100%;position:relative;overflow:hidden;
+  display:flex;flex-direction:column}
+.pf.ak-glasknopf{--accent:#0E7C86; --accent-ink:#0A626A}
+.pf.gsp{--paper:#EDEBE5; --tint:#F8F6F1; --ink:#22211C; --ink-2:#57544C; --ink-3:#847F74;
+  --ink-4:#A9A396; --line:rgba(100,94,78,.12); --line-2:rgba(100,94,78,.22);
+  --platte:#FAF8F3; --kante:#DFDACD;
+  --narbe:repeating-radial-gradient(circle at 30% 20%,rgba(120,112,92,.055) 0 1px,
+    transparent 1px 3px);
+  --accent:#7A6A4E; --accent-ink:#5F5340; --accent-soft:rgba(122,106,78,.10)}
+
+.pf .feld{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;
+  padding:2px 18px calc(env(safe-area-inset-bottom,0px) + 16px)}
+.pf .platte{background:var(--platte);background-image:var(--narbe);border:1px solid var(--kante);
+  border-radius:4px;box-shadow:0 2px 0 var(--kante)}
+.pf .oben{flex:1;min-height:0;display:grid;place-items:center;overflow:hidden;padding:12px}
+/* Quadratisch, nicht plattenfuellend: ein Cover ist quadratisch, und eine
+   hohe Platte wuerde es sonst zum Hochformat beschneiden. */
+.pf .bild{width:100%;aspect-ratio:1;max-height:100%;position:relative;overflow:hidden;
+  border-radius:2px}
+.pf .bild .ini{font-size:clamp(38px,8vh,70px);font-weight:700;color:rgba(255,255,255,.92)}
+.pf .mitte{flex:none;padding:14px 16px 12px}
+.pf .meta{min-width:0}
+.pf .meta h1{font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.pf .meta .ar{margin-top:3px;font-size:12.5px;color:var(--ink-3);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.pf .bahn{margin-top:10px}
+.pf .tast{display:flex;align-items:center;justify-content:center;gap:24px;padding-top:10px}
+.pf .tast button{width:42px;height:42px;border-radius:2px;display:grid;place-items:center;
+  color:var(--ink-2);border:1px solid var(--kante);background:var(--tint)}
+.pf .tast .haupt{width:54px;height:54px;background:var(--accent);color:#fff;border-color:var(--accent)}
+/* Gespritzt: derselbe Knopf, aber im Ring — die Fläche bleibt Material, das
+   Farbige ist nur der Rand. */
+.pf.gsp .tast button{border-radius:50%}
+.pf.gsp .tast .haupt{background:var(--tint);color:var(--accent-ink);
+  box-shadow:0 0 0 3px var(--accent) inset,0 0 0 1px var(--kante)}
+.pf .unten{flex:1.15;min-height:0;padding:12px 16px 10px;display:flex;flex-direction:column}
+.pf .unten .kap{flex:none;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-4);padding-bottom:7px}
+.pf .qliste{flex:1;min-height:0;overflow-y:auto}
+.pf .qz{padding:8px 2px;border-bottom:1px solid var(--line)}
+
+/* Die Grundstellung steht VOR der Umstellung: gleiche Spezifitaet, also
+   gewinnt sonst die spaetere Regel und das Querformat kaeme nie an. */
+.pf .rechts{display:contents}
+@media (min-width:760px) and (orientation:landscape){
+  /* Quer stehen die Platten nebeneinander: links die Bildplatte, rechts
+     Bedienung über Liste. Gestapelt wären sie sonst drei flache Streifen. */
+  .pf .feld{flex-direction:row;gap:14px;padding:2px 26px 22px}
+  .pf .oben{flex:0 0 auto;width:min(44vw,470px);align-self:flex-start}
+  .pf .rechts{flex:1;min-width:0;display:flex;flex-direction:column;gap:14px}
+  .pf .mitte{flex:none}
+  .pf .unten{flex:1;min-height:0}
+}
+
+/* ── 25 · Abreißkalender — Familie „Block" ──────────────────────────────
+   Der laufende Titel steht auf dem obersten Blatt, darunter liegt der
+   Stapel dessen, was noch kommt. Die Perforation ist die einzige Kante,
+   die es im Entwurf gibt. */
+.ka{
+  --paper:#EDECEB; --tint:#F8F7F6; --ink:#221F1D; --ink-2:#4F4C48; --ink-3:#7C7873;
+  --ink-4:#A5A29C; --line:rgba(40,36,32,.12); --line-2:rgba(40,36,32,.22);
+  --karton:#FFFFFF;
+  --accent:#8C1C2B; --accent-ink:#701020; --accent-soft:rgba(140,28,43,.09);
+  background:var(--paper);color:var(--ink);height:100%;position:relative;overflow:hidden;
+  display:flex;flex-direction:column}
+
+.ka .feld{flex:1;min-height:0;display:flex;flex-direction:column;gap:16px;
+  padding:2px 20px calc(env(safe-area-inset-bottom,0px) + 16px)}
+.ka .blatt{flex:none;background:var(--karton);border-radius:2px;padding:20px 20px 16px;
+  position:relative;box-shadow:0 10px 24px rgba(40,36,32,.12)}
+/* Die Perforation: eine Lochreihe am oberen Rand, sonst nichts. */
+.ka .blatt::before{content:'';position:absolute;left:14px;right:14px;top:7px;height:5px;
+  background:radial-gradient(circle,var(--paper) 0 2.2px,transparent 2.4px) 0 0/13px 5px repeat-x}
+.ka .datum{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent-ink);
+  padding-top:6px}
+.ka .meta{min-width:0;padding-top:8px}
+.ka .meta h1{font-size:clamp(24px,3.6vh,32px);font-weight:700;letter-spacing:-.015em;
+  line-height:1.12;text-wrap:balance}
+.ka .meta .ar{margin-top:7px;font-size:13.5px;color:var(--ink-3);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.ka .bahn{margin-top:16px}
+.ka .stapel{flex:1;min-height:0;display:flex;flex-direction:column}
+.ka .stapel .kap{flex:none;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-4);padding:0 4px 8px}
+.ka .qliste{flex:1;min-height:0;overflow-y:auto}
+/* Jede kommende Zeile ist ein Blatt weiter unten im Stapel: es liegt etwas
+   tiefer und ist etwas schmaler. */
+.ka .qz{background:var(--karton);border-radius:2px;padding:10px 14px;margin:0 auto 5px;
+  width:calc(100% - var(--tiefe,0px));box-shadow:0 1px 0 var(--line)}
+.ka .qz.an{width:100%;box-shadow:0 3px 10px rgba(40,36,32,.14)}
+.ka .tast{flex:none;display:flex;align-items:center;justify-content:center;gap:26px}
+.ka .tast button{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+  color:var(--ink-2);background:var(--karton);box-shadow:0 1px 3px rgba(40,36,32,.16)}
+.ka .tast .haupt{width:60px;height:60px;background:var(--accent);color:var(--karton)}
+
+/* Die Grundstellung steht VOR der Umstellung: gleiche Spezifitaet, also
+   gewinnt sonst die spaetere Regel und das Querformat kaeme nie an. */
+.ka .links{display:contents}
+@media (min-width:760px) and (orientation:landscape){
+  /* Quer liegt das Blatt links und der Stapel rechts — untereinander wäre
+     das Blatt sonst ein Streifen und der Stapel eine Restfläche. */
+  .ka .feld{flex-direction:row;gap:32px;padding:2px 30px 24px;align-items:stretch}
+  .ka .links{flex:0 0 auto;width:min(42vw,440px);display:flex;flex-direction:column;
+    justify-content:center;gap:20px}
+  .ka .meta h1{font-size:clamp(26px,3.4vw,38px)}
+  .ka .stapel{flex:1;min-width:0;padding-top:4px}
+}
 </style>
 </head>
 <body>
@@ -4166,7 +4526,7 @@ layout({
       const kennung = d.queue.join();
       if (letzteQ !== kennung){
         letzteQ = kennung;
-        kasten.innerHTML = d.queue.map((id, i) => {
+        const zeilen = d.queue.map((id, i) => {
           const x = TRACKS[id] || {t:'', d:0};
           return `<div class="qz" data-fq="${i}"><span class="nr">${String(i+1).padStart(2,'0')}</span>
             <span class="t">${esc(x.t)}</span><span class="d">${fmt(x.d)}</span></div>`;
@@ -4272,6 +4632,252 @@ layout({
       q('[data-ende]').textContent  = '−' + fmt(d.dur - d.pos);
     };
   },
+});
+})();
+
+
+/* ══ 18–25 · Die acht Themen aus mockups/acht-themen/ ═══════════════════════
+   Vier Familien, ein Markup. Was sie unterscheidet, steht im Stylesheet;
+   hier steht nur, welche Bausteine es gibt und wie sie an das Deck kommen.
+
+   Der Bau ist in allen vier derselbe: `bauAcht()` schreibt das Markup,
+   verdrahtet Transport, Bahn und Bibliothek und setzt `deck.onRender`. Was
+   eine Familie eigen hat, kommt als Rückruf dazu — mehr braucht keine von
+   ihnen. Die Vorlagen sind Telefonentwürfe; die zweite Spalte im Querformat
+   ist das Einzige, was hier hinzuerfunden ist. */
+(() => {
+
+/* Die sechs Bausteine. `extra` schiebt ein, was nur eine Familie kennt. */
+const teile = o => ({
+  kopf: kopfHTML('rund', o.kopf || 'Jetzt läuft'),
+  bild: `<span class="bild"><span class="fuell" data-fuell></span>
+    <span class="schleier"></span></span>`,
+  meta: `<div class="meta"><h1 data-titel>Nichts ausgewählt</h1>
+    <div class="ar" data-ar></div></div>`,
+  bahn: `<div class="bahn" data-bahn data-spulen><i></i><b data-voll></b><u data-griff></u></div>
+    <div class="zeit"><span data-jetzt>0:00</span><span data-ende>−0:00</span></div>`,
+  tast: `<div class="tast">
+      <button data-prev aria-label="Vorheriger Titel">${I.prev(20)}</button>
+      <button class="haupt" data-pp aria-label="Abspielen">${I.play(22)}</button>
+      <button data-next aria-label="Nächster Titel">${I.next(20)}</button>
+    </div>`,
+  liste: `<div class="qliste" data-queue></div>`,
+});
+
+/* Ein Bau für alle vier. `o.zeile` darf die Zeile schmücken (die Spur legt
+   ihren Stand hinein), `o.jeBild` das Bild nachbehandeln. */
+function bauAcht(w, deck, o){
+  w.innerHTML = o.markup + telBibHTML;
+  const q = s => w.querySelector(s);
+  q('[data-pp]').onclick   = () => deck.toggle();
+  q('[data-next]').onclick = () => deck.next();
+  q('[data-prev]').onclick = () => deck.prev();
+  bindDrag(q('[data-bahn]'), f => deck.seek(f));
+  const bib = telBib(w, deck);
+
+  /* Zwei Listen koennen im Markup stehen — hochkant und quer zeigen je eine.
+     Gefuellt werden beide: sonst steht die sichtbare beim Formatwechsel leer
+     da, und welche das ist, entscheidet das Stylesheet und nicht der Bau. */
+  const kaesten = $$('[data-queue]', w);
+  let letzter = null, letztesAlbum = null, letzteQ = null;
+  deck.onRender = d => {
+    q('[data-pp]').innerHTML = d.playing ? I.pause(22) : I.play(22);
+    const t = d.track, a = d.album;
+    if (!t){ letzter = null; letzteQ = null; letztesAlbum = null; return; }
+
+    const kennung = d.queue.join();
+    if (letzteQ !== kennung){
+      letzteQ = kennung;
+      const zeilen = d.queue.map((id, i) => {
+        const x = TRACKS[id] || {t:'', d:0};
+        /* Die Blätter des Kalenders liegen gestaffelt: je weiter hinten,
+           desto schmaler. Ab dem achten bleibt es gleich, sonst würde die
+           Liste bei langen Alben zum Keil. */
+        const tiefe = o.gestaffelt ? Math.min(i, 7) * 7 : 0;
+        return `<div class="qz" data-fq="${i}" style="--tiefe:${tiefe}px">
+          <span class="nr">${String(i+1).padStart(2,'0')}</span>
+          <span class="t">${esc(x.t)}</span><span class="d">${fmt(x.d)}</span></div>`;
+      }).join('');
+      kaesten.forEach(k => k.innerHTML = zeilen);
+      $$('[data-fq]', w).forEach(el => el.onclick = () => deck.jump(+el.dataset.fq));
+    }
+    kaesten.forEach(k => $$('[data-fq]', k).forEach((el, i) =>
+      el.classList.toggle('an', i === d.qi)));
+    /* Die Spur: jede Zeile trägt ihren eigenen Stand. Vor der laufenden ist
+       er voll, danach null — nur die laufende bewegt sich. */
+    if (o.spur){
+      kaesten.forEach(k => $$('[data-fq]', k).forEach((el, i) =>
+        el.style.setProperty('--z', i < d.qi ? 1 : i > d.qi ? 0 : d.frac.toFixed(3))));
+    }
+    /* Die Entwicklung: die Milchschicht geht mit der Position zurück. */
+    if (o.entwickelt) w.style.setProperty('--p', d.frac.toFixed(3));
+
+    if (letztesAlbum !== (a && a.id)){
+      letztesAlbum = a && a.id;
+      /* Der Kasten ist da, er bekommt nur die Fuellung — dafuer gibt es
+         coverFuellung(). Der Schleier haengt daneben und nicht darin,
+         sonst wuerde ihn jede Fuellung wieder wegwerfen. */
+      if (a) coverFuellung(q('[data-fuell]'), a);
+      else q('[data-fuell]').innerHTML = '';
+      bib.markiere();
+    }
+    if (letzter !== t.id){
+      letzter = t.id;
+      q('[data-titel]').textContent = t.t;
+      q('[data-ar]').textContent = a ? `${a.ar} · ${a.t}` : '';
+    }
+    const f = (d.frac * 100).toFixed(2);
+    q('[data-voll]').style.width = f + '%';
+    q('[data-griff]').style.left = f + '%';
+    q('[data-jetzt]').textContent = fmt(d.pos);
+    q('[data-ende]').textContent  = '−' + fmt(d.dur - d.pos);
+  };
+}
+
+/* ── Familie „Sofortbild" — Der echte Abzug, Die Entwicklung ───────────── */
+const sofortMarkup = (() => {
+  const p = teile({});
+  return `${p.kopf}
+    <div class="feld">
+      <div class="abzug">
+        ${p.bild}
+        ${p.meta}
+        ${p.bahn}
+        ${p.tast}
+        <div class="danach"><span class="kap">Danach</span>${p.liste}</div>
+      </div>
+      <div class="neben"><span class="kap">Warteschlange</span>${p.liste}</div>
+    </div>`;
+})();
+/* Zwei Listen im Markup, sichtbar ist immer nur eine — dieselbe Lösung wie
+   bei den beiden Achsen von „Papier"/„Desert Rose": ein Formatwechsel
+   mitten im Hören findet die andere nicht leer vor. Gefüllt wird die
+   sichtbare, deshalb sucht bauAcht() nur die erste. */
+
+layout({
+  id:'abzug', name:'Der echte Abzug', geraet:'iPhone hoch · PC', klasse:'sf',
+  ziele:['telefon','tablet','pc'], familie:'Sofortbild',
+  chrome:['#232326','rgba(237,237,235,.82)','#EDEDEB'],
+  text:'Ein Sofortbild mit breiter Kinnlade, gerade gelegt, rechte Winkel. Unter dem Transport steht, was danach kommt.',
+  akzente:[{id:'seidenmatt', name:'Mattabzug', farbe:'#4A4E52'},
+           {id:'hochglanz', name:'Hochglanz', farbe:'#1B1D1F'},
+           {id:'lacktropfen', name:'Lacktropfen', farbe:'#9C4A2E'}],
+  bau(w, deck){ bauAcht(w, deck, {markup: sofortMarkup}); },
+});
+
+layout({
+  id:'entwicklung', name:'Die Entwicklung', geraet:'iPhone hoch · PC', klasse:'sf ent',
+  ziele:['telefon','tablet','pc'], familie:'Sofortbild',
+  chrome:['#22262A','rgba(237,238,240,.82)','#EDEEF0'],
+  text:'Dasselbe Sofortbild — nur kommt das Bild erst, während der Titel läuft. Die Position ist die Entwicklungszeit.',
+  akzente:[{id:'schiefer', name:'Schiefer', farbe:'#2B3F58'}],
+  bau(w, deck){ bauAcht(w, deck, {markup: sofortMarkup, entwickelt: true}); },
+});
+
+/* ── Familie „Zeilen" — Milchglas, Programmheft, Die Spur ──────────────── */
+const zeilenMarkup = (() => {
+  const p = teile({});
+  return `${p.kopf}
+    <div class="feld">
+      <div class="links">
+        <div class="jetzt">${p.bild}${p.meta}</div>
+        <div class="unten">${p.bahn}${p.tast}</div>
+      </div>
+      ${p.liste}
+    </div>`;
+})();
+/* `.links` ist hochkant `display:contents` — die drei Blöcke stehen dann
+   einfach untereinander. Quer wird daraus eine echte Spalte. Ein Markup,
+   zwei Anordnungen, keine Fallunterscheidung im Bau. */
+
+layout({
+  id:'milchglas', name:'Milchglaszeilen', geraet:'iPhone hoch · PC', klasse:'zl',
+  ziele:['telefon','tablet','pc'], familie:'Zeilen',
+  chrome:['#1E2428','rgba(239,243,245,.82)','#EFF3F5'],
+  text:'Die Warteschlange ist der Bildschirm: jede Zeile eine Scheibe Glas, oben eine schmale Jetzt-Zeile.',
+  akzente:[{id:'klarglas', name:'Klarglas', farbe:'#1F5C9E'},
+           {id:'fluessig', name:'Flüssig', farbe:'#0E7C86'},
+           {id:'seeglas', name:'Seeglas', farbe:'#3F7A5E'},
+           {id:'perlmutt', name:'Perlmutt', farbe:'#7A6A9E'},
+           {id:'rauchquarz', name:'Rauchquarz', farbe:'#6B5A55'}],
+  bau(w, deck){ bauAcht(w, deck, {markup: zeilenMarkup}); },
+});
+
+layout({
+  id:'programmheft', name:'Programmheft', geraet:'iPhone hoch · PC', klasse:'zl hef',
+  ziele:['telefon','tablet','pc'], familie:'Zeilen',
+  chrome:['#241F1D','rgba(251,250,247,.82)','#FBFAF7'],
+  text:'Gedruckte Liste mit Bleistifthaken und Textmarker — der laufende Titel ist angestrichen.',
+  akzente:[{id:'kunstdruck', name:'Kunstdruck', farbe:'#9B1B30'},
+           {id:'kreide', name:'Kreide', farbe:'#3E5B7A'}],
+  bau(w, deck){ bauAcht(w, deck, {markup: zeilenMarkup}); },
+});
+
+layout({
+  id:'spur', name:'Die Spur', geraet:'iPhone hoch · PC', klasse:'zl spu',
+  ziele:['telefon','tablet','pc'], familie:'Zeilen',
+  chrome:['#1E2422','rgba(245,242,239,.82)','#F5F2EF'],
+  text:'Dieselbe Liste, aber jede Zeile trägt ihren eigenen Stand als Linie unter dem Titel.',
+  akzente:[{id:'emaillelack', name:'Emaillelack', farbe:'#0E5C63'}],
+  bau(w, deck){ bauAcht(w, deck, {markup: zeilenMarkup, spur: true}); },
+});
+
+/* ── Familie „Platten" — Emaille, Gespritzt ────────────────────────────── */
+const plattenMarkup = (() => {
+  const p = teile({});
+  return `${p.kopf}
+    <div class="feld">
+      <div class="platte oben">${p.bild}</div>
+      <div class="rechts">
+        <div class="platte mitte">${p.meta}${p.bahn}${p.tast}</div>
+        <div class="platte unten"><span class="kap">Warteschlange</span>${p.liste}</div>
+      </div>
+    </div>`;
+})();
+
+layout({
+  id:'emaille', name:'Emaille', geraet:'iPhone hoch · PC', klasse:'pf',
+  ziele:['telefon','tablet','pc'], familie:'Platten',
+  chrome:['#1F252C','rgba(234,238,242,.82)','#EAEEF2'],
+  text:'Drei Platten übereinander: Bild, Bedienung, Liste. Harte Kanten, tiefe Farbe.',
+  akzente:[{id:'hochglanzemail', name:'Hochglanz', farbe:'#1B4F8F'},
+           {id:'glasknopf', name:'Glasknopf', farbe:'#0E7C86'}],
+  bau(w, deck){ bauAcht(w, deck, {markup: plattenMarkup}); },
+});
+
+layout({
+  id:'gespritzt', name:'Gespritzt', geraet:'iPhone hoch · PC', klasse:'pf gsp',
+  ziele:['telefon','tablet','pc'], familie:'Platten',
+  chrome:['#22211C','rgba(237,235,229,.82)','#EDEBE5'],
+  text:'Dieselben Platten, aber genarbt — und der Knopf sitzt in einem Ring statt auf der Fläche.',
+  akzente:[{id:'chromring', name:'Chromring', farbe:'#7A6A4E'}],
+  bau(w, deck){ bauAcht(w, deck, {markup: plattenMarkup}); },
+});
+
+/* ── Familie „Block" — Abreißkalender ──────────────────────────────────── */
+const blockMarkup = (() => {
+  const p = teile({});
+  return `${p.kopf}
+    <div class="feld">
+      <div class="links">
+        <div class="blatt">
+          <div class="datum">Läuft gerade</div>
+          ${p.meta}
+          ${p.bahn}
+        </div>
+        ${p.tast}
+      </div>
+      <div class="stapel"><span class="kap">Danach</span>${p.liste}</div>
+    </div>`;
+})();
+
+layout({
+  id:'kalender', name:'Abreißkalender', geraet:'iPhone hoch · PC', klasse:'ka',
+  ziele:['telefon','tablet','pc'], familie:'Block',
+  chrome:['#221F1D','rgba(237,236,235,.82)','#EDECEB'],
+  text:'Der laufende Titel steht auf dem obersten Blatt, darunter liegt der Stapel dessen, was noch kommt.',
+  akzente:[{id:'chromopapier', name:'Chromopapier', farbe:'#8C1C2B'}],
+  bau(w, deck){ bauAcht(w, deck, {markup: blockMarkup, gestaffelt: true}); },
 });
 })();
 
