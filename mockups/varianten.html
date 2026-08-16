@@ -1,0 +1,1420 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Material &amp; Oberfläche</title>
+</head>
+<body>
+<style>
+/* ══════════════════════════════════════════════════════════════════════
+   Material & Oberfläche — fünf Entwürfe aus „Vorbilder", jeder in fünf
+   Behandlungen. Die Form bleibt jedes Mal dieselbe; was sich ändert, ist
+   der Stoff, aus dem sie gemacht ist.
+
+   Gegenstand      G Die Scheibe · M Sofortbild · P Die Liste
+                   V Die Platte  · Y Die Klapptafel
+   Behandlung      1 edel · 2 matt · 3 Glanz · 4 realistischer · 5 Idee
+
+   Aufbau: Grundform und Bedienung kommen unveraendert aus vorbilder.html.
+   Eine Variante ist nichts als eine zweite Klasse am selben Telefon
+   (.pG.v-glanz) — kein zweiter Entwurf, kein zweites Javascript.
+   ══════════════════════════════════════════════════════════════════════ */
+:root{
+  --paper:#FBF9F5; --stage:#F1EDE4; --ink:#241E18; --ink-2:#6B6155; --ink-3:#A0968A;
+  --line:rgba(36,30,24,.10); --line-2:rgba(36,30,24,.22);
+  --brass:#8A6534; --brass-soft:rgba(138,101,52,.09);
+  --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--stage);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;padding-bottom:90px}
+::selection{background:rgba(138,101,52,.2)}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+button,input{font:inherit;color:inherit;background:none;border:none}
+
+.page{max-width:1200px;margin:0 auto;padding:0 32px}
+.caps{font-family:var(--sans);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3)}
+.masthead{padding:84px 0 46px;max-width:70ch}
+.masthead .caps{margin-bottom:26px}
+.masthead h1{font-family:var(--serif);font-weight:400;font-size:clamp(42px,6.4vw,68px);line-height:1.05;
+  letter-spacing:-.015em;text-wrap:balance}
+.masthead h1 em{font-style:italic;color:var(--brass)}
+.masthead .lede{margin-top:22px;color:var(--ink-2);font-size:16px;max-width:58ch}
+.masthead .lede b{color:var(--ink);font-weight:600}
+.rule{height:1px;background:var(--line-2)}
+
+/* ── Kapitel je Quelle ── */
+.chapter{padding:74px 0 0}
+.chapter>.head{max-width:64ch}
+.chapter>.head .caps{color:var(--brass)}
+.chapter>.head h2{font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.6vw,38px);line-height:1.12;
+  margin-top:14px;letter-spacing:-.012em}
+.chapter>.head p{margin-top:16px;color:var(--ink-2);font-size:15px}
+.chapter>.head p b{color:var(--ink);font-weight:600}
+.source{margin-top:20px;padding:16px 18px;background:var(--paper);border:1px solid var(--line);
+  font-size:13.5px;color:var(--ink-2);max-width:64ch}
+.source b{color:var(--ink);font-weight:600}
+.source .caps{display:block;margin-bottom:7px}
+
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:64px;padding:46px 0 0;align-items:start}
+/* Das liegende Telefon ist breiter als eine Spalte — es bekommt eine Reihe. */
+.solo{display:grid;grid-template-columns:auto minmax(300px,1fr);gap:54px;padding:46px 0 0;align-items:start}
+.solo>.col{align-items:flex-start}
+@media (max-width:1180px){.solo{grid-template-columns:1fr;gap:38px;justify-items:center}
+  .solo .text{max-width:430px}}
+@media (max-width:1000px){.pair{grid-template-columns:1fr;gap:72px;justify-items:center}}
+.col{display:flex;flex-direction:column;align-items:center;gap:32px;max-width:430px}
+.col .text{width:100%}
+.col h3{font-family:var(--serif);font-size:28px;font-weight:400;letter-spacing:-.01em;line-height:1.15}
+.col h3 .no{display:block;margin-bottom:11px;font-family:var(--sans);font-size:10px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--brass)}
+.col p{margin-top:13px;color:var(--ink-2);font-size:14.5px}
+.col p b{color:var(--ink);font-weight:600}
+.col .swatches{display:flex;gap:0;margin-top:18px;border:1px solid var(--line-2);border-radius:2px;overflow:hidden}
+.col .swatches i{flex:1;height:26px;display:block}
+.col .note{margin-top:15px;padding-left:14px;border-left:2px solid var(--brass);font-size:13px;color:var(--ink-2)}
+.col .note b{color:var(--ink);font-weight:600}
+.col dl{margin-top:20px;border-top:1px solid var(--line-2)}
+.col dl>div{display:grid;grid-template-columns:104px 1fr;gap:14px;padding:10px 0;border-bottom:1px solid var(--line);
+  font-size:13px}
+.col dt{font-family:var(--sans);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);
+  padding-top:3px}
+.col dd{color:var(--ink-2)}
+.col dd b{color:var(--ink);font-weight:600}
+
+/* ══════════ Telefon ══════════ */
+.phone{width:390px;height:844px;border-radius:46px;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;flex-shrink:0;
+  box-shadow:0 0 0 9px #E7E1D5,0 0 0 10px rgba(36,30,24,.16),0 40px 80px rgba(36,30,24,.20);
+  touch-action:none;isolation:isolate}
+@media (max-width:620px){.phone{zoom:.72}}
+@media (max-width:460px){.phone{zoom:.58}}
+.notch{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:112px;height:31px;
+  border-radius:18px;background:#1A1512;z-index:300}
+.homeind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:126px;height:4px;
+  border-radius:3px;background:rgba(36,30,24,.22);z-index:300}
+.sbar{height:54px;flex-shrink:0;display:flex;align-items:flex-end;justify-content:space-between;
+  padding:0 30px 9px;font-size:13px;font-weight:600;font-family:var(--sans);position:relative;z-index:30}
+.sbar .ic{display:flex;gap:6px;align-items:center}
+.screen{flex:1;min-height:0;display:flex;flex-direction:column;position:relative}
+
+/* Hülle und Scheibe stehen für das echte Cover aus /api/cover */
+.art{position:relative;overflow:hidden}
+.art .sheen{position:absolute;inset:0;
+  background:radial-gradient(ellipse at 26% 16%,rgba(255,255,255,.34),transparent 56%),
+             radial-gradient(ellipse at 82% 96%,rgba(0,0,0,.22),transparent 62%)}
+.art .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);
+  font-style:italic;font-weight:400;color:rgba(255,255,255,.86)}
+/* Die gesponnene Scheibe: dasselbe Cover, nur im Kreis verwirbelt */
+.disc{position:relative;border-radius:50%;overflow:hidden;flex-shrink:0}
+.disc .wash{position:absolute;inset:-16%;filter:blur(17px);
+  background:conic-gradient(from 205deg,#6E86B8,#63B49C,#F0CE6A,#EE8A45,#E2645F,#A95F97,#6E86B8)}
+.disc .core{position:absolute;inset:27%;border-radius:50%;filter:blur(11px);
+  background:radial-gradient(circle at 46% 42%,#FBA43A,#E2645F 62%,rgba(226,100,95,0) 78%)}
+.spin{animation:spin 34s linear infinite;animation-play-state:paused}
+.playing .spin{animation-play-state:running}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Gemeinsame Bauteile: Warteschlangen-Blatt und Zeile */
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:40;max-height:66%;display:flex;flex-direction:column;
+  padding:10px 24px 26px;border-radius:26px 26px 0 0;background:#fff;
+  box-shadow:0 -18px 46px rgba(36,30,24,.16);transform:translateY(101%);
+  transition:transform .42s cubic-bezier(.3,.8,.25,1)}
+.open .sheet{transform:none}
+.sheet .grip{width:38px;height:4px;border-radius:3px;background:rgba(36,30,24,.14);margin:0 auto 14px;flex-shrink:0}
+.sheet .qh{font-family:var(--sans);font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:8px;flex-shrink:0}
+.sheet .qbody{overflow-y:auto;min-height:0}
+.scrim{position:absolute;inset:0;z-index:35;background:rgba(36,30,24,.18);opacity:0;pointer-events:none;
+  transition:opacity .35s}
+.open .scrim{opacity:1;pointer-events:auto}
+.qrow{display:flex;align-items:baseline;gap:12px;width:100%;text-align:left;padding:10px 0;cursor:pointer;
+  border-bottom:1px solid rgba(36,30,24,.07)}
+.qrow .n{width:15px;flex-shrink:0;font-size:10px;letter-spacing:.1em;color:var(--ink-3);
+  font-variant-numeric:tabular-nums}
+.qrow .t{flex:1;min-width:0;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qrow .d{flex-shrink:0;font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.qrow.now .t{font-weight:600}
+.qrow.past{opacity:.42}
+</style>
+<style>
+/* ═══════════ Die fünf Grundformen (aus vorbilder.html) ═══════════ */
+/* ══════════════════ G · DIE SCHEIBE ══════════════════
+   Quelle 1, wörtlich genommen: fast leeres Papier, eine einzige runde
+   Farbe in der Mitte, alles Bediente ganz unten. */
+.pG{background:#FCFBFA;color:#1D1A17;--g-3:#9A938B;--g-2:#5A544D}
+.pG .lid{display:flex;align-items:center;justify-content:space-between;padding:4px 26px 0;flex-shrink:0}
+.pG .lid .cap{font-size:9.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--g-3)}
+.pG .ic{width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--g-3);
+  cursor:pointer}
+.pG .ic:active{color:#1D1A17}
+.pG .stage{flex:1;min-height:0;display:grid;place-items:center;padding:0 30px}
+.pG .disc{width:min(74vw,258px);aspect-ratio:1;box-shadow:0 26px 60px rgba(60,40,30,.16)}
+.pG .foot{flex-shrink:0;padding:0 34px 30px;text-align:center}
+.pG .tt{font-family:var(--serif);font-weight:400;font-size:27px;line-height:1.18;letter-spacing:-.012em;
+  text-wrap:balance}
+.pG .by{margin-top:9px;font-size:14px;color:var(--g-2)}
+.pG .seek{padding:26px 0 0;cursor:pointer;touch-action:none}
+.pG .line{height:3px;border-radius:2px;background:rgba(29,26,23,.10);position:relative}
+.pG .fill{position:absolute;left:0;top:0;bottom:0;border-radius:2px;background:#4B443C}
+.pG .times{display:flex;justify-content:space-between;margin-top:11px;font-size:11.5px;color:var(--g-3);
+  font-variant-numeric:tabular-nums}
+.pG .transport{display:flex;align-items:center;justify-content:center;gap:38px;margin-top:24px}
+.pG .tb{width:38px;height:38px;display:flex;align-items:center;justify-content:center;color:#3A342E;cursor:pointer}
+.pG .play{width:62px;height:62px;border-radius:50%;background:#161311;color:#fff;display:flex;
+  align-items:center;justify-content:center;cursor:pointer;transition:transform .12s;
+  box-shadow:0 10px 24px rgba(22,19,17,.28)}
+.pG .play:active{transform:scale(.94)}
+
+/* ══════════════════ M · SOFORTBILD ══════════════════
+   Quelle 4: der Player ist ein Gegenstand, kein Bildschirm. Ein Abzug aus
+   Karton, leicht schief auf dem Tisch, mit einer breiten weißen Kinnlade. */
+.pM{background:radial-gradient(120% 80% at 50% 18%,#FBFAF8,#E9E5DF 68%,#DED9D1);color:#221F1C;
+  --m-3:#A29B93;--m-2:#5E574F;--m-a:#D8443A}
+.pM .lid{display:flex;align-items:center;justify-content:space-between;padding:4px 26px 0;flex-shrink:0}
+.pM .lid .cap{font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--m-3)}
+.pM .ic{width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--m-3);cursor:pointer}
+.pM .tisch{flex:1;min-height:0;display:grid;place-items:center;padding:0 28px 22px;position:relative}
+.pM .hinten{position:absolute;width:min(74vw,270px);background:#FDFCFA;border-radius:4px;height:62%;
+  transform:rotate(4.2deg) translate(9px,-8px);box-shadow:0 14px 30px rgba(34,31,28,.14);cursor:pointer}
+.pM .abzug{position:relative;width:min(78vw,286px);background:#FEFDFB;border-radius:4px;padding:15px 15px 0;
+  transform:rotate(-1.4deg);box-shadow:0 22px 46px rgba(34,31,28,.22),0 2px 4px rgba(34,31,28,.10)}
+.pM .abzug::after{content:'';position:absolute;inset:0;border-radius:4px;pointer-events:none;
+  background:repeating-linear-gradient(112deg,rgba(34,31,28,.018) 0 2px,transparent 2px 4px)}
+.pM .cover{width:100%;aspect-ratio:1;border-radius:1px;box-shadow:inset 0 0 0 1px rgba(34,31,28,.09)}
+.pM .kinn{padding:16px 4px 20px;text-align:center}
+.pM .tt{font-size:19px;font-weight:700;letter-spacing:-.01em;line-height:1.22;text-wrap:balance}
+.pM .by{margin-top:4px;font-size:11.5px;color:var(--m-3)}
+.pM .seek{margin-top:15px;padding:7px 2px;cursor:pointer;touch-action:none}
+.pM .line{height:4px;border-radius:3px;background:rgba(34,31,28,.10);position:relative}
+.pM .fill{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--m-a)}
+.pM .knob{position:absolute;top:50%;width:13px;height:13px;border-radius:50%;background:var(--m-a);
+  transform:translate(-50%,-50%);box-shadow:0 2px 5px rgba(216,68,58,.5)}
+.pM .times{display:flex;justify-content:space-between;margin-top:7px;font-size:10px;color:var(--m-3);
+  font-variant-numeric:tabular-nums}
+.pM .transport{display:flex;align-items:center;justify-content:center;gap:30px;margin-top:12px}
+.pM .tb{width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#C9C2B9;cursor:pointer}
+.pM .tb:active{color:var(--m-2)}
+.pM .play{width:54px;height:54px;border-radius:50%;background:var(--m-a);color:#fff;display:flex;
+  align-items:center;justify-content:center;cursor:pointer;transition:transform .12s;
+  box-shadow:0 8px 18px rgba(216,68,58,.4)}
+.pM .play:active{transform:scale(.94)}
+.pM .unten{flex-shrink:0;text-align:center;padding:0 30px 28px;font-size:9px;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--m-3)}
+
+/* ══════════════════ P · DIE LISTE ══════════════════
+   Quelle 5, umgekehrt: kein zweiter Bildschirm für „Jetzt läuft". Die
+   laufende Zeile klappt an ihrem Platz in der Liste auf. */
+.pP{background:#FDFBFA;color:#1E1B19;--p-3:#A29A93;--p-2:#5C554E;--acc:#E24A6E;
+  --acc-soft:rgba(226,74,110,.09)}
+.pP .kopf{flex-shrink:0;padding:6px 24px 12px}
+.pP .kopf .k{font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--p-3)}
+.pP .kopf h4{font-size:27px;font-weight:700;letter-spacing:-.02em;margin-top:8px}
+.pP .kopf .sub{font-size:12px;color:var(--p-3);margin-top:3px}
+.pP .rollen{flex:1;min-height:0;overflow-y:auto;padding:0 16px 100px}
+.pP .z{display:flex;align-items:center;gap:13px;width:100%;text-align:left;padding:11px 10px;
+  border-radius:18px;cursor:pointer;transition:background .3s}
+.pP .z .pl{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;
+  justify-content:center;background:rgba(30,27,25,.06);color:var(--p-2)}
+.pP .z .tx{flex:1;min-width:0;display:flex;flex-direction:column}
+.pP .z .t{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pP .z .s{font-size:11.5px;color:var(--p-3);margin-top:1px}
+.pP .z .d{flex-shrink:0;font-size:11px;color:var(--p-3);font-variant-numeric:tabular-nums}
+.pP .z.past{opacity:.45}
+/* die laufende Zeile: aus der Zeile wird eine Karte. Solange sie nicht läuft,
+   löst sich ihre innere Zeile per display:contents auf — dann sind Knopf,
+   Titel und Zeit direkt Kinder der Zeile und stehen wie überall sonst. */
+.pP .zeile1{display:contents}
+.pP .z .cover{display:none}
+.pP .z.now{display:block;background:var(--acc-soft);padding:16px;margin:8px 0}
+.pP .z.now .zeile1{display:flex;align-items:center;gap:14px}
+.pP .z.now .cover{display:block;width:64px;height:64px;border-radius:14px;flex-shrink:0;
+  box-shadow:0 8px 18px rgba(226,74,110,.22)}
+.pP .z.now .t{font-size:17px;white-space:normal}
+.pP .z.now .pl,.pP .z.now .d{display:none}
+.pP .z .aus{display:none}
+.pP .z.now .aus{display:block;margin-top:14px}
+.pP .seek{display:block;padding:6px 0;cursor:pointer;touch-action:none}
+.pP .line{display:block;height:3px;border-radius:3px;background:rgba(30,27,25,.12);position:relative}
+.pP .fill{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--acc)}
+.pP .knob{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;background:var(--acc);
+  transform:translate(-50%,-50%);box-shadow:0 2px 6px rgba(226,74,110,.45)}
+.pP .times{display:flex;justify-content:space-between;margin-top:7px;font-size:10.5px;color:var(--p-3);
+  font-variant-numeric:tabular-nums}
+.pP .transport{display:flex;align-items:center;justify-content:center;gap:28px;margin-top:8px}
+.pP .tb{width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:var(--p-2);cursor:pointer}
+.pP .play{width:54px;height:54px;border-radius:50%;background:var(--acc);color:#fff;display:flex;
+  align-items:center;justify-content:center;cursor:pointer;transition:transform .12s;
+  box-shadow:0 8px 20px rgba(226,74,110,.36)}
+.pP .play:active{transform:scale(.94)}
+.pP .pille{position:absolute;left:50%;bottom:30px;z-index:20;transform:translateX(-50%);
+  display:flex;align-items:center;gap:10px;padding:11px 20px;border-radius:30px;background:var(--acc);
+  color:#fff;cursor:pointer;box-shadow:0 10px 26px rgba(226,74,110,.38);
+  font-size:10px;letter-spacing:.22em;text-transform:uppercase}
+.pP .pille .bar{display:flex;align-items:flex-end;gap:2px;height:11px}
+.pP .pille .bar i{width:2px;background:#fff;border-radius:1px;animation:eq .9s ease-in-out infinite alternate;
+  animation-play-state:paused}
+.pP.playing .pille .bar i{animation-play-state:running}
+.pP .pille .bar i:nth-child(1){height:5px;animation-delay:0s}
+.pP .pille .bar i:nth-child(2){height:11px;animation-delay:.22s}
+.pP .pille .bar i:nth-child(3){height:7px;animation-delay:.44s}
+@keyframes eq{to{height:3px}}
+
+/* ══════════════════ V · DIE PLATTE ══════════════════
+   Dasselbe Material hochkant: drei Platten übereinander, jede mit eigener
+   Kante. Was oben liegt, ist das Bild; was unten liegt, ist die Liste. */
+.pV{background:linear-gradient(168deg,#F8F3EA,#EBE1D2);color:#2A2620;
+  --v-3:#A79C8B;--v-2:#5E564A;--v-a:#3FBF6A;--v-tief:rgba(150,136,116,.30);--v-hoch:rgba(255,255,255,.95)}
+.pV .lid{display:flex;align-items:center;justify-content:space-between;padding:4px 26px 0;flex-shrink:0}
+.pV .lid .cap{font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--v-3)}
+.pV .ic{width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--v-2);cursor:pointer}
+.pV .stapel{flex:1;min-height:0;display:flex;flex-direction:column;gap:16px;padding:14px 24px 22px;
+  overflow:hidden}
+.pV .platte{border-radius:22px;background:linear-gradient(#FDFAF4,#F0E7D9);
+  box-shadow:0 6px 0 #DED2BE,0 14px 22px rgba(120,104,84,.18),inset 0 1px 0 var(--v-hoch)}
+.pV .p1{padding:12px;flex-shrink:0}
+.pV .cover{width:min(100%,206px);aspect-ratio:1;border-radius:14px;margin:0 auto}
+.pV .p2{padding:16px 18px 18px;flex-shrink:0;text-align:center}
+.pV .tt{font-size:21px;font-weight:700;letter-spacing:-.012em;line-height:1.2;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.pV .by{margin-top:3px;font-size:11.5px;color:var(--v-2)}
+.pV .seek{margin-top:13px;padding:7px 0;cursor:pointer;touch-action:none}
+.pV .schnur{height:6px;border-radius:4px;background:#E4DACA;position:relative;
+  box-shadow:inset 0 2px 4px var(--v-tief)}
+.pV .fill{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--v-a)}
+.pV .knopf{position:absolute;top:50%;width:15px;height:15px;border-radius:50%;transform:translate(-50%,-50%);
+  background:var(--v-a);box-shadow:0 2px 4px rgba(63,191,106,.45)}
+.pV .times{display:flex;justify-content:space-between;margin-top:7px;font-size:10.5px;color:var(--v-3);
+  font-variant-numeric:tabular-nums}
+.pV .transport{display:flex;align-items:center;justify-content:center;gap:28px;margin-top:10px}
+.pV .tb{width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#2A2620;cursor:pointer}
+.pV .play{width:56px;height:56px;border-radius:50%;background:var(--v-a);color:#fff;display:flex;
+  align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 5px 0 #2E9351,0 11px 18px rgba(63,191,106,.32),inset 0 2px 3px rgba(255,255,255,.4)}
+.pV .play:active{transform:translateY(4px);box-shadow:0 1px 0 #2E9351}
+.pV .p3{flex:1;min-height:0;display:flex;flex-direction:column;padding:12px 8px 8px}
+.pV .p3 .k{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--v-3);padding:0 12px 6px}
+.pV .p3 .rollen{overflow-y:auto;min-height:0;padding:0 8px 4px}
+.pV .vz{display:flex;align-items:baseline;gap:11px;width:100%;text-align:left;padding:8px 10px;
+  border-radius:11px;cursor:pointer;font-size:13.5px;color:var(--v-2)}
+.pV .vz .n{font-size:9.5px;color:var(--v-3);font-variant-numeric:tabular-nums}
+.pV .vz .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pV .vz .d{font-size:10px;color:var(--v-3);font-variant-numeric:tabular-nums}
+.pV .vz.now{color:#2A2620;font-weight:600;background:rgba(63,191,106,.13)}
+.pV .vz.past{opacity:.45}
+
+/* ══════════════════ Y · DIE KLAPPTAFEL ══════════════════
+   Retro, dritte Lesart: die Anzeigetafel im Bahnhof. Beim Titelwechsel
+   klappt die Zeile um; darunter steht, was noch abfährt. */
+.pY{background:linear-gradient(172deg,#FAF7F1,#EFEAE0 62%,#E6DFD2);color:#26221C;
+  --y-3:#A69C8D;--y-2:#5C554A;--y-a:#8A6534}
+.pY .lid{display:flex;align-items:center;justify-content:space-between;padding:4px 26px 0;flex-shrink:0}
+.pY .lid .cap{font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--y-3)}
+.pY .ic{width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--y-3);cursor:pointer}
+.pY .halle{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;padding:0 24px}
+.pY .tafel{border-radius:6px;padding:12px;background:linear-gradient(#F6F1E7,#EDE6D9);
+  border:1px solid rgba(38,34,28,.16);
+  box-shadow:0 18px 34px rgba(60,50,38,.18),inset 0 1px 0 rgba(255,255,255,.8)}
+.pY .rahmen{border:1px solid var(--y-a);border-radius:3px;padding:10px;background:#FBF8F2}
+/* Ein Klappschild: zwei Hälften mit einer dunklen Naht dazwischen */
+.pY .schild{position:relative;border-radius:2px;overflow:hidden;perspective:600px;
+  background:linear-gradient(#FEFCF7 0 calc(50% - 1px),rgba(38,34,28,.34) calc(50% - 1px) calc(50% + 1px),
+    #F4EFE4 calc(50% + 1px) 100%);
+  box-shadow:inset 0 0 0 1px rgba(38,34,28,.10)}
+.pY .schild .zeile{padding:14px 14px 15px;display:flex;align-items:baseline;gap:12px}
+.pY .schild.klappt{animation:klapp .42s cubic-bezier(.3,.8,.25,1)}
+@keyframes klapp{
+  0%{transform:rotateX(-58deg);opacity:.55}
+  60%{transform:rotateX(6deg);opacity:1}
+  100%{transform:rotateX(0);opacity:1}}
+.pY .gross .nr{font-size:11px;letter-spacing:.18em;color:var(--y-a);font-variant-numeric:tabular-nums;
+  flex-shrink:0;padding-top:5px}
+.pY .gross .tx{flex:1;min-width:0;display:flex;flex-direction:column}
+.pY .gross .t{font-family:var(--serif);font-size:19px;line-height:1.2;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.pY .gross .s{margin-top:5px;font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--y-2)}
+.pY .gross .z{flex-shrink:0;font-size:15px;font-variant-numeric:tabular-nums;color:var(--y-2);padding-top:4px}
+.pY .lauf{margin-top:11px;padding:7px 0;cursor:pointer;touch-action:none}
+.pY .schiene{height:2px;background:rgba(38,34,28,.14);position:relative;border-radius:2px}
+.pY .fill{position:absolute;left:0;top:0;bottom:0;background:var(--y-a);border-radius:2px}
+.pY .times{display:flex;justify-content:space-between;margin-top:7px;font-size:9.5px;letter-spacing:.12em;
+  color:var(--y-3);font-variant-numeric:tabular-nums}
+.pY .abfahrt{margin-top:12px}
+.pY .ak{font-size:8.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--y-3);padding:0 2px 6px}
+.pY .az{display:flex;align-items:baseline;gap:12px;width:100%;text-align:left;padding:9px 12px;cursor:pointer;
+  border-radius:2px;margin-top:5px;font-size:13.5px;color:var(--y-2);
+  background:linear-gradient(#FDFBF6 0 calc(50% - 1px),rgba(38,34,28,.16) calc(50% - 1px) calc(50% + 1px),
+    #F5F1E8 calc(50% + 1px) 100%);box-shadow:inset 0 0 0 1px rgba(38,34,28,.08)}
+.pY .az .n{font-size:9px;color:var(--y-3);font-variant-numeric:tabular-nums}
+.pY .az .t{flex:1;min-width:0;font-family:var(--serif);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pY .az .d{font-size:10.5px;color:var(--y-3);font-variant-numeric:tabular-nums}
+/* Unter „Danach“ steht nur, was noch kommt — Gelaufenes und der laufende
+   Titel (der oben im Schild steht) fallen aus der Tafel. */
+.pY .az.past,.pY .az.now{display:none}
+.pY .foot{flex-shrink:0;padding:0 30px 28px;display:flex;align-items:center;justify-content:center;gap:30px}
+.pY .tb{width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:var(--y-2);cursor:pointer}
+.pY .play{width:58px;height:58px;border-radius:50%;border:1px solid var(--y-a);color:var(--y-a);display:flex;
+  align-items:center;justify-content:center;cursor:pointer;transition:background .2s,color .2s,transform .12s}
+.pY.playing .play{background:var(--y-a);color:#FBF8F2}
+.pY .play:active{transform:scale(.95)}
+</style>
+<style>
+/* ═══════════ Die Seite: eine Matrix statt zweier Spalten ═══════════ */
+.page{max-width:1460px}
+.matrix{display:grid;grid-template-columns:repeat(auto-fit,minmax(352px,1fr));gap:54px 30px;padding:44px 0 0}
+.probe{display:flex;flex-direction:column;align-items:center;gap:20px}
+.probe .phone{zoom:.82}
+.probe .txt{width:100%;max-width:392px}
+.probe h4{font-family:var(--serif);font-size:22px;font-weight:400;line-height:1.2}
+.probe h4 .no{display:block;margin-bottom:8px;font-family:var(--sans);font-size:9.5px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--brass)}
+.probe p{margin-top:10px;font-size:13.5px;color:var(--ink-2)}
+.probe p b{color:var(--ink);font-weight:600}
+.probe .stoff{margin-top:11px;font-family:var(--sans);font-size:9.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink-3)}
+.legende{display:grid;grid-template-columns:repeat(auto-fit,minmax(212px,1fr));margin-top:26px;
+  border-top:1px solid var(--line-2);max-width:64ch}
+.legende>div{padding:12px 16px 14px 0}
+.legende dt{font-family:var(--sans);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--brass);margin-bottom:5px}
+.legende dd{font-size:13px;color:var(--ink-2)}
+
+/* ══════════════════════════════════════════════════════════════════════
+   G · DIE SCHEIBE
+   ══════════════════════════════════════════════════════════════════════ */
+/* G1 · edel — Elfenbein und ein Messingring in der Luft */
+.pG.v-edel{background:#FBF8F2;--g-3:#A79A85;--g-2:#5C5140}
+.pG.v-edel .disc{outline:1px solid rgba(138,101,52,.40);outline-offset:15px;
+  box-shadow:0 34px 74px rgba(74,52,30,.20)}
+.pG.v-edel .tt{font-size:29px;letter-spacing:-.018em}
+.pG.v-edel .by{margin-top:12px;font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:#8A6534}
+.pG.v-edel .line{height:1px;background:rgba(74,52,30,.22)}
+.pG.v-edel .fill{background:#8A6534}
+.pG.v-edel .play{background:none;color:#8A6534;border:1px solid #8A6534;box-shadow:none}
+.pG.v-edel .tb{color:#6B5B44}
+
+/* G2 · matt — Farbe wie Kreide, kein einziger Schatten */
+.pG.v-matt{background:#F1EFE9;--g-3:#8E887E;--g-2:#4E4A44}
+.pG.v-matt .disc{box-shadow:none}
+.pG.v-matt .disc .wash{filter:blur(15px) saturate(.5)}
+.pG.v-matt .disc .core{opacity:.45}
+.pG.v-matt .tt{font-family:var(--sans);font-size:22px;font-weight:600;letter-spacing:-.012em}
+.pG.v-matt .line{height:2px;border-radius:0;background:rgba(29,26,23,.13)}
+.pG.v-matt .fill{border-radius:0;background:#2A2622}
+.pG.v-matt .play{background:#2A2622;box-shadow:none}
+
+/* G3 · Glanz — die Scheibe unter einer Glaskuppel */
+.pG.v-glanz{background:radial-gradient(120% 72% at 50% 4%,#FFFFFF,#F0EEEA 64%,#E3E0DA)}
+.pG.v-glanz .disc{box-shadow:0 30px 60px rgba(40,32,26,.28)}
+.pG.v-glanz .disc .wash{filter:blur(15px) saturate(1.4) brightness(1.06)}
+.pG.v-glanz .disc::after{content:'';position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 31% 20%,rgba(255,255,255,.92),rgba(255,255,255,.30) 20%,transparent 44%),
+    linear-gradient(158deg,rgba(255,255,255,.40),transparent 40%);
+  box-shadow:inset 0 -20px 36px rgba(255,255,255,.34),inset 0 14px 28px rgba(0,0,0,.12)}
+.pG.v-glanz .fill{background:linear-gradient(90deg,#6E6A62,#26231F)}
+.pG.v-glanz .play{background:radial-gradient(circle at 36% 24%,#5A5A5A,#0B0B0B 62%);
+  box-shadow:0 12px 26px rgba(20,18,16,.42),inset 0 1px 1px rgba(255,255,255,.55)}
+
+/* G4 · realistischer — gesponnene Farbe hat ein Korn und wirft einen Kontaktschatten */
+.pG.v-echt{background:#F7F5F1}
+.pG.v-echt .disc{box-shadow:0 2px 4px rgba(40,32,26,.32),0 26px 40px -14px rgba(40,32,26,.44),
+  inset 0 0 34px rgba(30,22,16,.20)}
+.pG.v-echt .disc::after{content:'';position:absolute;inset:0;border-radius:50%;pointer-events:none;opacity:.55;
+  background:repeating-conic-gradient(rgba(255,255,255,.09) 0 .55deg,rgba(0,0,0,.08) .55deg 1.1deg)}
+.pG.v-echt .play{background:#1A1714;
+  box-shadow:0 3px 5px rgba(26,23,20,.42),0 14px 22px -6px rgba(26,23,20,.5),inset 0 1px 0 rgba(255,255,255,.16)}
+
+/* G5 · Idee — Der Farbstand: die Scheibe füllt sich mit dem Titel */
+.pG.v-idee{background:#FCFBFA}
+.pG.v-idee .disc{box-shadow:0 20px 44px rgba(60,40,30,.14)}
+.pG.v-idee .disc::after{content:'';position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:conic-gradient(rgba(252,251,250,0) calc(var(--p,0)*360deg),rgba(252,251,250,.84) 0)}
+.pG.v-idee .line{background:none}
+.pG.v-idee .fill{display:none}
+.pG.v-idee .times{color:#B7B0A7}
+
+/* ══════════════════════════════════════════════════════════════════════
+   M · SOFORTBILD
+   ══════════════════════════════════════════════════════════════════════ */
+/* M1 · edel — Büttenkarton, Oxblood statt Signalrot */
+.pM.v-edel{background:radial-gradient(120% 80% at 50% 16%,#FCFAF6,#EBE6DD 68%,#DFD9CD);--m-a:#8E2C24;
+  --m-3:#A99F91;--m-2:#5A5245}
+.pM.v-edel .abzug{background:#FFFDF7;padding:17px 17px 0;box-shadow:0 26px 52px rgba(60,48,34,.20),
+  0 1px 2px rgba(60,48,34,.14),inset 0 0 0 1px rgba(60,48,34,.07)}
+.pM.v-edel .abzug::after{background:none}
+.pM.v-edel .cover{box-shadow:inset 0 0 0 1px rgba(34,31,28,.10),0 1px 0 rgba(154,124,60,.45)}
+.pM.v-edel .tt{font-family:var(--serif);font-weight:400;font-size:21px}
+.pM.v-edel .by{margin-top:6px;font-size:9px;letter-spacing:.24em;text-transform:uppercase}
+.pM.v-edel .play{background:none;border:1px solid var(--m-a);color:var(--m-a);box-shadow:none}
+.pM.v-edel .knob{box-shadow:none}
+
+/* M2 · matt — gerade gelegt, Papier ohne Glanz und ohne Schatten */
+.pM.v-matt{background:#EFEDE7;--m-a:#B2483C;--m-3:#9C968C}
+.pM.v-matt .abzug{transform:none;background:#FCFBF8;box-shadow:0 0 0 1px rgba(34,31,28,.10)}
+.pM.v-matt .abzug::after{background:none}
+.pM.v-matt .hinten{transform:rotate(0) translate(14px,-10px);box-shadow:0 0 0 1px rgba(34,31,28,.08)}
+.pM.v-matt .cover{box-shadow:none}
+.pM.v-matt .tt{font-size:18px;font-weight:600}
+.pM.v-matt .line{border-radius:0;height:3px}
+.pM.v-matt .fill{border-radius:0}
+.pM.v-matt .knob{display:none}
+.pM.v-matt .play{box-shadow:none}
+
+/* M3 · Glanz — Hochglanzabzug mit Reflex quer über dem Bild */
+.pM.v-glanz{background:radial-gradient(110% 74% at 50% 10%,#FFFFFF,#E9E7E2 70%,#DAD7D0)}
+.pM.v-glanz .abzug{background:linear-gradient(158deg,#FFFFFF,#F6F4F0);
+  box-shadow:0 26px 50px rgba(34,31,28,.26),0 2px 4px rgba(34,31,28,.14),inset 0 1px 0 #fff}
+.pM.v-glanz .cover::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(116deg,transparent 28%,rgba(255,255,255,.44) 41%,rgba(255,255,255,.10) 50%,
+    transparent 58%)}
+.pM.v-glanz .play{background:radial-gradient(circle at 36% 26%,#F4756B,#B6231A 68%);
+  box-shadow:0 10px 20px rgba(182,35,26,.44),inset 0 2px 2px rgba(255,255,255,.55)}
+.pM.v-glanz .knob{background:radial-gradient(circle at 36% 30%,#FF8A80,#C22E23);
+  box-shadow:0 2px 5px rgba(194,46,35,.6),inset 0 1px 1px rgba(255,255,255,.6)}
+
+/* M4 · realistischer — die Kinnlade eines echten Abzugs ist tiefer als der Rand */
+.pM.v-echt{background:radial-gradient(120% 80% at 50% 20%,#F8F6F2,#E4E0D9 66%,#D5D0C7)}
+.pM.v-echt .abzug{padding:13px 13px 0;border-radius:2px;
+  transform:rotate(-1.1deg) perspective(900px) rotateX(2.2deg);
+  box-shadow:0 1px 2px rgba(34,31,28,.30),0 20px 30px -10px rgba(34,31,28,.34)}
+.pM.v-echt .cover{border-radius:2px;filter:contrast(1.05) saturate(.94) sepia(.05);
+  box-shadow:inset 0 0 34px rgba(40,30,20,.22),inset 0 0 0 1px rgba(34,31,28,.12)}
+.pM.v-echt .kinn{padding:14px 4px 30px}
+.pM.v-echt .tt{font-size:17px}
+.pM.v-echt .times{font-size:9px}
+.pM.v-echt .play{width:48px;height:48px;box-shadow:0 4px 9px rgba(216,68,58,.42)}
+
+/* M5 · Idee — Die Entwicklung: das Bild kommt, während der Titel läuft */
+.pM.v-idee{background:radial-gradient(120% 80% at 50% 18%,#FBFAF8,#E9E5DF 68%,#DED9D1)}
+.pM.v-idee .cover{filter:saturate(calc(min(1,var(--p,0)*5))) contrast(calc(.6 + min(.4,var(--p,0)*2)))}
+.pM.v-idee .cover::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:#D8D6CA;opacity:calc(1 - min(1,var(--p,0)*5))}
+.pM.v-idee .abzug{box-shadow:0 22px 46px rgba(34,31,28,.22),0 2px 4px rgba(34,31,28,.10)}
+
+/* ══════════════════════════════════════════════════════════════════════
+   P · DIE LISTE
+   ══════════════════════════════════════════════════════════════════════ */
+/* P1 · edel — Haarlinien, Aubergine, Ziffern in Versalhöhe */
+.pP.v-edel{background:#FCFAF8;--acc:#5B2E4A;--acc-soft:rgba(91,46,74,.07);--p-3:#A79C93}
+.pP.v-edel .kopf h4{font-family:var(--serif);font-weight:400;font-size:29px;letter-spacing:-.01em}
+.pP.v-edel .z{border-radius:0;border-bottom:1px solid rgba(30,27,25,.09);padding:13px 6px}
+.pP.v-edel .z .pl{background:none;box-shadow:inset 0 0 0 1px rgba(30,27,25,.14)}
+.pP.v-edel .z .t{font-family:var(--serif);font-weight:400;font-size:16px}
+.pP.v-edel .z.now{border-radius:0;margin:0;padding:16px 6px;border-bottom:1px solid var(--acc)}
+.pP.v-edel .z.now .cover{border-radius:2px;box-shadow:0 6px 14px rgba(91,46,74,.20)}
+.pP.v-edel .play{box-shadow:none}
+.pP.v-edel .pille{border-radius:2px;box-shadow:none}
+
+/* P2 · matt — keine Rundungen, keine Schatten, ein Ziegelton */
+.pP.v-matt{background:#F3F1EC;--acc:#B25A45;--acc-soft:rgba(178,90,69,.13);--p-3:#948D84}
+.pP.v-matt .z,.pP.v-matt .z.now{border-radius:0}
+.pP.v-matt .z .pl{border-radius:0;background:rgba(30,27,25,.07)}
+.pP.v-matt .z.now .cover{border-radius:0;box-shadow:none}
+.pP.v-matt .line,.pP.v-matt .fill,.pP.v-matt .knob{border-radius:0}
+.pP.v-matt .knob{width:3px;height:14px}
+.pP.v-matt .play{border-radius:0;box-shadow:none}
+.pP.v-matt .pille{border-radius:0;box-shadow:none}
+
+/* P3 · Glanz — Zeilen aus Milchglas, der Akzent leuchtet */
+.pP.v-glanz{background:linear-gradient(176deg,#FFFFFF,#F4F1F4 60%,#EFE9F0);--acc:#E0335F;
+  --acc-soft:rgba(224,51,95,.10)}
+.pP.v-glanz .z{background:rgba(255,255,255,.62);box-shadow:0 4px 14px rgba(60,40,50,.07),
+  inset 0 1px 0 rgba(255,255,255,.9);margin-top:7px;backdrop-filter:blur(8px)}
+.pP.v-glanz .z .pl{background:rgba(255,255,255,.8);box-shadow:inset 0 1px 0 #fff,0 2px 5px rgba(60,40,50,.10)}
+.pP.v-glanz .z.now{background:linear-gradient(rgba(255,255,255,.86),rgba(255,236,241,.86));
+  box-shadow:0 10px 26px rgba(224,51,95,.16),inset 0 1px 0 #fff}
+.pP.v-glanz .z.now .cover{box-shadow:0 8px 20px rgba(224,51,95,.34)}
+.pP.v-glanz .play{background:radial-gradient(circle at 36% 26%,#FF6E92,#C71E48 68%);
+  box-shadow:0 8px 22px rgba(224,51,95,.5),inset 0 2px 2px rgba(255,255,255,.6)}
+.pP.v-glanz .pille{background:radial-gradient(circle at 30% 20%,#FF6E92,#D42356);
+  box-shadow:0 8px 26px rgba(224,51,95,.55),inset 0 1px 0 rgba(255,255,255,.5)}
+
+/* P4 · realistischer — ein gedrucktes Programm: Bleistifthaken und Textmarker */
+.pP.v-echt{background:#FAF7EF;--acc:#C4462F;--acc-soft:rgba(244,222,110,.55);--p-3:#9A9184}
+.pP.v-echt .kopf h4{font-family:var(--serif);font-weight:400;font-size:27px}
+.pP.v-echt .kopf .k{color:#9A9184}
+.pP.v-echt .z{position:relative;border-radius:0;padding:11px 10px 11px 34px;
+  border-bottom:1px dotted rgba(38,34,28,.30)}
+.pP.v-echt .z .pl{display:none}
+.pP.v-echt .z .t{font-family:var(--serif);font-weight:400;font-size:16px}
+.pP.v-echt .z.past::before{content:'✓';position:absolute;left:10px;top:11px;font-size:14px;color:#6E6A62;
+  transform:rotate(-11deg)}
+.pP.v-echt .z.now{background:var(--acc-soft);border-radius:2px;padding:15px 12px;margin:6px 0;
+  border-bottom:1px solid rgba(38,34,28,.16)}
+.pP.v-echt .z.now .cover{border-radius:0;box-shadow:0 2px 6px rgba(38,34,28,.24)}
+.pP.v-echt .play{border-radius:0;box-shadow:none}
+.pP.v-echt .pille{border-radius:2px;box-shadow:none;background:#C4462F}
+
+/* P5 · Idee — Die Spur: jede Zeile trägt ihren eigenen Stand */
+.pP.v-idee{background:#FCFBFA;--acc:#2E7D6B;--acc-soft:rgba(46,125,107,.08)}
+.pP.v-idee .z{position:relative;padding-bottom:15px}
+.pP.v-idee .z::after{content:'';position:absolute;left:10px;right:10px;bottom:6px;height:2px;
+  background:rgba(30,27,25,.10)}
+.pP.v-idee .z::before{content:'';position:absolute;left:10px;bottom:6px;height:2px;width:0;
+  background:var(--acc);z-index:2}
+.pP.v-idee .z.past::before{width:calc(100% - 20px)}
+.pP.v-idee .z.now::before{width:calc((100% - 32px) * var(--p,0))}
+.pP.v-idee .z.now{padding-bottom:20px}
+.pP.v-idee .z.now .seek,.pP.v-idee .z.now .times{opacity:.55}
+.pP.v-idee .z .pl{background:rgba(46,125,107,.10)}
+.pP.v-idee .play{box-shadow:0 8px 20px rgba(46,125,107,.34)}
+.pP.v-idee .pille{box-shadow:0 10px 26px rgba(46,125,107,.34)}
+.pP.v-idee .z.now .cover{box-shadow:0 8px 18px rgba(46,125,107,.22)}
+.pP.v-idee .knob{box-shadow:0 2px 6px rgba(46,125,107,.4)}
+
+/* ══════════════════════════════════════════════════════════════════════
+   V · DIE PLATTE
+   ══════════════════════════════════════════════════════════════════════ */
+/* V1 · edel — Creme und Tannengrün, eine Goldlinie an jeder Kante */
+.pV.v-edel{background:linear-gradient(168deg,#FAF6EE,#EDE5D6);--v-a:#2F5D43;--v-3:#A99C86;--v-2:#584F42}
+.pV.v-edel .platte{background:linear-gradient(#FEFCF7,#F3ECDE);
+  box-shadow:0 6px 0 #E3D9C6,0 14px 22px rgba(110,96,74,.16),inset 0 0 0 1px rgba(154,124,60,.30)}
+.pV.v-edel .tt{font-family:var(--serif);font-weight:400;font-size:22px}
+.pV.v-edel .play{box-shadow:0 5px 0 #23452F,0 11px 18px rgba(47,93,67,.30),inset 0 0 0 1px rgba(212,184,120,.5)}
+.pV.v-edel .vz.now{background:rgba(47,93,67,.10)}
+
+/* V2 · matt — Kreidelack, harte Kanten, ein flaches Grün */
+.pV.v-matt{background:#F0EBE1;--v-a:#4E8A5E;--v-3:#9C9386;--v-2:#565046}
+.pV.v-matt .platte{border-radius:4px;background:#FBF7EF;box-shadow:0 4px 0 #DED4C0}
+.pV.v-matt .cover{border-radius:2px}
+.pV.v-matt .schnur{border-radius:0;box-shadow:none;background:#E1D8C8}
+.pV.v-matt .fill{border-radius:0}
+.pV.v-matt .knopf{border-radius:0;width:4px;height:16px;box-shadow:none}
+.pV.v-matt .play{border-radius:0;box-shadow:0 4px 0 #3A6B47}
+.pV.v-matt .vz{border-radius:0}
+
+/* V3 · Glanz — Emaille: jede Platte hat ein Licht an der Oberkante */
+.pV.v-glanz{background:linear-gradient(168deg,#FBF8F2,#E9E2D6)}
+.pV.v-glanz .platte{position:relative;overflow:hidden;
+  background:linear-gradient(#FFFFFF 0%,#FEFBF5 16%,#F2EADC 100%);
+  box-shadow:0 6px 0 #DDD1BC,0 16px 26px rgba(110,96,74,.24),inset 0 1px 0 #fff}
+.pV.v-glanz .platte::after{content:'';position:absolute;left:0;right:0;top:0;height:38%;pointer-events:none;
+  background:linear-gradient(rgba(255,255,255,.75),rgba(255,255,255,0))}
+.pV.v-glanz .cover{box-shadow:0 6px 16px rgba(90,74,50,.28),inset 0 1px 0 rgba(255,255,255,.5)}
+.pV.v-glanz .play{background:radial-gradient(circle at 36% 24%,#7BE3A2,#279A50 66%);
+  box-shadow:0 6px 0 #1F7A40,0 14px 22px rgba(39,154,80,.42),inset 0 2px 3px rgba(255,255,255,.7)}
+.pV.v-glanz .knopf{background:radial-gradient(circle at 36% 30%,#8CEDAF,#2E9351);
+  box-shadow:0 2px 5px rgba(46,147,81,.5),inset 0 1px 1px rgba(255,255,255,.7)}
+
+/* V4 · realistischer — gespritztes ABS: Trennnaht, Schraubdome, weiche Fase */
+.pV.v-echt{background:linear-gradient(170deg,#F4F0E8,#E4DCCE)}
+.pV.v-echt .platte{position:relative;border-radius:14px;
+  background:linear-gradient(#FAF6EE,#EFE7D8);
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 -1px 0 rgba(120,104,80,.22) inset,
+    0 2px 3px rgba(90,76,54,.22),0 16px 22px -10px rgba(90,76,54,.34)}
+/* Die Trennnaht eines Spritzteils liegt an der Seitenwand, nicht im Gesicht:
+   deshalb sitzt sie knapp über der Unterkante und nicht auf halber Höhe. */
+.pV.v-echt .platte::after{content:'';position:absolute;left:8px;right:8px;bottom:7px;height:1px;
+  pointer-events:none;background:rgba(255,255,255,.75);box-shadow:0 1px 0 rgba(120,104,80,.16)}
+.pV.v-echt .p1{background-image:radial-gradient(circle at 10px 10px,rgba(120,104,80,.16) 1.5px,transparent 2px),
+  radial-gradient(circle at calc(100% - 10px) 10px,rgba(120,104,80,.16) 1.5px,transparent 2px);
+  background-repeat:no-repeat}
+.pV.v-echt .cover{border-radius:10px;box-shadow:0 1px 2px rgba(90,76,54,.3)}
+.pV.v-echt .play{box-shadow:0 2px 3px rgba(30,80,50,.4),0 10px 16px -6px rgba(30,80,50,.5),
+  inset 0 1px 0 rgba(255,255,255,.4),inset 0 -2px 3px rgba(20,60,36,.3)}
+
+/* V5 · Idee — Die Klaviatur: jede Zeile ist eine Taste, die laufende ist gedrückt */
+.pV.v-idee{background:linear-gradient(168deg,#F8F3EA,#EBE1D2)}
+.pV.v-idee .p3{padding:12px 10px 10px}
+.pV.v-idee .p3 .rollen{padding:0 4px 8px}
+.pV.v-idee .vz{border-radius:0 0 7px 7px;margin-bottom:7px;padding:11px 12px;
+  background:linear-gradient(#FFFDF8,#F2EBDD);
+  box-shadow:0 3px 0 #DFD4C0,0 5px 7px rgba(110,96,74,.16),inset 0 1px 0 #fff}
+.pV.v-idee .vz.now{transform:translateY(3px);background:linear-gradient(#EFE7D7,#F7F1E5);
+  box-shadow:inset 0 2px 6px rgba(110,96,74,.34);color:#2A2620}
+.pV.v-idee .vz.now .n{color:var(--v-a)}
+.pV.v-idee .vz:active{transform:translateY(3px);box-shadow:inset 0 2px 6px rgba(110,96,74,.30)}
+
+/* ══════════════════════════════════════════════════════════════════════
+   Y · DIE KLAPPTAFEL
+   ══════════════════════════════════════════════════════════════════════ */
+/* Y1 · edel — Messingrahmen, Elfenbeinemail, gestochene Serifen */
+.pY.v-edel{background:linear-gradient(172deg,#FBF8F2,#EDE7DA);--y-a:#9A7C3C;--y-3:#A99C86}
+.pY.v-edel .tafel{background:linear-gradient(#F8F4EA,#EFE8DA);border-color:rgba(154,124,60,.5);
+  box-shadow:0 20px 38px rgba(70,56,36,.20),inset 0 1px 0 rgba(255,255,255,.9)}
+.pY.v-edel .rahmen{border:1px solid var(--y-a);box-shadow:inset 0 0 0 3px #FBF8F2,inset 0 0 0 4px rgba(154,124,60,.4)}
+.pY.v-edel .gross .t{font-size:20px;letter-spacing:.005em}
+.pY.v-edel .schild{box-shadow:inset 0 0 0 1px rgba(154,124,60,.28)}
+.pY.v-edel .play{border-width:1px}
+
+/* Y2 · matt — Papierschilder, ein Strich als Naht, sonst nichts */
+.pY.v-matt{background:#F2EFE8;--y-a:#7C6A4E;--y-3:#9C9386}
+.pY.v-matt .tafel{background:#FAF7F0;border-color:rgba(38,34,28,.16);box-shadow:none;border-radius:0}
+.pY.v-matt .rahmen{border-color:rgba(38,34,28,.20);border-radius:0}
+.pY.v-matt .schild{border-radius:0;box-shadow:none;
+  background:linear-gradient(#FBF9F4 0 calc(50% - 1px),rgba(38,34,28,.42) calc(50% - 1px) calc(50% + 1px),
+    #F4F1EA calc(50% + 1px) 100%)}
+.pY.v-matt .az{border-radius:0;box-shadow:none;
+  background:linear-gradient(#FBF9F4 0 calc(50% - 1px),rgba(38,34,28,.20) calc(50% - 1px) calc(50% + 1px),
+    #F6F3EC calc(50% + 1px) 100%)}
+.pY.v-matt .play{box-shadow:none}
+
+/* Y3 · Glanz — lackierte Schilder hinter Glas */
+.pY.v-glanz{background:linear-gradient(172deg,#FCFAF6,#E9E4DA)}
+.pY.v-glanz .tafel{position:relative;overflow:hidden;
+  background:linear-gradient(#FBF7EE,#EDE5D6);box-shadow:0 22px 40px rgba(60,48,32,.24),inset 0 1px 0 #fff;
+  border-color:rgba(38,34,28,.22)}
+.pY.v-glanz .tafel::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:5;
+  background:linear-gradient(118deg,rgba(255,255,255,.52) 12%,rgba(255,255,255,.06) 30%,transparent 46%)}
+.pY.v-glanz .rahmen{border-color:#B99A56;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 0 0 1px rgba(154,124,60,.35)}
+.pY.v-glanz .schild{background:linear-gradient(#FFFFFF 0 calc(50% - 1px),rgba(30,26,20,.5) calc(50% - 1px)
+    calc(50% + 1px),#F2EDE3 calc(50% + 1px) 100%);
+  box-shadow:inset 0 1px 0 #fff,inset 0 -1px 0 rgba(120,104,80,.2)}
+.pY.v-glanz .az{background:linear-gradient(#FFFDF9 0 calc(50% - 1px),rgba(30,26,20,.28) calc(50% - 1px)
+    calc(50% + 1px),#F5F1E8 calc(50% + 1px) 100%);box-shadow:inset 0 1px 0 #fff}
+.pY.v-glanz .play{background:linear-gradient(#B99A56,#8A6534);color:#FBF8F2;border:none;
+  box-shadow:0 8px 16px rgba(138,101,52,.36),inset 0 1px 0 rgba(255,255,255,.5)}
+
+/* Y4 · realistischer — Solari: Achszapfen, Eigenschatten je Klappe, Tafelschrift */
+.pY.v-echt{background:linear-gradient(172deg,#F6F3EC,#E7E2D8);--y-2:#4C463C}
+.pY.v-echt .halle{perspective:1200px}
+.pY.v-echt .tafel{transform:rotateX(3deg);background:#EFEAE0;border-color:rgba(38,34,28,.3);
+  box-shadow:0 24px 40px rgba(50,42,32,.26),inset 0 0 0 1px rgba(255,255,255,.5)}
+.pY.v-echt .rahmen{background:#E8E2D6;border-color:rgba(38,34,28,.34);padding:12px 14px}
+/* Naht: ein feiner Spalt mit Eigenschatten der oberen Klappe auf der unteren.
+   Dick und dunkel gezeichnet wuerde daraus ein Durchstreichen. */
+.pY.v-echt .schild,.pY.v-echt .az{position:relative;border-radius:1px;
+  background:linear-gradient(#FDFBF6 0 calc(50% - .5px),rgba(58,52,44,.38) calc(50% - .5px) calc(50% + .5px),
+    rgba(255,255,255,.92) calc(50% + .5px) calc(50% + 1.5px),#F4EFE5 calc(50% + 1.5px) 100%);
+  box-shadow:inset 0 -5px 9px -6px rgba(40,34,26,.45),inset 0 0 0 1px rgba(38,34,28,.14)}
+/* Achszapfen: zwei kleine Stifte an den Seiten, auf Nahthöhe */
+.pY.v-echt .schild::after,.pY.v-echt .az::after{content:'';position:absolute;left:0;right:0;top:50%;height:7px;
+  pointer-events:none;transform:translateY(-50%);background-repeat:no-repeat;
+  background:radial-gradient(circle at 2.5px 50%,#7E776B 0 2.5px,transparent 3px),
+    radial-gradient(circle at calc(100% - 2.5px) 50%,#7E776B 0 2.5px,transparent 3px)}
+.pY.v-echt .gross .t{font-family:var(--sans);font-weight:600;font-size:15.5px;letter-spacing:.01em}
+.pY.v-echt .gross .s{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:8.5px}
+.pY.v-echt .gross .zeile{padding:12px 14px 13px}
+.pY.v-echt .az{padding:11px 14px}
+.pY.v-echt .az .t{font-family:var(--sans);font-size:12.5px}
+.pY.v-echt .gross .nr,.pY.v-echt .az .n{font-family:var(--sans);font-variant-numeric:tabular-nums}
+
+/* Y5 · Idee — Der Abreißkalender: der laufende Titel steht auf dem obersten Blatt */
+.pY.v-idee{background:linear-gradient(172deg,#FBF9F4,#EDE9E0);--y-a:#A8563C}
+.pY.v-idee .tafel{background:none;border:none;box-shadow:none;padding:0}
+.pY.v-idee .rahmen{border:none;background:#FDFBF6;padding:0 0 14px;border-radius:2px;
+  box-shadow:0 4px 0 #F4F0E6,0 5px 0 rgba(38,34,28,.10),0 9px 0 #F1EDE2,0 10px 0 rgba(38,34,28,.08),
+    0 14px 0 #EDE9DE,0 15px 0 rgba(38,34,28,.06),0 26px 34px rgba(60,50,38,.18)}
+.pY.v-idee .schild{background:#FFFDF8;border-radius:0;box-shadow:none;
+  border-bottom:1px dashed rgba(38,34,28,.30);
+  padding-top:12px;
+  background-image:repeating-linear-gradient(90deg,#FFFDF8 0 7px,rgba(38,34,28,.07) 7px 8px);
+  background-size:100% 7px;background-repeat:no-repeat;background-position:top}
+.pY.v-idee .schild .zeile{padding:16px 14px 18px}
+.pY.v-idee .gross .t{font-family:var(--serif);font-size:22px}
+.pY.v-idee .gross .nr{color:var(--y-a)}
+.pY.v-idee .lauf{padding:10px 14px 0}
+.pY.v-idee .az{background:none;box-shadow:none;border-radius:0;padding:9px 14px;
+  border-bottom:1px dotted rgba(38,34,28,.22)}
+.pY.v-idee .ak{padding-left:14px}
+.pY.v-idee .times{padding:0 14px}
+</style>
+<style>
+/* ── Schluss ── */
+.closing{margin-top:96px;padding-top:46px;border-top:1px solid var(--line-2);
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px}
+@media (max-width:1000px){.closing{grid-template-columns:1fr;gap:36px}}
+.closing h2{font-family:var(--serif);font-size:24px;font-weight:400;margin-bottom:16px}
+.closing p{color:var(--ink-2);font-size:14.5px;margin-bottom:14px}
+.closing p b{color:var(--ink);font-weight:600}
+.closing ul{list-style:none;border-top:1px solid var(--line)}
+.closing li{padding:13px 0;border-bottom:1px solid var(--line);font-size:14px;color:var(--ink-2);
+  display:grid;grid-template-columns:20px 1fr;gap:12px}
+.closing li .m{color:var(--brass)}
+.closing li b{color:var(--ink);font-weight:600}
+footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--line-2);font-family:var(--sans);
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+  display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}}
+</style>
+
+<div class="page">
+  <div class="masthead">
+    <div class="caps">Musiklib — Entwürfe, Jetzt läuft</div>
+    <h1>Material <em>&amp;</em> Oberfläche</h1>
+    <p class="lede">Fünf Entwürfe aus <b>Vorbilder</b>, jeder in fünf Behandlungen. Die Form bleibt jedes Mal
+    dieselbe — dasselbe Bild, dieselbe Achse, dieselben Knöpfe. Was sich ändert, ist der Stoff, aus dem sie
+    gemacht ist. <b>Eine Variante ist im Code nichts als eine zweite Klasse</b> am selben Telefon; kein
+    zweiter Entwurf, kein zweites Javascript.</p>
+    <div class="legende">
+      <div><dt>1 · edel</dt><dd>Weniger, aber genauer: Haarlinien, Messing, Serifen. Kein Effekt.</dd></div>
+      <div><dt>2 · matt</dt><dd>Kein Schatten, kein Glanz, keine Rundung. Nur Fläche und Kante.</dd></div>
+      <div><dt>3 · Glanz</dt><dd>Licht als Material: Lack, Glas, Spiegelung, kräftigere Farbe.</dd></div>
+      <div><dt>4 · realistischer</dt><dd>Das echte Ding, mit seinen Fehlern: Korn, Naht, Fase, Kontaktschatten.</dd></div>
+      <div><dt>5 · Idee</dt><dd>Mein eigener Vorschlag — die Behandlung ändert nicht das Aussehen, sondern was der Gegenstand erzählt.</dd></div>
+    </div>
+  </div>
+  <div class="rule"></div>
+
+  <!-- ═══════════════ G ═══════════════ -->
+  <div class="chapter">
+    <div class="head">
+      <div class="caps">Gegenstand G</div>
+      <h2>Die Scheibe</h2>
+      <p>Fast leeres Papier, in der Mitte das Cover als runde Farbe. Weil hier <b>fast nichts</b> steht, trägt
+      jede Behandlung sehr weit: dieselbe Scheibe kann eine Vitrine, ein Kreidebild oder ein nasser Lackpunkt
+      sein.</p>
+    </div>
+    <div class="matrix">
+      <div class="probe">
+        <div class="phone pG v-edel" data-m="G"></div>
+        <div class="txt"><h4><span class="no">G1 · edel</span>Der Messingring</h4>
+          <p>Ein Haarkreis aus Messing schwebt <b>neben</b> der Scheibe, nicht auf ihr. Der Balken ist auf
+          einen Strich verdünnt, der schwarze Knopf zu einem Ring geworden — es gibt kein Schwarz mehr im
+          Bild.</p>
+          <div class="stoff">Elfenbein · Messing · ein Haarkreis</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pG v-matt" data-m="G"></div>
+        <div class="txt"><h4><span class="no">G2 · matt</span>Kreide</h4>
+          <p>Die Sättigung halbiert, alle Schatten gelöscht, Rundungen weg. Was bleibt, liegt <b>in</b> der
+          Fläche statt darauf — und die Scheibe wirkt gedruckt statt beleuchtet.</p>
+          <div class="stoff">Kreide · Grauton · kein Schatten</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pG v-glanz" data-m="G"></div>
+        <div class="txt"><h4><span class="no">G3 · Glanz</span>Unter Glas</h4>
+          <p>Eine Kuppel über der Farbe: Spitzlicht oben links, Randlicht unten, dazu ein schwarzer Knopf aus
+          poliertem Glas. Der Preis ist die <b>feste Lichtrichtung</b> — sie stimmt nie mit dem Raum überein,
+          in dem man sitzt.</p>
+          <div class="stoff">Lack · Glas · Spitzlicht</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pG v-echt" data-m="G"></div>
+        <div class="txt"><h4><span class="no">G4 · realistischer</span>Gesponnene Farbe</h4>
+          <p>Wirklich gesponnene Farbe hat ein <b>Korn</b> in Drehrichtung, wird zum Rand hin dunkler und wirft
+          zwei Schatten: einen harten direkt darunter, einen weichen weit darum.</p>
+          <div class="stoff">Korn · Randabdunklung · Kontaktschatten</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pG v-idee" data-m="G"></div>
+        <div class="txt"><h4><span class="no">G5 · Idee</span>Der Farbstand</h4>
+          <p><b>Die Scheibe ist der Balken.</b> Sie beginnt blass und färbt sich im Uhrzeigersinn ein, während
+          der Titel läuft — bei der Hälfte ist die Hälfte farbig. Darunter steht keine Linie mehr, nur noch die
+          beiden Zeiten; gespult wird trotzdem dort, wo sie war.</p>
+          <div class="stoff">Farbe als Anzeige · keine Linie</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ M ═══════════════ -->
+  <div class="chapter">
+    <div class="head">
+      <div class="caps">Gegenstand M</div>
+      <h2>Sofortbild</h2>
+      <p>Ein Abzug mit weißem Rand und breiter Kinnlade. Hier entscheidet die Behandlung, ob man einen
+      <b>Gegenstand</b> sieht oder ein Bild von einem Gegenstand — und das ist der ganze Unterschied zwischen
+      Kitsch und Klarheit.</p>
+    </div>
+    <div class="matrix">
+      <div class="probe">
+        <div class="phone pM v-edel" data-m="M"></div>
+        <div class="txt"><h4><span class="no">M1 · edel</span>Bütten</h4>
+          <p>Schwererer Karton, eine Goldlinie unter dem Bild, Serifen statt Fettschrift. Das Signalrot ist zu
+          <b>Oxblood</b> gedämpft und der Knopf zu einem Ring geworden.</p>
+          <div class="stoff">Bütten · Gold · Oxblood</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pM v-matt" data-m="M"></div>
+        <div class="txt"><h4><span class="no">M2 · matt</span>Geradegelegt</h4>
+          <p>Die Drehung raus, der Schlagschatten raus, das Papierkorn raus. Übrig bleibt eine Karte mit einer
+          <b>Haarlinie als Kante</b> — sachlich, und ohne jede Behauptung von Tiefe.</p>
+          <div class="stoff">Flach · Haarlinie · ein Ziegelrot</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pM v-glanz" data-m="M"></div>
+        <div class="txt"><h4><span class="no">M3 · Glanz</span>Hochglanz</h4>
+          <p>Ein Reflex läuft schräg über das Bild, der Karton bekommt Firnis, der Knopf wird zum
+          Bonbon. Schön — aber der Reflex liegt <b>über jedem Cover gleich</b>, und das merkt man beim zweiten
+          Album.</p>
+          <div class="stoff">Firnis · Reflex · Bonbonrot</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pM v-echt" data-m="M"></div>
+        <div class="txt"><h4><span class="no">M4 · realistischer</span>Der echte Abzug</h4>
+          <p>Echte Maße: die Kinnlade ist <b>doppelt so tief</b> wie der obere Rand. Dazu Vignette und leichter
+          Farbstich der Emulsion, eine minimale Wölbung des Kartons und ein Schatten, der am Rand ansetzt statt
+          zu schweben.</p>
+          <div class="stoff">Emulsion · Vignette · Wölbung</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pM v-idee" data-m="M"></div>
+        <div class="txt"><h4><span class="no">M5 · Idee</span>Die Entwicklung</h4>
+          <p><b>Das Bild entwickelt sich, während der Titel läuft.</b> Bei null ist es eine milchige Fläche,
+          nach knapp einer Minute steht es. Wer das Album schon kennt, sieht am Bild, wie weit er ist —
+          und wer neu einsteigt, wartet ein paar Sekunden, wie damals.</p>
+          <div class="stoff">Milchig → farbig · Zeit als Chemie</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ P ═══════════════ -->
+  <div class="chapter">
+    <div class="head">
+      <div class="caps">Gegenstand P</div>
+      <h2>Die Liste</h2>
+      <p>Kein Player-Bildschirm, sondern eine Liste, in der die laufende Zeile aufklappt. Eine Liste ist der
+      <b>ehrlichste Prüfstein</b> für Material: hier gibt es kein großes Bild, hinter dem sich schlechte
+      Typografie verstecken könnte.</p>
+    </div>
+    <div class="matrix">
+      <div class="probe">
+        <div class="phone pP v-edel" data-m="P"></div>
+        <div class="txt"><h4><span class="no">P1 · edel</span>Haarlinien</h4>
+          <p>Kacheln raus, Linien rein: jede Zeile endet auf einem Haarstrich, die laufende auf einer
+          Aubergine-Linie. Titel in Serifen, der Abspielkreis nur noch <b>umrissen</b>.</p>
+          <div class="stoff">Aubergine · Serifen · Haarlinien</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pP v-matt" data-m="P"></div>
+        <div class="txt"><h4><span class="no">P2 · matt</span>Ohne Rundung</h4>
+          <p>Kein Radius, kein Schatten, kein Leuchten — auch der Knopf und die Pille sind rechteckig. Der
+          Zeiger ist ein <b>Strich statt einer Kugel</b>. Kühl, schnell zu lesen, ein bisschen Bahnhof.</p>
+          <div class="stoff">Ziegel · rechte Winkel · Strichzeiger</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pP v-glanz" data-m="P"></div>
+        <div class="txt"><h4><span class="no">P3 · Glanz</span>Milchglaszeilen</h4>
+          <p>Jede Zeile ist eine eigene Milchglaskarte mit Licht an der Oberkante, die laufende zusätzlich mit
+          farbigem Schein. Das ist die <b>teuerste</b> Variante: fünf Unschärfeflächen übereinander kosten
+          jedes Bild Rechenzeit.</p>
+          <div class="stoff">Milchglas · Schein · Rosé</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pP v-echt" data-m="P"></div>
+        <div class="txt"><h4><span class="no">P4 · realistischer</span>Das Programmheft</h4>
+          <p>Ein gedrucktes Programm: punktierte Linien, gelber Textmarker auf der laufenden Zeile und ein
+          <b>Bleistifthaken</b> neben jedem gespielten Titel. Der Abspielkreis entfällt — auf Papier gibt es
+          keine Knöpfe.</p>
+          <div class="stoff">Druck · Textmarker · Bleistift</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pP v-idee" data-m="P"></div>
+        <div class="txt"><h4><span class="no">P5 · Idee</span>Die Spur</h4>
+          <p><b>Jede Zeile trägt ihren eigenen Stand.</b> Unter dem Titel liegt eine Spur: bei gespielten
+          Titeln ganz gefüllt, beim laufenden bis zur aktuellen Stelle, bei den kommenden leer. Damit sieht man
+          den Abend als Ganzes, ohne eine zweite Achse.</p>
+          <div class="stoff">Spur je Zeile · Grünspan</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ V ═══════════════ -->
+  <div class="chapter">
+    <div class="head">
+      <div class="caps">Gegenstand V</div>
+      <h2>Die Platte</h2>
+      <p>Drei Platten übereinander: Bild, Bedienung, Liste. Weil die Form aus <b>Kanten</b> besteht, ist sie
+      der dankbarste Fall für Material — jede Behandlung sitzt sofort in der Fuge.</p>
+    </div>
+    <div class="matrix">
+      <div class="probe">
+        <div class="phone pV v-edel" data-m="V"></div>
+        <div class="txt"><h4><span class="no">V1 · edel</span>Tannengrün</h4>
+          <p>Das grelle Grün wird zu Tanne, um jede Platte läuft eine <b>Goldlinie</b>, der Titel steht in
+          Serifen. Aus dem Spielzeug wird ein Möbelstück.</p>
+          <div class="stoff">Creme · Tanne · Goldlinie</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pV v-matt" data-m="V"></div>
+        <div class="txt"><h4><span class="no">V2 · matt</span>Kreidelack</h4>
+          <p>Kleine Radien, flacher Sockel, ein stumpfes Grün, kein Glanzpunkt. Der Zeiger ist ein
+          <b>Schieber</b>, kein Ball. Das ist die Variante, die auch bei Sonne auf dem Balkon hält.</p>
+          <div class="stoff">Kreidelack · 4-Punkt-Kante</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pV v-glanz" data-m="V"></div>
+        <div class="txt"><h4><span class="no">V3 · Glanz</span>Emaille</h4>
+          <p>Jede Platte bekommt ein Licht über der oberen Hälfte, der Knopf wird ein <b>Glasjuwel</b> mit
+          Schein. Sieht nach Waschmaschinenblende von 1962 aus — im besten Sinn.</p>
+          <div class="stoff">Emaille · Juwel · Lichtkante</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pV v-echt" data-m="V"></div>
+        <div class="txt"><h4><span class="no">V4 · realistischer</span>Gespritzt</h4>
+          <p>So sieht gespritztes ABS wirklich aus: eine <b>Trennnaht</b> auf halber Höhe, zwei Schraubdome
+          oben in den Ecken, eine weiche Fase statt eines harten Sockels — und ein Schatten, der unten ansetzt
+          statt zu stehen.</p>
+          <div class="stoff">ABS · Trennnaht · Schraubdom</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pV v-idee" data-m="V"></div>
+        <div class="txt"><h4><span class="no">V5 · Idee</span>Die Klaviatur</h4>
+          <p><b>Die unterste Platte ist eine Tastatur.</b> Jeder Titel ist eine Taste mit eigener Vorderkante,
+          und die laufende steht gedrückt — man sieht den Stand der Warteschlange also an der Mechanik, nicht
+          an einer Farbe. Antippen drückt die nächste.</p>
+          <div class="stoff">Tasten · gedrückt = läuft</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Y ═══════════════ -->
+  <div class="chapter">
+    <div class="head">
+      <div class="caps">Gegenstand Y</div>
+      <h2>Die Klapptafel</h2>
+      <p>Eine Zeile mit Naht, die beim Titelwechsel umklappt, darunter der Fahrplan. Bei diesem Gegenstand
+      steckt das Material nicht in der Farbe, sondern in der <b>Naht</b> — an ihr entscheidet sich, ob man
+      Papier, Emaille oder Kunststoff sieht.</p>
+    </div>
+    <div class="matrix">
+      <div class="probe">
+        <div class="phone pY v-edel" data-m="Y"></div>
+        <div class="txt"><h4><span class="no">Y1 · edel</span>Messingrahmen</h4>
+          <p>Ein doppelter Rahmen — Messinglinie, Luft, noch eine Linie — und Elfenbeinemail dahinter. Die
+          Schrift wird größer und ruhiger; die Tafel hört auf, ein Fahrplan zu sein, und wird ein
+          <b>Schild</b>.</p>
+          <div class="stoff">Messing · Email · doppelte Linie</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pY v-matt" data-m="Y"></div>
+        <div class="txt"><h4><span class="no">Y2 · matt</span>Papierschilder</h4>
+          <p>Kein Rahmen, keine Rundung, kein Schatten: die Naht ist ein <b>Strich auf Papier</b>. Am nächsten
+          an dem, was <code>mobile.html</code> heute schon kann — und die einzige Variante, die man ohne
+          Verlust auch drucken könnte.</p>
+          <div class="stoff">Papier · ein Strich · nichts sonst</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pY v-glanz" data-m="Y"></div>
+        <div class="txt"><h4><span class="no">Y3 · Glanz</span>Hinter Glas</h4>
+          <p>Lackierte Schilder, Messingrahmen mit Verlauf und eine <b>Scheibe über der ganzen Tafel</b>, in
+          der sich das Fenster spiegelt. Die Spiegelung liegt über der Schrift — hübsch, aber sie kostet
+          Lesbarkeit.</p>
+          <div class="stoff">Lack · Glas · Spiegelung</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pY v-echt" data-m="Y"></div>
+        <div class="txt"><h4><span class="no">Y4 · realistischer</span>Solari</h4>
+          <p>Die echte Tafel: <b>Achszapfen</b> an beiden Seiten jeder Klappe, ein dunkler Spalt statt einer
+          Linie, Eigenschatten der oberen Hälfte auf der unteren, Tafelschrift ohne Serifen und die ganze Tafel
+          leicht nach hinten geneigt.</p>
+          <div class="stoff">Achszapfen · Spalt · Neigung</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pY v-idee" data-m="Y"></div>
+        <div class="txt"><h4><span class="no">Y5 · Idee</span>Der Abreißkalender</h4>
+          <p><b>Kein Rahmen, sondern ein Block.</b> Der laufende Titel steht auf dem obersten Blatt, gezackte
+          Oberkante und Perforation inklusive; darunter liegt der Rest der Warteschlange als sichtbarer Stapel.
+          Weiterspringen heißt abreißen — und der Stapel wird dünner.</p>
+          <div class="stoff">Blockrand · Perforation · Stapel</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="closing">
+    <div>
+      <h2>Was ich davon einbauen würde</h2>
+      <p><b>Behandlung 1 und 2 sind die sicheren.</b> Edel und matt kosten fast nichts, halten bei jedem Licht
+      und altern nicht — ein Player, den man täglich benutzt, will keine Spitzlichter, die immer aus derselben
+      Richtung kommen.</p>
+      <p><b>Glanz ist die Falle.</b> Reflexe sind auf einem Bild bezaubernd und auf zwanzig Alben eine
+      Behauptung: dieselbe Lichtkante liegt über jedem Cover, egal ob dunkel oder hell. Wenn Glanz, dann
+      sparsam und nur an einem Bauteil — am Knopf.</p>
+      <p><b>Realistisch ist teuer, aber nicht schwer.</b> Korn, Naht und Fase sind je zwei Zeilen CSS. Der
+      Aufwand steckt nicht im Code, sondern darin, es nicht zu übertreiben: ein Gegenstand wird glaubwürdig
+      durch <em>eine</em> richtige Kleinigkeit, nicht durch fünf.</p>
+      <p><b>Von den fünf Ideen ist M5 die stärkste</b> — das Bild, das sich entwickelt, während der Titel
+      läuft. Sie kostet keine Daten, keine Geste und keinen Platz, und sie beantwortet nebenbei die Frage, die
+      der Balken beantwortet.</p>
+    </div>
+    <div>
+      <h2>Was das im Code bedeutet</h2>
+      <ul>
+        <li><span class="m">→</span><span><b>Eine Variante ist eine Klasse.</b> Alle fünfundzwanzig Telefone
+        hier benutzen unverändert das Markup und das Javascript aus <code>vorbilder.html</code>; nur
+        <code>.pG.v-glanz</code> und Geschwister kommen dazu.</span></li>
+        <li><span class="m">→</span><span><b>Zwei neue Größen am Wurzelelement.</b> <code>--p</code> ist der
+        Stand im Titel, <code>--pq</code> der in der Warteschlange, beide als reine Zahl. Damit rechnen G5, M5
+        und P5 ihre Anzeige direkt im CSS aus — ohne eine Zeile eigenes Javascript.</span></li>
+        <li><span class="m">→</span><span><b>Milchglas kostet.</b> P3 legt fünf unscharfe Flächen übereinander;
+        auf einem älteren iPhone ist das der einzige Entwurf hier, der beim Scrollen ins Stocken kommen
+        kann.</span></li>
+        <li><span class="m">→</span><span><b>Behandlung und Thema sind zweierlei.</b> In
+        <code>mobile.html</code> wäre die Behandlung kein zweites Thema, sondern eine Einstellung <em>im</em>
+        Thema — dieselbe Form, andere Oberfläche.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <span>Musiklib — mobile.html</span>
+    <span>Fünf Gegenstände × fünf Behandlungen</span>
+  </footer>
+</div>
+
+<script>
+'use strict';
+
+/* ═════════ Daten ═════════
+   Ein Album, zwölfmal dasselbe — damit die Entwürfe vergleichbar bleiben.
+   Die Farben stehen für das echte Cover aus /api/cover. */
+const ALBUM = {
+  t:'All Melody', ar:'Nils Frahm', y:2018,
+  c:['#F0B266','#E2645F','#6E86B8'],
+  tr:[['Sunson',536],['A Place',322],['My Friend The Forest',272],
+      ['Human Range',415],['Kaleidoscope',372],['Momentum',248]]
+};
+const grad = `linear-gradient(152deg,${ALBUM.c[0]},${ALBUM.c[1]} 54%,${ALBUM.c[2]})`;
+
+const fmt = s => { s = Math.max(0,Math.round(s)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
+const fmtLang = s => { s = Math.round(s); const h = Math.floor(s/3600), m = Math.round(s%3600/60);
+  return h ? `${h} Std ${m} Min` : `${m} Min`; };
+const clamp = (v,a,b) => Math.min(b,Math.max(a,v));
+const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+/* ═════════ Zeichen ═════════ */
+const PREV = '<svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 20L9 12l10-8v16zM5 4h2v16H5z"/></svg>';
+const NEXT = '<svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M5 4l10 8-10 8V4zm14 0h2v16h-2z"/></svg>';
+const TRI_L = '<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M18 4v16L6 12z"/></svg>';
+const TRI_R = '<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l12 8-12 8z"/></svg>';
+const PLAY = w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
+const PAUSE = w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4.5h3.4v15H6zM14.6 4.5H18v15h-3.4z"/></svg>`;
+const line = (d,w=1.5) => `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+  stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const CHEV  = line('<path d="M6 9l6 6 6-6"/>');
+const DOTS  = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>';
+const LISTE = line('<path d="M4 7h16M4 12h16M4 17h10"/>');
+const ZURUECK = line('<path d="M15 6l-6 6 6 6"/>');
+const NOTE  = line('<path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.6"/><circle cx="16.5" cy="16" r="2.6"/>');
+const LAUT  = line('<path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9.5a4 4 0 010 5"/>');
+const SCHEIBE = line('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="2.2"/>');
+const SBAR = `<div class="sbar"><span>9:41</span><div class="ic">
+ <svg width="15" height="11" viewBox="0 0 14 10" fill="currentColor"><rect y="6.5" width="2.2" height="3.5" rx="1"/><rect x="3.8" y="4" width="2.2" height="6" rx="1"/><rect x="7.6" y="1.5" width="2.2" height="8.5" rx="1"/><rect x="11.4" width="2.2" height="10" rx="1" opacity=".35"/></svg>
+ <svg width="23" height="11" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="20" height="11" rx="3.5" stroke="currentColor" stroke-opacity=".35"/><rect x="2" y="2" width="14" height="8" rx="2" fill="currentColor"/></svg>
+</div></div>`;
+
+/* Bausteine: Hülle (Quadrat), Scheibe (Kreis), Warteschlangenzeilen */
+const HUELLE = (size,cls='cover art',extra='') =>
+  `<div class="${cls}" style="background:${grad};${extra}"><div class="sheen"></div>
+   <span class="ini" style="font-size:${size}px">A</span></div>`;
+const SCHEIBEN = `<span class="wash"></span><span class="core"></span>`;
+const QROWS = () => ALBUM.tr.map(([t,d],i) => `<div class="qrow" data-jump="${i}" data-row="${i}">
+  <span class="n">${i+1}</span><span class="t">${esc(t)}</span><span class="d">${fmt(d)}</span></div>`).join('');
+const ZEILEN = () => ALBUM.tr.map(([t,d],i) => `<div class="zeile" data-jump="${i}" data-row="${i}">
+  <span class="n">${i+1}</span><span class="t">${esc(t)}</span><span class="d">${fmt(d)}</span></div>`).join('');
+const SHELL = inner => `<div class="notch"></div>${SBAR}<div class="screen">${inner}</div><div class="homeind"></div>`;
+
+/* Der Ring: Fortschritt über die ganze Warteschlange, ein Punkt je Titel.
+   Das SVG ist per CSS um 90° gedreht — Winkel 0 liegt damit oben. */
+const R_RING = 47, U_RING = 2 * Math.PI * R_RING;
+const punkt = (f,r) => [50 + r*Math.cos(2*Math.PI*f), 50 + r*Math.sin(2*Math.PI*f)];
+const RING = () => {
+  let o = [], a = 0;
+  for (const [,d] of ALBUM.tr){ o.push(a); a += d; }
+  const T = a;
+  const pins = o.map((v,i) => { const [x,y] = punkt(v/T, R_RING);
+    return `<circle class="pin" data-pin="${i}" cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="2.3"/>`; }).join('');
+  return `<svg viewBox="0 0 100 100">
+    <circle class="track" cx="50" cy="50" r="${R_RING}"/>
+    <circle class="prog" data-arc cx="50" cy="50" r="${R_RING}"
+      stroke-dasharray="${U_RING.toFixed(2)}" stroke-dashoffset="${U_RING.toFixed(2)}"/>
+    ${pins}<circle class="knob" data-rknob cx="${50+R_RING}" cy="50" r="4"/></svg>`;
+};
+
+/* ═════════ Die zwölf Entwürfe ═════════
+   Jeder liefert sein Markup und, falls er etwas Eigenes anzeigt, ein sync().
+   Alles Gemeinsame — Titel, Zeiten, Balken, Knopf, Zeilen — macht die Klasse. */
+const D = {};
+/* G · Die Scheibe */
+D.G = { html: () => `
+  <div class="lid"><span class="ic">${CHEV}</span><span class="cap">Jetzt läuft</span>
+    <span class="ic" data-act="sheet">${DOTS}</span></div>
+  <div class="stage"><div class="disc spin">${SCHEIBEN}</div></div>
+  <div class="foot">
+    <h3 class="tt" data-title></h3>
+    <div class="by"><span data-artist></span> · <span data-album></span></div>
+    <div class="seek" data-seek><div class="line"><div class="fill" data-bar></div></div></div>
+    <div class="times"><span data-elapsed></span><span data-dur></span></div>
+    <div class="transport"><span class="tb" data-act="prev">${PREV}</span>
+      <span class="play" data-pp data-size="22"></span>
+      <span class="tb" data-act="next">${NEXT}</span></div>
+  </div>
+  <div class="scrim" data-act="sheet"></div>
+  <div class="sheet"><div class="grip"></div><div class="qh">Warteschlange · <span data-count></span></div>
+    <div class="qbody">${QROWS()}</div></div>` };
+
+/* M · Sofortbild */
+D.M = { html: () => `
+  <div class="lid"><span class="ic">${CHEV}</span><span class="cap">Jetzt läuft</span>
+    <span class="ic" data-act="sheet">${LISTE}</span></div>
+  <div class="tisch">
+    <div class="hinten" data-act="next"></div>
+    <div class="abzug">
+      ${HUELLE(52)}
+      <div class="kinn">
+        <div class="tt" data-title></div>
+        <div class="by"><span data-artist></span> · <span data-album></span></div>
+        <div class="seek" data-seek><div class="line">
+          <div class="fill" data-bar></div><div class="knob" data-knob></div></div></div>
+        <div class="times"><span data-elapsed></span><span data-remain></span></div>
+        <div class="transport"><span class="tb" data-act="prev">${PREV}</span>
+          <span class="play" data-pp data-size="20"></span>
+          <span class="tb" data-act="next">${NEXT}</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="unten"><span data-count></span> · noch <span data-restq></span></div>
+  <div class="scrim" data-act="sheet"></div>
+  <div class="sheet"><div class="grip"></div><div class="qh">Warteschlange</div>
+    <div class="qbody">${QROWS()}</div></div>` };
+
+/* P · Die Liste */
+D.P = { html: () => `
+  <div class="kopf"><div class="k">Musiklib</div><h4>Warteschlange</h4>
+    <div class="sub"><span data-count></span> · <span data-album></span> · noch <span data-restq></span></div></div>
+  <div class="rollen" data-rollen>
+    ${ALBUM.tr.map(([t,d],i) => `<div class="z" data-jump="${i}" data-row="${i}">
+      <span class="zeile1">
+        ${HUELLE(20)}
+        <span class="pl">${PLAY(13)}</span>
+        <span class="tx"><span class="t">${esc(t)}</span><span class="s">${esc(ALBUM.ar)}</span></span>
+        <span class="d">${fmt(d)}</span>
+      </span>
+      <span class="aus">
+        <span class="seek" data-seek><span class="line">
+          <span class="fill" data-bar></span><span class="knob" data-knob></span></span></span>
+        <span class="times"><span data-elapsed></span><span data-remain></span></span>
+        <span class="transport"><span class="tb" data-act="prev">${PREV}</span>
+          <span class="play" data-pp data-size="20"></span>
+          <span class="tb" data-act="next">${NEXT}</span></span>
+      </span>
+    </div>`).join('')}
+  </div>
+  <div class="pille" data-act="tonow"><span class="bar"><i></i><i></i><i></i></span>Jetzt läuft</div>` };
+
+/* V · Die Platte */
+D.V = { html: () => `
+  <div class="lid"><span class="ic">${CHEV}</span><span class="cap">Jetzt läuft</span>
+    <span class="ic">${DOTS}</span></div>
+  <div class="stapel">
+    <div class="platte p1">${HUELLE(44)}</div>
+    <div class="platte p2">
+      <div class="tt" data-title></div>
+      <div class="by"><span data-artist></span> · <span data-album></span></div>
+      <div class="seek" data-seek><div class="schnur">
+        <div class="fill" data-bar></div><div class="knopf" data-knob></div></div></div>
+      <div class="times"><span data-elapsed></span><span data-remain></span></div>
+      <div class="transport">
+        <span class="tb" data-act="prev">${PREV}</span>
+        <span class="play" data-pp data-size="21"></span>
+        <span class="tb" data-act="next">${NEXT}</span>
+      </div>
+    </div>
+    <div class="platte p3">
+      <div class="k">Warteschlange · <span data-count></span></div>
+      <div class="rollen">
+        ${ALBUM.tr.map(([t,d],i) => `<div class="vz" data-jump="${i}" data-row="${i}">
+          <span class="n">${i+1}</span><span class="t">${esc(t)}</span><span class="d">${fmt(d)}</span></div>`).join('')}
+      </div>
+    </div>
+  </div>` };
+
+/* Y · Die Klapptafel */
+D.Y = { html: () => `
+  <div class="lid"><span class="ic">${CHEV}</span><span class="cap">Abfahrt</span>
+    <span class="ic" data-act="sheet">${LISTE}</span></div>
+  <div class="halle">
+    <div class="tafel">
+      <div class="rahmen">
+        <div class="schild gross" data-schild>
+          <div class="zeile">
+            <span class="nr" data-count></span>
+            <span class="tx"><span class="t" data-title></span>
+              <span class="s"><span data-artist></span> · <span data-album></span></span></span>
+            <span class="z" data-remain></span>
+          </div>
+        </div>
+        <div class="lauf" data-seek>
+          <div class="schiene"><div class="fill" data-bar></div></div>
+          <div class="times"><span data-elapsed></span><span>noch <span data-restq></span></span></div>
+        </div>
+        <div class="abfahrt">
+          <div class="ak">Danach</div>
+          ${ALBUM.tr.map(([t,d],i) => `<div class="az" data-jump="${i}" data-row="${i}">
+            <span class="n">${i+1}</span><span class="t">${esc(t)}</span><span class="d">${fmt(d)}</span></div>`).join('')}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">
+    <span class="tb" data-act="prev">${PREV}</span>
+    <span class="play" data-pp data-size="20"></span>
+    <span class="tb" data-act="next">${NEXT}</span>
+  </div>
+  <div class="scrim" data-act="sheet"></div>
+  <div class="sheet"><div class="grip"></div><div class="qh">Alle Abfahrten</div>
+    <div class="qbody">${QROWS()}</div></div>`,
+  sync(p){
+    // Beim Titelwechsel klappt das Schild um — einmal, nicht dauernd.
+    if (p._ly === undefined){ p._ly = p.qi; return; }
+    if (p._ly === p.qi) return;
+    p._ly = p.qi;
+    const sch = p.$('[data-schild]');
+    sch.classList.remove('klappt');
+    void sch.offsetWidth;
+    sch.classList.add('klappt');
+  } };
+
+/* ═════════ Das gemeinsame Modell ═════════ */
+class Player {
+  constructor(m, root){
+    this.m = m; this.root = root; this.d = D[m];
+    this.qi = 2; this.pos = 88; this.playing = true; this.open = false; this.drag = false;
+    root.innerHTML = SHELL(this.d.html());
+    this.wire();
+    this.sync(true);
+  }
+  $(s){ return this.root.querySelector(s); }
+  $$(s){ return [...this.root.querySelectorAll(s)]; }
+  txt(s,v){ this.$$(s).forEach(n => n.textContent = v); }
+  get cur(){ return ALBUM.tr[this.qi]; }
+  get offs(){ let o = [], a = 0; for (const [,d] of ALBUM.tr){ o.push(a); a += d; } return o; }
+  get total(){ return ALBUM.tr.reduce((s,[,d]) => s+d, 0); }
+  get gpos(){ return this.offs[this.qi] + this.pos; }
+  idxAt(v){ const o = this.offs; for (let k = o.length-1; k >= 0; k--) if (v >= o[k]) return k; return 0; }
+
+  /* ── Bedienung ── */
+  wire(){
+    this.$$('[data-act]').forEach(n => n.addEventListener('click', e => {
+      e.stopPropagation(); this.act(n.dataset.act); }));
+    // Jeder Abspielknopf schaltet um — auch die, die nur data-pp tragen.
+    this.$$('[data-pp]').forEach(n => { if (!n.dataset.act)
+      n.addEventListener('click', e => { e.stopPropagation(); this.toggle(); }); });
+    this.$$('[data-jump]').forEach(n => n.addEventListener('click', () => {
+      this.qi = +n.dataset.jump; this.pos = 0; this.playing = true; this.sync(true); }));
+    this.$$('[data-seek]').forEach(n => this.bindSeek(n, false));
+    this.$$('[data-seekq]').forEach(n => this.bindSeek(n, true));
+    const ring = this.$('[data-ring]');
+    if (ring) this.bindRing(ring);
+  }
+  act(a){
+    if (a === 'pp') this.toggle();
+    else if (a === 'next') this.next();
+    else if (a === 'prev') this.prev();
+    else if (a === 'sheet') this.setOpen(!this.open);
+    else if (a === 'tonow'){ const n = this.$(`[data-row="${this.qi}"]`);
+      if (n) n.scrollIntoView({block:'center', behavior:'smooth'}); }
+  }
+  setOpen(v){ this.open = v; this.root.classList.toggle('open', v); }
+  toggle(){ this.playing = !this.playing; this.sync(true); }
+  next(){ if (this.qi < ALBUM.tr.length-1){ this.qi++; this.pos = 0; } else this.pos = this.cur[1]-0.5;
+    this.sync(true); }
+  prev(){ if (this.pos > 3 || this.qi === 0) this.pos = 0; else { this.qi--; this.pos = 0; }
+    this.sync(true); }
+
+  /* Waagerechtes Ziehen: der Balken zeigt den laufenden Titel, nicht die Schlange. */
+  bindSeek(el, global){
+    const at = e => { const r = el.getBoundingClientRect();
+      return clamp((e.clientX - r.left)/r.width, 0, 1); };
+    // Manche Entwuerfe legen die ganze Warteschlange auf eine Achse (Kassette,
+    // Skala) statt nur den laufenden Titel — dann wird global gesetzt.
+    const setz = f => { if (!global){ this.pos = f * this.cur[1]; return; }
+      const v = clamp(f * this.total, 0, this.total - 0.5), i = this.idxAt(v);
+      this.qi = i; this.pos = v - this.offs[i]; };
+    // Der Balken liegt in Entwurf P innerhalb einer Zeile, die selbst anspringt —
+    // ohne dieses Abfangen wuerde jedes Spulen den Titel neu starten.
+    el.addEventListener('click', e => e.stopPropagation());
+    el.addEventListener('pointerdown', e => {
+      e.stopPropagation(); this.drag = true; el.setPointerCapture(e.pointerId);
+      setz(at(e)); this.sync(); });
+    el.addEventListener('pointermove', e => { if (this.drag){ setz(at(e)); this.sync(); } });
+    const end = () => { this.drag = false; this.sync(true); };
+    el.addEventListener('pointerup', end);
+    el.addEventListener('pointercancel', end);
+  }
+  /* Rundes Ziehen: der Ring trägt die ganze Warteschlange, also wird global
+     gesetzt — dieselbe Rechnung wie am Rand, nur mit einem Winkel. */
+  bindRing(el){
+    const at = e => { const r = el.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width/2), dy = e.clientY - (r.top + r.height/2);
+      let a = Math.atan2(dx, -dy); if (a < 0) a += 2*Math.PI;
+      return a / (2*Math.PI) * this.total; };
+    const setG = v => { v = clamp(v, 0, this.total - 0.5); const i = this.idxAt(v);
+      this.qi = i; this.pos = v - this.offs[i]; this.sync(); };
+    let moved = false, sx = 0, sy = 0, down = false;
+    el.addEventListener('pointerdown', e => {
+      // Nur am Ring wird gezogen — in der Mitte sitzt der Knopf.
+      const r = el.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width/2), dy = e.clientY - (r.top + r.height/2);
+      if (Math.hypot(dx,dy) < r.width * 0.30) return;
+      down = true; moved = false; sx = e.clientX; sy = e.clientY;
+      el.setPointerCapture(e.pointerId);
+    });
+    el.addEventListener('pointermove', e => {
+      if (!down) return;
+      if (!moved && Math.hypot(e.clientX-sx, e.clientY-sy) > 6){
+        moved = true; this.drag = true; el.classList.add('grabbing');
+      }
+      if (moved) setG(at(e));
+    });
+    const end = () => { if (!down) return; down = false;
+      if (moved){ this.drag = false; el.classList.remove('grabbing'); }
+      this.sync(true); };
+    el.addEventListener('pointerup', end);
+    el.addEventListener('pointercancel', end);
+  }
+
+  tick(dt){
+    if (!this.playing || this.drag) return;
+    this.pos += dt;
+    if (this.pos >= this.cur[1]){
+      if (this.qi < ALBUM.tr.length-1){ this.qi++; this.pos = 0; }
+      else { this.pos = this.cur[1]-0.5; this.playing = false; }
+      this.sync(true); return;
+    }
+    this.sync();
+  }
+
+  /* ── Anzeige ── */
+  sync(hart){
+    const [t,d] = this.cur, f = clamp(this.pos/d, 0, 1), p = (f*100).toFixed(2) + '%';
+    this.$$('[data-bar]').forEach(n => n.style.width = p);
+    this.$$('[data-knob]').forEach(n => n.style.left = p);
+    this.$$('[data-mark]').forEach(n => n.style.left = p);
+    const q = (this.gpos/this.total*100).toFixed(2) + '%';
+    this.$$('[data-barq]').forEach(n => n.style.width = q);
+    this.$$('[data-markq]').forEach(n => n.style.left = q);
+    // Der Stand als reine Zahl am Wurzelelement: Varianten koennen ihn in
+    // Verlaeufen und Filtern verwenden, ohne eigenes Javascript.
+    this.root.style.setProperty('--p', f.toFixed(4));
+    this.root.style.setProperty('--pq', (this.gpos/this.total).toFixed(4));
+    this.txt('[data-elapsed]', fmt(this.pos));
+    this.txt('[data-dur]', fmt(d));
+    this.txt('[data-remain]', '−' + fmt(d - this.pos));
+    this.txt('[data-restq]', fmtLang(this.total - this.gpos));
+
+    if (hart || this._lt !== t){
+      this._lt = t;
+      this.txt('[data-title]', t);
+      this.txt('[data-artist]', ALBUM.ar);
+      this.txt('[data-album]', ALBUM.t);
+      this.txt('[data-count]', `${this.qi+1} / ${ALBUM.tr.length}`);
+      this.txt('[data-nexttitle]', this.qi < ALBUM.tr.length-1
+        ? ALBUM.tr[this.qi+1][0] : 'Ende der Warteschlange');
+      this.$$('[data-row]').forEach(n => { const i = +n.dataset.row;
+        n.classList.toggle('now', i === this.qi);
+        n.classList.toggle('past', i < this.qi); });
+    }
+    if (hart || this._lp !== this.playing){
+      this._lp = this.playing;
+      this.root.classList.toggle('playing', this.playing);
+      this.$$('[data-pp]').forEach(n => { const w = +n.dataset.size || 22;
+        n.innerHTML = this.playing ? PAUSE(w) : PLAY(w+2); });
+    }
+    if (this.d.sync) this.d.sync(this);
+  }
+}
+
+/* ═════════ Start ═════════
+   Zwölf Telefone auf einer Seite: gerechnet wird zehnmal je Sekunde, nicht
+   sechzigmal — die Zeiten laufen sichtbar, das Gerät bleibt kühl. */
+
+/* ═════════ Start ═════════ */
+const players = [...document.querySelectorAll('.phone')].map(el => new Player(el.dataset.m, el));
+setInterval(() => players.forEach(p => p.tick(0.12)), 120);
+</script>
+</body>
+</html>

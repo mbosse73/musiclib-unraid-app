@@ -1,10 +1,14 @@
-# Music Player — Design-Paket (23 Entwürfe)
+# Music Player — Design-Paket (27 Entwürfe)
 
 Übergabepaket für das **musiclib**-Repo. Geliefert waren 22 Player-Konzepte, jeweils als
 **iPhone-Variante (Hochformat)** und **PC-Variante (Querformat)**. Geblieben sind die
 **12 Konzepte, die gebaut werden** — 23 Entwürfe, weil **18 Akai-747** nur im Querformat
 existiert. Die zehn übrigen sind auf Wunsch des Eigentümers samt Dateien entfernt; welche
 das waren und warum, steht in `AUSWAHL.md`, die Dateien selbst in der Git-Historie.
+
+Dazu liegen in `html/` **vier weitere Dateien ohne Generator**: `foto33a_…` und
+`foto33b_…`, die zwei überlebenden Fassungen des gestrichenen Blattes 33, je Hoch- und
+Querformat. `baualle.py` erzeugt sie nicht und löscht sie nicht — siehe `AUSWAHL.md`.
 
 Jeder Entwurf ist aus einem realen Referenzfoto (Hardware oder Grafik) abgeleitet und als
 **pixelgenaues, in sich geschlossenes HTML** vorhanden. Das HTML ist die verbindliche Quelle:
@@ -69,7 +73,7 @@ Wellenform, Icons) sind **inline SVG** und damit frei skalier- und einfärbbar.
 
 ---
 
-## Verbindliche Regeln, die in allen 23 Entwürfen gelten
+## Verbindliche Regeln, die in allen Entwürfen gelten
 
 1. **Jeder Entwurf ist vollständig bedienbar gedacht.** Vorhanden sind immer:
    Zurück · Play · Pause · Weiter, ein Fortschrittsbalken mit Position, sowie

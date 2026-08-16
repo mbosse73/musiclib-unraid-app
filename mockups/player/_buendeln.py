@@ -5,7 +5,11 @@ import base64, io, os, pathlib, re, urllib.parse
 from PIL import Image
 
 QUELLE = pathlib.Path('/home/user/musiclib-unraid-app/mockups/player')
-FOTOS  = pathlib.Path('/home/user/musiclib-unraid-app/mckups_player')
+# Zwei Vorlagenordner: die erste Reihe kam aus `mckups_player`, die Blätter
+# 21–25 aus `mckups_player_2`. Beide werden eingebettet, sonst hängt das
+# Bündel an einem relativen Pfad, den es nach dem Weiterreichen nicht gibt.
+FOTOS  = [pathlib.Path('/home/user/musiclib-unraid-app/mckups_player'),
+          pathlib.Path('/home/user/musiclib-unraid-app/mckups_player_2')]
 ZIEL   = pathlib.Path('/home/user/musiclib-unraid-app/mockups/player/alle-blaetter.html')
 # Fassung ohne <html>/<head>/<body> zum Veröffentlichen; der Pfad gehört nicht
 # ins Repo, also über die Umgebung. Ohne MUSIKLIB_ARTEFAKT landet sie in /tmp.
@@ -19,8 +23,9 @@ def daten_uri(pfad, breite=760):
     return 'data:image/jpeg;base64,' + base64.b64encode(puffer.getvalue()).decode()
 
 bilder = {}
-for f in FOTOS.glob('*.png'):
-    bilder[f.name] = daten_uri(f)
+for ordner in FOTOS:
+    for f in sorted(ordner.glob('*.png')):
+        bilder[f.name] = daten_uri(f)
 print('Fotos eingebettet:', len(bilder), 'Summe',
       sum(len(v) for v in bilder.values()) // 1024, 'kB')
 
@@ -28,7 +33,7 @@ def bild_ersetzen(text):
     def ersatz(m):
         name = urllib.parse.unquote(m.group(1))
         return 'src="' + bilder.get(name, '') + '"'
-    return re.sub(r'src="\.\./\.\./mckups_player/([^"]+)"', ersatz, text)
+    return re.sub(r'src="\.\./\.\./mckups_player(?:_2)?/([^"]+)"', ersatz, text)
 
 blaetter = sorted(QUELLE.glob('[0-9][0-9]-*.html'))
 stile, koerper, skripte, verzeichnis = [], [], [], []

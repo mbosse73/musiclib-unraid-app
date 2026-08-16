@@ -585,7 +585,10 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
   box-shadow:0 4px 12px rgba(20,20,20,.3)}
 .wr .arm .kopf{position:absolute;left:50%;bottom:0;width:26px;height:40px;margin-left:-13px;border-radius:4px;
   background:linear-gradient(120deg,#F4F4F6,#A8A8AE);box-shadow:0 3px 8px rgba(20,20,20,.3);
-  transform:rotate(-14deg)}
+  transform:rotate(15deg)}
+/* Der Tonkopf knickt zur Plattenmitte hin. Seit „Register" seine Platte
+   ebenfalls links stehen hat, gilt für beide Laufwerke dieselbe Seite —
+   deshalb steht hier nur noch eine Regel. */
 
 .wr .spalte{position:absolute;right:var(--sr);top:50%;transform:translateY(-50%);width:var(--sw)}
 .wr .spalte .kap{display:block;margin-bottom:20px}
@@ -652,8 +655,18 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
 
 /* Register: die Platte rueckt nach rechts ueber den Rand, links steht die
    Warteschlange in Haarlinien. */
-.wr.reg{--pd:min(720px,84vh);--px:66%;--ax:92%;--ay:4%;--sr:36%;--sw:min(380px,28vw);
+/* --ax war 92 %: dort sitzt das Lager auf der Plattenkante. Von links über
+   der Mitte hat es Luft, und der Arm schwenkt von der linken Rille nach innen. */
+/* „Register" hat dieselbe Aufstellung wie „Aufgeschlagen" — Platte links,
+   Lager rechts über ihrer Mitte —, nur steht rechts zusätzlich die
+   Warteschlange. Die Schriftspalte haengt deshalb an der Plattenkante und
+   nicht am rechten Rand: sonst wandert sie auf schmalen Fenstern in die
+   Platte hinein. */
+.wr.reg{--pd:min(720px,84vh);--px:calc(var(--pd) * -.18);--ax:40%;--ay:6%;
   --tg:clamp(24px,4.2vh,40px)}
+.wr.reg .spalte{left:calc(var(--px) + var(--pd) + clamp(28px,3vw,60px));right:auto;
+  width:min(360px,26vw)}
+.wr.reg .register{left:auto;right:clamp(20px,3vw,48px);width:min(280px,22vw)}
 
 /* ═══════════════════════════════════════════════════════════════════════
    08/09 · Bedienteil und Konsole — Blatt 11 „Rack"
@@ -665,11 +678,12 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
   --nacht:#0C0C0E; --hell:#F0F1F3; --hell-2:#9DA0A8; --hell-3:#61646C;
   --orange:#E8722C;
   --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
-  --pad:34px; --gap:30px; --rh:min(430px,44vh); --rd:min(180px,21vh); --tg:26px;
+  --pad:34px; --gap:30px; --rh:min(252px,30vh); --rd:min(180px,21vh); --tg:26px; --ig:30px;
   --hw:160px; --bsp:3; --pg:40px; --pp:40px; --tb:50px;
   background:radial-gradient(80% 60% at 50% 0%,#1B1B1F,var(--nacht) 70%);
   color:var(--hell);height:100%;overflow:hidden;
-  display:flex;flex-direction:column;padding:var(--pad);gap:var(--gap);position:relative}
+  display:flex;flex-direction:column;justify-content:center;padding:var(--pad);gap:var(--gap);
+  position:relative}
 .rk .kap{font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--hell-3)}
 .rk .metallflaeche{
   background:
@@ -678,29 +692,52 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
   box-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(0,0,0,.6),
     0 18px 40px rgba(0,0,0,.55)}
 
-.rk .reihe{flex:none;height:var(--rh);border-radius:8px;padding:12px;display:flex;gap:12px}
-.rk .schirmchen{flex:1;min-width:0;border-radius:4px;position:relative;overflow:hidden;cursor:pointer;
-  background:#0A0A0C;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)}
+/* ── Das Fach ────────────────────────────────────────────────────────────
+   In der Vorlage stehen die Platten in einem Fach, mehrere nebeneinander —
+   nicht drei Grossbilder. Also die ganze Sammlung in einer Reihe, jede Huelle
+   quadratisch und klein, dafuer scharf. Die Beschriftung steht *unter* der
+   Huelle auf dem Metall, nicht als Schleier darueber: eine Schrift auf einem
+   Verlauf ueber einem Bild ist nie so scharf wie dieselbe Schrift auf einer
+   Flaeche.                                                                */
+/* Die Kachelgroesse kommt aus der Fachhoehe, nicht aus der Fachbreite: bei
+   wenigen Alben wuerde eine breitenbasierte Kachel mit aspect-ratio:1 das
+   ganze Geraet sprengen. Schrumpfen duerfen sie, wachsen nicht. */
+.rk{--kh:min(160px,calc(var(--rh) - 92px))}
+.rk .reihe{flex:none;height:var(--rh);border-radius:8px;padding:14px 16px;display:flex;
+  gap:var(--rg,12px);align-items:stretch;justify-content:space-between}
+.rk .schirmchen{flex:0 1 var(--kh);min-width:0;display:flex;flex-direction:column;gap:9px;
+  cursor:pointer;background:none}
+.rk .schirmchen .huelle{position:relative;width:100%;aspect-ratio:1;border-radius:3px;overflow:hidden;
+  flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 5px 12px rgba(0,0,0,.5)}
+.rk .schirmchen .unter{text-align:center}
 .rk .schirmchen .bild{position:absolute;inset:0;display:grid;place-items:center;color:#fff;
-  font-size:56px;font-weight:600;filter:saturate(.85) brightness(.9)}
+  font-size:var(--ig,26px);font-weight:600;letter-spacing:.02em}
 .rk .schirmchen .bild img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.rk .schirmchen .glas{position:absolute;inset:0;
-  background:linear-gradient(118deg,rgba(255,255,255,.18) 0 22%,transparent 46%)}
-.rk .schirmchen .unter{position:absolute;left:0;right:0;bottom:0;padding:14px 16px;
-  background:linear-gradient(180deg,transparent,rgba(0,0,0,.82));display:flex;
-  justify-content:space-between;align-items:flex-end;gap:12px}
-.rk .schirmchen .t{font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;
-  text-overflow:ellipsis}
-.rk .schirmchen .s{font-size:11.5px;color:var(--hell-2);white-space:nowrap;overflow:hidden;
-  text-overflow:ellipsis}
-.rk .schirmchen.an{box-shadow:inset 0 0 0 2px var(--orange)}
-.rk .schirmchen.an .bild{filter:none}
-.rk .schirmchen .laeuft{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--orange);
-  white-space:nowrap;opacity:0}
+/* Ungespielte Huellen stehen im Schatten des Fachs — abgedunkelt durch einen
+   Schleier, nicht durch einen Filter: ein brightness() nimmt auch der Schrift
+   die Kante. */
+.rk .schirmchen .huelle::after{content:'';position:absolute;inset:0;z-index:2;
+  background:rgba(8,8,10,.34)}
+.rk .schirmchen.an .huelle::after{background:none}
+.rk .schirmchen .glas{position:absolute;inset:0;z-index:1;
+  background:linear-gradient(118deg,rgba(255,255,255,.20) 0 20%,transparent 44%)}
+.rk .schirmchen .unter{min-width:0}
+.rk .schirmchen .t{font-size:11.5px;font-weight:600;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;color:var(--hell-2)}
+.rk .schirmchen .s{font-size:10px;color:var(--hell-3);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;margin-top:2px}
+.rk .schirmchen.an .huelle{box-shadow:inset 0 0 0 2px var(--orange),0 6px 16px rgba(0,0,0,.55)}
+.rk .schirmchen.an .t{color:var(--orange)}
+.rk .schirmchen .laeuft{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;
+  color:var(--orange);white-space:nowrap;opacity:0;margin-top:3px}
 .rk .schirmchen.an .laeuft{opacity:1}
 
-.rk .pult{flex:1;min-height:0;border-radius:8px;display:flex;align-items:center;gap:var(--pg);
-  padding:0 var(--pp)}
+/* Das Pult waechst in die freie Hoehe, aber nicht endlos: seit das Fach von
+   430 auf 252 Punkte geschrumpft ist, wuerde es auf einem hohen Schirm
+   (Tablet hochkant) zu einer halben Seite leerem Metall. Was ueber der
+   Grenze bleibt, wird Luft um das Geraet — deshalb steht der Stapel mittig. */
+.rk .pult{flex:1;min-height:0;max-height:min(420px,46vh);border-radius:8px;display:flex;
+  align-items:center;gap:var(--pg);padding:0 var(--pp)}
 .rk .anzeige{flex:1;min-width:0}
 .rk .anzeige .titel{font-size:var(--tg);font-weight:600;letter-spacing:-.01em;white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis}
@@ -788,7 +825,7 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
   color:var(--hell-3)}
 
 /* Konsole: dasselbe Geraet, zwei Leuchtflaechen statt drei, groesseres Rad. */
-.rk.kons{--rh:min(380px,42vh);--rd:min(220px,26vh);--tg:28px;--hw:150px;--pad:30px;--pg:34px;--pp:34px;
+.rk.kons{--rh:min(232px,29vh);--rd:min(220px,26vh);--tg:28px;--hw:150px;--pad:30px;--pg:34px;--pp:34px;--ig:26px;--rg:10px;
   --tb:56px;--bsp:2}
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -911,7 +948,7 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
   box-shadow:0 4px 12px rgba(34,34,28,.28)}
 .sg .arm .kopf{position:absolute;left:50%;bottom:0;width:30px;height:46px;margin-left:-15px;
   border-radius:5px;background:linear-gradient(150deg,#FBFBF6,#C6C6BC);
-  box-shadow:0 3px 8px rgba(34,34,28,.3);transform:rotate(-18deg)}
+  box-shadow:0 3px 8px rgba(34,34,28,.3);transform:rotate(18deg)}
 .sg .plattenfeld{position:relative;flex:none}
 
 .sg .textzeile{margin-top:var(--tz);text-align:center;max-width:520px}
@@ -1014,7 +1051,8 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
 .nc .wz i{width:8px;height:8px;border-radius:50%;flex:none;background:rgba(42,36,26,.22)}
 .nc .wz.an{color:var(--tinte);font-weight:600;background:rgba(42,36,26,.06)}
 .nc .wz.an i{background:var(--zeiger);box-shadow:0 0 6px rgba(122,30,18,.6)}
-.nc .tasten{display:flex;gap:10px;flex:none}
+/* Die Tasten gehoeren unter die Mitte der Laufleiste, nicht an ihren Anfang. */
+.nc .tasten{display:flex;gap:10px;flex:none;justify-content:center}
 .nc .tasten button{width:var(--tb);height:var(--tb);border-radius:3px;color:var(--tinte);
   display:grid;place-items:center;background:linear-gradient(180deg,#EDE7D6,#C8C0A8);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 2px 4px rgba(0,0,0,.35)}
@@ -1374,9 +1412,6 @@ input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
 .mg .deck .arm::after{content:'';position:absolute;left:50%;top:calc(var(--al) + 4px);width:16px;
   height:22px;margin-left:-8px;border-radius:3px;background:linear-gradient(150deg,#FBFBFF,#C9C9D6);
   box-shadow:0 2px 5px rgba(30,30,60,.3)}
-.mg .deck .stift{position:absolute;right:11%;top:5%;width:8px;height:8px;border-radius:50%;
-  background:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
-.mg .deck .stift.zwei{right:15%}
 .mg .titel{text-align:center;margin-top:clamp(12px,2.6vh,26px);max-width:100%}
 .mg .titel h1{font-size:clamp(21px,3.4vh,30px);font-weight:700;letter-spacing:-.02em;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -2425,6 +2460,43 @@ function wave(seed, n){
   return out;
 }
 
+/* Tonarm ── Ein Tonarm ist kein Zeiger. Die Nadel laeuft auf einem Kreisbogen
+   um das Lager, und wo sie dabei auf der Platte aufsitzt, folgt aus dem
+   Kosinussatz im Dreieck Lager–Plattenmitte–Nadel. Ein geratener Winkelbereich
+   trifft das nur zufaellig; „niemals ueber das Label" waere damit eine
+   Hoffnung und keine Zusage.
+
+   Gerechnet wird in Bildschirmpunkten, weil die Layouts ueber min()/vh
+   skalieren; die Armlaenge muss danach durch den Massstab zurueck in
+   Layoutpunkte. aussen/innen sind Anteile des Plattenradius.
+
+   o = {lager, aussen, innen, ueber, seite}
+   seite: -1, wenn das Lager rechts ueber der Platte sitzt, +1, wenn links. */
+function tonarm(arm, platte, o){
+  const lager = arm.querySelector('.lager');
+  let D = 0, L = 0, phi = 0, Rp = 0, breite = 0;
+  const vermessen = () => {
+    const pr = platte.getBoundingClientRect(), lr = lager.getBoundingClientRect();
+    if (!pr.width || !platte.offsetWidth) return false;
+    const skala = pr.width / platte.offsetWidth;
+    const cx = pr.left + pr.width/2, cy = pr.top + pr.height/2;
+    const lx = lr.left + lr.width/2, ly = lr.top + lr.height/2;
+    Rp = pr.width/2; breite = platte.offsetWidth;
+    D = Math.hypot(cx-lx, cy-ly);
+    L = D - o.ueber*Rp;
+    arm.style.height = (o.lager + L/skala).toFixed(1) + 'px';
+    phi = Math.atan2(cy-ly, cx-lx) * 180/Math.PI;
+    return true;
+  };
+  return f => {
+    if ((!D || breite !== platte.offsetWidth) && !vermessen()) return;
+    const r = (o.aussen - clamp(f,0,1)*(o.aussen - o.innen)) * Rp;
+    const c = clamp((D*D + L*L - r*r) / (2*D*L), -1, 1);
+    arm.style.transform =
+      `rotate(${(phi - 90 + o.seite * Math.acos(c) * 180/Math.PI).toFixed(2)}deg)`;
+  };
+}
+
 /* Bibliothek — jedes Layout bringt sein eigenes Aussehen mit (eine Blende,
    ein Suchfeld, eine Liste, ein Knopf). Filtern, Zeichnen, Markieren und
    Oeffnen ist ueberall dasselbe und steht deshalb hier.
@@ -3120,6 +3192,12 @@ function verdrahte(w, deck){
   q('[data-mix]').onclick  = () => deck.toggleShuffle();
   bindDrag(q('[data-faden]'), f => deck.seek(f));
 
+  /* Das Label misst hier 15 % des Durchmessers, also 0,30 Radien; 0,42 laesst
+     eine Handbreit Luft und wird nie unterschritten. „Register" hat sein
+     Lager links ueber der Mitte, die anderen rechts. */
+  const setzeArm = tonarm(q('[data-arm]'), q('[data-platte]'),
+    {lager:22, aussen:.94, innen:.42, ueber:.10, seite:-1});
+
   const bib = bindBibliothek({
     knopf: q('[data-bib]'), zu: q('[data-bib-zu]'), blende: q('[data-bib-blende]'),
     feld: q('[data-suche]'), liste: q('[data-bibliothek]'), treffer: q('[data-btreffer]'), deck,
@@ -3162,7 +3240,7 @@ function verdrahte(w, deck){
     q('[data-pp]').innerHTML = d.playing ? I.pause(20) : I.play(20);
     q('[data-mix]').classList.toggle('an', d.shuffle);
     q('[data-platte]').classList.toggle('halt', !d.playing);
-    q('[data-arm]').style.transform = `rotate(${(26 + 17*f).toFixed(1)}deg)`;
+    setzeArm(f);
   };
 }
 
@@ -3182,7 +3260,7 @@ layout({
   id:'register', name:'Register', geraet:'PC', klasse:'wr reg',
   ziele:['pc'], familie:'Der Satz',
   chrome:['#141414','rgba(252,252,251,.7)','#FCFCFB'],
-  text:'Dieselbe Ruhe, aber die Platte rückt nach rechts: links steht die Warteschlange in Haarlinien.',
+  text:'Dieselbe Ruhe, dazu die Warteschlange in Haarlinien am rechten Rand.',
   bau(w, deck){
     w.innerHTML = `<span class="kap ecke">Musiklib</span>` + platteHTML + spalteHTML
       + `<div class="register"><span class="kap">Warteschlange</span><div data-queue></div></div>`
@@ -3241,7 +3319,7 @@ const pultHTML = `
     <div class="bfuss" data-btreffer></div>
   </div>`;
 
-function verdrahte(w, deck, anzahl){
+function verdrahte(w, deck){
   const q = s => w.querySelector(s);
   q('[data-pp]').onclick = () => deck.toggle();
   $$('[data-next]', w).forEach(b => b.onclick = () => deck.next());
@@ -3289,18 +3367,37 @@ function verdrahte(w, deck, anzahl){
     leer: '<div class="bz" style="box-shadow:none;background:none"><span class="s">Nichts gefunden.</span></div>',
   });
 
-  /* Die Leuchtflaechen zeigen das laufende Album und seine Nachbarn im
-     Regal — keine Kacheln, sondern das, was gerade daneben steht. */
+  /* Das Fach zeigt die Sammlung in Regalordnung — nicht ein Fenster von
+     dreien, das bei jedem Albumwechsel durchrutscht. Was laeuft, ist die
+     Huelle mit dem orangen Rand. Was nicht ins Fach passt, steht dahinter
+     und ist ueber die Sammlung erreichbar. */
   function zeigeReihe(d){
-    const start = Math.max(0, ALBUMS.findIndex(a => d.album && a.id === d.album.id));
-    const um = Array.from({length:Math.min(anzahl, ALBUMS.length)},
-      (_,k) => ALBUMS[(start + k) % ALBUMS.length]);
-    q('[data-reihe]').innerHTML = um.map((a,k) => `
-      <div class="schirmchen${k===0?' an':''}" data-alb="${esc(a.id)}">
-        ${coverHTML(a, 'bild')}
-        <div class="glas"></div>
-        <div class="unter"><div style="min-width:0">
-          <div class="t">${esc(a.t)}</div><div class="s">${[esc(a.ar), esc(a.y)].filter(Boolean).join(' · ')}</div></div>
+    /* Wie viele Huellen ins Fach passen, entscheidet das Fach — nicht eine
+       Zahl im Aufruf. Sonst bleibt rechts eine leere Flaeche stehen, sobald
+       das Geraet breiter ist als gedacht. --kh steckt in einer min()-Formel
+       und laesst sich nur messen, nicht lesen: ein Probestueck erledigt das
+       in einem Zug und ohne zweiten Durchgang. */
+    const reihe = q('[data-reihe]'), cs = getComputedStyle(reihe);
+    const probe = document.createElement('i');
+    probe.style.cssText = 'display:block;width:var(--kh)';
+    reihe.appendChild(probe);
+    const kh = probe.offsetWidth || 160;
+    probe.remove();
+    const luft = parseFloat(cs.columnGap) || 12;
+    const innen = reihe.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const passt = Math.max(1, Math.floor((innen + luft) / (kh + luft)));
+    /* Regalordnung, aber das laufende Album ist immer dabei: bei mehr Alben
+       als Faechern wandert der Ausschnitt mit, statt bei Null zu bleiben. */
+    const n = Math.min(passt, ALBUMS.length);
+    const i = Math.max(0, ALBUMS.findIndex(a => d.album && a.id === d.album.id));
+    const ab = Math.min(Math.max(0, i - (n >> 1)), ALBUMS.length - n);
+    const um = ALBUMS.slice(ab, ab + n);
+    q('[data-reihe]').innerHTML = um.map(a => `
+      <div class="schirmchen${d.album && a.id === d.album.id ? ' an' : ''}" data-alb="${esc(a.id)}">
+        <span class="huelle">${coverHTML(a, 'bild')}<span class="glas"></span></span>
+        <div class="unter">
+          <div class="t">${esc(a.t)}</div>
+          <div class="s">${[esc(a.ar), esc(a.y)].filter(Boolean).join(' · ')}</div>
           <span class="laeuft">▶ läuft</span></div>
       </div>`).join('');
     $$('.schirmchen', w).forEach(el => el.onclick = () => {
@@ -3335,16 +3432,16 @@ layout({
   id:'bedienteil', name:'Bedienteil', geraet:'PC', klasse:'rk',
   ziele:['tablet','pc'], familie:'Das Rack',
   chrome:['#F0F1F3','rgba(12,12,14,.72)','#0C0C0E'],
-  text:'Gebürstetes Metall, drei Cover als Leuchtflächen, ein Metallrad zum Spulen.',
-  bau(w, deck){ w.innerHTML = pultHTML; verdrahte(w, deck, 3); },
+  text:'Gebürstetes Metall, die Sammlung als Plattenfach in Regalordnung, ein Metallrad zum Spulen.',
+  bau(w, deck){ w.innerHTML = pultHTML; verdrahte(w, deck); },
 });
 
 layout({
   id:'konsole', name:'Konsole', geraet:'iPad quer', klasse:'rk kons',
   ziele:['tablet','pc'], familie:'Das Rack',
   chrome:['#F0F1F3','rgba(12,12,14,.72)','#0C0C0E'],
-  text:'Dasselbe Gerät für die Hand: zwei Leuchtflächen, größeres Rad, breitere Tasten.',
-  bau(w, deck){ w.innerHTML = pultHTML; verdrahte(w, deck, 2); },
+  text:'Dasselbe Gerät für die Hand: flacheres Fach, größeres Rad, breitere Tasten.',
+  bau(w, deck){ w.innerHTML = pultHTML; verdrahte(w, deck); },
 });
 })();
 
@@ -3401,6 +3498,10 @@ layout({
       </div>`;
 
     const q = s => w.querySelector(s);
+    /* Das Label misst hier 38 % des Durchmessers, also 0,38 Radien; 0,55
+       laesst eine Handbreit Luft und wird nie unterschritten. */
+    const setzeArm = tonarm(q('[data-arm]'), q('[data-teller]'),
+      {lager:26, aussen:.94, innen:.55, ueber:.20, seite:-1});
     q('[data-pp]').onclick   = () => deck.toggle();
     q('[data-next]').onclick = () => deck.next();
     q('[data-prev]').onclick = () => deck.prev();
@@ -3449,7 +3550,7 @@ layout({
       q('[data-ende]').textContent  = fmt(d.dur);
       q('[data-pp]').innerHTML = d.playing ? I.pause(20) : I.play(20);
       q('[data-teller]').classList.toggle('halt', !d.playing);
-      q('[data-arm]').style.transform = `rotate(${(28 + 16*f).toFixed(1)}deg)`;
+      setzeArm(f);
       q('[data-volgriff]').style.top = ((1-d.vol)*100).toFixed(1) + '%';
     };
   },
@@ -3483,7 +3584,6 @@ const instrumentHTML = kanal => `
     <span class="kanal">${kanal}</span>
     <svg viewBox="0 0 200 100">
       <path d="M 24 88 A 88 88 0 0 1 176 88" fill="none" stroke="rgba(42,36,26,.45)" stroke-width="1.2"/>
-      <path d="M 130 33 A 88 88 0 0 1 176 88" fill="none" stroke="#7A1E12" stroke-width="2.4"/>
       ${Array.from({length:11}, (_,i) => {
         const wk = Math.PI * (1 - i/10);
         const x1 = 100 + Math.cos(wk)*80,  y1 = 88 - Math.sin(wk)*80;
@@ -3969,7 +4069,6 @@ layout({
     w.innerHTML = kopfHTML('rund', 'Jetzt läuft') + `
       <div class="spieler">
         <div class="deck">
-          <span class="stift"></span><span class="stift zwei"></span>
           <div class="teller" data-teller><div class="label" data-label></div></div>
           <div class="arm" data-arm></div>
         </div>

@@ -1,0 +1,61 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:2340px;overflow:hidden}
+.stage{position:relative;width:1080px;height:2340px;overflow:hidden}
+
+/* Der Schleier: zwei weiche Lichter über einem mittleren Grau, dazu ein
+   Abdunkeln zu den Rändern. Kein Rahmen, keine Kante, keine Karte — die
+   Anzeige hat keinen Ort, sie liegt über allem. */
+.stage{background:
+    radial-gradient(78% 96% at 34% 34%,rgba(255,255,255,.30) 0%,rgba(255,255,255,0) 62%),
+    radial-gradient(66% 80% at 78% 74%,rgba(255,255,255,.13) 0%,rgba(255,255,255,0) 58%),
+    radial-gradient(120% 130% at 50% 46%,#9B9DA0 0%,#85878B 52%,#6C6E72 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#F4F5F6;-webkit-font-smoothing:antialiased}
+
+/* Die Quellenzeile — hier führt sie in die Sammlung. Klein, gesperrt, matt:
+   sie soll da sein, aber nicht mitlesen. */
+.quelle{display:inline-flex;align-items:center;color:rgba(244,245,246,.46);letter-spacing:.26em;
+  text-transform:uppercase;font-weight:500}
+
+/* Der Titel darf umbrechen und tut es mittig. Dünn geschnitten, weil er gross
+   ist: ein fetter Schnitt in dieser Grösse wäre ein Schild, keine Anzeige. */
+.titel{font-weight:300;letter-spacing:-.021em;line-height:1.14;text-align:center;
+  text-wrap:balance}
+.unter{color:rgba(244,245,246,.72);font-weight:300;text-align:center}
+
+/* Die Haarlinie. Der gelaufene Teil ist heller, nicht farbig — in dieser
+   Anzeige gibt es keine zweite Farbe. */
+.bahn{position:relative;background:rgba(244,245,246,.26)}
+.bahn i{position:absolute;left:0;top:0;bottom:0;background:rgba(244,245,246,.30)}
+.bahn i b{position:absolute;inset:0;background:#F4F5F6}
+
+.reihe{display:flex;align-items:center;justify-content:space-between}
+.pegel{display:inline-flex;align-items:center;color:rgba(244,245,246,.72)}
+.pegel b{font-weight:400;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.zeit{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(244,245,246,.46);font-variant-numeric:tabular-nums}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;display:flex;flex-direction:column;
+  padding:130px 84px 260px">
+  <div style="text-align:center"><span class="quelle" style="gap:11px;font-size:18px"><svg width="19" height="19" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="rgba(244,245,246,.46)"/><rect x="8" y="4" width="3" height="16" rx="1" fill="rgba(244,245,246,.46)"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="rgba(244,245,246,.46)"/></svg>Sammlung · 240 Alben</span></div>
+  <div style="flex:1;min-height:0;display:flex;align-items:center;
+    padding-bottom:211px">
+    <div style="width:100%"><div>
+  <div class="titel" style="font-size:72px">Blue in Green</div>
+  <div class="unter" style="font-size:31px;margin-top:23px">
+    Miles Davis · Kind of Blue · 1959</div>
+</div></div>
+  </div>
+  <div>
+  <div class="bahn" style="height:1px">
+    <i style="width:40%"><b></b></i></div>
+  <div class="reihe" style="margin-top:14px">
+    <span class="zeit" style="font-size:20px">02:14</span>
+    <span class="zeit" style="font-size:20px">-03:23</span>
+  </div>
+  <div class="reihe" style="margin-top:34px">
+    <span class="pegel" style="gap:14px">
+      <svg width="31" height="31" viewBox="0 0 24 24" fill="none" stroke="rgba(244,245,246,.72)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z" fill="rgba(244,245,246,.72)"/><path d="M17 9.5a4 4 0 0 1 0 5"/><path d="M19.5 7a7.5 7.5 0 0 1 0 10"/></svg><b style="font-size:35px">60</b></span>
+    <span style="display:inline-flex"><svg width="42" height="42" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#F4F5F6"/></svg></span>
+  </div>
+</div>
+</div></div></body></html>

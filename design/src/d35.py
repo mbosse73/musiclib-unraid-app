@@ -38,7 +38,7 @@ pc=f'''<div style="position:absolute;inset:0;background:{BG};padding:56px 80px;d
     <div style="margin-top:30px">{trow('01','Music Sounds Better','4:56',True)}{trow('02','One More Time','5:20')}{trow('03','Digital Love','4:58')}{trow('04','Around The World','7:09')}</div>
     {pbar(52,'#ececea',RED,5,mt=26,knob=18,kc=RED)}
     {hb('02:34','04:56',SUB,19,MONO,1,10)}
-    <div style="display:flex;align-items:center;gap:24px;margin-top:32px">
+    <div style="height:190px;display:flex;align-items:center;justify-content:center;gap:24px">
       {cbtn(shuffle(24,SUB),68)}{cbtn(prev(28,INK),78)}{cbtn(tri(34,'#fff'),104,RED,RED)}
       {cbtn(nexti(28,INK),78)}{cbtn(libicon(24,RED),68)}</div>
   </div></div>'''

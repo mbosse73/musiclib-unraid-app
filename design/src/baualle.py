@@ -8,6 +8,12 @@
 Die HTML-Dateien sind die verbindliche Quelle (siehe ../README.md); dieses
 Skript ist der Weg, sie aus den Generatoren zurückzugewinnen. `MUSIKLIB_CHROME`
 überschreibt die Browsersuche, wie in der Testsuite.
+
+Zwei Dateien in ../html/ stammen NICHT von hier: `foto33a_…` und `foto33b_…`,
+die zwei überlebenden Fassungen des gestrichenen Blattes 33 (siehe
+../AUSWAHL.md). Dieses Skript legt nur an, was es selbst erzeugt, und räumt den
+Ordner nicht leer — die beiden bleiben also stehen. Wer hier trotzdem einmal
+`rm ../html/*` schreibt, löscht sie ein zweites Mal.
 """
 import os
 import pathlib

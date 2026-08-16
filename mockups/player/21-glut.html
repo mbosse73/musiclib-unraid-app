@@ -1,0 +1,502 @@
+<title>14 · Glut</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 21 — Vorlage: ein einzelner Regler in einer weichen Fassung. Der
+   Griff ist keine Scheibe, sondern eine Kapsel, die glüht und ihre Umgebung
+   mitbeleuchtet; unter der Schiene stehen zwei Wörter, links und rechts.
+
+   Genommen: die glühende Kapsel als Spulgriff und die zwei Beschriftungen
+   als das, was links und rechts von der Gegenwart liegt. Das Licht ist die
+   Anzeige — wo es hell ist, ist gespielt.
+   ══════════════════════════════════════════════════════════════════════════ */
+.gl{
+  --grund:#6A6577; --grund-2:#4A4657;
+  --fassung:rgba(255,255,255,.07); --kante:rgba(255,255,255,.30); --kante-2:rgba(255,255,255,.12);
+  --schacht:#312D3C; --schacht-2:#26222F;
+  --hell:#F4F1F6; --hell-2:rgba(244,241,246,.62); --hell-3:rgba(244,241,246,.34);
+  --glut:#FFB067; --glut-hell:#FFF6EA;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  background:radial-gradient(120% 100% at 50% 30%,#7A7488 0%,var(--grund) 45%,var(--grund-2) 100%);
+  color:var(--hell);font-family:var(--sans);height:100%;overflow:hidden;position:relative}
+.gl *{font-family:inherit}
+.gl .kap{font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--hell-3)}
+
+/* ── Kopfzeile ── */
+.gl .kz{position:absolute;left:0;right:0;top:0;z-index:6;display:flex;align-items:center;
+  justify-content:space-between;padding:24px 34px}
+.gl .kz .marke{display:flex;align-items:center;gap:13px}
+.gl .kz button{color:var(--hell-2);width:38px;height:38px;border-radius:50%;display:grid;
+  place-items:center;background:var(--fassung);box-shadow:inset 0 0 0 1px var(--kante-2)}
+.gl .kz button.an{color:var(--glut-hell);box-shadow:inset 0 0 0 1px var(--kante),0 0 22px rgba(255,176,103,.5)}
+
+/* ── Cover ── */
+.gl .cov,.gl .pl{position:relative;overflow:hidden;display:grid;place-items:center;flex:none}
+.gl .cov img,.gl .pl img{width:100%;height:100%;object-fit:cover}
+.gl .ini{font-size:.42em;font-weight:300;letter-spacing:.1em;color:rgba(255,255,255,.9)}
+
+/* ══ Die Fassung ══ Alles, was bedient wird, sitzt in so einem Kasten:
+   eine flache Erhebung mit heller Oberkante, wie in der Vorlage.        */
+.gl .fassung{background:var(--fassung);border-radius:26px;padding:16px 22px 13px;
+  box-shadow:inset 0 1px 0 var(--kante),inset 0 0 0 1px var(--kante-2),
+    0 18px 40px rgba(20,17,28,.30)}
+.gl .fassung .ueber{text-align:center;font-size:17px;font-weight:500;letter-spacing:.01em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:11px}
+.gl .fassung .unter{display:flex;justify-content:space-between;gap:16px;margin-top:9px;
+  font-size:11.5px;color:var(--hell-2)}
+.gl .fassung .unter span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46%}
+.gl .fassung .unter .r{text-align:right}
+
+/* ── Der Schacht und die Glut ── */
+.gl .schiene{position:relative;height:var(--sh,34px);border-radius:calc(var(--sh,34px)/2);
+  background:linear-gradient(180deg,var(--schacht-2),var(--schacht));
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.45),inset 0 -1px 0 rgba(255,255,255,.05);
+  cursor:pointer;touch-action:none;overflow:hidden}
+.gl .schiene .fuell{position:absolute;left:0;top:0;bottom:0;border-radius:inherit;
+  background:linear-gradient(90deg,rgba(255,176,103,.10),rgba(255,176,103,.30));opacity:0}
+.gl .schiene .marken{position:absolute;inset:0;pointer-events:none}
+.gl .schiene .marken i{position:absolute;top:22%;bottom:22%;width:1px;background:rgba(255,255,255,.16)}
+.gl .glut{position:absolute;top:4px;bottom:4px;width:var(--gb,74px);border-radius:99px;
+  background:linear-gradient(180deg,#fff,var(--glut-hell) 55%,#FFE2BC);
+  box-shadow:0 0 16px 3px rgba(255,176,103,.85),0 0 46px 12px rgba(255,150,60,.42),
+    inset 0 -1px 2px rgba(255,150,60,.35);
+  transition:opacity .2s}
+.gl .schiene.aus .glut{opacity:0}
+.gl .schiene.aus .fuell{opacity:.55}
+.gl .schiene.an .fuell{opacity:1}
+
+/* ── Transport ── */
+.gl .transport{display:flex;align-items:center;gap:var(--tg,20px)}
+.gl .transport button{width:var(--tk,46px);height:var(--tk,46px);border-radius:50%;display:grid;
+  place-items:center;color:var(--hell-2);background:var(--fassung);
+  box-shadow:inset 0 1px 0 var(--kante),inset 0 0 0 1px var(--kante-2)}
+.gl .transport button:hover{color:var(--hell)}
+.gl .transport .pp{width:var(--pk,62px);height:var(--pk,62px);color:#3A2415;
+  background:linear-gradient(180deg,#FFF6EA,#FFC98E);
+  box-shadow:0 0 24px 4px rgba(255,176,103,.6),0 0 60px 16px rgba(255,150,60,.3),
+    inset 0 -2px 3px rgba(255,150,60,.4)}
+.gl .uhr{font-size:12px;letter-spacing:.1em;color:var(--hell-3);font-variant-numeric:tabular-nums;
+  min-width:50px}
+
+/* ── Bibliothek: dieselbe Fassung, über die ganze Fläche ── */
+.gl .bib{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;
+  padding:44px 54px 38px;background:rgba(40,36,50,.93);backdrop-filter:blur(18px);
+  opacity:0;pointer-events:none;transform:translateY(12px);transition:opacity .22s,transform .22s}
+.gl .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.gl .bib .bkopf{display:flex;align-items:center;gap:22px;flex:none;margin-bottom:22px}
+.gl .bib h2{font-size:22px;font-weight:500;flex:none}
+.gl .bib .suchfassung{flex:1;min-width:0;display:flex;align-items:center;gap:12px;height:52px;
+  padding:0 22px;border-radius:26px;background:var(--schacht);
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.4),0 0 30px rgba(255,150,60,.16)}
+.gl .bib .suchfassung svg{color:var(--hell-3);flex:none}
+.gl .bib .suchfassung input{flex:1;min-width:0;background:none;border:none;outline:none;
+  color:var(--hell);font-size:16px}
+.gl .bib .suchfassung input::placeholder{color:var(--hell-3)}
+.gl .bib .zu{flex:none;color:var(--hell-2);width:44px;height:44px;border-radius:50%;display:grid;
+  place-items:center;background:var(--fassung);box-shadow:inset 0 0 0 1px var(--kante-2)}
+.gl .bib .bliste{flex:1;min-height:0;overflow:hidden;display:grid;
+  grid-template-columns:repeat(3,1fr);gap:12px;align-content:start}
+.gl .bib .bz{display:flex;align-items:center;gap:14px;padding:10px 14px;border-radius:18px;
+  background:var(--fassung);box-shadow:inset 0 1px 0 var(--kante-2);cursor:pointer}
+.gl .bib .bz:hover{box-shadow:inset 0 1px 0 var(--kante)}
+.gl .bib .bz .pl{width:44px;height:44px;border-radius:12px;font-size:44px}
+.gl .bib .bz .m{flex:1;min-width:0}
+.gl .bib .bz .t{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gl .bib .bz .s{display:block;font-size:11.5px;color:var(--hell-3);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.gl .bib .bz.an{box-shadow:inset 0 0 0 1px var(--kante),0 0 26px rgba(255,150,60,.30)}
+.gl .bib .bz.an .t{color:var(--glut-hell)}
+.gl .bib .bfuss{flex:none;padding-top:18px}
+@media (prefers-reduced-motion:reduce){.gl .bib{transition:none}}
+
+/* ══ Variante 1 · Glutbank ═══════════════════════════════════════════════ */
+.gl.bank{--sh:30px;--gb:60px}
+.gl.bank .raum{position:absolute;inset:82px 44px 40px;display:grid;
+  grid-template-columns:392px minmax(0,1fr);gap:52px}
+.gl.bank .links{display:flex;flex-direction:column;align-items:flex-start}
+.gl.bank .halo{position:relative;width:100%;aspect-ratio:1;border-radius:34px;flex:none}
+.gl.bank .halo::after{content:'';position:absolute;inset:12% 12% -6% 12%;border-radius:34px;
+  background:radial-gradient(ellipse at 50% 60%,rgba(255,150,60,.55),transparent 70%);
+  filter:blur(26px);z-index:0}
+.gl.bank .cov{position:relative;z-index:1;width:100%;height:100%;border-radius:30px;font-size:112px;
+  box-shadow:0 26px 60px rgba(20,17,28,.42),inset 0 0 0 1px var(--kante-2)}
+.gl.bank h1{margin-top:30px;font-size:31px;font-weight:500;letter-spacing:-.01em;line-height:1.18;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.gl.bank .ar{margin-top:9px;font-size:14.5px;color:var(--hell-2)}
+.gl.bank .transport{margin-top:26px}
+.gl.bank .vol{margin-top:auto;width:100%}
+.gl.bank .rechts{display:flex;flex-direction:column;min-width:0}
+.gl.bank .rkopf{display:flex;justify-content:space-between;align-items:baseline;flex:none;
+  padding:0 4px 14px}
+.gl.bank .bank{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;gap:11px}
+.gl.bank .bank .fassung{padding:11px 18px 9px;border-radius:21px;cursor:pointer}
+.gl.bank .bank .fassung .ueber{display:none}
+.gl.bank .bank .fassung .unter{margin-top:7px;font-size:11px}
+.gl.bank .bank .fassung.an{background:rgba(255,255,255,.11);
+  box-shadow:inset 0 1px 0 var(--kante),inset 0 0 0 1px var(--kante-2),
+    0 18px 44px rgba(20,17,28,.34),0 0 60px rgba(255,150,60,.20)}
+.gl.bank .bank .fassung.an .unter{color:var(--hell)}
+.gl.bank .bank .fassung.war .unter{color:var(--hell-3)}
+
+/* ══ Variante 2 · Glutleiste ═════════════════════════════════════════════ */
+.gl.leiste{--sh:60px;--gb:116px;--tk:54px;--pk:74px;--tg:26px}
+.gl.leiste .bloom{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);
+  width:760px;height:760px;border-radius:50%;filter:blur(90px);opacity:.34;pointer-events:none;z-index:0}
+.gl.leiste .mitte{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
+  padding:0 62px;z-index:2;display:flex;flex-direction:column;align-items:center}
+.gl.leiste .kopfzeile{display:flex;align-items:center;gap:18px;align-self:stretch;margin-bottom:26px}
+/* Ohne Kachel trägt der Albumname allein — größer als eine Zeile, aber
+   deutlich kleiner als der Titel darunter, sonst streiten sich zwei
+   Überschriften um dieselbe Stelle. */
+.gl.leiste .kopfzeile .m{min-width:0;flex:1}
+.gl.leiste .kopfzeile .alb{font-size:21px;font-weight:500;letter-spacing:-.005em;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.gl.leiste .kopfzeile .ar{font-size:13px;color:var(--hell-3);margin-top:4px}
+.gl.leiste .fassung{align-self:stretch;padding:22px 30px 17px;border-radius:38px}
+.gl.leiste .fassung .ueber{font-size:34px;font-weight:500;margin-bottom:18px}
+.gl.leiste .fassung .unter{margin-top:13px;font-size:14px}
+.gl.leiste .fuss{margin-top:34px;display:flex;align-items:center;gap:34px}
+.gl.leiste .volfass{width:230px;padding:10px 16px 8px;border-radius:20px;background:var(--fassung);
+  box-shadow:inset 0 1px 0 var(--kante),inset 0 0 0 1px var(--kante-2)}
+.gl.leiste .volfass .schiene{--sh:16px;--gb:34px}
+.gl.leiste .volfass .glut{top:2px;bottom:2px}
+.gl.leiste .volfass .kap{display:block;text-align:center;margin-top:6px}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 21</div>
+      <h1>Glut</h1>
+      <p class="lede">Die Vorlage zeigt einen einzigen Regler: eine weiche Fassung, ein dunkler
+      Schacht, darin eine Kapsel, die <b>glüht</b> und die Fassung mitbeleuchtet. Unter der Schiene
+      stehen zwei Wörter, links und rechts. Als Spieler taugt das, weil beides schon eine Bedeutung
+      hat: die Kapsel ist die Gegenwart, und links und rechts von ihr liegt das, was war und was
+      kommt.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <img src="../../mckups_player_2/Bildschirmfoto%202026-08-13%20um%2016.43.55.png" alt="Vorlage">
+      <figcaption>Vorlage · 16.43.55</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Glutbank</h2><span class="marke geraet">PC · 1440 × 900</span></div>
+    <p class="etext">Die Vorlage zeigt <em>einen</em> Regler — hier steht für <b>jeden Titel des Albums
+    einer</b>. Untereinander ergibt das eine Bank aus Schienen: der laufende Titel glüht und trägt die
+    Kapsel, die gespielten sind matt warm aufgefüllt, die kommenden dunkel. Man sieht ohne ein Wort,
+    wo im Album man ist, und man springt, indem man in die Schiene fasst, in die man will — die Stelle,
+    an der man hineingreift, ist gleich die Stelle, an der es weitergeht.
+    <span class="probier"><b>Ausprobieren:</b> in eine dunkle Schiene weiter unten greifen und ziehen;
+    oben rechts die Bibliothek öffnen.</span></p>
+    <div class="buehne">
+      <div class="rahmen pc">
+        <div class="schirm">
+          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
+          <div class="flaeche"><div class="gl bank" id="v1"></div></div>
+        </div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Album, Position und Sprungziel in <b>einer</b> Geste</dd></div>
+      <div><dt>Schwäche</dt><dd>Alben mit vielen Titeln brauchen eine Rolle</dd></div>
+      <div><dt>Spulen</dt><dd>In jede Schiene greifen — auch in eine fremde</dd></div>
+      <div><dt>Licht</dt><dd>Nur die laufende Schiene glüht, sonst wäre es Dekor</dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Glutleiste</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
+    <p class="etext">Dieselbe Fassung, aber nur eine, und die ist so breit wie das Gerät: die Schiene
+    ist <b>die ganze Warteschlange</b>, nicht der einzelne Titel. Feine Marken im Schacht zeigen, wo ein
+    Titel endet und der nächste beginnt; die Kapsel wandert über sie hinweg. Über der Schiene steht,
+    was gerade läuft, darunter links, was war, und rechts, was kommt — genau die zwei Wörter der
+    Vorlage, nur dass sie jetzt etwas heißen.
+    <span class="probier"><b>Ausprobieren:</b> die Kapsel über eine Marke hinwegziehen — der Titel
+    darüber wechselt mit.</span></p>
+    <div class="buehne">
+      <div class="rahmen ipad-quer">
+        <div class="schirm"><div class="gl leiste" id="v2"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Aus zwei Metern ablesbar, mit dem Daumen bedienbar</dd></div>
+      <div><dt>Schwäche</dt><dd>Kurze Titel werden zu schmalen Abschnitten</dd></div>
+      <div><dt>Spulen</dt><dd>Über Titelgrenzen hinweg — <code>seekGlobal</code></dd></div>
+      <div><dt>Cover</dt><dd>Nur als Lichtquelle hinter der Fassung, klein in der Kopfzeile</dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Die Kapsel ist breit, die Rechnung muss das wissen.</b> Ein Griff von 60 px in einer
+      600 px breiten Schiene deckt 10 % ab. Position und Klickwert rechnen deshalb beide über
+      <code>Breite − Griffbreite</code>, sonst erreicht die Kapsel das Ende nie und ein Klick ganz
+      rechts landet bei 90 %.</span></li>
+      <li><span><b>Eine fremde Schiene anzufassen ist ein Sprung <em>und</em> ein Spulen.</b> In der
+      Bank prüft der Griff erst, ob die Schiene dem laufenden Titel gehört: wenn nicht, erst
+      <code>jump(i)</code>, dann <code>seek(f)</code>. Nur so bedeutet „ich greife hier hinein" auch
+      „hier soll es weitergehen".</span></li>
+      <li><span><b>Das Glühen kostet nichts, das Verwischen schon.</b> Die Kapsel ist ein
+      <code>box-shadow</code> mit zwei Stufen — das rechnet die GPU. Der große Schein hinter dem Cover
+      ist ein <code>filter:blur()</code> auf einer festen Fläche und wird deshalb <b>nicht</b> pro
+      Bild neu gesetzt, sondern nur beim Albumwechsel.</span></li>
+      <li><span><b>Marken im Schacht sind Prozente, keine Pixel.</b> Sie kommen aus
+      <code>deck.offs</code> geteilt durch <code>deck.total</code> und werden nur neu gezeichnet, wenn
+      sich die Warteschlange ändert — nicht bei jedem <code>timeupdate</code>.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für pc.html und ipad.html</span><span>Blatt 21 · Glut</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+
+/* Der Griff ist breit: die Kapsel läuft nur über Breite − Griffbreite, und
+   ein Klick wird auf derselben Strecke gemessen. Sonst erreicht sie das Ende
+   nicht und ein Klick ganz rechts wäre nie 100 %. */
+function griffWert(el, klick){
+  const r = el.getBoundingClientRect();
+  const gb = parseFloat(getComputedStyle(el).getPropertyValue('--gb')) || 0;
+  /* Das Blatt steckt in einem herunterskalierten Rahmen: getBoundingClientRect
+     misst in Bildschirmpunkten, --gb steht in Gerätepunkten. Ohne diesen
+     Faktor rechnete die Griffbreite in einer anderen Einheit als die Strecke. */
+  const skala = el.clientWidth ? r.width / el.clientWidth : 1;
+  const gbs = gb * skala;
+  const weg = Math.max(1, r.width - gbs);
+  return clamp((klick - r.left - gbs/2) / weg, 0, 1);
+}
+function setzeGriff(el, glut, f){
+  const gb = parseFloat(getComputedStyle(el).getPropertyValue('--gb')) || 0;
+  const weg = Math.max(0, el.clientWidth - gb);
+  glut.style.left = (f * weg).toFixed(1) + 'px';
+}
+/* Ziehen an einer Schiene: derselbe Ablauf wie bindDrag, nur mit der
+   Griffbreite in der Rechnung. */
+function ziehe(el, cb){
+  let zieht = false;
+  el.addEventListener('pointerdown', ev => {
+    zieht = true; el.setPointerCapture(ev.pointerId); cb(griffWert(el, ev.clientX)); ev.preventDefault(); });
+  el.addEventListener('pointermove', ev => { if (zieht) cb(griffWert(el, ev.clientX)); });
+  const aus = () => zieht = false;
+  el.addEventListener('pointerup', aus);
+  el.addEventListener('pointercancel', aus);
+}
+
+const schieneHTML = (extra = '') =>
+  `<div class="schiene"${extra}><span class="fuell"></span><span class="marken"></span>
+     <span class="glut"></span></div>`;
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Bibliothek</h2>
+      <label class="suchfassung">${I.search(19)}
+        <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>
+      <button class="zu" data-bib-zu>${I.x(19)}</button>
+    </div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss kap" data-btreffer></div>
+  </div>`;
+
+const kzHTML = `
+  <div class="kz">
+    <div class="marke"><span class="kap">Musiklib</span></div>
+    <button data-bib title="Bibliothek">${I.list(19)}</button>
+  </div>`;
+
+function bibBinden(wurzel, deck){
+  const q = s => wurzel.querySelector(s);
+  return bindBibliothek({
+    knopf: q('[data-bib]'), zu: q('[data-bib-zu]'), blende: q('[data-bib-blende]'),
+    feld: q('[data-suche]'), liste: q('[data-bibliothek]'), treffer: q('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">${coverHTML(a,'pl')}
+        <span class="m"><span class="t">${esc(a.t)}</span>
+        <span class="s">${esc(a.ar)} · ${a.y}</span></span></div>`,
+    leer: '<div class="bz" style="grid-column:1/-1"><span class="m"><span class="t">Nichts gefunden.</span></span></div>',
+  });
+}
+
+/* ══ Variante 1 · Glutbank ══════════════════════════════════════════════ */
+(() => {
+const deck = new Deck('blu', {qi:2, pos:96, speed:8});
+const w = document.getElementById('v1');
+const q = s => w.querySelector(s), qq = s => [...w.querySelectorAll(s)];
+
+w.innerHTML = kzHTML + `
+  <div class="raum">
+    <div class="links">
+      <div class="halo"><div class="cov" data-cov></div></div>
+      <h1 data-titel></h1>
+      <div class="ar" data-ar></div>
+      <div class="transport">
+        <button data-prev aria-label="Zurück">${I.prev(20)}</button>
+        <button class="pp" data-pp aria-label="Abspielen">${I.pause(22)}</button>
+        <button data-next aria-label="Weiter">${I.next(20)}</button>
+        <span class="uhr" data-jetzt></span>
+      </div>
+      <div class="fassung vol">
+        ${schieneHTML(' data-vol')}
+        <div class="unter"><span>Leise</span><span class="r">Laut</span></div>
+      </div>
+    </div>
+    <div class="rechts">
+      <div class="rkopf"><span class="kap">Warteschlange</span><span class="kap" data-anz></span></div>
+      <div class="bank" data-bank></div>
+    </div>
+  </div>` + bibHTML;
+
+const bib = bibBinden(w, deck);
+q('[data-pp]').onclick   = () => deck.toggle();
+q('[data-next]').onclick = () => deck.next();
+q('[data-prev]').onclick = () => deck.prev();
+
+const volS = q('[data-vol]');
+ziehe(volS, f => deck.setVol(f));
+
+/* Eine Schiene je Titel. Sie wird nur neu gebaut, wenn sich die
+   Warteschlange ändert — die Kapsel wandert danach über style.left. */
+let letzteQ = null, letzter = null, letztesAlbum = null;
+function baueBank(d){
+  q('[data-bank]').innerHTML = d.queue.map((id,i) => {
+    const t = TRACKS[id];
+    return `<div class="fassung" data-i="${i}">
+      ${schieneHTML(' data-s')}
+      <div class="unter"><span>${String(i+1).padStart(2,'0')} · ${esc(t.t)}</span>
+        <span class="r">${fmt(t.d)}</span></div>
+    </div>`;
+  }).join('');
+  qq('[data-bank] .fassung').forEach(f => {
+    const i = +f.dataset.i, s = f.querySelector('[data-s]');
+    /* In eine fremde Schiene greifen heißt springen und dorthin spulen. */
+    ziehe(s, wert => {
+      if (i !== deck.qi){ deck.jump(i); }
+      deck.seek(wert);
+    });
+  });
+  q('[data-anz]').textContent = d.queue.length + ' Titel';
+}
+
+deck.onRender = d => {
+  const t = d.track, a = d.album;
+  if (letzteQ !== d.queue.join()){ letzteQ = d.queue.join(); baueBank(d); letzter = null; }
+  if (letztesAlbum !== a.id){
+    letztesAlbum = a.id;
+    q('[data-cov]').outerHTML = coverHTML(a, 'cov', ' data-cov');
+    bib.markiere();
+  }
+  if (letzter !== t.id){
+    letzter = t.id;
+    q('[data-titel]').textContent = t.t;
+    q('[data-ar]').textContent = a.ar + ' · ' + a.t + ' · ' + a.y;
+  }
+  qq('[data-bank] .fassung').forEach(f => {
+    const i = +f.dataset.i, s = f.querySelector('[data-s]');
+    const lauf = i === d.qi, war = i < d.qi;
+    f.classList.toggle('an', lauf);
+    f.classList.toggle('war', war && !lauf);
+    s.classList.toggle('an', lauf);
+    s.classList.toggle('aus', !lauf);
+    const fr = lauf ? d.frac : (war ? 1 : 0);
+    s.querySelector('.fuell').style.width = (fr*100).toFixed(2) + '%';
+    if (lauf) setzeGriff(s, s.querySelector('.glut'), fr);
+  });
+  q('[data-jetzt]').textContent = fmt(d.pos) + ' / ' + fmt(d.dur);
+  q('[data-pp]').innerHTML = d.playing ? I.pause(22) : I.play(22);
+  volS.querySelector('.fuell').style.width = (d.vol*100).toFixed(1) + '%';
+  setzeGriff(volS, volS.querySelector('.glut'), d.vol);
+};
+deck.render();
+})();
+
+/* ══ Variante 2 · Glutleiste ════════════════════════════════════════════ */
+(() => {
+const deck = new Deck('koe', {qi:1, pos:120, speed:22});
+const w = document.getElementById('v2');
+const q = s => w.querySelector(s);
+
+w.innerHTML = kzHTML + `
+  <div class="bloom" data-bloom></div>
+  <div class="mitte">
+    <div class="kopfzeile">
+      <div class="m"><div class="alb" data-alb></div><div class="ar" data-ar></div></div>
+      <span class="kap" data-lauf></span>
+    </div>
+    <div class="fassung">
+      <div class="ueber" data-titel></div>
+      ${schieneHTML(' data-s')}
+      <div class="unter"><span data-links></span><span class="r" data-rechts></span></div>
+    </div>
+    <div class="fuss">
+      <span class="uhr" data-jetzt></span>
+      <div class="transport">
+        <button data-prev aria-label="Zurück">${I.prev(23)}</button>
+        <button class="pp" data-pp aria-label="Abspielen">${I.pause(26)}</button>
+        <button data-next aria-label="Weiter">${I.next(23)}</button>
+      </div>
+      <span class="uhr" data-ende></span>
+      <div class="volfass">
+        ${schieneHTML(' data-vol')}
+        <span class="kap">Lautstärke</span>
+      </div>
+    </div>
+  </div>` + bibHTML;
+
+const bib = bibBinden(w, deck);
+q('[data-pp]').onclick   = () => deck.toggle();
+q('[data-next]').onclick = () => deck.next();
+q('[data-prev]').onclick = () => deck.prev();
+
+const s = q('[data-s]'), volS = q('[data-vol]');
+s.classList.add('an');
+volS.classList.add('an');
+ziehe(s, f => deck.seekGlobal(f * deck.total));
+ziehe(volS, f => deck.setVol(f));
+
+/* Die Marken stehen dort, wo ein Titel endet — Prozente aus deck.offs,
+   neu gezeichnet nur bei geänderter Warteschlange. */
+let letzteQ = null, letzter = null, letztesAlbum = null;
+function baueMarken(d){
+  const o = d.offs, g = d.total;
+  s.querySelector('.marken').innerHTML = o.slice(1)
+    .map(v => `<i style="left:${(v/g*100).toFixed(3)}%"></i>`).join('');
+}
+
+deck.onRender = d => {
+  const t = d.track, a = d.album;
+  if (letzteQ !== d.queue.join()){ letzteQ = d.queue.join(); baueMarken(d); }
+  if (letztesAlbum !== a.id){
+    letztesAlbum = a.id;
+    q('[data-bloom]').style.background = grad(a);
+    q('[data-alb]').textContent = a.t;
+    q('[data-ar]').textContent = a.ar + ' · ' + a.y;
+    bib.markiere();
+  }
+  if (letzter !== t.id){
+    letzter = t.id;
+    q('[data-titel]').textContent = t.t;
+    const vor = d.queue[d.qi-1], nach = d.queue[d.qi+1];
+    q('[data-links]').textContent  = vor  ? '‹ ' + TRACKS[vor].t  : '‹ Anfang der Warteschlange';
+    q('[data-rechts]').textContent = nach ? TRACKS[nach].t + ' ›' : 'Ende der Warteschlange ›';
+    q('[data-lauf]').textContent = 'Titel ' + (d.qi+1) + ' von ' + d.queue.length;
+  }
+  const fg = clamp(d.gpos / d.total, 0, 1);
+  s.querySelector('.fuell').style.width = (fg*100).toFixed(3) + '%';
+  setzeGriff(s, s.querySelector('.glut'), fg);
+  q('[data-jetzt]').textContent = fmt(d.pos);
+  q('[data-ende]').textContent  = '−' + fmt(d.rest);
+  q('[data-pp]').innerHTML = d.playing ? I.pause(26) : I.play(26);
+  volS.querySelector('.fuell').style.width = (d.vol*100).toFixed(1) + '%';
+  setzeGriff(volS, volS.querySelector('.glut'), d.vol);
+};
+deck.render();
+})();
+
+})();
+</script>

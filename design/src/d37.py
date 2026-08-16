@@ -22,8 +22,7 @@ def bogen(w, scale=1.0):
     return f'''<div style="display:flex;justify-content:center">{spiral_vinyl(w,label=RED)}</div>
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-top:{s(30):.0f}px">
           <div><div style="font-family:{SANS};font-weight:800;font-size:{s(38):.0f}px;color:{INK}">Rumours</div>
-            <div style="font-family:{SANS};font-size:{s(21):.0f}px;color:{SUB};margin-top:{s(5):.0f}px">Fleetwood Mac · 1977</div></div>
-          <div style="background:#fff;padding:{s(4):.0f}px">{qr(int(s(88)))}</div></div>
+            <div style="font-family:{SANS};font-size:{s(21):.0f}px;color:{SUB};margin-top:{s(5):.0f}px">Fleetwood Mac · 1977</div></div></div>
         {pbar(46,'#eceae6',ACC,int(s(5)),mt=int(s(22)),knob=int(s(16)),kc=ACC)}
         <div style="display:flex;justify-content:space-between;font-family:{MONO};font-size:{s(16):.0f}px;color:{SUB};margin-top:{s(8):.0f}px"><span>01:58</span><span>04:19</span></div>
         <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:{s(22):.0f}px">
@@ -60,11 +59,11 @@ pc=f'''<div style="position:absolute;inset:0;background:{WALL};display:flex;alig
     </div>
     {pbar(46,'#dfdad1',ACC,6,mt=24,knob=18,kc=ACC)}
     {hb('01:58','04:19',SUB,19,MONO,1,10)}
-    <div style="display:flex;align-items:flex-end;gap:26px;margin-top:28px">
+    <div style="position:relative;display:flex;align-items:flex-end;gap:26px;margin-top:28px;justify-content:center">
       {pill(shuffle(24,INK),'SHUFFLE',44)}{pill(prev(26,INK),'PREV',48)}
       {pill(tri(30,'#fff'),'PLAY',82,True)}
       {pill(nexti(26,INK),'NEXT',48)}{pill(repeat(24,INK),'REPEAT',44)}
-      <div style="margin-left:auto">{pill(libicon(26,ACC),'SAMMLUNG',52)}</div></div>
+      <div style="position:absolute;right:0;bottom:0">{pill(libicon(26,ACC),'SAMMLUNG',52)}</div></div>
   </div></div>'''
 
 add('37','Song-Poster-Weiss','iphone',ph); add('37','Song-Poster-Weiss','pc',pc)

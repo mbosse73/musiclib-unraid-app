@@ -1,0 +1,609 @@
+<title>18 · Eisblau</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 25 — Vorlage: blassblauer Grund, alles aus einem Material geformt.
+   Eine Platte mit orangem Label, darunter Titel, ein Ausschlag als Spulleiste
+   und drei Knöpfe, von denen genau einer gefüllt ist.
+
+   Genommen: der Ausschlag als Leiste. Er ist keine Analyse — er ist ein
+   Muster, das zu einem Titel gehört und sich nicht ändert. Genau deshalb
+   taugt er: man erkennt das Stück an seiner Form wieder.
+   ══════════════════════════════════════════════════════════════════════════ */
+.eb{
+  --eis:#D8E2EA; --eis-2:#C7D5DF; --karte:#DEE7EE;
+  --tinte:#26333E; --tinte-2:#6B7F8C; --tinte-3:#9FB0BB;
+  --orange:#EE6C3A; --orange-2:#FF8A5C;
+  --hoch:rgba(255,255,255,.88); --tief:rgba(142,164,180,.52);
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  background:linear-gradient(150deg,#E3EBF1,var(--eis) 46%,var(--eis-2));
+  color:var(--tinte);font-family:var(--sans);height:100%;overflow:hidden;position:relative}
+.eb *{font-family:inherit}
+.eb .kap{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--tinte-3)}
+
+/* Alles ist aus demselben Material: entweder herausgedrückt oder eingedrückt. */
+.eb .raus{background:var(--karte);
+  box-shadow:7px 7px 16px var(--tief),-7px -7px 16px var(--hoch)}
+.eb .rein{background:var(--karte);
+  box-shadow:inset 5px 5px 11px var(--tief),inset -5px -5px 11px var(--hoch)}
+
+.eb .kz{position:absolute;left:0;right:0;top:0;z-index:6;display:flex;align-items:center;
+  justify-content:space-between;padding:26px 36px}
+.eb .kz .titelz{font-size:15px;font-weight:700;letter-spacing:.01em}
+.eb .kz button{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+  color:var(--tinte-2);background:var(--karte);
+  box-shadow:5px 5px 12px var(--tief),-5px -5px 12px var(--hoch)}
+.eb .kz button:active,.eb .kz button.an{color:var(--orange);
+  box-shadow:inset 4px 4px 9px var(--tief),inset -4px -4px 9px var(--hoch)}
+
+/* ── Die Platte ── */
+.eb .teller{position:relative;width:var(--td,330px);height:var(--td,330px);border-radius:50%;
+  background:var(--karte);display:grid;place-items:center;flex:none;
+  box-shadow:9px 9px 22px var(--tief),-9px -9px 22px var(--hoch)}
+.eb .scheibe{width:86%;height:86%;border-radius:50%;position:relative;display:grid;place-items:center;
+  background:
+    repeating-radial-gradient(circle at 50% 50%,#141A1F 0 2px,#1D252C 2px 4px),
+    radial-gradient(circle at 32% 26%,#39454E,#12181D 62%);
+  box-shadow:0 8px 22px rgba(20,30,38,.34);
+  animation:eb-dreh 5.2s linear infinite}
+.eb .scheibe.halt{animation-play-state:paused}
+@keyframes eb-dreh{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.eb .scheibe{animation:none}}
+.eb .label{width:41%;height:41%;border-radius:50%;position:relative;overflow:hidden;display:grid;
+  place-items:center;box-shadow:0 0 0 6px var(--orange),0 0 0 7px rgba(20,30,38,.3)}
+.eb .label img{width:100%;height:100%;object-fit:cover}
+.eb .label .ini{font-size:34px;font-weight:300;color:rgba(255,255,255,.92)}
+.eb .dorn{position:absolute;width:11px;height:11px;border-radius:50%;background:var(--eis);
+  box-shadow:inset 0 1px 2px rgba(20,30,38,.4);z-index:2}
+
+/* ── Ausschlag ── Die Spulleiste. Balken, kein Verlauf. ── */
+.eb .aus{position:relative;display:flex;align-items:center;gap:var(--ag,3px);height:var(--ah,66px);
+  cursor:pointer;touch-action:none;padding:0 2px}
+.eb .aus i{flex:1;min-width:1px;border-radius:2px;background:var(--tinte-3);opacity:.55;
+  transition:background .12s,opacity .12s}
+.eb .aus i.war{background:var(--tinte-2);opacity:1}
+.eb .aus i.jetzt{background:var(--orange);opacity:1;box-shadow:0 0 10px rgba(238,108,58,.8)}
+.eb .aus .grenzen{position:absolute;inset:0;pointer-events:none}
+.eb .aus .grenzen b{position:absolute;top:0;bottom:0;width:1px;background:rgba(38,51,62,.22)}
+.eb .zeitz{display:flex;justify-content:space-between;font-size:12px;color:var(--tinte-2);
+  font-variant-numeric:tabular-nums}
+
+/* ── Transport: drei Knöpfe, genau einer gefüllt ── */
+.eb .transport{display:flex;align-items:center;justify-content:center;gap:var(--tg,26px)}
+.eb .transport button{width:var(--tk,58px);height:var(--tk,58px);border-radius:50%;display:grid;
+  place-items:center;color:var(--tinte-2);background:var(--karte);
+  box-shadow:6px 6px 14px var(--tief),-6px -6px 14px var(--hoch)}
+.eb .transport button:active{box-shadow:inset 5px 5px 11px var(--tief),inset -5px -5px 11px var(--hoch)}
+.eb .transport .pp{width:var(--pk,84px);height:var(--pk,84px);color:#fff;
+  background:linear-gradient(158deg,var(--orange-2),var(--orange));
+  box-shadow:7px 7px 18px rgba(190,80,40,.34),-6px -6px 14px var(--hoch)}
+.eb .transport .pp:active{background:linear-gradient(158deg,var(--orange),#DA5D2D)}
+
+/* ── Lautstärke ── */
+.eb .vol{position:relative;width:var(--vb,150px);height:26px;display:flex;align-items:center;
+  cursor:pointer;touch-action:none;flex:none}
+.eb .vol .bn{width:100%;height:10px;border-radius:5px;background:var(--karte);
+  box-shadow:inset 3px 3px 6px var(--tief),inset -3px -3px 6px var(--hoch)}
+.eb .vol .vl{position:absolute;left:3px;height:4px;border-radius:2px;background:var(--tinte-2)}
+.eb .vol .kn{position:absolute;width:18px;height:18px;border-radius:50%;background:var(--karte);
+  margin-left:-9px;box-shadow:2px 2px 5px var(--tief),-2px -2px 5px var(--hoch)}
+
+/* ── Cover ── */
+.eb .cov,.eb .pl{position:relative;overflow:hidden;display:grid;place-items:center;flex:none}
+.eb .cov img,.eb .pl img{width:100%;height:100%;object-fit:cover}
+.eb .ini{font-size:.4em;font-weight:300;color:rgba(255,255,255,.92)}
+
+/* ── Warteschlange als Liste ── */
+.eb .qz{display:flex;align-items:center;gap:14px;padding:11px 16px;border-radius:16px;cursor:pointer;
+  font-size:13.5px}
+.eb .qz:hover{background:rgba(255,255,255,.42)}
+.eb .qz .nr{width:22px;font-size:11px;color:var(--tinte-3);font-variant-numeric:tabular-nums;flex:none}
+.eb .qz .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eb .qz .d{font-size:11.5px;color:var(--tinte-3);font-variant-numeric:tabular-nums}
+.eb .qz.an{background:var(--karte);font-weight:600;
+  box-shadow:inset 4px 4px 9px var(--tief),inset -4px -4px 9px var(--hoch)}
+.eb .qz.an .nr{color:var(--orange)}
+
+/* ── Bibliothek ── */
+.eb .bib{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;padding:44px 54px 38px;
+  background:linear-gradient(150deg,#E3EBF1,var(--eis) 46%,var(--eis-2));
+  opacity:0;pointer-events:none;transform:translateY(12px);transition:opacity .22s,transform .22s}
+.eb .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.eb .bib .bkopf{display:flex;align-items:center;gap:20px;flex:none;margin-bottom:24px}
+.eb .bib h2{font-size:21px;font-weight:700;flex:none}
+.eb .suchzeile{flex:1;min-width:0;display:flex;align-items:center;gap:13px;height:52px;padding:0 22px;
+  border-radius:26px;background:var(--karte);
+  box-shadow:inset 4px 4px 10px var(--tief),inset -4px -4px 10px var(--hoch)}
+.eb .suchzeile svg{color:var(--tinte-3);flex:none}
+.eb .suchzeile input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--tinte);
+  font-size:15px}
+.eb .suchzeile input::placeholder{color:var(--tinte-3)}
+.eb .bib .zu{flex:none;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;
+  color:var(--tinte-2);background:var(--karte);
+  box-shadow:5px 5px 12px var(--tief),-5px -5px 12px var(--hoch)}
+.eb .bib .bliste{flex:1;min-height:0;overflow:hidden;display:grid;grid-template-columns:repeat(3,1fr);
+  gap:14px;align-content:start}
+.eb .bib .bz{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:20px;
+  cursor:pointer;background:var(--karte);
+  box-shadow:5px 5px 12px var(--tief),-5px -5px 12px var(--hoch)}
+.eb .bib .bz:active,.eb .bib .bz.an{
+  box-shadow:inset 4px 4px 10px var(--tief),inset -4px -4px 10px var(--hoch)}
+.eb .bib .bz .pl{width:46px;height:46px;border-radius:50%;font-size:46px}
+.eb .bib .bz.an .pl{box-shadow:0 0 0 3px var(--orange)}
+.eb .bib .bz .m{flex:1;min-width:0}
+.eb .bib .bz .t{display:block;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.eb .bib .bz .s{display:block;font-size:11.5px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.eb .bib .bfuss{flex:none;padding-top:18px}
+@media (prefers-reduced-motion:reduce){.eb .bib{transition:none}}
+
+/* ══ Variante 1 · Eisblau ════════════════════════════════════════════════ */
+.eb.gerade .raum{position:absolute;inset:96px 64px 46px;display:grid;
+  grid-template-columns:auto minmax(0,1fr);gap:64px;align-items:center}
+.eb.gerade .rechts{display:flex;flex-direction:column;min-width:0}
+.eb.gerade h1{font-size:38px;font-weight:700;letter-spacing:-.018em;line-height:1.14;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.eb.gerade .ar{margin-top:11px;font-size:16px;color:var(--tinte-2)}
+.eb.gerade .aussenrum{margin-top:34px;border-radius:26px;padding:10px 20px 8px}
+.eb.gerade .zeitz{margin-top:4px}
+.eb.gerade .transport{margin-top:32px;justify-content:flex-start}
+.eb.gerade .volz{margin-top:28px;display:flex;align-items:center;gap:16px;color:var(--tinte-3)}
+
+/* ══ Variante 2 · Eisblau, weit ══════════════════════════════════════════ */
+.eb.weit{--td:210px;--ah:112px;--ag:2px;--tk:52px;--pk:74px;--tg:22px;--vb:130px}
+.eb.weit .raum{position:absolute;inset:92px 48px 40px;display:flex;flex-direction:column}
+/* .oben nimmt den freien Platz auf: sonst klebt es oben und zwischen ihm
+   und dem Band unten steht eine leere Fläche. */
+.eb.weit .oben{display:grid;grid-template-columns:auto minmax(0,1fr) 384px;gap:44px;
+  align-items:stretch;flex:1;min-height:0;padding-bottom:34px}
+.eb.weit .oben>.teller,.eb.weit .oben>.mitte{align-self:center}
+.eb.weit .mitte{min-width:0}
+.eb.weit h1{font-size:34px;font-weight:700;letter-spacing:-.018em;line-height:1.14;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.eb.weit .ar{margin-top:9px;font-size:15px;color:var(--tinte-2)}
+.eb.weit .transport{margin-top:26px;justify-content:flex-start}
+.eb.weit .warte{border-radius:26px;padding:14px 10px;display:flex;flex-direction:column;min-height:0}
+.eb.weit .warte .kap{padding:2px 12px 10px;flex:none}
+.eb.weit .warte .qliste{flex:1;min-height:0;overflow:hidden}
+.eb.weit .band{flex:none;border-radius:30px;padding:16px 26px 12px}
+.eb.weit .bandkopf{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.eb.weit .volz{display:flex;align-items:center;gap:14px;color:var(--tinte-3)}
+
+/* ══ Variante 3 · Eisblau, hochkant ══════════════════════════════════════
+   Die Vorlage steht hochkant — hier bleibt sie es. Alles auf der Mittelachse,
+   alles gleich breit: die Platte in ihrer Kachel, der Ausschlag, die drei
+   Knöpfe. Was in den Querformaten nebeneinander liegt, liegt hier
+   untereinander, und das ist die ganze Übersetzung.
+
+   Kein Ton fehlt: Lautstärke gibt es hier nicht, weil ein Telefon dafür
+   seine eigenen Tasten hat — dieselbe Entscheidung, die die fünf
+   Telefon-Auslagen in player.html schon treffen.                          */
+.eb.hoch{--td:236px;--ah:60px;--ag:3px;--tk:56px;--pk:82px;--tg:30px}
+/* Mittig, nicht auseinandergezogen: mit margin-top:auto am Ausschlag stünde
+   die ganze freie Höhe als eine Lücke zwischen Interpret und Spulleiste. */
+.eb.hoch .raum{position:absolute;inset:84px 30px 26px;display:flex;flex-direction:column;
+  align-items:stretch;justify-content:center}
+/* Die Kachel um die Platte ist das Stück, das die Vorlage vorgibt: ein
+   herausgedrücktes Quadrat mit weichen Ecken, die Platte mittig darin. */
+.eb.hoch .kachel{border-radius:38px;padding:30px;display:grid;place-items:center;flex:none}
+.eb.hoch .schrift{text-align:center;margin-top:28px;flex:none}
+.eb.hoch h1{font-size:26px;font-weight:700;letter-spacing:-.015em;line-height:1.2;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.eb.hoch .ar{margin-top:7px;font-size:14px;color:var(--tinte-2);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.eb.hoch .aussenrum{margin-top:38px;border-radius:24px;padding:9px 16px 7px;flex:none}
+.eb.hoch .zeitz{margin-top:5px;font-size:11.5px;flex:none}
+.eb.hoch .transport{margin-top:24px;flex:none}
+.eb.hoch .fuss{margin-top:18px;text-align:center;flex:none;padding-bottom:2px}
+/* Die Bibliothek ist auf dem Telefon einspaltig — drei Spalten wären auf
+   390 px drei Streifen ohne Titel. */
+.eb.hoch .bib{padding:34px 30px 28px}
+.eb.hoch .bib .bliste{grid-template-columns:1fr;gap:11px}
+.eb.hoch .bib .bkopf{flex-wrap:wrap;gap:14px;margin-bottom:20px}
+.eb.hoch .bib h2{font-size:19px}
+.eb.hoch .suchzeile{height:46px;order:3;flex-basis:100%}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 25</div>
+      <h1>Eisblau</h1>
+      <p class="lede">Die Vorlage ist aus einem Stück geformt: blassblau, weich, alles entweder
+      herausgedrückt oder eingedrückt. Zwei Dinge daraus sind mehr als Oberfläche — der
+      <b>Ausschlag</b> als Spulleiste und die Regel, dass von drei Knöpfen genau einer gefüllt ist.
+      Das Orange ist in der ganzen Vorlage die einzige Farbe, und es sitzt dort, wo etwas
+      passiert.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <img src="../../mckups_player_2/Bildschirmfoto%202026-08-13%20um%2016.46.00.png" alt="Vorlage">
+      <figcaption>Vorlage · 16.46.00</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Eisblau</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
+    <p class="etext">Die Vorlage ist hochkant; quer gelegt zerfällt sie sauber in zwei Hälften — links
+    die Platte, rechts Schrift, Ausschlag und Knöpfe. Der Ausschlag gehört zum <b>laufenden Titel</b>
+    und ist so hoch, dass man ihn mit dem Daumen trifft. Die Platte dreht sich nur, solange Ton läuft;
+    das ist die zweite Anzeige und die einzige Bewegung im Bild.
+    <span class="probier"><b>Ausprobieren:</b> im Ausschlag ziehen; Pause drücken — die Platte hält
+    an. Oben rechts die Bibliothek.</span></p>
+    <div class="buehne">
+      <div class="rahmen ipad-quer">
+        <div class="schirm"><div class="eb gerade" id="v1"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Zwei Anzeigen ohne ein Wort: <b>Ausschlag und Drehung</b></dd></div>
+      <div><dt>Schwäche</dt><dd>Weiche Schatten brauchen einen hellen Grund — kein Nachtmodus</dd></div>
+      <div><dt>Spulen</dt><dd>Im Ausschlag, 66 px hoch</dd></div>
+      <div><dt>Orange</dt><dd>Genau zwei Stellen: Abspielknopf und laufender Balken</dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Eisblau, weit</h2><span class="marke geraet">PC · 1440 × 900</span></div>
+    <p class="etext">Am breiten Schirm wird der Ausschlag zum <b>Band über die ganze Fläche</b> — und
+    dann lohnt es sich, ihn nicht auf einen Titel zu beschränken: er trägt die <b>ganze
+    Warteschlange</b>, mit feinen Strichen an den Titelgrenzen. Man sieht auf einen Blick, wie lang das
+    Album noch ist, und spult über Grenzen hinweg. Oben rechts liegt die Warteschlange als Liste
+    daneben, damit man auch springen kann, ohne zu zielen.
+    <span class="probier"><b>Ausprobieren:</b> im Band weit nach rechts ziehen — der Titel wechselt
+    unterwegs.</span></p>
+    <div class="buehne">
+      <div class="rahmen pc">
+        <div class="schirm">
+          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
+          <div class="flaeche"><div class="eb weit" id="v2"></div></div>
+        </div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Das ganze Album als <b>eine</b> Form, in einer Geste erreichbar</dd></div>
+      <div><dt>Schwäche</dt><dd>Bei 200 Balken auf 60 Minuten ist ein Balken 18 Sekunden</dd></div>
+      <div><dt>Spulen</dt><dd>Über Titelgrenzen hinweg — <code>seekGlobal</code></dd></div>
+      <div><dt>Grenzen</dt><dd>Feine Striche im Band, aus <code>deck.offs</code></dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 3 · Eisblau, hochkant</h2><span class="marke geraet">Telefon · 390 × 844</span></div>
+    <p class="etext">Die Vorlage ist ein Telefon — und dies ist die Fassung, die das nicht erst
+    umlegt. Alles steht <b>auf einer Mittelachse und in einer Breite</b>: die Platte in ihrer Kachel,
+    darunter Titel und Interpret, unten der Ausschlag und die drei Knöpfe. Die Kachel ist das Stück,
+    das die Vorlage am deutlichsten vorgibt — ein herausgedrücktes Quadrat mit weichen Ecken, in dem
+    die Platte sitzt.
+    <span class="probier"><b>Ausprobieren:</b> im Ausschlag ziehen; Pause drücken — die Platte hält
+    an. Oben rechts die Bibliothek, hier einspaltig.</span></p>
+    <div class="buehne">
+      <div class="rahmen telefon">
+        <div class="schirm"><div class="eb hoch" id="v3"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Die Vorlage bleibt, was sie ist — <b>keine Umdeutung</b></dd></div>
+      <div><dt>Schwäche</dt><dd>Kein Platz für die Warteschlange neben dem Bild</dd></div>
+      <div><dt>Spulen</dt><dd>Im Ausschlag, 60 px hoch — Daumenbreite</dd></div>
+      <div><dt>Lautstärke</dt><dd>Bewusst keine: dafür hat ein Telefon Tasten</dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Der Ausschlag ist keine Analyse.</b> Er kommt aus <code>wave(id, n)</code> — einem
+      Zufallsgenerator, der aus der Titelkennung gespeist wird und deshalb für ein Stück immer
+      dasselbe Muster liefert. Er zeigt <em>nicht</em>, wo es laut ist; er zeigt, welches Stück das
+      ist, und er flackert beim Wechsel nicht. Ein echter Ausschlag bräuchte eine Analyse beim Scan und
+      ein neues Feld in <code>library.json</code> — <b>das ist hier bewusst nicht der Fall</b>.</span></li>
+      <li><span><b>Weiche Schatten sind zwei Schatten.</b> Jede Fläche trägt einen dunklen nach unten
+      rechts und einen hellen nach oben links; „eingedrückt" ist dasselbe mit <code>inset</code>. Das
+      steht deshalb genau zweimal im Regelwerk, als <code>.raus</code> und <code>.rein</code>, und
+      nicht an jedem Element neu.</span></li>
+      <li><span><b>Die Drehung ist eine Animation, kein Rechenwerk.</b> Angehalten wird mit
+      <code>animation-play-state:paused</code> — die Scheibe bleibt stehen, wo sie steht, und läuft
+      weiter, wo sie war. Eine über <code>timeupdate</code> gesetzte Drehung würde bei jedem Bild neu
+      rechnen und beim Spulen springen.</span></li>
+      <li><span><b>Balken sind Elemente, ihre Zahl ist eine Entscheidung.</b> 96 Balken für einen
+      Titel, 200 für eine Warteschlange — mehr wäre bei 3 px Breite nicht sichtbar und würde bei jedem
+      Bild 400 Klassenwechsel auslösen. Umgeschaltet wird deshalb nur der Balken, dessen Zustand sich
+      wirklich geändert hat.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für ipad.html und pc.html</span><span>Blatt 25 · Eisblau</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+
+const tellerHTML = `
+  <div class="teller" data-teller>
+    <div class="scheibe" data-scheibe>
+      <div class="label" data-label></div>
+      <span class="dorn"></span>
+    </div>
+  </div>`;
+
+const volHTML = `<div class="vol" data-vol><span class="bn"></span><span class="vl"></span>
+  <span class="kn"></span></div>`;
+
+const suchzeileHTML = `
+  <label class="suchzeile">${I.search(18)}
+    <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>`;
+
+const bibHTML = `
+  <div class="bib" data-bib-blende>
+    <div class="bkopf"><h2>Bibliothek</h2>${suchzeileHTML}
+      <button class="zu" data-bib-zu aria-label="Schließen">${I.x(19)}</button></div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss kap" data-btreffer></div>
+  </div>`;
+
+function bibBinden(w, deck){
+  const q = s => w.querySelector(s);
+  return bindBibliothek({
+    knopf: q('[data-bib]'), zu: q('[data-bib-zu]'), blende: q('[data-bib-blende]'),
+    feld: q('[data-suche]'), liste: q('[data-bibliothek]'), treffer: q('[data-btreffer]'), deck,
+    zeile: a => `<div class="bz" data-alb="${a.id}">${coverHTML(a,'pl')}
+        <span class="m"><span class="t">${esc(a.t)}</span>
+        <span class="s">${esc(a.ar)} · ${a.y}</span></span></div>`,
+    leer: '<div class="bz" style="grid-column:1/-1;cursor:default"><span class="m"><span class="t">Nichts gefunden.</span></span></div>',
+  });
+}
+function volBinden(w, deck){
+  const v = w.querySelector('[data-vol]');
+  bindDrag(v, f => deck.setVol(f));
+  return x => {
+    v.querySelector('.vl').style.width = 'calc(' + (x*100).toFixed(1) + '% - 6px)';
+    v.querySelector('.kn').style.left  = (x*100).toFixed(1) + '%';
+  };
+}
+
+/* Der Ausschlag: n Balken, Höhe aus wave(). Umgeschaltet wird nur, was sich
+   wirklich ändert — sonst wären es bei jedem Bild n Klassenwechsel. */
+function baueAusschlag(el, seed, n){
+  const w = wave(seed, n);
+  el.innerHTML = w.map(h => `<i style="height:${(h*100).toFixed(1)}%"></i>`).join('')
+    + '<span class="grenzen"></span>';
+  return [...el.querySelectorAll('i')];
+}
+function zeichneAusschlag(balken, f){
+  const bis = Math.round(f * balken.length);
+  balken.forEach((b,i) => {
+    const war = i < bis - 1, jetzt = i === bis - 1;
+    if (b._war !== war){ b.classList.toggle('war', war); b._war = war; }
+    if (b._jetzt !== jetzt){ b.classList.toggle('jetzt', jetzt); b._jetzt = jetzt; }
+  });
+}
+
+/* ══ Variante 1 · Eisblau ═══════════════════════════════════════════════ */
+(() => {
+const deck = new Deck('blu', {qi:2, pos:88, speed:8});
+const w = document.getElementById('v1');
+const q = s => w.querySelector(s);
+
+w.innerHTML = `
+  <div class="kz">
+    <button data-prev2 aria-label="Zurück">${I.back(20)}</button>
+    <span class="titelz">Läuft gerade</span>
+    <button data-bib title="Bibliothek">${I.list(20)}</button>
+  </div>
+  <div class="raum">
+    ${tellerHTML}
+    <div class="rechts">
+      <h1 data-titel></h1>
+      <div class="ar" data-ar></div>
+      <div class="aussenrum rein">
+        <div class="aus" data-aus></div>
+      </div>
+      <div class="zeitz"><span data-jetzt></span><span data-ende></span></div>
+      <div class="transport">
+        <button data-prev aria-label="Zurück">${I.prev(21)}</button>
+        <button class="pp" data-pp aria-label="Abspielen">${I.pause(28)}</button>
+        <button data-next aria-label="Weiter">${I.next(21)}</button>
+      </div>
+      <div class="volz">${I.vol(19)}${volHTML}<span class="kap" data-lauf></span></div>
+    </div>
+  </div>` + bibHTML;
+
+const bib = bibBinden(w, deck);
+const zeichneVol = volBinden(w, deck);
+q('[data-pp]').onclick    = () => deck.toggle();
+q('[data-next]').onclick  = () => deck.next();
+q('[data-prev]').onclick  = () => deck.prev();
+q('[data-prev2]').onclick = () => deck.prev();
+
+let balken = [];
+bindDrag(q('[data-aus]'), f => deck.seek(f));
+
+let letzter = null, letztesAlbum = null;
+deck.onRender = d => {
+  const t = d.track, a = d.album;
+  if (letztesAlbum !== a.id){
+    letztesAlbum = a.id;
+    /* Das Label ist ein vorhandener Kasten — er bekommt nur die Füllung,
+       so wie coverFuellung() es im echten Spieler macht. */
+    q('[data-label]').style.background = grad(a);
+    q('[data-label]').innerHTML = `<span class="ini">${esc(ini(a))}</span>`;
+    bib.markiere();
+  }
+  if (letzter !== t.id){
+    letzter = t.id;
+    q('[data-titel]').textContent = t.t;
+    q('[data-ar]').textContent = a.ar + ' · ' + a.t + ' · ' + a.y;
+    q('[data-lauf]').textContent = 'Titel ' + (d.qi+1) + ' von ' + d.queue.length;
+    balken = baueAusschlag(q('[data-aus]'), t.id, 96);
+  }
+  zeichneAusschlag(balken, d.frac);
+  q('[data-jetzt]').textContent = fmt(d.pos);
+  q('[data-ende]').textContent  = '−' + fmt(d.rest);
+  q('[data-pp]').innerHTML = d.playing ? I.pause(28) : I.play(28);
+  q('[data-scheibe]').classList.toggle('halt', !d.playing);
+  zeichneVol(d.vol);
+};
+deck.render();
+})();
+
+/* ══ Variante 2 · Eisblau, weit ═════════════════════════════════════════ */
+(() => {
+const deck = new Deck('koe', {qi:0, pos:210, speed:26});
+const w = document.getElementById('v2');
+const q = s => w.querySelector(s), qq = s => [...w.querySelectorAll(s)];
+
+w.innerHTML = `
+  <div class="kz">
+    <span class="titelz">Läuft gerade</span>
+    <button data-bib title="Bibliothek">${I.list(20)}</button>
+  </div>
+  <div class="raum">
+    <div class="oben">
+      ${tellerHTML}
+      <div class="mitte">
+        <h1 data-titel></h1>
+        <div class="ar" data-ar></div>
+        <div class="transport">
+          <button data-prev aria-label="Zurück">${I.prev(20)}</button>
+          <button class="pp" data-pp aria-label="Abspielen">${I.pause(25)}</button>
+          <button data-next aria-label="Weiter">${I.next(20)}</button>
+          <div class="volz" style="margin-left:14px">${I.vol(18)}${volHTML}</div>
+        </div>
+      </div>
+      <div class="warte raus">
+        <span class="kap" data-wkap></span>
+        <div class="qliste" data-qliste></div>
+      </div>
+    </div>
+    <div class="band rein">
+      <div class="bandkopf"><span class="kap" data-bkap></span><span class="kap" data-brest></span></div>
+      <div class="aus" data-aus></div>
+      <div class="zeitz"><span data-jetzt></span><span data-ende></span></div>
+    </div>
+  </div>` + bibHTML;
+
+const bib = bibBinden(w, deck);
+const zeichneVol = volBinden(w, deck);
+q('[data-pp]').onclick   = () => deck.toggle();
+q('[data-next]').onclick = () => deck.next();
+q('[data-prev]').onclick = () => deck.prev();
+
+/* Das Band trägt die ganze Warteschlange: der Ausschlag wird aus allen
+   Titelkennungen zusammen gebildet, gespult wird global. */
+let balken = [];
+bindDrag(q('[data-aus]'), f => deck.seekGlobal(f * deck.total));
+
+let letzteQ = null, letzter = null, letztesAlbum = null;
+deck.onRender = d => {
+  const t = d.track, a = d.album;
+  if (letzteQ !== d.queue.join()){
+    letzteQ = d.queue.join();
+    balken = baueAusschlag(q('[data-aus]'), d.queue.join('|'), 200);
+    q('[data-aus] .grenzen').innerHTML = d.offs.slice(1)
+      .map(v => `<b style="left:${(v/d.total*100).toFixed(3)}%"></b>`).join('');
+    q('[data-qliste]').innerHTML = d.queue.map((id,i) => `
+      <div class="qz" data-q="${i}"><span class="nr">${String(i+1).padStart(2,'0')}</span>
+        <span class="t">${esc(TRACKS[id].t)}</span>
+        <span class="d">${fmt(TRACKS[id].d)}</span></div>`).join('');
+    qq('[data-qliste] .qz').forEach(el => el.onclick = () => d.jump(+el.dataset.q));
+    q('[data-wkap]').textContent = d.queue.length + ' Titel · ' + fmtLang(d.total);
+    q('[data-bkap]').textContent = 'Warteschlange';
+  }
+  if (letztesAlbum !== a.id){
+    letztesAlbum = a.id;
+    /* Das Label ist ein vorhandener Kasten — er bekommt nur die Füllung,
+       so wie coverFuellung() es im echten Spieler macht. */
+    q('[data-label]').style.background = grad(a);
+    q('[data-label]').innerHTML = `<span class="ini">${esc(ini(a))}</span>`;
+    bib.markiere();
+  }
+  if (letzter !== t.id){
+    letzter = t.id;
+    q('[data-titel]').textContent = t.t;
+    q('[data-ar]').textContent = a.ar + ' · ' + a.t + ' · ' + a.y;
+    qq('[data-qliste] .qz').forEach((el,i) => el.classList.toggle('an', i === d.qi));
+  }
+  zeichneAusschlag(balken, clamp(d.gpos / d.total, 0, 1));
+  q('[data-brest]').textContent = 'noch ' + fmtLang(d.total - d.gpos);
+  q('[data-jetzt]').textContent = fmt(d.pos);
+  q('[data-ende]').textContent  = '−' + fmt(d.rest);
+  q('[data-pp]').innerHTML = d.playing ? I.pause(25) : I.play(25);
+  q('[data-scheibe]').classList.toggle('halt', !d.playing);
+  zeichneVol(d.vol);
+};
+deck.render();
+})();
+
+/* ══ Variante 3 · Eisblau, hochkant ═════════════════════════════════════ */
+(() => {
+const deck = new Deck('blu', {qi:1, pos:46, speed:7});
+const w = document.getElementById('v3');
+const q = s => w.querySelector(s);
+
+w.innerHTML = `
+  <div class="kz">
+    <button data-prev2 aria-label="Zurück">${I.back(20)}</button>
+    <span class="titelz">Läuft gerade</span>
+    <button data-bib title="Bibliothek">${I.list(20)}</button>
+  </div>
+  <div class="raum">
+    <div class="kachel raus">${tellerHTML}</div>
+    <div class="schrift">
+      <h1 data-titel></h1>
+      <div class="ar" data-ar></div>
+    </div>
+    <div class="aussenrum rein">
+      <div class="aus" data-aus></div>
+    </div>
+    <div class="zeitz"><span data-jetzt></span><span data-ende></span></div>
+    <div class="transport">
+      <button data-prev aria-label="Zurück">${I.prev(21)}</button>
+      <button class="pp" data-pp aria-label="Abspielen">${I.pause(28)}</button>
+      <button data-next aria-label="Weiter">${I.next(21)}</button>
+    </div>
+    <div class="fuss kap" data-lauf></div>
+  </div>` + bibHTML;
+
+const bib = bibBinden(w, deck);
+q('[data-pp]').onclick    = () => deck.toggle();
+q('[data-next]').onclick  = () => deck.next();
+q('[data-prev]').onclick  = () => deck.prev();
+q('[data-prev2]').onclick = () => deck.prev();
+
+let balken = [];
+bindDrag(q('[data-aus]'), f => deck.seek(f));
+
+let letzter = null, letztesAlbum = null;
+deck.onRender = d => {
+  const t = d.track, a = d.album;
+  if (letztesAlbum !== a.id){
+    letztesAlbum = a.id;
+    q('[data-label]').style.background = grad(a);
+    q('[data-label]').innerHTML = `<span class="ini">${esc(ini(a))}</span>`;
+    bib.markiere();
+  }
+  if (letzter !== t.id){
+    letzter = t.id;
+    q('[data-titel]').textContent = t.t;
+    q('[data-ar]').textContent = a.ar + ' · ' + a.t;
+    q('[data-lauf]').textContent = 'Titel ' + (d.qi+1) + ' von ' + d.queue.length;
+    /* 60 Balken statt 96: auf 330 px wären 96 Balken 2 px breit mit 3 px
+       Abstand — dann sieht man den Abstand und nicht mehr die Form. */
+    balken = baueAusschlag(q('[data-aus]'), t.id, 60);
+  }
+  zeichneAusschlag(balken, d.frac);
+  q('[data-jetzt]').textContent = fmt(d.pos);
+  q('[data-ende]').textContent  = '−' + fmt(d.rest);
+  q('[data-pp]').innerHTML = d.playing ? I.pause(28) : I.play(28);
+  q('[data-scheibe]').classList.toggle('halt', !d.playing);
+};
+deck.render();
+})();
+
+})();
+</script>

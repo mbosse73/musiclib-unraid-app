@@ -1,7 +1,10 @@
-# Eigene Entwürfe: zehn Spieler aus `player2/` und `player3/`
+# Eigene Entwürfe: dreizehn Spieler aus `player2/`, `player3/` und drei Vorlagen ohne Ordner
 
-Zehn Entwürfe, gebaut aus den Fotos in `player2/` (vier, Nummern 39–46) und
-`player3/` (sechs, Nummern 48–58) im Wurzelverzeichnis. Ursprünglich waren es
+Dreizehn Entwürfe: zehn aus den Fotos in `player2/` (vier, Nummern 39–46) und
+`player3/` (sechs, Nummern 48–58) im Wurzelverzeichnis, dazu **60 Klimaxfront**,
+das ein benanntes Gerät zur Vorlage hat statt eines Fotos, **61 Fernanzeige**
+nach einer Bildschirmeinblendung und **62 Leuchtmarke** nach der Nahaufnahme
+einer Skala. Ursprünglich waren es
 siebzehn; **47, 49, 52, 54, 55, 57 und 59 sind auf Wunsch des Eigentümers samt
 Dateien wieder entfernt worden**, und von **51** ist das Querformat weg. Sie
 sind kein Teil des gelieferten Design-Pakets, halten sich aber an dessen Regeln,
@@ -84,6 +87,93 @@ Drei Beobachtungen aus diesem Satz:
   statt einen Pegel. Genau an dieser Stelle entscheidet sich, ob ein Entwurf ein
   Spieler wird oder ein Bild bleibt.
 
+## 60 Klimaxfront — ein Gerät statt eines Fotos
+
+Das einzige Blatt dieses Satzes, dessen Vorlage nicht im Repo liegt: die Front
+des **Linn Klimax DSM (nächste Generation)**. Sie ist eine schwarze
+Spiegelscheibe, hinter der ein **1600 × 480** grosses Feld leuchtet — und was
+dort steht, ist der ganze Entwurf: Quelle, Lautstärke, Titel, Interpret, Album,
+Format. **Kein Cover**, keine Farbe, keine Fläche; eine Schrift und zwei Grade
+Grau.
+
+Weil die Bühne des Rechner-Blatts genau 1600 breit ist, sitzt das Feld dort in
+**Originalgrösse** — 1600 × 480, mittig in der Scheibe. Das Telefon bekommt
+dasselbe Feld im selben Verhältnis (1080 × 324) und darunter Warteschlange und
+Quellen in derselben Sprache; der Rest der Scheibe bleibt blank, wie am Gerät.
+
+Zwei Abweichungen sind Absicht:
+
+- **Der Schriftzug ist unserer.** Das Blatt ist ein Entwurf für Musiklib und
+  soll sich nicht als fremdes Gerät ausgeben.
+- **Quelle, Lautstärke und Titel stehen zusammen.** Die Vorlage zeigt Quelle und
+  Lautstärke *statt* der Titelzeile und blendet nach ein paar Sekunden ab. Ein
+  Blatt, das den Titel wegblendet, wäre kein Spieler.
+
+Der Bibliotheks-Zugang ist die **Quellenzeile**: Am Gerät wählt der Drehknopf
+die Quelle, hier ist die Sammlung eine Quelle wie jede andere — kein Knopf, den
+es am Klimax nicht gibt. 44 Gerätezeile geht auf dasselbe Haus zurück (Selekt
+DSM), ist aber die schmale Zeile; hier ist es die ganze Breite.
+
+## 61 Fernanzeige — eine Einblendung statt eines Geräts
+
+Vorlage ist keine Front und kein Foto aus den beiden Ordnern, sondern eine
+**Bildschirmanzeige**: grauer Schleier über die ganze Fläche, mittig der Titel
+in zwei Zeilen, darunter der Interpret, eine Haarlinie als Stand, und in den
+unteren Ecken genau zwei Zeichen — links die Lautstärke als **Zahl**, rechts
+die Wiedergabe.
+
+Drei Entscheidungen tragen das Blatt:
+
+- **Der Schleier ist das Cover**, nur so weit weggezogen, dass nichts mehr davon
+  zu erkennen ist — deshalb kein flaches Grau, sondern ein Verlauf mit einer
+  hellen Stelle. Gebaut aus Verläufen, nicht aus einer Datei, wie überall hier.
+- **Der Titel darf zwei und drei Zeilen brauchen.** Lange Werktitel sind bei
+  klassischer Musik der Normalfall; ein Blatt, das sie abschneidet, ist für
+  diese Sammlung falsch gebaut. Nachgemessen mit
+  „Goldberg Variations, BWV 988, (Arr. by Józef Koffler for Small Orchestra):
+  I. Aria“ — drei Zeilen, nichts läuft über die Bühne hinaus.
+- **Die Lautstärke steht als Zahl.** Eine Zahl liest man aus drei Metern, einen
+  Reglerstand nicht. Das ist der ganze Unterschied zu 44 Gerätezeile, wo
+  dieselbe Zahl an einem schmalen Gerät steht, und zu 60 Klimaxfront, wo sie
+  hinter Glas sitzt.
+
+Der Zugang zur Sammlung ist die einzige Zutat gegenüber der Vorlage — er muss
+in jedem Blatt vorkommen und sitzt als schmale Zeile oben in der Mitte, wo an
+einem Gerät der Quellenname stünde. Die untere Reihe bleibt damit unangetastet.
+
+## 62 Leuchtmarke — die Skala ist scharf, wo man steht
+
+Vorlage ist eine Nahaufnahme: schwarze Skala, feine weisse Striche, Zahlen, die
+nach rechts kleiner werden, und darauf ein **roter, von innen leuchtender
+Keil**. Die Aufnahme hat sehr wenig Schärfentiefe — nur ein Streifen um den
+Keil steht klar.
+
+Was daraus ein Entwurf wird und keine Dekoration:
+
+- **Die Skala trägt die ganze Warteschlange in Minuten**, nicht einen Titel.
+  Die Zahlen sind die verbleibenden Minuten; deshalb werden sie nach rechts
+  kleiner, genau wie in der Vorlage. Die **Titelgrenzen** stehen als hohe
+  Striche zwischen den feinen — man sieht ohne Liste, wie weit es bis zum
+  nächsten Stück ist.
+- **Scharf ist nur, wo die Marke steht**, und die klare Stelle wandert mit ihr.
+  Das ist die Übersetzung der Schärfentiefe in eine Aussage: neben der
+  Gegenwart liest man genau ab, am Rand nur noch ungefähr. Umgesetzt als
+  Schleier *über* den Strichen, nicht als `blur()` auf der Skala — ein Filter
+  würde auch den Keil weichzeichnen, und der ist das Einzige, was scharf
+  bleiben muss.
+- **Der Keil ist das einzige Licht.** Rot kommt sonst nirgends vor. Wo Rot ist,
+  ist die Gegenwart.
+
+Striche und Zahlen laufen durch **dieselbe Abbildung** (`_anteil()`, mit einem
+Rand von 5 %): sonst stünde die erste Zahl nicht auf ihrem Strich, und der
+Fehler wäre am Rand am grössten — also genau dort, wo er auffällt. Die erste
+und letzte Zahl brauchen diesen Rand ohnehin, sonst hängen sie zur Hälfte über
+der Blechkante.
+
+Abgegrenzt: 15 Weltempfänger hat auch ein Band mit Skala, aber dort *wählt* das
+Band das Album. Hier wählt es nichts — es zeigt die Position in der
+Warteschlange und ist zugleich die Spulfläche.
+
 ## 43 Sonnenglas — drei Scheiben
 
 Von 43 gibt es zwei zusätzliche Fassungen. **Die Farbe bleibt in allen gleich**
@@ -162,10 +252,10 @@ Entwürfe, keine Lieferung.
 
 ```bash
 cd design/entwuerfe/src
-python3 baualle.py          # schreibt alle 23 Dateien nach ../html/
+python3 baualle.py          # schreibt alle 25 Dateien nach ../html/
 ```
 
-`werkzeug.py` hält, was alle zehn teilen: das eine Beispielalbum, die Zeichen
+`werkzeug.py` hält, was alle dreizehn teilen: das eine Beispielalbum, die Zeichen
 (Bibliothek, Lupe, Mischen, Wiederholen, Lautstärke), das abstrakte Cover, die
 Schallplatte, die Kassette und die Wellenform. Dokumentgerüst, Zeigerinstrument
 und die Transportzeichen kommen aus `../../src/lib.py`, also aus dem Paket selbst —
@@ -180,6 +270,6 @@ gesetzt, nicht skaliert.
 
 ## Was noch offen ist
 
-Diese zehn sind **Entwürfe zum Ansehen**, noch kein Layout in `player.html`.
+Diese dreizehn sind **Entwürfe zum Ansehen**, noch kein Layout in `player.html`.
 Ob und welche davon portiert werden, steht in `design/AUSWAHL.md` — dort sind
 sie bisher nicht eingetragen, weil die Auswahl beim Eigentümer liegt.

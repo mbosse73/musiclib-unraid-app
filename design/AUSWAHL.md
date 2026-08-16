@@ -32,41 +32,52 @@ Portierungsrezept festzurren lässt, bevor die aufwendigeren folgen.
 | 29 Rewind Deck | 30 iPod Weiß | 32 Seattle Skeuo |
 | 33 Glass Musiknote | | |
 
-Die ersten neun in einem Zug, 33 schon vorher (dort waren zwei Fassungen zur
-Auswahl offen, und die Frage hat sich mit dem Löschen erledigt). Mit ihnen sind
-`d17` bis `d32` aus `design/src/designs3.py` verschwunden — der Generator baut
-nur noch, was es noch gibt.
+Die ersten neun in einem Zug, 33 schon vorher. Mit ihnen sind `d17` bis `d32`
+aus `design/src/designs3.py` verschwunden — der Generator baut nur noch, was es
+noch gibt.
+
+**Bei 33 ist das Löschen zu weit gegangen.** Gestrichen war das gelieferte
+Blatt; mitgelöscht wurden seine beiden Abwandlungen `foto33a_…-Ohne` und
+`foto33b_…-Dezent`, die gerade *wegen* ihrer besseren Lesbarkeit gebaut worden
+waren. Sie sind aus der Git-Historie (`f263c53^`) zurückgeholt und liegen jetzt
+in `design/html/`. **Sie sind die einzigen zwei Dateien dort, zu denen es keinen
+Generator gibt** — `baualle.py` erzeugt sie nicht und überschreibt sie auch
+nicht. Offen ist, ob eine der beiden 33 ersetzt oder ob 33 endgültig wegfällt.
 
 Damit bleibt von der Familie *Gerät* nur ein Blatt übrig — und das nur im
 Querformat. Die Gruppierung nach Familien im Einstellungsdialog lohnt sich
 dadurch weniger als geplant; bei 12 Einträgen plus den 17 vorhandenen Layouts
 entscheidet sich das erst beim Bauen.
 
-## Wird angepasst gebaut
+## `design/varianten/` gibt es nicht mehr
 
-Drei Blätter kommen nicht so in die App, wie sie geliefert wurden. Die
-angepassten Fassungen liegen unter `design/varianten/`, die Begründung je
-Änderung steht in `design/varianten/LIESMICH.md`.
+Dort lagen drei abgeleitete Fassungen — 31a (Tasten mittig) sowie 36a und 37a
+(ohne QR-Code, Tasten mittig). Jede von ihnen war eine offene Entscheidung in
+Dateiform: das gelieferte Blatt blieb unangetastet, daneben lag die Fassung, die
+gebaut werden sollte.
 
-| Entwurf | Änderung |
-|---|---|
-| 31 Vinyl Rote Tasten | PC: die drei roten Tasten mittig unter die Fortschrittsleiste. iPhone unverändert. |
-| 36 Song-Poster schwarz | Beide: QR-Code raus. PC: Tastenreihe unter der Fortschrittsleiste zentriert. |
-| 37 Song-Poster weiß | Beide: QR-Code raus. PC: Tastenreihe unter der Fortschrittsleiste zentriert. |
+Die Entscheidungen sind gefallen, also sind sie **in die Blätter selbst
+gewandert** (siehe die Tabelle unten). Damit waren 36a und 37a Byte für Byte
+identisch mit ihren Vorlagen und 31a nur noch eine schwächere Fassung davon —
+der Ordner samt `_ableiten.py` ist gelöscht. Wer die alte Trennung sehen will,
+findet sie in der Git-Historie.
 
 ## Am Paket selbst geändert
 
-Fünf Blätter sind nicht abgewandelt, sondern **im Paket geändert** worden — die
-Dateien unter `design/html/` und `design/previews/` sind die neue Fassung, die
-alte steht nur noch in der Git-Historie. Der Unterschied zu den Abwandlungen
-oben ist Absicht: dort steht eine Entscheidung noch offen, hier nicht.
+Acht Blätter sind **im Paket selbst geändert** worden — die Dateien unter
+`design/html/` und `design/previews/` sind die neue Fassung, die alte steht nur
+noch in der Git-Historie. Seit `design/varianten/` weg ist, ist das der einzige
+Ort, an dem eine Änderung am Paket steht.
 
 | Entwurf | Änderung |
 |---|---|
-| 18 Akai 747 | AKAI-Schild weg; Zählwerk und VU-Paar stehen mittig auf der rechten Hälfte und sind deutlich grösser. Das Hochformat ist entfallen. |
-| 35 Music Sounds Better | Der Typo-Kasten über der Platte ist weg; die Platte steht dafür links (PC) bzw. im oberen Bereich (iPhone) zentriert. |
-| 36 Song-Poster schwarz | iPhone: das Plakat füllt das Blatt, der schwarze Rahmen ist entfallen. |
-| 37 Song-Poster weiß | iPhone: das Plakat füllt das Blatt, der weisse Rahmen ist der Blattrand. |
+| 18 Akai 747 | AKAI-Schild weg. Rechte Hälfte neu: **ein** VU ohne Kanalbuchstaben statt eines beschrifteten Paars, darüber das Zählwerk, darunter die Tastenreihe — die drei stehen auf einer Achse. Titel und Zeitstrahl laufen jetzt über die volle Breite. Das Hochformat ist entfallen. |
+| 22 EA Archive | PC: die Tastenleiste steht mittig in der Fläche unter dem Zeitstrahl statt direkt darunter. |
+| 24 Mix Tape Klar | PC: die fünf Rundtasten stehen waagerecht und senkrecht mittig unter dem Zeitstrahl. |
+| 31 Vinyl Rote Tasten | PC: die drei roten Tasten stehen mittig unter dem Zeitstrahl (war die Fassung 31a). |
+| 35 Music Sounds Better | Der Typo-Kasten über der Platte ist weg; die Platte steht dafür links (PC) bzw. im oberen Bereich (iPhone) zentriert. PC: die Tastenreihe steht mittig unter dem Zeitstrahl. |
+| 36 Song-Poster schwarz | iPhone: das Plakat füllt das Blatt, der schwarze Rahmen ist entfallen. Beide: QR-Code raus. PC: Tastenreihe zentriert, Bibliothek bleibt am rechten Rand (war die Fassung 36a). |
+| 37 Song-Poster weiß | iPhone: das Plakat füllt das Blatt, der weisse Rahmen ist der Blattrand. Beide: QR-Code raus. PC: Tastenreihe zentriert, Bibliothek bleibt am rechten Rand (war die Fassung 37a). |
 | 38 World Music Day | „World Music Day" steht in beiden Fassungen mittig im blauen Feld; auf dem iPhone steht auch das Radio mittig im orangen. |
 
 ## Eigene Entwürfe aus den Ordnern `player2/` und `player3/`
@@ -84,7 +95,12 @@ nach der Durchsicht durch den Eigentümer sind sechs davon geblieben —
 56 Punktring, 58 Zeigerfront. 58 fasst zwei Fotos desselben Geräts zusammen,
 wie es 44 schon vormacht.
 
-Alle zehn liegen unter
+Dazu kommen drei ohne Fotoordner: **60 Klimaxfront** nach einem benannten Gerät
+(die Anzeige des Linn Klimax DSM, im Rechner-Blatt in Originalgrösse
+1600 × 480), **61 Fernanzeige** nach einer Bildschirmeinblendung und
+**62 Leuchtmarke** nach der Nahaufnahme einer Skala.
+
+Alle dreizehn liegen unter
 `design/entwuerfe/`, halten dieselben Regeln ein wie das Paket und sind bisher
 **nicht** Teil der Auswahl oben: welche davon gebaut werden, ist noch nicht
 entschieden. Begründung je Entwurf in `design/entwuerfe/LIESMICH.md`.

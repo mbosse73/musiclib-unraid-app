@@ -22,8 +22,7 @@ def bogen(w, scale=1.0):
     return f'''<div style="display:flex;justify-content:center">{spiral_vinyl(w)}</div>
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-top:{s(30):.0f}px">
           <div><div style="font-family:{SANS};font-weight:800;font-size:{s(40):.0f}px;color:{INK}">Kind of Blue</div>
-            <div style="font-family:{SANS};font-size:{s(22):.0f}px;color:{SUB};margin-top:{s(6):.0f}px">Miles Davis · 1959</div></div>
-          <div style="background:#fff;padding:{s(4):.0f}px">{qr(int(s(92)))}</div></div>
+            <div style="font-family:{SANS};font-size:{s(22):.0f}px;color:{SUB};margin-top:{s(6):.0f}px">Miles Davis · 1959</div></div></div>
         {pbar(38,'#e8e8e6',INK,int(s(5)),mt=int(s(24)),knob=int(s(17)),kc=INK)}
         <div style="display:flex;justify-content:space-between;font-family:{MONO};font-size:{s(17):.0f}px;color:{SUB};margin-top:{s(9):.0f}px"><span>03:24</span><span>09:22</span></div>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:{s(24):.0f}px">
@@ -57,10 +56,10 @@ pc=f'''<div style="position:absolute;inset:0;background:{WALL};display:flex;alig
     </div>
     {pbar(38,'#e0e0dd',INK,6,mt=26,knob=18,kc=INK)}
     {hb('03:24','09:46',SUB,19,MONO,1,10)}
-    <div style="display:flex;align-items:center;gap:26px;margin-top:30px">
+    <div style="position:relative;display:flex;align-items:center;gap:26px;margin-top:30px;justify-content:center">
       {ctrl(46,shuffle(26,INK))}{ctrl(50,prev(28,INK))}{ctrl(86,pausei(34,INK),True)}
       {ctrl(50,nexti(28,INK))}{ctrl(46,repeat(26,INK))}
-      <div style="margin-left:auto">{ctrl(56,libicon(30,RED),True)}</div></div>
+      <div style="position:absolute;right:0;top:50%;transform:translateY(-50%)">{ctrl(56,libicon(30,RED),True)}</div></div>
   </div></div>'''
 
 add('36','Song-Poster-Schwarz','iphone',ph); add('36','Song-Poster-Schwarz','pc',pc)

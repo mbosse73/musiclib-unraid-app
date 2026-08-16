@@ -1,0 +1,509 @@
+<title>15 · Lupe</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 22 — Vorlage: ein weißes Suchfeld, das über hellgrauem Grund
+   schwebt. Unter seiner Unterkante steht kein Schatten, sondern ein warmer
+   Schein, als läge Licht darunter. In der Ecke ein rotes Feld, halb aus dem
+   Bild.
+
+   Genommen: der Schein ist nicht Dekor, sondern die Anzeige — er wächst mit
+   der Zeit. Und das Suchfeld ist nicht ein Element der Oberfläche, sondern
+   ihre Mitte: gefunden wird hier, gespielt wird darunter.
+   ══════════════════════════════════════════════════════════════════════════ */
+.lu{
+  /* ══ Das Material ══════════════════════════════════════════════════════
+     Quer durch die Pille gescannt, und dabei stimmte fast nichts, was das
+     kleine Bild nahelegt:
+
+       Grund neben der Pille   (165,154,149)  — ein *warmes* Grau
+       Pille                   (165,165,165)  — ein *neutrales* Grau
+       unter der Pille         (180,139,107)  — Bernstein, breit und weich
+
+     Die Pille ist also nicht weiß, sondern genauso hell wie der Grund und
+     nur kühler. Sichtbar wird sie durch den Temperaturunterschied und durch
+     das Licht, das hinter ihr liegt — nicht durch Helligkeit. Und der Schein
+     ist kein Saum an der Unterkante, sondern ein großes warmes Feld, auf dem
+     die Pille steht.                                                     */
+  --grund:#B4ABA5; --grund-2:#9C938D; --grund-3:#8C837E;
+  --pille:#D2D2D3; --pille-2:#C4C4C6;
+  --tinte:#1C1C1E; --tinte-2:#55555A; --tinte-3:#87878E;
+  --linie:rgba(20,20,24,.10); --linie-2:rgba(20,20,24,.18);
+  --glut:#F0A050; --glut-warm:#E07A2C; --glut-hell:#FFD9A8; --rot:#D8342B;
+  --wurf:rgba(48,42,38,.30);
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  background:radial-gradient(130% 105% at 26% 4%,#C6BEB8 0%,var(--grund) 34%,
+    var(--grund-2) 72%,var(--grund-3) 100%);
+  color:var(--tinte);font-family:var(--sans);height:100%;overflow:hidden;position:relative}
+.lu *{font-family:inherit}
+.lu .kap{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+
+/* ── Die rote Ecke: in der Vorlage halb aus dem Bild ── */
+.lu .ecke{position:absolute;right:-14px;top:-14px;z-index:30;background:var(--rot);color:#fff;
+  border-radius:22px;padding:24px 30px 13px 24px;font-size:13.5px;font-weight:600;letter-spacing:.02em;
+  cursor:pointer;box-shadow:0 14px 34px rgba(150,30,24,.42)}
+.lu .ecke:hover{background:#E63B31}
+.lu .ecke b{font-variant-numeric:tabular-nums}
+
+.lu .oben{position:absolute;left:0;top:0;z-index:6;padding:26px 34px}
+
+/* ══ Die Pille ══ Neutral, matt, mit einer hellen Linie an der Oberkante und
+   einer kaum sichtbaren dunklen an der Unterkante. Kein Verlauf über die
+   Fläche — sie ist gleichmäßig, wie mattes Acryl.                        */
+.lu .pille{position:relative;border-radius:999px;
+  background:linear-gradient(180deg,var(--pille),var(--pille-2));
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.72),inset 0 -1px 0 rgba(60,55,50,.16),
+    0 2px 4px rgba(48,42,38,.20),0 20px 40px -12px var(--wurf)}
+
+/* ══ Das Licht ══ Es liegt *hinter und unter* der Pille, als breites warmes
+   Feld — nicht als Streifen an ihrer Kante. Die gespielte Zeit bestimmt,
+   wie weit es reicht.                                                    */
+.lu .schein{position:absolute;left:2%;bottom:-58px;height:126px;border-radius:50%;
+  background:radial-gradient(58% 100% at 50% 24%,var(--glut-hell),var(--glut) 40%,
+    rgba(224,122,44,.42) 66%,transparent 84%);
+  filter:blur(22px);pointer-events:none;width:0;z-index:-1}
+/* Darunter eine scharfe Linie: das Licht allein hat keine ablesbare Kante. */
+.lu .saumbahn{position:absolute;left:5%;right:5%;bottom:-1px;height:2px;border-radius:2px;
+  background:rgba(20,20,24,.14);pointer-events:none}
+.lu .kante{position:absolute;left:5%;bottom:-1px;height:2px;border-radius:2px;background:var(--glut-hell);
+  box-shadow:0 0 8px rgba(255,200,130,.9);pointer-events:none;width:0}
+.lu .greifer{position:absolute;left:5%;right:5%;bottom:-13px;height:26px;cursor:pointer;
+  touch-action:none;z-index:4}
+
+/* ── Suchpille ── */
+.lu .suchpille{display:flex;align-items:center;gap:16px;height:var(--sp,72px);padding:0 32px}
+.lu .suchpille input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--tinte);
+  font-size:var(--sf,20px);letter-spacing:.005em}
+.lu .suchpille input::placeholder{color:var(--tinte-3)}
+.lu .suchpille .ic{color:var(--tinte);flex:none;display:grid;place-items:center}
+
+/* ── Cover ── */
+.lu .cov,.lu .pl{position:relative;overflow:hidden;display:grid;place-items:center;flex:none}
+.lu .cov img,.lu .pl img{width:100%;height:100%;object-fit:cover}
+.lu .ini{font-size:.4em;font-weight:300;color:rgba(255,255,255,.92)}
+
+/* ── Trefferliste ── */
+.lu .treffer{display:grid;gap:9px}
+.lu .tz{display:flex;align-items:center;gap:15px;padding:11px 18px;border-radius:22px;
+  background:linear-gradient(180deg,rgba(214,214,216,.72),rgba(198,198,201,.66));cursor:pointer;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -1px 0 rgba(60,55,50,.12),
+    0 6px 14px -5px var(--wurf)}
+.lu .tz:hover{background:linear-gradient(180deg,rgba(226,226,228,.85),rgba(210,210,213,.78))}
+.lu .tz .pl{width:44px;height:44px;border-radius:13px;font-size:44px}
+.lu .tz .m{flex:1;min-width:0}
+.lu .tz .t{display:block;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lu .tz .s{display:block;font-size:11.5px;color:var(--tinte-2);margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lu .tz .n{font-size:11px;color:var(--tinte-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.lu .tz.an{background:linear-gradient(180deg,rgba(232,232,234,.92),rgba(216,216,219,.88));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 0 22px rgba(240,160,80,.55),
+    0 8px 18px -6px var(--wurf)}
+.lu .tz.an .t{color:#7A3A08;font-weight:600}
+
+/* ── Transport ── */
+.lu .transport{display:flex;align-items:center;gap:var(--tg,16px);flex:none}
+.lu .transport button{width:var(--tk,42px);height:var(--tk,42px);border-radius:50%;display:grid;
+  place-items:center;color:var(--tinte-2)}
+.lu .transport button:hover{color:var(--tinte);background:rgba(255,255,255,.30)}
+.lu .transport .pp{width:var(--pk,52px);height:var(--pk,52px);color:#3A1D06;
+  background:linear-gradient(180deg,var(--glut-hell),var(--glut));
+  box-shadow:0 8px 20px rgba(224,122,44,.55),inset 0 1px 0 rgba(255,255,255,.5)}
+.lu .transport .pp:hover{background:linear-gradient(180deg,#FFE6C6,#F5AC62)}
+.lu .uhr{font-size:12px;color:var(--tinte-3);font-variant-numeric:tabular-nums;flex:none}
+
+/* ── Lautstärke: eine kurze graue Schiene, kein Schein ── */
+.lu .vol{position:relative;width:104px;height:22px;cursor:pointer;touch-action:none;flex:none;
+  display:flex;align-items:center}
+.lu .vol .bahn{width:100%;height:4px;border-radius:2px;background:var(--linie-2)}
+.lu .vol .voll{position:absolute;left:0;height:4px;border-radius:2px;background:var(--tinte-2)}
+.lu .vol .knopf{position:absolute;width:14px;height:14px;border-radius:40%;background:#E8E8EA;
+  box-shadow:0 3px 6px rgba(48,42,38,.42);margin-left:-7px}
+
+/* ── Warteschlange als Blende von rechts ── */
+.lu .qblende{position:absolute;right:0;top:0;bottom:0;width:392px;z-index:25;
+  background:linear-gradient(180deg,#D2D2D3,#C2C2C5);
+  box-shadow:-24px 0 54px rgba(48,42,38,.34);display:flex;flex-direction:column;padding:30px 26px;
+  transform:translateX(100%);transition:transform .26s cubic-bezier(.4,0,.2,1)}
+.lu .qblende.auf{transform:none}
+.lu .qkopf{display:flex;align-items:center;justify-content:space-between;flex:none;
+  padding-bottom:16px;border-bottom:1px solid var(--linie)}
+.lu .qkopf h2{font-size:17px;font-weight:600}
+.lu .qliste{flex:1;min-height:0;overflow:hidden;padding-top:8px}
+.lu .qz{display:flex;align-items:center;gap:13px;padding:10px 8px;border-radius:12px;cursor:pointer;
+  font-size:13.5px}
+.lu .qz:hover{background:rgba(255,255,255,.34)}
+.lu .qz .nr{font-size:11px;color:var(--tinte-3);width:20px;font-variant-numeric:tabular-nums}
+.lu .qz .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lu .qz .d{font-size:11.5px;color:var(--tinte-3);font-variant-numeric:tabular-nums}
+.lu .qz.an{background:rgba(240,160,80,.26)}
+.lu .qz.an .t{color:#5E2C05;font-weight:600}
+@media (prefers-reduced-motion:reduce){.lu .qblende{transition:none}}
+
+/* ══ Variante 1 · Lupe ═══════════════════════════════════════════════════ */
+.lu.mitte-such .feld{position:absolute;left:50%;top:132px;transform:translateX(-50%);width:660px;
+  z-index:10}
+.lu.mitte-such .liste{position:absolute;left:50%;top:256px;transform:translateX(-50%);width:660px;
+  bottom:238px;overflow:hidden;display:flex;flex-direction:column;gap:10px}
+/* Die Liste endet nicht an einer Kante, sondern blendet aus — sonst sieht
+   eine abgeschnittene Zeile wie ein Fehler aus. */
+.lu.mitte-such .liste .treffer{-webkit-mask-image:linear-gradient(180deg,#000 88%,transparent);
+  mask-image:linear-gradient(180deg,#000 88%,transparent)}
+.lu.mitte-such .liste .kopfz{display:flex;justify-content:space-between;flex:none;padding:0 6px 2px}
+.lu.mitte-such .liste .treffer{overflow:hidden}
+.lu.mitte-such .fuss{position:absolute;left:50%;bottom:104px;transform:translateX(-50%);width:940px;
+  z-index:12}
+.lu.mitte-such .fuss .pille{display:flex;align-items:center;gap:20px;height:88px;padding:0 26px 0 16px}
+.lu.mitte-such .fuss .cov{width:62px;height:62px;border-radius:18px;font-size:62px}
+.lu.mitte-such .fuss .m{flex:1;min-width:0}
+.lu.mitte-such .fuss .t{font-size:16.5px;font-weight:600;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.lu.mitte-such .fuss .s{font-size:12.5px;color:var(--tinte-2);margin-top:3px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+
+/* ══ Variante 2 · Lupe, aufgeschlagen ════════════════════════════════════ */
+.lu.doppel{--sp:60px;--sf:17px}
+.lu.doppel .raum{position:absolute;inset:70px 46px 40px;display:grid;
+  grid-template-columns:minmax(0,1fr) 452px;gap:46px}
+.lu.doppel .spieler{display:flex;flex-direction:column;align-items:center;justify-content:center}
+/* Die Tafel ist dieselbe matte Pille, nur hoch statt lang. */
+.lu.doppel .tafel{position:relative;border-radius:40px;padding:34px 38px 40px;width:100%;
+  background:linear-gradient(180deg,var(--pille),var(--pille-2));
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.72),inset 0 -1px 0 rgba(60,55,50,.16),
+    0 2px 4px rgba(48,42,38,.20),0 26px 54px -14px var(--wurf)}
+.lu.doppel .tafel .cov{width:212px;height:212px;border-radius:30px;font-size:212px;margin:0 auto}
+.lu.doppel .tafel h1{margin-top:26px;font-size:26px;font-weight:600;text-align:center;line-height:1.22;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lu.doppel .tafel .ar{margin-top:8px;font-size:14px;color:var(--tinte-2);text-align:center}
+.lu.doppel .zeitz{margin-top:26px;display:flex;justify-content:space-between;align-items:center}
+.lu.doppel .tafel .transport{margin-top:14px;justify-content:center}
+.lu.doppel .tafel .schein{left:8%;bottom:-56px;height:120px}
+.lu.doppel .tafel .kante{left:8%}
+.lu.doppel .tafel .greifer{left:8%;right:8%}
+.lu.doppel .volz{margin-top:26px;display:flex;align-items:center;gap:14px;justify-content:center;
+  color:var(--tinte-3)}
+.lu.doppel .sammlung{display:flex;flex-direction:column;min-width:0}
+.lu.doppel .sammlung .kopfz{display:flex;justify-content:space-between;align-items:baseline;
+  flex:none;padding:0 6px 14px}
+.lu.doppel .sammlung .rolle{flex:1;min-height:0;overflow:hidden;margin-top:20px}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 22</div>
+      <h1>Lupe</h1>
+      <p class="lede">Die Vorlage ist ein einziges Element: ein weißes Suchfeld über hellgrauem Grund.
+      Unter seiner Kante liegt kein Schatten, sondern <b>Licht</b>. Zwei Dinge daraus: der Schein wird
+      zur Anzeige — er wächst mit der Zeit —, und das Suchfeld bleibt, was es in der Vorlage ist, die
+      Mitte der Oberfläche.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <img src="../../mckups_player_2/Bildschirmfoto%202026-08-13%20um%2016.44.13.png" alt="Vorlage">
+      <figcaption>Vorlage · 16.44.13</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Lupe</h2><span class="marke geraet">PC · 1440 × 900</span></div>
+    <p class="etext">Am Schreibtisch tippt man. Also steht das Suchfeld dort, wo in der Vorlage das
+    Suchfeld steht — in der Mitte, groß, und die Sammlung fällt darunter aus. Gespielt wird auf der
+    zweiten Pille am unteren Rand: dieselbe weiße Form, derselbe Schein, nur dass er hier
+    <b>mitwächst</b>. Gespult wird an der Unterkante — nicht an einer Leiste, die man erst suchen muss,
+    sondern an dem Licht, das ohnehin schon zeigt, wie weit es ist.
+    <span class="probier"><b>Ausprobieren:</b> „blue" oder „jarrett" tippen, eine Zeile anklicken, dann
+    unten am Lichtsaum ziehen. Rechts oben die rote Ecke öffnet die Warteschlange.</span></p>
+    <div class="buehne">
+      <div class="rahmen pc">
+        <div class="schirm">
+          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
+          <div class="flaeche"><div class="lu mitte-such" id="v1"></div></div>
+        </div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Suchen ist kein Modus, sondern <b>der Ausgangszustand</b></dd></div>
+      <div><dt>Schwäche</dt><dd>Wer nur klicken will, sieht zuerst ein Eingabefeld</dd></div>
+      <div><dt>Spulen</dt><dd>Am Lichtsaum unter der Pille</dd></div>
+      <div><dt>Rot</dt><dd>Genau eine Fläche im ganzen Entwurf — die Warteschlange</dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Lupe, aufgeschlagen</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
+    <p class="etext">Auf einem Gerät, das im Regal steht, ist ein leeres Suchfeld in der Mitte eine
+    Zumutung: man will sehen, was da ist. Also liegt die Sammlung offen daneben, und die Suchzeile
+    steht direkt über ihr — dieselbe Ausnahme, die schon „Kassette" und „Die Platte" am PC machen.
+    Links wird die Pille zur <b>Tafel</b>: dieselbe weiße Fläche, dieselbe runde Kante, nur hoch statt
+    lang. Der Schein liegt weiterhin unter ihr.
+    <span class="probier"><b>Ausprobieren:</b> rechts ein Album antippen, links unter der Tafel am
+    Lichtsaum ziehen.</span></p>
+    <div class="buehne">
+      <div class="rahmen ipad-quer">
+        <div class="schirm"><div class="lu doppel" id="v2"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Nichts ist versteckt: Sammlung, Suche und Spieler auf einmal</dd></div>
+      <div><dt>Schwäche</dt><dd>Das Cover wird kleiner als in jedem anderen Blatt dieser Reihe</dd></div>
+      <div><dt>Spulen</dt><dd>Am Lichtsaum unter der Tafel</dd></div>
+      <div><dt>Suche</dt><dd>Als Zeile über der Liste, nicht hinter einem Knopf</dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Die Pille ist nicht weiß.</b> Quer durch die Vorlage gemessen liegt sie bei
+      <code>(165,165,165)</code> — und der Grund daneben bei <code>(165,154,149)</code>. Gleich hell
+      also, nur <em>kühler</em>. Sie hebt sich durch die Farbtemperatur ab und durch das Licht
+      dahinter, nicht durch Helligkeit. Eine weiße Pille auf hellgrauem Grund sieht auf den ersten
+      Blick ähnlich aus und ist ein anderes Material.</span></li>
+      <li><span><b>Licht allein ist zu ungenau zum Spulen.</b> Ein <code>blur(9px)</code> hat keine
+      ablesbare Kante. Deshalb liegen dort zwei Elemente übereinander: der weiche Schein und eine
+      2 px hohe, scharfe Linie in derselben Farbe. Der Schein sagt „ungefähr hier", die Linie sagt
+      „genau hier".</span></li>
+      <li><span><b>Die Greiffläche ist höher als das, was man sieht.</b> Der Lichtsaum ist 2 px hoch,
+      die Fläche darüber 26 px — sonst trifft man ihn mit der Maus nicht und mit dem Finger schon gar
+      nicht. Dieselbe Regel wie bei den Haarlinien in „Weißraum".</span></li>
+      <li><span><b>Suchen ohne Knopf heißt: die Blende entfällt, nicht die Mechanik.</b>
+      <code>bindBibliothek</code> bekommt hier kein <code>knopf</code> und kein <code>zu</code> — nur
+      Feld, Liste und Trefferzähler. Beim Öffnen eines Albums schließt es eine Blende, die es nicht
+      gibt; das ist ein Aufruf ins Leere und genau deshalb unschädlich.</span></li>
+      <li><span><b>Ein gesättigtes Rot verträgt die Fläche nur einmal.</b> In der Vorlage ist es halb
+      aus dem Bild, und das ist der Grund, warum es funktioniert. Hier trägt es den Zähler der
+      Warteschlange und sonst nichts — jedes zweite rote Element würde beide entwerten.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für pc.html und ipad.html</span><span>Blatt 22 · Lupe</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+
+const suchpilleHTML = `
+  <label class="pille suchpille" data-suchpille>
+    <input type="search" placeholder="Album, Interpret oder Titel" data-suche>
+    <span class="ic">${I.search(20)}</span>
+  </label>`;
+
+const volHTML = `
+  <div class="vol" data-vol><span class="bahn"></span><span class="voll"></span>
+    <span class="knopf"></span></div>`;
+
+/* Der Lichtsaum: weicher Schein, scharfe Linie, hohe Greiffläche. Alle drei
+   gehören zusammen und stehen deshalb an einer Stelle. */
+const saumHTML = `
+  <span class="saumbahn"></span><span class="schein" data-schein></span>
+  <span class="kante" data-kante></span><span class="greifer" data-greifer></span>`;
+
+function zeileHTML(a){
+  return `<div class="tz" data-alb="${a.id}">${coverHTML(a,'pl')}
+    <span class="m"><span class="t">${esc(a.t)}</span>
+      <span class="s">${esc(a.ar)} · ${a.y}</span></span>
+    <span class="n">${a.tr.length} · ${fmtLang(albDur(a))}</span></div>`;
+}
+const LEER = '<div class="tz" style="cursor:default"><span class="m"><span class="t">Nichts gefunden.</span></span></div>';
+
+/* Der Saum zeigt den Anteil und nimmt den Zug entgegen. */
+function saumBinden(wurzel, deck){
+  const q = s => wurzel.querySelector(s);
+  bindDrag(q('[data-greifer]'), f => deck.seek(f));
+  return f => {
+    q('[data-schein]').style.width = (f*90).toFixed(2) + '%';
+    q('[data-kante]').style.width  = (f*90).toFixed(2) + '%';
+  };
+}
+function volBinden(wurzel, deck){
+  const q = s => wurzel.querySelector(s);
+  const v = q('[data-vol]');
+  bindDrag(v, f => deck.setVol(f));
+  return w => {
+    v.querySelector('.voll').style.width = (w*100).toFixed(1) + '%';
+    v.querySelector('.knopf').style.left = (w*100).toFixed(1) + '%';
+  };
+}
+
+/* ══ Variante 1 · Lupe ══════════════════════════════════════════════════ */
+(() => {
+const deck = new Deck('blu', {qi:1, pos:52, speed:7});
+const w = document.getElementById('v1');
+const q = s => w.querySelector(s), qq = s => [...w.querySelectorAll(s)];
+
+w.innerHTML = `
+  <div class="oben"><span class="kap">Musiklib</span></div>
+  <div class="ecke" data-qknopf>Warteschlange <b data-qn></b></div>
+  <div class="feld">${suchpilleHTML}</div>
+  <div class="liste">
+    <div class="kopfz"><span class="kap">Sammlung</span><span class="kap" data-btreffer></span></div>
+    <div class="treffer" data-bibliothek></div>
+  </div>
+  <div class="fuss">
+    <div class="pille">
+      <div class="cov" data-cov></div>
+      <div class="m"><div class="t" data-titel></div><div class="s" data-ar></div></div>
+      <span class="uhr" data-jetzt></span>
+      <div class="transport">
+        <button data-prev aria-label="Zurück">${I.prev(19)}</button>
+        <button class="pp" data-pp aria-label="Abspielen">${I.pause(20)}</button>
+        <button data-next aria-label="Weiter">${I.next(19)}</button>
+      </div>
+      <span class="uhr" data-ende></span>
+      ${volHTML}
+      ${saumHTML}
+    </div>
+  </div>
+  <div class="qblende" data-qblende>
+    <div class="qkopf"><h2>Warteschlange</h2>
+      <button data-qzu aria-label="Schließen">${I.x(19)}</button></div>
+    <div class="qliste" data-qliste></div>
+  </div>`;
+
+/* Ohne Knopf und ohne Blende: die Sammlung liegt offen, gesucht wird in der
+   Zeile darüber. bindBibliothek braucht davon nur Feld, Liste und Zähler. */
+const bib = bindBibliothek({
+  blende: q('.liste'), feld: q('[data-suche]'), liste: q('[data-bibliothek]'),
+  treffer: q('[data-btreffer]'), deck, zeile: zeileHTML, leer: LEER,
+});
+q('[data-suche]').addEventListener('input', ev =>
+  q('[data-suchpille]').classList.toggle('voll', !!ev.target.value));
+
+q('[data-pp]').onclick   = () => deck.toggle();
+q('[data-next]').onclick = () => deck.next();
+q('[data-prev]').onclick = () => deck.prev();
+
+const zeigeQ = auf => q('[data-qblende]').classList.toggle('auf', auf);
+q('[data-qknopf]').onclick = () => zeigeQ(!q('[data-qblende]').classList.contains('auf'));
+q('[data-qzu]').onclick    = () => zeigeQ(false);
+
+const zeichneSaum = saumBinden(w, deck);
+const zeichneVol  = volBinden(w, deck);
+
+let letzteQ = null, letzter = null, letztesAlbum = null;
+deck.onRender = d => {
+  const t = d.track, a = d.album;
+  if (letzteQ !== d.queue.join()){
+    letzteQ = d.queue.join();
+    q('[data-qliste]').innerHTML = d.queue.map((id,i) => `
+      <div class="qz" data-q="${i}"><span class="nr">${String(i+1).padStart(2,'0')}</span>
+        <span class="t">${esc(TRACKS[id].t)}</span>
+        <span class="d">${fmt(TRACKS[id].d)}</span></div>`).join('');
+    qq('[data-qliste] .qz').forEach(el => el.onclick = () => d.jump(+el.dataset.q));
+    q('[data-qn]').textContent = d.queue.length;
+  }
+  if (letztesAlbum !== a.id){
+    letztesAlbum = a.id;
+    q('[data-cov]').outerHTML = coverHTML(a, 'cov', ' data-cov');
+    bib.markiere();
+  }
+  if (letzter !== t.id){
+    letzter = t.id;
+    q('[data-titel]').textContent = t.t;
+    q('[data-ar]').textContent = a.ar + ' · ' + a.t;
+    qq('[data-qliste] .qz').forEach((el,i) => el.classList.toggle('an', i === d.qi));
+  }
+  zeichneSaum(d.frac);
+  zeichneVol(d.vol);
+  q('[data-jetzt]').textContent = fmt(d.pos);
+  q('[data-ende]').textContent  = '−' + fmt(d.rest);
+  q('[data-pp]').innerHTML = d.playing ? I.pause(20) : I.play(20);
+};
+deck.render();
+})();
+
+/* ══ Variante 2 · Lupe, aufgeschlagen ═══════════════════════════════════ */
+(() => {
+const deck = new Deck('ryu', {qi:0, pos:64, speed:9});
+const w = document.getElementById('v2');
+const q = s => w.querySelector(s);
+
+w.innerHTML = `
+  <div class="ecke" data-qknopf>Titel <b data-qn></b></div>
+  <div class="raum">
+    <div class="spieler">
+      <div class="tafel">
+        <div class="cov" data-cov></div>
+        <h1 data-titel></h1>
+        <div class="ar" data-ar></div>
+        <div class="zeitz"><span class="uhr" data-jetzt></span>
+          <span class="kap" data-lauf></span>
+          <span class="uhr" data-ende></span></div>
+        <div class="transport">
+          <button data-prev aria-label="Zurück">${I.prev(21)}</button>
+          <button class="pp" data-pp aria-label="Abspielen">${I.pause(22)}</button>
+          <button data-next aria-label="Weiter">${I.next(21)}</button>
+        </div>
+        <div class="volz">${I.vol(17)}${volHTML}</div>
+        ${saumHTML}
+      </div>
+    </div>
+    <div class="sammlung">
+      <div class="kopfz"><span class="kap">Sammlung</span><span class="kap" data-btreffer></span></div>
+      ${suchpilleHTML}
+      <div class="rolle"><div class="treffer" data-bibliothek></div></div>
+    </div>
+  </div>
+  <div class="qblende" data-qblende>
+    <div class="qkopf"><h2>Warteschlange</h2>
+      <button data-qzu aria-label="Schließen">${I.x(19)}</button></div>
+    <div class="qliste" data-qliste></div>
+  </div>`;
+
+const bib = bindBibliothek({
+  blende: q('.sammlung'), feld: q('[data-suche]'), liste: q('[data-bibliothek]'),
+  treffer: q('[data-btreffer]'), deck, zeile: zeileHTML, leer: LEER,
+});
+q('[data-suche]').addEventListener('input', ev =>
+  q('[data-suchpille]').classList.toggle('voll', !!ev.target.value));
+
+q('[data-pp]').onclick   = () => deck.toggle();
+q('[data-next]').onclick = () => deck.next();
+q('[data-prev]').onclick = () => deck.prev();
+
+const zeigeQ = auf => q('[data-qblende]').classList.toggle('auf', auf);
+q('[data-qknopf]').onclick = () => zeigeQ(!q('[data-qblende]').classList.contains('auf'));
+q('[data-qzu]').onclick    = () => zeigeQ(false);
+
+const zeichneSaum = saumBinden(w, deck);
+const zeichneVol  = volBinden(w, deck);
+
+let letzteQ = null, letzter = null, letztesAlbum = null;
+deck.onRender = d => {
+  const t = d.track, a = d.album;
+  if (letzteQ !== d.queue.join()){
+    letzteQ = d.queue.join();
+    q('[data-qliste]').innerHTML = d.queue.map((id,i) => `
+      <div class="qz" data-q="${i}"><span class="nr">${String(i+1).padStart(2,'0')}</span>
+        <span class="t">${esc(TRACKS[id].t)}</span>
+        <span class="d">${fmt(TRACKS[id].d)}</span></div>`).join('');
+    [...w.querySelectorAll('[data-qliste] .qz')].forEach(el => el.onclick = () => d.jump(+el.dataset.q));
+    q('[data-qn]').textContent = d.queue.length;
+  }
+  if (letztesAlbum !== a.id){
+    letztesAlbum = a.id;
+    q('[data-cov]').outerHTML = coverHTML(a, 'cov', ' data-cov');
+    bib.markiere();
+  }
+  if (letzter !== t.id){
+    letzter = t.id;
+    q('[data-titel]').textContent = t.t;
+    q('[data-ar]').textContent = a.ar + ' · ' + a.t + ' · ' + a.y;
+    q('[data-lauf]').textContent = 'Titel ' + (d.qi+1) + ' von ' + d.queue.length;
+    [...w.querySelectorAll('[data-qliste] .qz')].forEach((el,i) =>
+      el.classList.toggle('an', i === d.qi));
+  }
+  zeichneSaum(d.frac);
+  zeichneVol(d.vol);
+  q('[data-jetzt]').textContent = fmt(d.pos);
+  q('[data-ende]').textContent  = '−' + fmt(d.rest);
+  q('[data-pp]').innerHTML = d.playing ? I.pause(22) : I.play(22);
+};
+deck.render();
+})();
+
+})();
+</script>

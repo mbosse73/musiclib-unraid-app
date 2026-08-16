@@ -132,7 +132,7 @@
   box-shadow:0 4px 12px rgba(34,34,28,.28)}
 .sg .arm .kopf{position:absolute;left:50%;bottom:0;width:30px;height:46px;margin-left:-15px;
   border-radius:5px;background:linear-gradient(150deg,#FBFBF6,#C6C6BC);
-  box-shadow:0 3px 8px rgba(34,34,28,.3);transform:rotate(-18deg)}
+  box-shadow:0 3px 8px rgba(34,34,28,.3);transform:rotate(18deg)}
 .sg .plattenfeld{position:relative;flex:none}
 
 .sg .textzeile{margin-top:var(--tz,26px);text-align:center;max-width:520px}
@@ -341,6 +341,43 @@ function verdrahte(wurzel, deck, stil){
     [...$('[data-bibliothek]').children]
       .forEach(el => el.classList.toggle('an', el.dataset.alb === deck.album.id));
   }
+
+  /* ══ Tonarm ═══════════════════════════════════════════════════════════
+     Die Nadel läuft auf einem Kreisbogen um das Lager; wo sie dabei auf der
+     Platte aufsitzt, folgt aus dem Kosinussatz im Dreieck Lager–Mitte–Nadel.
+     Ein geratener Winkelbereich (vorher: 28° bis 44°) trifft das nur
+     zufällig, und „niemals über das Label" wäre damit eine Hoffnung.
+     Gerechnet wird in Bildschirmpunkten — der Rahmen ist skaliert —, die
+     Armlänge muss danach durch den Maßstab zurück in Layoutpunkte.       */
+  function tonarm(arm, teller, o){
+    const lager = arm.querySelector('.lager');
+    let D = 0, L = 0, phi = 0, Rp = 0, breite = 0;
+    const vermessen = () => {
+      const pr = teller.getBoundingClientRect(), lr = lager.getBoundingClientRect();
+      if (!pr.width || !teller.offsetWidth) return false;
+      const skala = pr.width / teller.offsetWidth;
+      const cx = pr.left + pr.width/2, cy = pr.top + pr.height/2;
+      const lx = lr.left + lr.width/2, ly = lr.top + lr.height/2;
+      Rp = pr.width/2; breite = teller.offsetWidth;
+      D = Math.hypot(cx-lx, cy-ly);
+      L = D - o.ueber*Rp;
+      arm.style.height = (o.lager + L/skala).toFixed(1) + 'px';
+      phi = Math.atan2(cy-ly, cx-lx) * 180/Math.PI;
+      return true;
+    };
+    return f => {
+      if ((!D || breite !== teller.offsetWidth) && !vermessen()) return;
+      const r = (o.aussen - clamp(f,0,1)*(o.aussen - o.innen)) * Rp;
+      const c = clamp((D*D + L*L - r*r) / (2*D*L), -1, 1);
+      arm.style.transform =
+        `rotate(${(phi - 90 + o.seite * Math.acos(c) * 180/Math.PI).toFixed(2)}deg)`;
+    };
+  }
+  /* Das Label misst hier 38 % des Durchmessers, also 0,38 Radien. 0,50 lässt
+     eine Handbreit Luft und wird nie unterschritten. */
+  const setzeArm = tonarm($('[data-arm]'), $('[data-teller]'),
+    {lager:26, aussen:.94, innen:.55, ueber:.20, seite:-1});
+
   let letztesAlbum = null, letzter = null;
   deck.onRender = d => {
     const t = d.track, a = d.album;
@@ -369,7 +406,7 @@ function verdrahte(wurzel, deck, stil){
     $('[data-ende]').textContent  = fmt(d.dur);
     $('[data-pp]').innerHTML = d.playing ? I.pause(20) : I.play(20);
     $('[data-teller]').classList.toggle('halt', !d.playing);
-    $('[data-arm]').style.transform = `rotate(${(28 + 16*f).toFixed(1)}deg)`;
+    setzeArm(f);
     setzeSchieber($('[data-volgriff]'), d.vol);
   };
   deck.render();
