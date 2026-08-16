@@ -27,6 +27,11 @@ OFFEN = [
   'Release“ bleiben. Die Release ist durch — sie können weg, sobald du sie nicht mehr brauchst. '
   'Seit die acht Themen als Auslagen gebaut sind, hängt an <code>mobile.html</code> '
   'auch nichts Einmaliges mehr.'),
- ('Das Repo hat keine CI',
-  'Die 164 Tests laufen nur, wenn jemand sie startet — vor diesem Merge von Hand, mit grünem Ergebnis auf dem gemergten Stand. Ein GitHub-Workflow würde das selbst tun und hätte nebenbei gemerkt, dass zwei Zweige liegenbleiben. Von allem hier ist das der kleinste Schritt mit der grössten Wirkung.'),
+ ('CI läuft — der Schutz davor fehlt noch',
+  '<code>.github/workflows/tests.yml</code> lässt die 164 Tests jetzt bei jedem Push auf jedem Zweig '
+  'laufen, mit Chromium, und bricht ab, sobald ein Test <b>übersprungen</b> wird — ohne Browser '
+  'überspringt sich <code>test_frontend.py</code> nämlich geschlossen und ein Lauf wäre grün, ohne '
+  'die Oberflächen angefasst zu haben. Offen ist nur noch das, was man im Repo nicht bauen kann: '
+  '<b>eine Branch-Protection-Regel auf <code>main</code></b>, die einen roten Lauf am Merge hindert. '
+  'Das sind zwei Haken in den GitHub-Einstellungen und muss von Hand gesetzt werden.'),
 ]

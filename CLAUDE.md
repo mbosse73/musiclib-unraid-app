@@ -28,7 +28,7 @@ The application the container runs is six files:
 
 ## Running locally
 
-There is no linter and no build step. There *is* a pytest suite; run it before and after changes.
+There is no linter and no build step. There *is* a pytest suite; run it before and after changes. `.github/workflows/tests.yml` runs the same suite on every push to any branch — with `playwright install --with-deps chromium`, because `test_frontend.py` skips itself silently without a browser and a run that only did the backend tests would still report green. The last step in that workflow is a guard against exactly that: it reads the JUnit XML and **fails on any skipped test and on a total below 100**, so a green check means the whole suite ran, not that it was allowed to run.
 
 ```bash
 python3 -m venv .venv

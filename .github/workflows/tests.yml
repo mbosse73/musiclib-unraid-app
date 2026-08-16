@@ -1,0 +1,66 @@
+# Die Testsuite laeuft jetzt von selbst — vorher nur, wenn jemand sie startete.
+#
+# Der Container installiert beim Start aus requirements.txt und liest die
+# HTML-Dateien direkt; ein Fehler faellt sonst erst auf dem NAS auf. Hier faellt
+# er beim Push auf.
+name: Tests
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+# Wer zweimal hintereinander pusht, braucht den ersten Lauf nicht mehr.
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'      # dieselbe Fassung wie im Container
+          cache: pip
+
+      - name: Abhaengigkeiten
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      # Ohne Browser ueberspringt sich test_frontend.py geschlossen und der Lauf
+      # waere gruen, ohne etwas geprueft zu haben. --with-deps holt die
+      # Systembibliotheken mit, die Chromium auf einem nackten Runner fehlen.
+      - name: Chromium
+        run: python -m playwright install --with-deps chromium
+
+      - name: Tests
+        run: python -m pytest -q -rs --junitxml=ergebnis.xml
+
+      # Der eigentliche Wachhund: ein uebersprungener Test ist hier ein Fehler,
+      # kein Hinweis. Lokal darf die Suite ohne Browser gruen sein, in CI nicht —
+      # sonst meldet ein Lauf Erfolg, der nur die Backend-Tests gemacht hat.
+      - name: Nichts uebersprungen, nichts leer
+        if: always()
+        run: |
+          python - <<'PY'
+          import sys, xml.etree.ElementTree as ET
+          w = ET.parse('ergebnis.xml').getroot()
+          fall = w.iter('testcase')
+          gesamt = sprung = 0
+          namen = []
+          for f in fall:
+              gesamt += 1
+              if f.find('skipped') is not None:
+                  sprung += 1
+                  namen.append(f.get('classname', '') + '::' + f.get('name', ''))
+          print(f'{gesamt} Tests, {sprung} uebersprungen')
+          if gesamt < 100:
+              sys.exit(f'Nur {gesamt} Tests gelaufen — die Suite ist unvollstaendig.')
+          if sprung:
+              sys.exit('Uebersprungen:\n  ' + '\n  '.join(namen))
+          PY
