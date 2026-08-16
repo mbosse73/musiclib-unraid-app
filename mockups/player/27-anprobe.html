@@ -1,0 +1,480 @@
+<title>27 · Anprobe</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 27 — Der Einstellungsdialog als Anprobe.
+
+   Vorschlag 2 von zwei, und der gegenteilige Gedanke zu Blatt 26. Dort wird
+   die Ansicht in einem Kasten gezeigt und dann genommen. Hier gibt es keinen
+   Kasten: die Ansicht wird sofort aufgesetzt, in voller Grösse, mit der
+   laufenden Musik — und unten liegt eine Leiste, mit der man weiterblättert.
+   Behalten oder abbrechen entscheidet man am Ende.
+
+   Der Preis ist ein Zustand mehr („in Anprobe"). Der Gewinn ist, dass die
+   Voransicht keine Verkleinerung ist, sondern die Sache selbst.
+   ══════════════════════════════════════════════════════════════════════════ */
+.ap{
+  --papier:#FBF9F5; --tinte:#241E18; --tinte-2:#6B6155; --tinte-3:#A0968A;
+  --linie:rgba(36,30,24,.12); --linie-2:rgba(36,30,24,.24); --messing:#8A6534;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
+  height:100%;overflow:hidden;position:relative;font-family:var(--sans);color:var(--tinte)}
+.ap *{font-family:inherit}
+
+/* ── Die Auslage, die gerade aufliegt ──────────────────────────────────────
+   Auf diesem Blatt ist sie ein Bild aus Farbe, Strich und Schrift. Im
+   Programm ist sie die echte Auslage; siehe unten. */
+.ap .flur{position:absolute;inset:0;display:flex;flex-direction:column;
+  background:var(--bg);color:var(--ink);transition:background .3s,color .3s}
+.ap .flur .kz{flex:none;display:flex;align-items:center;justify-content:space-between;
+  padding:26px 34px 0;font-size:11px;letter-spacing:.22em;text-transform:uppercase;opacity:.6}
+.ap .flur .mitte{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;
+  gap:42px;padding:20px 40px}
+.ap .flur .sig{color:var(--ink);opacity:.9}
+.ap .flur .text{max-width:32ch}
+.ap .flur .text .kl{font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:.55}
+.ap .flur .text h4{margin-top:10px;font-size:30px;font-weight:400;letter-spacing:-.01em;
+  line-height:1.15}
+.ap .flur .text .ar{margin-top:6px;font-size:15px;opacity:.66}
+.ap .flur .bahn{margin-top:22px;height:5px;background:var(--ink);opacity:.18;position:relative}
+.ap .flur .bahn i{position:absolute;left:0;top:0;bottom:0;width:38%;background:var(--akz);opacity:1}
+.ap .flur .tast{margin-top:20px;display:flex;gap:12px;align-items:center}
+.ap .flur .tast button{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid currentColor;opacity:.75;color:var(--ink)}
+.ap .flur .tast button.gross{width:56px;height:56px;background:var(--akz);border-color:transparent;
+  color:#fff;opacity:1}
+.ap .flur .fuss{flex:none;padding:0 34px 30px;font-size:12px;opacity:.5}
+
+/* ── Zustand 1: der kurze Dialog ───────────────────────────────────────────
+   Zwei Zeilen statt sieben Abschnitten. Was hier steht, ist keine
+   Einstellung, sondern ein Weg dorthin. */
+.ap .veil{position:absolute;inset:0;background:rgba(20,18,14,.5);z-index:10}
+.ap .kurz{position:absolute;z-index:11;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:min(520px,calc(100% - 44px));background:var(--papier);border-radius:3px;
+  box-shadow:0 40px 90px rgba(0,0,0,.42);overflow:hidden}
+.ap .kurz h2{font-size:19px;font-weight:500;padding:20px 24px 4px}
+.ap .kurz>p{font-size:12.5px;color:var(--tinte-2);padding:0 24px 16px;line-height:1.5}
+.ap .tor{width:100%;display:flex;align-items:center;gap:14px;padding:15px 24px;text-align:left;
+  border-top:1px solid var(--linie)}
+.ap .tor:hover{background:rgba(36,30,24,.045)}
+.ap .tor .sig{flex:none;color:var(--messing)}
+.ap .tor .txt{flex:1;min-width:0}
+.ap .tor .n{display:block;font-size:15px;font-weight:500}
+.ap .tor .b{display:block;margin-top:3px;font-size:12px;color:var(--tinte-2);line-height:1.45}
+.ap .tor .pfeil{flex:none;color:var(--tinte-3)}
+.ap .kfuss{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:12px 24px;border-top:1px solid var(--linie);font-size:11.5px;color:var(--tinte-3);
+  background:rgba(36,30,24,.03)}
+.ap .kfuss button{border:1px solid var(--linie-2);border-radius:2px;padding:6px 14px;font-size:12.5px;
+  color:var(--tinte-2)}
+
+/* ── Zustand 2: die Anprobeleiste ─────────────────────────────────────────
+   Sie liegt auf der Auslage, nicht davor: der Rest des Bildschirms bleibt
+   sichtbar und bedienbar — man kann während der Anprobe weiterhören. */
+.ap .leiste{position:absolute;z-index:12;left:0;right:0;bottom:0;
+  background:rgba(251,249,245,.94);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+  border-top:1px solid var(--linie-2);box-shadow:0 -18px 44px rgba(20,18,14,.2);
+  transform:translateY(100%);transition:transform .26s ease}
+.ap.probe .leiste{transform:translateY(0)}
+.ap .lkopf{display:flex;align-items:center;gap:16px;padding:12px 22px 0}
+.ap .lkopf .name{font-size:16px;font-weight:500;flex:none}
+.ap .lkopf .fam{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--tinte-3)}
+.ap .formate{display:flex;border:1px solid var(--linie-2);border-radius:2px;overflow:hidden;
+  margin-left:auto;flex:none}
+.ap .formate button{padding:6px 12px;font-size:12px;color:var(--tinte-2);
+  border-right:1px solid var(--linie-2)}
+.ap .formate button:last-child{border-right:0}
+.ap .formate button.an{background:var(--tinte);color:var(--papier)}
+.ap .formate button .n{font-size:10px;opacity:.7;margin-left:5px;font-variant-numeric:tabular-nums}
+
+.ap .akz{display:flex;gap:6px;align-items:center;flex:none}
+.ap .akz button{width:22px;height:22px;border-radius:50%;border:1px solid var(--linie-2);
+  position:relative}
+.ap .akz button.an{box-shadow:0 0 0 2px var(--papier),0 0 0 3.5px var(--tinte)}
+
+/* Der Filmstreifen. Jede Kachel ist ein Format-Rechteck mit dem Strichbild
+   darin — dieselbe Form, die gleich den ganzen Schirm füllt. */
+.ap .streifen{display:flex;gap:12px;align-items:flex-end;overflow-x:auto;overflow-y:hidden;
+  padding:12px 22px 14px;scroll-behavior:smooth;scrollbar-width:none}
+.ap .streifen::-webkit-scrollbar{display:none}
+.ap .kachel{flex:none;display:flex;flex-direction:column;align-items:center;gap:6px;
+  color:var(--tinte-3)}
+.ap .kachel .bild{border:1px solid var(--linie-2);background:#fff;display:grid;place-items:center;
+  border-radius:2px;transition:transform .18s,box-shadow .18s,border-color .18s}
+.ap .kachel .lab{font-size:10.5px;white-space:nowrap;max-width:98px;overflow:hidden;
+  text-overflow:ellipsis}
+.ap .kachel.an{color:var(--tinte)}
+.ap .kachel.an .bild{border-color:var(--tinte);transform:scale(1.14);
+  box-shadow:0 10px 24px rgba(36,30,24,.2)}
+.ap .kachel.laeuft .lab::after{content:' ·';color:var(--messing)}
+.ap .kachel.fremd{opacity:.5}
+.ap .kachel.fremd .bild{border-style:dashed}
+
+.ap .lfuss{display:flex;align-items:center;gap:12px;padding:0 22px 14px}
+.ap .lfuss .sagt{font-size:12px;color:var(--tinte-2);flex:1;min-width:0;line-height:1.4}
+.ap .lfuss .sagt b{color:var(--tinte);font-weight:600}
+.ap .lfuss .sagt .aus{color:#8C2F1E}
+.ap .behalten{background:var(--tinte);color:var(--papier);border-radius:2px;padding:10px 20px;
+  font-size:13.5px;font-weight:500;flex:none}
+.ap .abbruch{border:1px solid var(--linie-2);border-radius:2px;padding:9px 15px;font-size:13px;
+  color:var(--tinte-2);flex:none}
+.ap .lfuss kbd{font-family:var(--mono);font-size:11px;border:1px solid var(--linie-2);
+  border-radius:2px;padding:1px 5px;color:var(--tinte-3)}
+
+.ap .toast{position:absolute;left:50%;top:26px;transform:translate(-50%,-12px);z-index:20;
+  background:var(--tinte);color:var(--papier);border-radius:2px;padding:9px 17px;font-size:13px;
+  opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+.ap .toast.auf{opacity:1;transform:translate(-50%,0)}
+.ap [hidden]{display:none!important}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Telefon. Die Leiste wird höher statt breiter: Format und Akzent rutschen
+   unter den Namen, der Streifen bleibt. Grundregel steht vor der Abfrage.
+   ══════════════════════════════════════════════════════════════════════════ */
+.ap.eng .flur .mitte{flex-direction:column;gap:22px;padding:16px 26px;text-align:center}
+.ap.eng .flur .text{max-width:none}
+.ap.eng .flur .text h4{font-size:23px}
+.ap.eng .flur .kz{padding:18px 22px 0}
+.ap.eng .flur .fuss{padding:0 22px 22px}
+.ap.eng .kurz{width:calc(100% - 24px)}
+.ap.eng .lkopf{flex-wrap:wrap;gap:6px 10px;padding:10px 16px 0}
+.ap.eng .lkopf .name{font-size:15px}
+.ap.eng .formate{margin-left:0;order:3;flex-basis:100%}
+.ap.eng .formate button{flex:1;text-align:center;padding:7px 6px}
+.ap.eng .streifen{padding:9px 16px 10px;gap:9px}
+.ap.eng .kachel{gap:4px}
+.ap.eng .kachel .lab{font-size:9.5px;max-width:74px}
+.ap.eng .lfuss{padding:0 16px 14px;flex-wrap:wrap;gap:9px}
+.ap.eng .lfuss .sagt{flex-basis:100%;order:0;font-size:11.5px}
+.ap.eng .behalten,.ap.eng .abbruch{padding:9px 14px}
+.ap.eng .behalten{flex:1;text-align:center}
+.ap.eng .lfuss kbd{display:none}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Entwürfe für den Einstellungsdialog · Blatt 27</div>
+      <h1>Anprobe</h1>
+      <p class="lede">Der gegenteilige Gedanke zu Blatt 26: <b>keine Voransicht in einem Kasten</b>,
+      sondern die Ansicht selbst, sofort, über den ganzen Schirm — und unten eine Leiste, mit der
+      man weiterblättert wie durch einen Filmstreifen. Am Ende <b>behalten</b> oder
+      <b>abbrechen</b>. Der Dialog selbst schrumpft dabei auf zwei Zeilen.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage" style="padding:16px 16px 18px">
+      <svg viewBox="0 0 300 190" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="8" y="8" width="284" height="174" rx="2"/>
+        <circle cx="98" cy="76" r="30"/><path d="M150 62h96M150 78h64"/>
+        <path d="M150 96h96" stroke-width="4"/>
+        <path d="M8 128h284"/>
+        <rect x="26" y="142" width="40" height="26" rx="1"/>
+        <rect x="76" y="138" width="48" height="32" rx="1" stroke-width="3"/>
+        <rect x="134" y="142" width="40" height="26" rx="1"/>
+        <rect x="184" y="142" width="40" height="26" rx="1"/>
+        <rect x="236" y="146" width="40" height="18" rx="1" stroke-width="2.6"/>
+      </svg>
+      <figcaption>Die Auslage füllt, die Leiste blättert</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Anprobe</h2><span class="marke geraet">PC · 1440 × 900</span></div>
+    <p class="etext">Der Dialog hat nur noch <b>zwei Tore</b>: „Aussehen" führt in die Anprobe,
+    „Wiedergabe" zum Rest. Damit ist die Kolonne aus sieben Abschnitten weg, ohne dass etwas
+    verschwindet — sie liegt eine Ebene tiefer, in zwei klar benannten Räumen.
+    <br><br>In der Anprobe ist der ganze Schirm die Voransicht. Die Leiste unten trägt links den
+    Namen und die Akzente, in der Mitte den <b>Filmstreifen</b> aller Ansichten dieses Formats,
+    rechts <b>Behalten</b> und <b>Abbrechen</b>. Was gerade läuft, ist im Streifen markiert; was
+    nicht für dieses Format gezeichnet ist, steht mit gestricheltem Rand dahinter — man <em>kann</em>
+    es aufsetzen und sieht dann sofort selbst, warum es nicht empfohlen ist. Das ist die ehrlichste
+    Form der Warnung, die es gibt.
+    <span class="probier"><b>Ausprobieren:</b> „Aussehen" drücken. Dann im Streifen klicken oder
+    mit <b>← →</b> blättern — der ganze Schirm wechselt mit. Format umschalten. <b>Abbrechen</b>
+    setzt zurück auf die, mit der man hereinkam; <b>Behalten</b> macht sie zur laufenden.</span></p>
+    <div class="buehne">
+      <div class="rahmen pc">
+        <div class="schirm">
+          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
+          <div class="flaeche"><div class="ap" id="v1"></div></div>
+        </div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Die Voransicht ist keine Verkleinerung — sie ist <b>die Sache</b></dd></div>
+      <div><dt>Stärke</dt><dd>Der Dialog ist zwei Zeilen lang; nichts mehr zu scrollen</dd></div>
+      <div><dt>Schwäche</dt><dd>Ein Zustand mehr. Wer die Leiste übersieht, glaubt, es sei schon entschieden</dd></div>
+      <div><dt>Antwort darauf</dt><dd>Die Leiste ist nicht ausblendbar und sagt in Worten, was gilt</dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Anprobe, hochkant</h2><span class="marke geraet">Telefon · 390 × 844</span></div>
+    <p class="etext">Am Telefon ist dieser Vorschlag stärker als am Schreibtisch: hier hat ein
+    Kasten neben einer Liste ohnehin keinen Platz, und eine Verkleinerung von 390 px ist keine
+    Voransicht mehr. Die Leiste wird höher statt breiter — Format und Akzent rutschen unter den
+    Namen —, der Streifen bleibt und wird <b>gewischt</b>. Darüber steht die Ansicht in ihrer
+    echten Grösse, mit dem Titel, der gerade läuft.
+    <span class="probier"><b>Ausprobieren:</b> „Aussehen", dann im Streifen wischen oder tippen.
+    Fünf Telefonansichten, dahinter die acht, die auch quer können.</span></p>
+    <div class="buehne">
+      <div class="rahmen telefon">
+        <div class="schirm"><div class="ap eng" id="v2"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Am Telefon die <b>einzige</b> ehrliche Voransicht — echte Grösse</dd></div>
+      <div><dt>Schwäche</dt><dd>Die Leiste verdeckt das untere Drittel der Auslage</dd></div>
+      <div><dt>Gemessen</dt><dd>Leiste 267 px hoch; darüber bleiben 577 px von 844</dd></div>
+      <div><dt>Wischen</dt><dd>Der Streifen scrollt; die Auswahl folgt der Mitte</dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Anprobieren ist schon gebaut.</b> <code>zeigeLayout(id)</code> baut eine Auslage
+      auf und ab, und das <code>&lt;audio&gt;</code>-Element liegt bewusst <em>ausserhalb</em> von
+      <code>#buehne</code> — genau deshalb übersteht die Wiedergabe einen Wechsel. Die Anprobe ist
+      also nichts Neues: sie ruft dieselbe Funktion, nur ohne zu speichern.</span></li>
+      <li><span><b>Der Unterschied ist eine einzige Zeile.</b> <code>zeigeLayout()</code> schreibt
+      heute am Ende <code>musiklib:layout</code>. Für die Anprobe braucht es
+      <code>zeigeLayout(id, {merken:false})</code>; <b>Behalten</b> schreibt den Schlüssel,
+      <b>Abbrechen</b> ruft <code>zeigeLayout(vorherige)</code>. Kein zweiter Zeichenweg, kein
+      zweiter <code>deck.onRender</code> — der Haken aus Blatt 26 entfällt hier
+      vollständig.</span></li>
+      <li><span><b>Der Kachel im Streifen genügt ein Strichbild.</b> Bei 84 px Breite wäre auch eine
+      echte Auslage nur ein Fleck. Das Strichbild kommt aus der <code>familie</code>, die jede
+      Auslage bereits trägt und die bisher <em>nirgends</em> gerendert wird — hier bekommt sie
+      endlich eine Aufgabe.</span></li>
+      <li><span><b>Was nicht gezeichnet ist, wird nicht versteckt.</b> <code>alleZeigen</code>
+      entfällt als Kästchen: die ungeeigneten stehen am Ende des Streifens, gestrichelt, und die
+      Leiste sagt in Worten, was sie sind. Wer eine aufsetzt, sieht in derselben Sekunde, ob sie
+      trotzdem taugt — die Empfehlung bleibt eine Empfehlung.</span></li>
+      <li><span><b>Ein Risiko, das benannt gehört.</b> Wer die Leiste übersieht und die Seite
+      schliesst, hat nichts gespeichert und findet beim nächsten Öffnen die alte Ansicht — er
+      glaubt, die Einstellung sei verlorengegangen. Zwei Gegenmittel: die Leiste ist nicht
+      wegklickbar, und beim Verlassen der Seite in Anprobe wird das Aufgesetzte
+      übernommen.</span></li>
+      <li><span><b>Beide Blätter teilen eine Entscheidung.</b> Format, Ansicht und Akzent gehören
+      zusammen und der Rest gehört woandershin. Ob man das über <em>Reiter</em> löst (26) oder über
+      <em>Tore</em> (27), ist die eigentliche Frage — alles andere folgt daraus.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für den Einstellungsdialog in player.html</span><span>Blatt 27 · Anprobe</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+/* ══════════════════════════════════════════════════════════════════════════
+   Die Anprobe. Drei Zustände, und der mittlere ist der neue:
+     zu       — nichts offen, die Auslage läuft
+     dialog   — die zwei Tore
+     probe    — eine Auslage ist aufgesetzt, aber nicht gespeichert
+   `laeuft` ist das Gespeicherte, `auf` das Aufgesetzte. Abbrechen heisst,
+   `auf` auf `laeuft` zurückzusetzen — mehr passiert dabei nicht.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+function bauAnprobe(w, eng){
+  let ziel = eng ? 'telefon' : 'pc';
+  let laeuft = eng ? 'papier' : 'bedienteil';   // das Gespeicherte
+  let auf = laeuft;                             // das Aufgesetzte
+  let modus = 'zu';                             // zu | dialog | probe
+  const akzent = {};
+
+  const alb = ALBUMS[2], titel = alb.tr[1];
+  const holL = id => AUSLAGEN.find(x => x.id === id);
+  const reihe = () => fuerZiel(ziel).concat(AUSLAGEN.filter(L => !L.ziele.includes(ziel)));
+
+  w.innerHTML = `
+    <div class="flur" data-flur></div>
+    <div class="veil" data-veil hidden></div>
+    <div class="kurz" data-kurz hidden></div>
+    <div class="leiste" data-leiste></div>
+    <div class="toast" data-toast></div>`;
+
+  const flur = w.querySelector('[data-flur]');
+  const veil = w.querySelector('[data-veil]');
+  const kurz = w.querySelector('[data-kurz]');
+  const leiste = w.querySelector('[data-leiste]');
+  const toastEl = w.querySelector('[data-toast]');
+  let tz = 0;
+  const toast = t => {
+    toastEl.textContent = t; toastEl.classList.add('auf');
+    clearTimeout(tz); tz = setTimeout(() => toastEl.classList.remove('auf'), 1900);
+  };
+
+  /* ── Die aufgesetzte Auslage ───────────────────────────────────────────
+     Attrappe: Farbe der Familie, Strichbild, laufender Titel, eine Bahn.
+     Im Programm steht hier die Auslage selbst. */
+  function zeichneFlur(){
+    const L = holL(auf);
+    const [bg, ink, akz] = farbenFuer(L, akzent[L.id]);
+    flur.style.setProperty('--bg', bg);
+    flur.style.setProperty('--ink', ink);
+    flur.style.setProperty('--akz', akz);
+    flur.innerHTML = `
+      <div class="kz"><span>${esc(L.name)}</span><span>${esc(alb.t)}</span></div>
+      <div class="mitte">
+        ${signet(L.fam, eng ? 150 : 230)}
+        <div class="text">
+          <div class="kl">Es läuft</div>
+          <h4>${esc(titel[0])}</h4>
+          <div class="ar">${esc(alb.ar)} · ${esc(alb.t)}</div>
+          <div class="bahn"><i></i></div>
+          <div class="tast">
+            <button type="button" aria-label="Vorheriger">${I.prev(17)}</button>
+            <button class="gross" type="button" aria-label="Pause">${I.pause(21)}</button>
+            <button type="button" aria-label="Nächster">${I.next(17)}</button>
+          </div>
+        </div>
+      </div>
+      <div class="fuss">${esc(L.fam)} · ${esc(L.ger)}</div>`;
+  }
+
+  /* ── Zustand „dialog": zwei Tore, mehr nicht ── */
+  function zeichneKurz(){
+    kurz.innerHTML = `
+      <h2>Einstellungen</h2>
+      <p>Eine Sammlung, viele Oberflächen. Was gespielt wird, läuft beim Wechsel weiter — nur das
+      Gerät drumherum ist ein anderes.</p>
+      <button class="tor" type="button" data-tor="aussehen">
+        ${signet(holL(laeuft).fam, 40)}
+        <span class="txt"><span class="n">Aussehen</span>
+          <span class="b">Format, Ansicht, Akzent — zurzeit <b>${esc(holL(laeuft).name)}</b> auf
+          ${esc(zielName(ziel))}. Zum Anprobieren, nicht zum Raten.</span></span>
+        <span class="pfeil">${I.fwd(16)}</span></button>
+      <button class="tor" type="button" data-tor="wiedergabe">
+        ${I.slider(30)}
+        <span class="txt"><span class="n">Wiedergabe</span>
+          <span class="b">Sortierung, Sammlung, Warteschlangenende, Lautstärke, Bildschirm,
+          neu einlesen.</span></span>
+        <span class="pfeil">${I.fwd(16)}</span></button>
+      <div class="kfuss"><span>Taste <b>L</b> öffnet diese Liste</span>
+        <button type="button" data-zu>Schließen</button></div>`;
+    kurz.querySelectorAll('[data-tor]').forEach(b => b.onclick = () => {
+      if (b.dataset.tor === 'aussehen'){ modus = 'probe'; zeichne(); }
+      else toast('„Wiedergabe" — auf diesem Blatt nicht ausgezeichnet');
+    });
+    kurz.querySelector('[data-zu]').onclick = () => { modus = 'zu'; zeichne(); };
+  }
+
+  /* ── Zustand „probe": die Leiste ── */
+  function zeichneLeiste(){
+    const L = holL(auf);
+    const ist = L.ziele.includes(ziel);
+    const ak = L.ak || [];
+    const jetzt = akzent[L.id] || (ak[0] && ak[0][0]);
+    const mass = ziel === 'telefon' ? (eng ? [38, 70] : [46, 84])
+               : ziel === 'tablet'  ? (eng ? [66, 50] : [84, 63])
+                                    : (eng ? [74, 46] : [96, 60]);
+    leiste.innerHTML = `
+      <div class="lkopf">
+        <span class="name">${esc(L.name)}</span>
+        <span class="fam">${esc(L.fam)}</span>
+        ${ak.length > 1 ? `<span class="akz">${ak.map(([n, f]) => `
+          <button type="button" data-ak="${esc(n)}" title="${esc(n)}"
+            class="${n === jetzt ? 'an' : ''}" style="background:${f}"></button>`).join('')}</span>` : ''}
+        <span class="formate">${ZIELE.map(z => `
+          <button type="button" data-z="${z.id}" class="${z.id === ziel ? 'an' : ''}">${esc(z.name)}
+            <span class="n">${fuerZiel(z.id).length}</span></button>`).join('')}</span>
+      </div>
+      <div class="streifen" data-streifen>${reihe().map(x => {
+        const eigen = x.ziele.includes(ziel);
+        return `<button class="kachel${x.id === auf ? ' an' : ''}${x.id === laeuft ? ' laeuft' : ''}${
+          eigen ? '' : ' fremd'}" type="button" data-l="${x.id}" title="${esc(x.name)}">
+          <span class="bild" style="width:${mass[0]}px;height:${mass[1]}px">${
+            signet(x.fam, Math.round(mass[0] * .74))}</span>
+          <span class="lab">${esc(x.name)}</span></button>`;
+      }).join('')}</div>
+      <div class="lfuss">
+        <span class="sagt">${
+          auf === laeuft
+            ? `<b>${esc(L.name)}</b> ist die eingestellte Ansicht.`
+            : `Aufgesetzt: <b>${esc(L.name)}</b> — noch nicht übernommen.`}
+          ${ist ? '' : `<span class="aus">Nicht für ${esc(zielName(ziel))} gezeichnet: kann
+            abgeschnitten, zu klein oder unbedienbar sein.</span>`}</span>
+        <kbd>←</kbd><kbd>→</kbd>
+        <button class="abbruch" type="button" data-abbruch>Abbrechen</button>
+        <button class="behalten" type="button" data-behalten>Behalten</button>
+      </div>`;
+
+    leiste.querySelectorAll('[data-l]').forEach(b => b.onclick = () => setzeAuf(b.dataset.l));
+    leiste.querySelectorAll('[data-z]').forEach(b => b.onclick = () => {
+      ziel = b.dataset.z;
+      if (!holL(auf).ziele.includes(ziel)) setzeAuf((fuerZiel(ziel)[0] || holL(auf)).id);
+      else zeichne();
+    });
+    leiste.querySelectorAll('[data-ak]').forEach(b => b.onclick = () => {
+      akzent[auf] = b.dataset.ak; zeichne();
+    });
+    leiste.querySelector('[data-abbruch]').onclick = () => {
+      const zurueck = auf !== laeuft;
+      auf = laeuft; modus = 'zu'; zeichne();
+      toast(zurueck ? `Zurück auf „${holL(laeuft).name}"` : 'Nichts geändert');
+    };
+    leiste.querySelector('[data-behalten]').onclick = () => {
+      laeuft = auf; modus = 'zu'; zeichne();
+      toast(`„${holL(laeuft).name}" behalten`);
+    };
+    mitteRuecken();
+  }
+
+  /* Die gewählte Kachel in die Mitte des Streifens holen — sonst blättert
+     man mit den Pfeilen aus dem Bild heraus. */
+  function mitteRuecken(){
+    const s = leiste.querySelector('[data-streifen]');
+    const k = s && s.querySelector('.kachel.an');
+    if (!k) return;
+    s.scrollLeft = k.offsetLeft - (s.clientWidth - k.offsetWidth) / 2;
+  }
+
+  function setzeAuf(id){ auf = id; zeichne(); }
+
+  function zeichne(){
+    w.classList.toggle('probe', modus === 'probe');
+    veil.hidden = modus !== 'dialog';
+    kurz.hidden = modus !== 'dialog';
+    zeichneFlur();
+    if (modus === 'dialog') zeichneKurz();
+    if (modus === 'probe') zeichneLeiste();
+    /* Der Wechsler bleibt der Weg hinein — auch auf diesem Blatt. */
+    if (modus === 'zu'){
+      flur.insertAdjacentHTML('beforeend', `
+        <button type="button" data-wechsler style="position:absolute;right:22px;bottom:22px;
+          width:46px;height:46px;border-radius:50%;border:1px solid currentColor;opacity:.6;
+          display:grid;place-items:center;color:var(--ink)"
+          aria-label="Einstellungen">${I.slider(20)}</button>`);
+      flur.querySelector('[data-wechsler]').onclick = () => { modus = 'dialog'; zeichne(); };
+    }
+  }
+
+  w.tabIndex = 0;
+  w.addEventListener('pointerdown', () => w.focus());
+  w.addEventListener('keydown', ev => {
+    if (modus !== 'probe') {
+      if (ev.key.toLowerCase() === 'l'){ modus = 'dialog'; zeichne(); }
+      return;
+    }
+    const r = reihe();
+    const i = r.findIndex(x => x.id === auf);
+    if (ev.key === 'ArrowRight' || ev.key === 'ArrowLeft'){
+      ev.preventDefault();
+      setzeAuf(r[clamp(i + (ev.key === 'ArrowRight' ? 1 : -1), 0, r.length - 1)].id);
+    } else if (ev.key === 'Enter'){
+      ev.preventDefault(); laeuft = auf; modus = 'zu'; zeichne();
+      toast(`„${holL(laeuft).name}" behalten`);
+    } else if (ev.key === 'Escape'){
+      auf = laeuft; modus = 'zu'; zeichne(); toast(`Zurück auf „${holL(laeuft).name}"`);
+    }
+  });
+
+  zeichne();
+}
+
+/* Wurzel als Element, nicht als Kennung — siehe Blatt 26. */
+bauAnprobe(document.getElementById('v1'), false);
+bauAnprobe(document.getElementById('v2'), true);
+</script>

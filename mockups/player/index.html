@@ -83,6 +83,20 @@
 
   <div class="gitter" id="gitter3"></div>
 
+  <div class="reihe2">
+    <div class="regel" style="margin-top:70px"></div>
+    <h2 style="font-family:var(--serif);font-size:27px;font-weight:400;margin-top:34px">Der
+    Einstellungsdialog</h2>
+    <p class="etext" style="margin-top:12px;max-width:70ch">Zwei Blätter, die <b>keinen Spieler</b>
+    entwerfen, sondern die Stelle, an der man einen auswählt. Heute stehen dort fünfundzwanzig
+    Ansichten als Textkacheln — Name, Gerät, ein Satz —, man wählt blind, und der Dialog schliesst
+    sich sofort. Beide Blätter geben ihm eine <b>Voransicht</b> und räumen die Kolonne aus sieben
+    Abschnitten auf; sie tun es auf entgegengesetzte Weise. Es sind
+    <b>Vorschläge zur Auswahl</b>, keine Entscheidung.</p>
+  </div>
+
+  <div class="gitter" id="gitter4"></div>
+
   <div class="tafel">
     <div class="regel" style="margin-bottom:34px"></div>
     <h2 style="font-family:var(--serif);font-size:27px;font-weight:400">Woran man sie unterscheidet</h2>
@@ -327,6 +341,46 @@ const DRITTE = [
    'Aus einem Stück geformt, alles gedrückt statt gezeichnet; von drei Knöpfen ist einer gefüllt.',['PC','iPad quer','Telefon']],
 ];
 
+/* ── Der Einstellungsdialog (Blätter 26–27) ───────────────────────────────
+   Diese zwei haben keine Vorlage aus einem Foto: ihre Vorlage ist der Dialog,
+   der heute in player.html steht. Die Skizzen zeigen den Aufbau, nicht das
+   Aussehen — links Liste und Kasten, rechts Auslage und Leiste. */
+const VIERTE = [
+  ['26','schaukasten','Schaukasten',
+   'Links die Liste, rechts die eine, auf die man zeigt. Gewechselt wird erst auf Druck.',
+   ['PC','iPad','Telefon']],
+  ['27','anprobe','Anprobe',
+   'Keine Verkleinerung: die Ansicht wird aufgesetzt, unten blättert eine Leiste weiter.',
+   ['PC','iPad','Telefon']],
+];
+const SKIZZEN2 = {
+  '26': skizze('#F2EFE9', `
+    <rect x="14" y="14" width="272" height="192" rx="3" fill="#FBF9F5"/>
+    <rect x="14" y="14" width="272" height="30" fill="#F2EFE9"/>
+    <rect x="196" y="38" width="52" height="3" fill="#8A6534"/>
+    <rect x="14" y="44" width="96" height="162" fill="#F2EFE9"/>
+    <g fill="#C9C2B6">${[0,1,2,3,4].map(i =>
+      `<rect x="26" y="${60 + i*26}" width="72" height="12" rx="2"/>`).join('')}</g>
+    <rect x="22" y="112" width="80" height="18" rx="2" fill="#FBF9F5"/>
+    <rect x="22" y="112" width="2.5" height="18" fill="#8A6534"/>
+    <rect x="140" y="62" width="112" height="70" rx="2" fill="#B7BABC"/>
+    <rect x="140" y="126" width="70" height="6" fill="#C4402A"/>
+    <rect x="128" y="152" width="90" height="10" rx="2" fill="#241E18"/>
+    <rect x="128" y="172" width="76" height="20" rx="2" fill="#241E18"/>`),
+  '27': skizze('#B7BABC', `
+    <rect x="0" y="0" width="300" height="150" fill="#B7BABC"/>
+    <rect x="52" y="46" width="70" height="40" rx="3" fill="none" stroke="#23262A" stroke-width="4"/>
+    <circle cx="150" cy="66" r="20" fill="none" stroke="#23262A" stroke-width="4"/>
+    <rect x="176" y="52" width="86" height="6" fill="#23262A"/>
+    <rect x="176" y="70" width="60" height="4" fill="#23262A" opacity=".5"/>
+    <rect x="176" y="88" width="86" height="5" fill="#C4402A"/>
+    <rect x="0" y="150" width="300" height="70" fill="#FBF9F5"/>
+    <g fill="#FFF" stroke="#C4BEB3" stroke-width="2">${[0,1,2,3,4].map(i =>
+      `<rect x="${16 + i*46}" y="168" width="34" height="26" rx="2"/>`).join('')}</g>
+    <rect x="106" y="163" width="42" height="34" rx="2" fill="#FFF" stroke="#241E18" stroke-width="3"/>
+    <rect x="238" y="168" width="48" height="20" rx="2" fill="#241E18"/>`),
+};
+
 const karte = (nr, datei, name, bild, vorlage, text, ger) => `
   <a class="blatt" href="${nr}-${datei}.html">
     <div class="bild">${bild}</div>
@@ -349,4 +403,7 @@ document.getElementById('gitter3').innerHTML = DRITTE.map(([nr, datei, name, fot
   karte(nr, datei, name,
     `<img src="../../mckups_player_2/Bildschirmfoto%202026-08-13%20um%20${foto}.png" alt="">`,
     foto, text, ger)).join('');
+
+document.getElementById('gitter4').innerHTML = VIERTE.map(([nr, datei, name, text, ger]) =>
+  karte(nr, datei, name, SKIZZEN2[nr], 'player.html', text, ger)).join('');
 </script>

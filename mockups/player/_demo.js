@@ -231,3 +231,133 @@ function bindBibliothek(o){
 function coverHTML(a, cls = 'cov', extra = ''){
   return `<div class="${cls}" style="background:${grad(a)}"${extra}><span class="ini">${ini(a)}</span></div>`;
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Die fünfundzwanzig Auslagen — nur für die Blätter 26 und 27.
+
+   Das sind die Entwürfe für den Einstellungsdialog selbst; sie brauchen
+   nicht einen Spieler, sondern die Liste aller Spieler. Namen, Formate,
+   Familien und Akzente stehen hier so, wie sie in `player.html` registriert
+   sind — wer dort eine Auslage hinzufügt, ergänzt hier eine Zeile.
+
+   `signet()` zeichnet die Familie als Strichbild. Im Programm ist die
+   Voransicht keine Zeichnung, sondern die Auslage selbst (siehe Blatt 26,
+   „Was das im Code bedeutet"); hier fehlen dafür schlicht die Auslagen.
+   ══════════════════════════════════════════════════════════════════════════ */
+const AUSLAGEN = [
+ {id:'geraet',   name:'Gerät',        fam:'Die Platte',  ger:'iPad hoch', ziele:['telefon','tablet','pc'],
+  text:'Ein Laufwerk ohne ein Wort, quadratisch über die volle Breite. Der Tonarm ist die Spulleiste.'},
+ {id:'werkstisch', name:'Werkstisch', fam:'Die Platte',  ger:'PC', ziele:['tablet','pc'],
+  text:'Dasselbe Laufwerk links, rechts die Sammlung als reine Textliste mit Suchzeile.'},
+ {id:'vollbild', name:'Vollbild',     fam:'Die Platte',  ger:'iPad quer', ziele:['tablet','pc'],
+  text:'Nachtblau, die Platte nur aus Rillen — gespielte Ringe leuchten. Gezogen wird am Ring.'},
+ {id:'deck',     name:'Deck',         fam:'Die Kassette',ger:'PC', ziele:['tablet','pc'],
+  text:'Die Kassette in der Mitte, Tasten mit Druckpunkt, rechts die Sammlung als Regal mit Suche.'},
+ {id:'handgeraet', name:'Handgerät',  fam:'Die Kassette',ger:'iPad quer', ziele:['tablet','pc'],
+  text:'Dieselbe Kassette, fast randlos, Tasten so breit wie Daumen. Die Auswurftaste öffnet das Regal.'},
+ {id:'aufgeschlagen', name:'Aufgeschlagen', fam:'Der Satz', ger:'iPad quer', ziele:['tablet','pc'],
+  text:'Links die Platte, rechts der Satz. Eine Haarlinie ist die Position, mehr steht nicht da.'},
+ {id:'register', name:'Register',     fam:'Der Satz',    ger:'PC', ziele:['pc'],
+  text:'Dieselbe Ruhe, dazu die Warteschlange in Haarlinien am rechten Rand.'},
+ {id:'bedienteil', name:'Bedienteil', fam:'Das Rack',    ger:'PC', ziele:['tablet','pc'],
+  text:'Gebürstetes Metall, die Sammlung als Plattenfach in Regalordnung, ein Metallrad zum Spulen.'},
+ {id:'konsole',  name:'Konsole',      fam:'Das Rack',    ger:'iPad quer', ziele:['tablet','pc'],
+  text:'Dasselbe Gerät für die Hand: flacheres Fach, größeres Rad, breitere Tasten.'},
+ {id:'pult',     name:'Pult',         fam:'Das Pult',    ger:'PC', ziele:['tablet','pc'],
+  text:'Salbei und Terracotta: links ein langer Regler und die Titelliste, rechts die Platte.'},
+ {id:'turm',     name:'Turm',         fam:'Das Möbel',   ger:'PC', ziele:['tablet','pc'],
+  text:'Holz und Champagner, zwei Geräte übereinander: oben die Zeiger, unten die Bedienplatte.'},
+ {id:'vollverstaerker', name:'Vollverstärker', fam:'Das Möbel', ger:'iPad quer', ziele:['tablet','pc'],
+  text:'Ein Gerät statt zwei: Zeiger, Anzeige und Bedienung auf einer Frontplatte.'},
+ {id:'papier',   name:'Papier',       fam:'Das Telefon', ger:'iPhone hoch', ziele:['telefon'],
+  text:'Elfenbein und Messing, Serifen. Die Warteschlange ist eine Achse im rechten Rand.',
+  ak:[['messing','#8A6534'],['petrol','#2E5F63'],['gruen','#4A6B3A']]},
+ {id:'wueste',   name:'Desert Rose',  fam:'Das Telefon', ger:'iPhone hoch', ziele:['telefon'],
+  text:'Sand und Burgunder, Bild im Passepartout, alles auf der Mittelachse. Die Achse liegt hier waagerecht.',
+  ak:[['ton','#A9663F'],['rose','#8C3B4A']]},
+ {id:'kissen',   name:'Kissen',       fam:'Das Telefon', ger:'iPhone hoch', ziele:['telefon'],
+  text:'Weiches Weiß, Knöpfe treten aus der Fläche heraus. Der Ausschlag ist die Spulleiste.',
+  ak:[['nebel','#7C8794'],['flieder','#7A6E96']]},
+ {id:'karte',    name:'Karte',        fam:'Das Telefon', ger:'iPhone hoch', ziele:['telefon'],
+  text:'Weiße Karte über Schwarz, die Zeit als Überschrift, ein roter Ausschlag.',
+  ak:[['zinnober','#C4402A']]},
+ {id:'kiesel',   name:'Kiesel',       fam:'Das Telefon', ger:'iPhone hoch', ziele:['telefon'],
+  text:'Grau in Grau, weiche Kiesel. Der Spieler ist die Zeile, die läuft.',
+  ak:[['graphit','#4A4A46'],['stahl','#5C6B74']]},
+ {id:'abzug',    name:'Der echte Abzug', fam:'Sofortbild', ger:'iPhone hoch · PC', ziele:['telefon','tablet','pc'],
+  text:'Ein Sofortbild mit breiter Kinnlade, gerade gelegt, rechte Winkel.',
+  ak:[['seidenmatt','#8E8578'],['hochglanz','#2B2B2B'],['lacktropfen','#B2472F']]},
+ {id:'entwicklung', name:'Die Entwicklung', fam:'Sofortbild', ger:'iPhone hoch · PC', ziele:['telefon','tablet','pc'],
+  text:'Dasselbe Sofortbild — nur kommt das Bild erst, während der Titel läuft.',
+  ak:[['schiefer','#4A5259']]},
+ {id:'milchglas', name:'Milchglaszeilen', fam:'Zeilen', ger:'iPhone hoch · PC', ziele:['telefon','tablet','pc'],
+  text:'Die Warteschlange ist der Bildschirm: jede Zeile eine Scheibe Glas.',
+  ak:[['klarglas','#7FA3B0'],['fluessig','#5E8C93'],['seeglas','#6E9E86'],['perlmutt','#A79CB0'],['rauchquarz','#7A6E67']]},
+ {id:'programmheft', name:'Programmheft', fam:'Zeilen', ger:'iPhone hoch · PC', ziele:['telefon','tablet','pc'],
+  text:'Gedruckte Liste mit Bleistifthaken und Textmarker — der laufende Titel ist angestrichen.',
+  ak:[['kunstdruck','#C2A03A'],['kreide','#6E7B86']]},
+ {id:'spur',     name:'Die Spur',     fam:'Zeilen',      ger:'iPhone hoch · PC', ziele:['telefon','tablet','pc'],
+  text:'Dieselbe Liste, aber jede Zeile trägt ihren eigenen Stand als Linie unter dem Titel.',
+  ak:[['emaillelack','#2F6B72']]},
+ {id:'emaille',  name:'Emaille',      fam:'Platten',     ger:'iPhone hoch · PC', ziele:['telefon','tablet','pc'],
+  text:'Drei Platten übereinander: Bild, Bedienung, Liste. Harte Kanten, tiefe Farbe.',
+  ak:[['hochglanzemail','#1F5C6B'],['glasknopf','#C9553F']]},
+ {id:'gespritzt', name:'Gespritzt',   fam:'Platten',     ger:'iPhone hoch · PC', ziele:['telefon','tablet','pc'],
+  text:'Dieselben Platten, aber genarbt — und der Knopf sitzt in einem Ring statt auf der Fläche.',
+  ak:[['chromring','#8C9298']]},
+ {id:'kalender', name:'Abreißkalender', fam:'Block',     ger:'iPhone hoch · PC', ziele:['telefon','tablet','pc'],
+  text:'Der laufende Titel steht auf dem obersten Blatt, darunter der Stapel dessen, was noch kommt.'},
+];
+
+const ZIELE = [
+  {id:'telefon', name:'Telefon',      text:'Hochkant in einer Hand.'},
+  {id:'tablet',  name:'Tablet',       text:'iPad, hoch oder quer, mit dem Finger.'},
+  {id:'pc',      name:'Schreibtisch', text:'Großes Fenster, Maus und Tastatur.'},
+];
+const zielName = id => (ZIELE.find(z => z.id === id) || ZIELE[0]).name;
+const fuerZiel = z => AUSLAGEN.filter(L => L.ziele.includes(z));
+
+/* ── Signet: die Familie als Strichbild ──────────────────────────────────
+   Ein Rechteck ist die Fläche, die Striche sind, wo etwas steht. Mehr soll
+   es nicht sein — bei 46 px Breite ist alles andere Grafik ohne Aussage. */
+const SIGNET = {
+ 'Die Platte':   '<circle cx="34" cy="31" r="17"/><circle cx="34" cy="31" r="4"/><path d="M74 13 60 36"/>',
+ 'Die Kassette': '<rect x="14" y="15" width="72" height="32" rx="2"/><circle cx="36" cy="31" r="6"/><circle cx="64" cy="31" r="6"/><path d="M22 54h56"/>',
+ 'Der Satz':     '<circle cx="26" cy="31" r="14"/><path d="M52 20h34M52 28h34M52 36h22"/><path d="M52 50h34"/>',
+ 'Das Rack':     '<rect x="12" y="12" width="46" height="26" rx="1"/><path d="M12 25h46"/><circle cx="76" cy="25" r="10"/><path d="M12 48h64"/>',
+ 'Das Pult':     '<path d="M12 20h40M12 30h40M12 40h26"/><rect x="12" y="50" width="40" height="5" rx="2"/><circle cx="74" cy="31" r="16"/>',
+ 'Das Möbel':    '<rect x="12" y="10" width="76" height="20" rx="1"/><circle cx="32" cy="20" r="6"/><circle cx="52" cy="20" r="6"/><rect x="12" y="36" width="76" height="20" rx="1"/><path d="M22 46h32"/>',
+ 'Das Telefon':  '<rect x="34" y="6" width="32" height="52" rx="4"/><rect x="40" y="12" width="20" height="18" rx="1"/><path d="M40 38h20M40 44h14"/><path d="M74 12v40"/>',
+ 'Sofortbild':   '<rect x="30" y="6" width="40" height="52" rx="1"/><rect x="35" y="11" width="30" height="26"/><path d="M38 44h24"/><circle cx="50" cy="52" r="4"/>',
+ 'Zeilen':       '<path d="M14 12h72M14 22h72M14 32h72M14 42h72M14 52h48"/><rect x="12" y="28" width="76" height="8" rx="1" fill="currentColor" fill-opacity=".18" stroke="none"/>',
+ 'Platten':      '<rect x="20" y="6" width="60" height="16" rx="1"/><rect x="20" y="25" width="60" height="14" rx="1"/><circle cx="50" cy="32" r="4"/><rect x="20" y="42" width="60" height="16" rx="1"/>',
+ 'Block':        '<rect x="24" y="8" width="52" height="26" rx="1"/><path d="M28 40h44M31 47h38M34 54h32"/>',
+};
+function signet(fam, w = 46){
+  return `<svg class="sig" viewBox="0 0 100 64" width="${w}" height="${Math.round(w * .64)}"
+    fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"
+    aria-hidden="true">${SIGNET[fam] || ''}</svg>`;
+}
+
+/* Jede Familie hat einen Grund, eine Tinte und einen Akzent. Das ist keine
+   Palette der Auslage, sondern ihr Wiedererkennungswert im Kleinen: in einer
+   Voransicht von 90 px ist die Farbe das Erste, was ankommt. */
+const FAMILIENFARBEN = {
+ 'Die Platte':   ['#EFEFEC','#1A1A16','#8A6534'],
+ 'Die Kassette': ['#2A2A28','#F2EFE7','#C8A24A'],
+ 'Der Satz':     ['#FBF9F5','#241E18','#8A6534'],
+ 'Das Rack':     ['#B7BABC','#23262A','#C4402A'],
+ 'Das Pult':     ['#DCE3D4','#2C3327','#B4593A'],
+ 'Das Möbel':    ['#4A3628','#F0E4D0','#D9C48A'],
+ 'Das Telefon':  ['#F5F0E4','#2A2419','#8A6534'],
+ 'Sofortbild':   ['#E8E6E1','#1F1D1A','#B2472F'],
+ 'Zeilen':       ['#E4EAEE','#26333E','#5E8C93'],
+ 'Platten':      ['#16505C','#EAF2F2','#C9553F'],
+ 'Block':        ['#F2EDE2','#2A2620','#C24A32'],
+};
+/* Grund, Tinte, Akzent — der gewählte Akzent schlägt den der Familie. */
+function farbenFuer(L, akzentId){
+  const [bg, ink, akz] = FAMILIENFARBEN[L.fam] || FAMILIENFARBEN['Der Satz'];
+  const eigen = ((L.ak || []).find(a => a[0] === akzentId) || [])[1];
+  return [bg, ink, eigen || akz];
+}

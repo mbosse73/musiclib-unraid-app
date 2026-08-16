@@ -1,0 +1,659 @@
+<title>26 · Schaukasten</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 26 — Der Einstellungsdialog als Schaukasten.
+
+   Vorschlag 1 von zwei. Die Frage ist nicht, wie der Dialog aussieht,
+   sondern wie man in ihm eine von fünfundzwanzig Ansichten findet, ohne
+   sie zu kennen. Antwort dieses Blattes: man zeigt sie.
+
+   Links steht, was es gibt — schmal, gruppiert, mit einem Strichbild je
+   Zeile. Rechts steht die eine, auf die man gerade zeigt: gross, mit Namen,
+   Formaten, Akzenten. Gewechselt wird erst auf Druck. Bis dahin schaut man
+   nur, und das ist der ganze Unterschied zu heute.
+   ══════════════════════════════════════════════════════════════════════════ */
+.sx{
+  --papier:#FBF9F5; --grund:#F2EFE9; --kasten:#FFFFFF;
+  --tinte:#241E18; --tinte-2:#6B6155; --tinte-3:#A0968A;
+  --linie:rgba(36,30,24,.12); --linie-2:rgba(36,30,24,.24);
+  --messing:#8A6534;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
+  height:100%;overflow:hidden;position:relative;font-family:var(--sans);color:var(--tinte);
+  background:#1E1A16}
+.sx *{font-family:inherit}
+
+/* Der Spieler dahinter — nur angedeutet. Er ist hier nicht der Entwurf,
+   aber er muss da sein: der Dialog liegt über etwas, das weiterläuft. */
+.sx .dahinter{position:absolute;inset:0;background:
+  radial-gradient(120% 90% at 22% 18%,#6E6459,#2A251F 62%);opacity:.5}
+.sx .dahinter .scheibe{position:absolute;left:9%;top:50%;transform:translateY(-50%);
+  width:min(300px,28%);aspect-ratio:1;border-radius:50%;
+  background:repeating-radial-gradient(circle,#1A1A16 0 3px,#242420 3px 6px)}
+.sx .veil{position:absolute;inset:0;background:rgba(20,18,14,.55)}
+
+/* ── Der Kasten ── */
+.sx .kasten{position:absolute;inset:26px;background:var(--papier);border-radius:3px;
+  box-shadow:0 40px 90px rgba(0,0,0,.4);display:flex;flex-direction:column;overflow:hidden}
+.sx .kkopf{flex:none;display:flex;align-items:flex-end;gap:26px;padding:22px 26px 0;
+  border-bottom:1px solid var(--linie)}
+.sx .kkopf h2{font-size:20px;font-weight:500;letter-spacing:-.01em;padding-bottom:14px;flex:none}
+.sx .reiter{display:flex;gap:2px;margin-left:auto}
+.sx .reiter button{padding:10px 18px 12px;font-size:13.5px;color:var(--tinte-2);
+  border-bottom:2px solid transparent;margin-bottom:-1px}
+.sx .reiter button.an{color:var(--tinte);border-bottom-color:var(--messing);font-weight:500}
+.sx .zu{flex:none;padding-bottom:12px;color:var(--tinte-3)}
+.sx .zu:hover{color:var(--tinte)}
+
+.sx .krumpf{flex:1;min-height:0;display:grid;grid-template-columns:322px minmax(0,1fr)}
+.sx .krumpf.einspaltig{grid-template-columns:1fr}
+
+/* ── Links: was es gibt ── */
+.sx .rail{border-right:1px solid var(--linie);display:flex;flex-direction:column;min-height:0;
+  background:var(--grund)}
+.sx .railkopf{flex:none;padding:16px 18px 14px;border-bottom:1px solid var(--linie)}
+.sx .kap{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--messing);
+  display:block;margin-bottom:8px}
+.sx .formate{display:flex;border:1px solid var(--linie-2);border-radius:2px;overflow:hidden}
+.sx .formate button{flex:1;padding:8px 4px 9px;font-size:12.5px;color:var(--tinte-2);
+  border-right:1px solid var(--linie-2);line-height:1.25}
+.sx .formate button:last-child{border-right:0}
+.sx .formate button.an{background:var(--tinte);color:#FBF9F5}
+.sx .formate button b{display:block;font-weight:500;font-size:13px}
+.sx .formate button .n{font-size:10px;letter-spacing:.06em;opacity:.7;font-variant-numeric:tabular-nums}
+.sx .suchzeile{margin-top:11px;display:flex;align-items:center;gap:8px;border:1px solid var(--linie-2);
+  border-radius:2px;padding:0 9px;background:#fff}
+.sx .suchzeile svg{color:var(--tinte-3);flex:none}
+.sx .suchzeile input{flex:1;min-width:0;padding:8px 0;font-size:13px;background:none;outline:none}
+
+.sx .liste{flex:1;min-height:0;overflow:auto;padding:6px 0 14px}
+.sx .gruppe{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--tinte-3);
+  padding:14px 18px 6px}
+.sx .zeile{width:100%;display:flex;align-items:center;gap:12px;padding:9px 18px;text-align:left;
+  border-left:2px solid transparent}
+.sx .zeile:hover{background:rgba(36,30,24,.05)}
+.sx .zeile.zeigt{background:var(--kasten);border-left-color:var(--messing)}
+.sx .zeile .sig{flex:none;color:var(--tinte-3)}
+.sx .zeile.zeigt .sig{color:var(--messing)}
+.sx .zeile .txt{min-width:0;flex:1}
+.sx .zeile .n{display:block;font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.sx .zeile .g{display:block;font-size:10.5px;color:var(--tinte-3);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.sx .zeile .haken{flex:none;color:var(--messing);opacity:0}
+.sx .zeile.laeuft .haken{opacity:1}
+.sx .zeile.fremd{opacity:.52}
+.sx .leer{padding:22px 18px;font-size:12.5px;color:var(--tinte-3)}
+
+/* Der Schalter für die ungeeigneten steht dort, wo sie stehen würden — und
+   nicht oben als Kästchen mit einer Fussnote irgendwo darunter. */
+.sx .mehr{width:100%;text-align:left;padding:14px 18px;font-size:12px;color:var(--tinte-2);
+  border-top:1px solid var(--linie);margin-top:10px;display:flex;align-items:center;gap:8px}
+.sx .mehr:hover{color:var(--tinte)}
+.sx .mehr svg{transition:transform .18s}
+.sx .mehr.auf svg{transform:rotate(180deg)}
+.sx .warnzeile{padding:4px 18px 12px;font-size:11.5px;color:var(--tinte-3);line-height:1.45}
+
+/* ── Rechts: die eine, auf die man zeigt ── */
+.sx .kasten2{display:flex;flex-direction:column;min-height:0;background:var(--kasten)}
+.sx .buehne2{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:10px;padding:26px 30px 22px;
+  background:
+    linear-gradient(rgba(36,30,24,.03),rgba(36,30,24,.03)),
+    repeating-linear-gradient(45deg,transparent 0 9px,rgba(36,30,24,.022) 9px 18px)}
+/* Die Voransicht. Auf diesem Blatt gemalt — im Programm die Auslage selbst
+   (siehe „Was das im Code bedeutet"). Was sie zeigt, ist dasselbe, was die
+   Auslage zeigt: Farbe der Familie, Bild, laufender Titel, Bahn, Transport. */
+.sx .schau{position:relative;border:1px solid var(--linie-2);overflow:hidden;
+  box-shadow:0 18px 44px rgba(36,30,24,.16);display:flex;flex-direction:column;
+  background:var(--vbg);color:var(--vink);transition:width .22s,height .22s,background .2s}
+.sx .schau .vkopf{flex:none;display:flex;justify-content:space-between;gap:10px;
+  padding:9px 12px 0;font-size:7px;letter-spacing:.18em;text-transform:uppercase;opacity:.55}
+.sx .schau .vkopf span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:48%}
+.sx .schau .vmitte{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;
+  gap:14px;padding:8px 14px}
+.sx .schau.hoch .vmitte{flex-direction:column;gap:12px;text-align:center}
+.sx .schau .sig{color:currentColor;opacity:.9;flex:none}
+.sx .schau .vtext{min-width:0}
+.sx .schau .vt{font-size:13px;line-height:1.15;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.sx .schau .var{margin-top:3px;font-size:9px;opacity:.6;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.sx .schau .vbahn{margin-top:9px;height:3px;background:currentColor;opacity:.22;position:relative}
+.sx .schau .vbahn i{position:absolute;inset:0 62% 0 0;background:var(--vakz);opacity:1;display:block}
+.sx .schau .vtast{margin-top:9px;display:flex;gap:6px;align-items:center;justify-content:inherit}
+.sx .schau.hoch .vtast{justify-content:center}
+.sx .schau .vtast span{width:13px;height:13px;border-radius:50%;border:1px solid currentColor;
+  opacity:.5;display:block}
+.sx .schau .vtast span.gr{width:19px;height:19px;background:var(--vakz);border-color:transparent;
+  opacity:1}
+.sx .fmt{position:absolute;left:0;bottom:-24px;font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--tinte-3)}
+
+.sx .schild{flex:none;padding:18px 30px 22px;border-top:1px solid var(--linie)}
+.sx .schild h3{font-size:22px;font-weight:500;letter-spacing:-.01em}
+.sx .marken{margin-top:7px;display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.sx .marke2{font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--tinte-2);
+  border:1px solid var(--linie-2);border-radius:2px;padding:3px 8px}
+.sx .marke2.aus{color:#8C2F1E;border-color:rgba(140,47,30,.35)}
+.sx .schild p{margin-top:11px;font-size:13.5px;color:var(--tinte-2);line-height:1.55;max-width:58ch}
+.sx .warn{margin-top:10px;font-size:12.5px;color:#8C2F1E;line-height:1.5;max-width:58ch;
+  padding-left:11px;border-left:2px solid rgba(140,47,30,.45)}
+
+.sx .akz{margin-top:15px;display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.sx .akz .kap{margin:0 4px 0 0}
+.sx .akz button{display:flex;align-items:center;gap:7px;border:1px solid var(--linie);
+  border-radius:2px;padding:5px 10px;font-size:12px;color:var(--tinte-2)}
+.sx .akz button.an{border-color:var(--tinte);color:var(--tinte);box-shadow:inset 0 0 0 1px var(--tinte)}
+.sx .akz i{width:11px;height:11px;border-radius:50%;display:block;flex:none}
+
+.sx .tat{margin-top:18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.sx .nehmen{background:var(--tinte);color:#FBF9F5;border-radius:2px;padding:11px 22px;font-size:14px;
+  font-weight:500}
+.sx .nehmen[disabled]{opacity:.32}
+.sx .zurueck2{border:1px solid var(--linie-2);border-radius:2px;padding:10px 16px;font-size:13px;
+  color:var(--tinte-2)}
+.sx .tat .hin{font-size:12px;color:var(--tinte-3);margin-left:auto;text-align:right;line-height:1.4}
+.sx .tat .hin kbd{font-family:var(--mono);font-size:11px;border:1px solid var(--linie-2);
+  border-radius:2px;padding:1px 5px;color:var(--tinte-2)}
+
+/* ── Reiter „Wiedergabe" — alles, was nicht Aussehen ist ── */
+.sx .weite{overflow:auto;padding:22px 30px 30px}
+.sx .satz{padding-top:18px;margin-top:18px;border-top:1px solid var(--linie)}
+.sx .satz:first-child{margin-top:0;padding-top:0;border-top:0}
+.sx .reihe{margin-top:9px;display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:9px}
+.sx .wk{text-align:left;border:1px solid var(--linie);border-radius:2px;padding:11px 12px 12px;
+  color:var(--tinte)}
+.sx .wk:hover{background:rgba(36,30,24,.045)}
+.sx .wk.an{border-color:var(--tinte);box-shadow:inset 0 0 0 1px var(--tinte)}
+.sx .wk .n{display:block;font-size:14.5px;font-weight:500}
+.sx .wk .b{display:block;margin-top:5px;font-size:12px;color:var(--tinte-2);line-height:1.45}
+.sx .felder{margin-top:9px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.sx .felder label{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--tinte-2)}
+.sx .felder select{border:1px solid var(--linie-2);border-radius:2px;padding:6px 8px;font-size:13px;
+  background:#fff;color:var(--tinte)}
+.sx .felder input[type=range]{flex:1;min-width:170px;max-width:320px;accent-color:var(--messing)}
+.sx .felder .knopf{border:1px solid var(--linie-2);border-radius:2px;padding:6px 12px;font-size:12.5px}
+.sx .felder .knopf.an{border-color:var(--tinte);box-shadow:inset 0 0 0 1px var(--tinte)}
+.sx .stand{margin-top:11px;display:flex;align-items:center;gap:14px;font-size:12.5px;color:var(--tinte-2)}
+.sx .stand b{color:var(--tinte);font-variant-numeric:tabular-nums}
+.sx .stand .knopf{margin-left:auto;border:1px solid var(--linie-2);border-radius:2px;padding:6px 12px}
+
+.sx .kfuss{flex:none;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:12px 26px;border-top:1px solid var(--linie);font-size:12px;color:var(--tinte-3);
+  background:var(--grund)}
+.sx .kfuss a{color:var(--messing)}
+
+/* Kurze Rückmeldung statt eines Dialogs, der sich schliesst und nichts sagt. */
+.sx .toast{position:absolute;left:50%;bottom:26px;transform:translate(-50%,14px);
+  background:var(--tinte);color:#FBF9F5;border-radius:2px;padding:10px 18px;font-size:13px;
+  opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:20}
+.sx .toast.auf{opacity:1;transform:translate(-50%,0)}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Telefon: dieselbe Sache, eine Spalte. Der Schaukasten wandert nach oben
+   und bleibt beim Blättern stehen — die Liste läuft darunter durch.
+   Diese Grundregel steht VOR der Medienabfrage, sonst gewinnt sie nie.
+   ══════════════════════════════════════════════════════════════════════════ */
+.sx.eng .kasten{inset:0;border-radius:0}
+.sx.eng .krumpf{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+.sx.eng .kasten2{border-bottom:1px solid var(--linie);order:0}
+.sx.eng .rail{border-right:0;order:1}
+.sx.eng .buehne2{padding:12px 16px 8px;gap:6px;min-height:0}
+.sx.eng .schild{padding:10px 16px 12px}
+.sx.eng .schild h3{font-size:18px}
+/* Auf 390 px zählt jede Zeile, die die Liste behält. Weg müssen deshalb:
+   der Beschreibungstext, die Formatmarken (das Format steht als Taste
+   direkt darunter) und die Unterschrift am Kasten. */
+.sx.eng .schild p,
+.sx.eng .marken,
+.sx.eng .buehne2 .fmt{display:none}
+.sx.eng .akz{margin-top:0}
+.sx.eng .tat{margin-top:12px}
+.sx.eng .tat .hin{display:none}
+.sx.eng .nehmen{flex:1;text-align:center;padding:12px 14px}
+.sx.eng .kkopf{padding:14px 16px 0;gap:12px}
+.sx.eng .kkopf h2{font-size:17px;padding-bottom:10px}
+.sx.eng .reiter button{padding:8px 12px 10px;font-size:12.5px}
+.sx.eng .railkopf{padding:12px 16px 12px}
+.sx.eng .zeile{padding:8px 16px}
+.sx.eng .kfuss{padding:10px 16px;font-size:11px}
+.sx.eng .weite{padding:16px}
+.sx.eng .formate button b{font-size:12px}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Entwürfe für den Einstellungsdialog · Blatt 26</div>
+      <h1>Schaukasten</h1>
+      <p class="lede">Fünfundzwanzig Ansichten stehen heute als <b>Textkacheln</b> im Dialog: Name,
+      Gerät, ein Satz. Man wählt blind, und der Dialog schliesst sich sofort — wem die Wahl nicht
+      gefällt, der muss ihn wieder öffnen und die nächste raten. Dieses Blatt macht daraus einen
+      <b>Schaukasten</b>: links die Liste, rechts das Stück, auf das man zeigt. Gewechselt wird
+      erst auf Druck.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage" style="padding:16px 16px 18px">
+      <svg viewBox="0 0 300 190" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="8" y="8" width="284" height="174" rx="2"/>
+        <path d="M8 40h284M104 40v142"/>
+        <rect x="20" y="54" width="72" height="16" rx="1"/>
+        <rect x="20" y="80" width="72" height="12" rx="1"/>
+        <rect x="20" y="98" width="72" height="12" rx="1"/>
+        <rect x="20" y="116" width="72" height="12" rx="1"/>
+        <rect x="140" y="58" width="120" height="76" rx="1" stroke-width="2.6"/>
+        <path d="M120 152h100M120 166h60" stroke-width="2.6"/>
+      </svg>
+      <figcaption>Der Aufbau: Liste, Kasten, Schild</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Schaukasten</h2><span class="marke geraet">PC · 1440 × 900</span></div>
+    <p class="etext">Der Dialog hat jetzt <b>zwei Reiter</b>. „Aussehen" trägt Format, Ansicht und
+    Akzent — die drei Dinge, die zusammengehören und heute über zwei Abschnitte verteilt sind.
+    „Wiedergabe" trägt alles andere: Sortierung, Sammlung, Warteschlangenende, Ton, Bildschirm,
+    Einlesen. Damit endet die Kolonne aus sieben Abschnitten, durch die man heute scrollt.
+    <br><br>Links entscheidet das <b>Format</b>, was die Liste zeigt, und sagt in der Taste selbst,
+    wie viele das sind. Die Ansichten stehen nach Familie gruppiert, jede mit einem Strichbild —
+    keine Beschreibung, die man lesen muss, um zu ahnen, was gemeint ist. Was <b>nicht</b> für
+    dieses Format gezeichnet ist, steht am Ende hinter einer Zeile, die man aufklappt, und dann
+    steht neben jedem Eintrag, <b>warum</b>.
+    <span class="probier"><b>Ausprobieren:</b> in der Liste klicken — rechts wechselt nur die
+    Voransicht, unten links bleibt der Haken bei der laufenden. Erst „Diese Ansicht nehmen"
+    schaltet um. Mit <b>↑ ↓</b> durch die Liste gehen. Format wechseln. „Auch ungeeignete zeigen"
+    aufklappen und eine davon anschauen.</span></p>
+    <div class="buehne">
+      <div class="rahmen pc">
+        <div class="schirm">
+          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
+          <div class="flaeche"><div class="sx" id="v1"></div></div>
+        </div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Man sieht, wofür man sich entscheidet — <b>vor</b> der Entscheidung</dd></div>
+      <div><dt>Stärke</dt><dd>Der Grund für eine kurze Liste steht an der Liste, nicht in einer Fussnote</dd></div>
+      <div><dt>Schwäche</dt><dd>Braucht Breite. Unter 700 px ist es einspaltig — siehe Variante 2</dd></div>
+      <div><dt>Kosten</dt><dd>Eine echte Voransicht heisst: eine Auslage zweimal gleichzeitig bauen</dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Schaukasten, hochkant</h2><span class="marke geraet">Telefon · 390 × 844</span></div>
+    <p class="etext">Zwei Spalten gibt es hier nicht, also werden sie zu zweien übereinander: der
+    Kasten oben, fest, die Liste darunter läuft durch. Das ist dieselbe Anordnung, nur gekippt —
+    und sie behält die Eigenschaft, auf die es ankommt: <b>man sieht die Ansicht, während man in
+    der Liste unterwegs ist</b>. Der Beschreibungstext fällt weg; auf 390 px ist er der erste, der
+    stört, und das Strichbild sagt dasselbe schneller.
+    <span class="probier"><b>Ausprobieren:</b> in der Liste blättern — der Kasten oben bleibt
+    stehen und wechselt mit.</span></p>
+    <div class="buehne">
+      <div class="rahmen telefon">
+        <div class="schirm"><div class="sx eng" id="v2"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Dieselbe Bedienung wie am Schreibtisch, nichts Eigenes zu lernen</dd></div>
+      <div><dt>Schwäche</dt><dd>Der Kasten kostet Höhe: gemessen bleiben <b>drei</b> Listenzeilen</dd></div>
+      <div><dt>Weggelassen</dt><dd>Beschreibung und Tastaturhinweis — beides ist hier Ballast</dd></div>
+      <div><dt>Behalten</dt><dd><b>Nehmen</b> als volle Taste: der Daumen trifft sie ohne Zielen</dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Die Voransicht ist keine Zeichnung.</b> Auf diesem Blatt steht ein Strichbild,
+      weil die Attrappe keine Auslagen hat. Im Programm gibt es sie: eine Auslage ist ein Modul mit
+      <code>bau(wurzel, deck)</code>, das in <em>irgendeine</em> Wurzel schreibt. Die Voransicht ist
+      also <code>L.bau(vorschaukasten, deck)</code> plus ein <code>transform:scale()</code> — die
+      echte Ansicht, klein, mit dem laufenden Titel darin.</span></li>
+      <li><span><b>Ein Haken hängt daran, und er gehört benannt.</b> <code>deck.onRender</code> ist
+      heute ein einzelner Platz. Zwei gleichzeitig gebaute Auslagen — die grosse hinter dem Dialog
+      und die kleine im Kasten — überschreiben einander den Zeichner. Aus <code>onRender</code>
+      muss eine Liste werden, so wie <code>listenZeichner</code> schon eine ist. Das ist die einzige
+      Änderung am Unterbau, die dieses Blatt verlangt.</span></li>
+      <li><span><b>Nichts wird angewendet, bis „Nehmen" gedrückt ist.</b> Heute ruft die Kachel
+      direkt <code>zeigeLayout()</code> und schliesst den Dialog. Hier setzt der Klick nur eine
+      Variable <code>vorschau</code>; <code>zeigeLayout()</code> steht ausschliesslich am
+      Nehmen-Knopf. Der Rückweg ist damit kostenlos — <b>Esc</b>, und es bleibt, wie es war.</span></li>
+      <li><span><b>Die Reiter kosten keine neue Speicherstelle.</b> Welcher Reiter offen ist, ist
+      Zustand des Dialogs, nicht der App: eine Variable, die beim Schliessen verfällt. Alle Schlüssel
+      bleiben, wie sie sind — <code>musiklib:layout</code>, <code>:ziel</code>,
+      <code>:akzent</code>, <code>:sort</code>, <code>:ansicht</code>.</span></li>
+      <li><span><b>Die Begründung ersetzt die Fussnote.</b> Heute stehen drei Dinge nebeneinander,
+      die dasselbe erklären: ein Kästchen „Auch Ansichten zeigen, die …", eine Suchzeile und ein
+      Absatz darunter. Hier ist es <em>eine</em> Zeile am Ende der Liste, und der Grund steht bei
+      dem Eintrag, für den er gilt — <code>Werkstisch</code> verliert am Telefon die Titel,
+      <code>Register</code> schiebt die Plattenmitte aus dem Bild. Diese zwei Sätze stehen schon in
+      <code>CLAUDE.md</code>; sie gehören dorthin, wo man sie braucht.</span></li>
+      <li><span><b>Was bleibt, wie es ist.</b> Die Liste kommt weiter aus <code>LAYOUTS</code>,
+      gefiltert über <code>ziele</code>; <code>alleZeigen</code> bleibt der Schalter, nur an anderer
+      Stelle; der Akzent bleibt an der Auslage (<code>akzentFuer()</code>) und erscheint nur, wenn
+      es mehr als einen gibt.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für den Einstellungsdialog in player.html</span><span>Blatt 26 · Schaukasten</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+/* ══════════════════════════════════════════════════════════════════════════
+   Der Schaukasten. Zwei Zustände entscheiden alles:
+     ziel     — welches Format, filtert die Liste
+     vorschau — worauf man zeigt (nicht: was läuft)
+   `laeuft` ist, was läuft. Dass diese drei getrennt sind, IST der Entwurf.
+   ══════════════════════════════════════════════════════════════════════════ */
+function bauSchaukasten(w, eng){
+  let ziel = eng ? 'telefon' : 'pc';
+  let laeuft = eng ? 'papier' : 'werkstisch';
+  let vorschau = laeuft;
+  let reiter = 'aussehen';
+  let alle = false, suchtext = '';
+  const akzent = {};                        // je Auslage der gewählte Akzent
+
+  /* Warum eine Ansicht für ein Format nicht gezeichnet ist. Zwei Fälle sind
+     gemessen und stehen in CLAUDE.md — die übrigen sind der Regelfall. */
+  const GRUND = {
+    'werkstisch|telefon': 'Die Textliste presst am Telefon die Titel weg — es bleiben Nummer und Dauer.',
+    'register|telefon':   'Schiebt hochkant die Mitte der Platte aus dem Bild.',
+    'register|tablet':    'Schiebt hochkant die Mitte der Platte aus dem Bild.',
+  };
+  const grundFuer = L => GRUND[L.id + '|' + ziel]
+    || `Gezeichnet für ${L.ziele.map(zielName).join(' und ')} — auf ${zielName(ziel)} nicht nachgemessen.`;
+
+  w.innerHTML = `
+    <div class="dahinter"><div class="scheibe"></div></div>
+    <div class="veil"></div>
+    <div class="kasten">
+      <div class="kkopf">
+        <h2>Einstellungen</h2>
+        <div class="reiter">
+          <button type="button" data-r="aussehen">Aussehen</button>
+          <button type="button" data-r="wiedergabe">Wiedergabe</button>
+        </div>
+        <button class="zu" type="button" title="Schließen">${I.x(18)}</button>
+      </div>
+      <div class="krumpf" data-krumpf></div>
+      <div class="kfuss">
+        <span data-fuss></span>
+        <span><a href="#">Album des Tages</a></span>
+      </div>
+      <div class="toast" data-toast></div>
+    </div>`;
+
+  const krumpf = w.querySelector('[data-krumpf]');
+  const toastEl = w.querySelector('[data-toast]');
+  let toastZeit = 0;
+  const toast = t => {
+    toastEl.textContent = t;
+    toastEl.classList.add('auf');
+    clearTimeout(toastZeit);
+    toastZeit = setTimeout(() => toastEl.classList.remove('auf'), 1900);
+  };
+
+  const sichtbar = () => {
+    const q = suchtext.trim().toLowerCase();
+    const passt = L => !q || (L.name + ' ' + L.fam + ' ' + L.text).toLowerCase().includes(q);
+    return {
+      eigen: fuerZiel(ziel).filter(passt),
+      fremd: AUSLAGEN.filter(L => !L.ziele.includes(ziel)).filter(passt),
+    };
+  };
+
+  function listeHTML(){
+    const {eigen, fremd} = sichtbar();
+    let h = '', fam = '';
+    const zeile = (L, ist) => `
+      <button class="zeile${L.id === vorschau ? ' zeigt' : ''}${L.id === laeuft ? ' laeuft' : ''}${
+        ist ? '' : ' fremd'}" type="button" data-l="${L.id}">
+        ${signet(L.fam, 42)}
+        <span class="txt"><span class="n">${esc(L.name)}</span>
+          <span class="g">${esc(ist ? L.ger : grundFuer(L))}</span></span>
+        <span class="haken">${I.disc(15)}</span>
+      </button>`;
+    eigen.forEach(L => {
+      if (L.fam !== fam){ fam = L.fam; h += `<div class="gruppe">${esc(fam)}</div>`; }
+      h += zeile(L, true);
+    });
+    if (!eigen.length) h += `<p class="leer">Keine Ansicht passt zu dieser Suche.</p>`;
+    if (fremd.length){
+      h += `<button class="mehr${alle ? ' auf' : ''}" type="button" data-mehr>${I.down(14)}
+        ${alle ? 'Nur die für ' + esc(zielName(ziel)) + ' gezeichneten'
+               : esc(fremd.length) + ' weitere, nicht für ' + esc(zielName(ziel)) + ' gezeichnet'}</button>`;
+      if (alle){
+        h += `<p class="warnzeile">Ausgesperrt wird niemand — diese hier können auf
+          ${esc(zielName(ziel))} aber abgeschnitten, zu klein oder unbedienbar sein.</p>`;
+        fremd.forEach(L => h += zeile(L, false));
+      }
+    }
+    return h;
+  }
+
+  function schildHTML(){
+    const L = AUSLAGEN.find(x => x.id === vorschau);
+    const ist = L.ziele.includes(ziel);
+    const ak = L.ak || [];
+    const jetzt = akzent[L.id] || (ak[0] && ak[0][0]);
+    /* Der Kasten hat das Seitenverhältnis des Formats, auf das man schaut —
+       sonst behauptet die Voransicht eine Form, die es nicht gibt. Am Telefon
+       ist er kleiner: sonst bleibt für die Liste darunter keine Zeile übrig. */
+    const mass = ziel === 'telefon' ? (eng ? [88, 190] : [186, 402])
+               : ziel === 'tablet'  ? (eng ? [188, 141] : [300, 225])
+                                    : (eng ? [214, 134] : [372, 233]);
+    const hoch = mass[1] > mass[0];
+    const [vbg, vink, vakz] = farbenFuer(L, jetzt);
+    const st = ALBUMS[2], sti = st.tr[1];
+    return `
+      <div class="buehne2">
+        <div class="schau${hoch ? ' hoch' : ''}"
+          style="width:${mass[0]}px;height:${mass[1]}px;--vbg:${vbg};--vink:${vink};--vakz:${vakz}">
+          <div class="vkopf"><span>${esc(L.name)}</span><span>${esc(st.t)}</span></div>
+          <div class="vmitte">
+            ${signet(L.fam, Math.round(mass[0] * (hoch ? .44 : .3)))}
+            <div class="vtext">
+              <div class="vt">${esc(sti[0])}</div>
+              <div class="var">${esc(st.ar)}</div>
+              <div class="vbahn"><i></i></div>
+              <div class="vtast"><span></span><span class="gr"></span><span></span></div>
+            </div>
+          </div>
+        </div>
+        <span class="fmt" style="position:static;margin-top:8px">${esc(zielName(ziel))} · Voransicht</span>
+      </div>
+      <div class="schild">
+        <h3>${esc(L.name)}</h3>
+        <div class="marken">
+          <span class="marke2">${esc(L.fam)}</span>
+          ${ZIELE.map(z => L.ziele.includes(z.id)
+              ? `<span class="marke2">${esc(z.name)}</span>` : '').join('')}
+          ${ist ? '' : '<span class="marke2 aus">nicht für ' + esc(zielName(ziel)) + '</span>'}
+          ${L.id === laeuft ? '<span class="marke2">läuft gerade</span>' : ''}
+        </div>
+        <p>${esc(L.text)}</p>
+        ${ist ? '' : `<p class="warn">${esc(grundFuer(L))}</p>`}
+        ${ak.length > 1 ? `<div class="akz"><span class="kap">Akzent</span>${
+          ak.map(([n, f]) => `<button type="button" data-ak="${esc(n)}"
+            class="${n === jetzt ? 'an' : ''}"><i style="background:${f}"></i>${esc(n)}</button>`).join('')
+        }</div>` : ''}
+        <div class="tat">
+          <button class="nehmen" type="button" data-nehmen ${L.id === laeuft ? 'disabled' : ''}>${
+            L.id === laeuft ? 'Läuft bereits' : 'Diese Ansicht nehmen'}</button>
+          <button class="zurueck2" type="button" data-esc>Schließen</button>
+          <span class="hin"><kbd>↑</kbd><kbd>↓</kbd> blättern · <kbd>↵</kbd> nehmen · <kbd>Esc</kbd> zurück</span>
+        </div>
+      </div>`;
+  }
+
+  function aussehenHTML(){
+    const n = z => fuerZiel(z).length;
+    return `
+      <div class="rail">
+        <div class="railkopf">
+          <span class="kap">Format</span>
+          <div class="formate">${ZIELE.map(z => `
+            <button type="button" data-z="${z.id}" class="${z.id === ziel ? 'an' : ''}">
+              <b>${esc(z.name)}</b><span class="n">${n(z.id)} Ansichten</span></button>`).join('')}</div>
+          <div class="suchzeile">${I.search(15)}
+            <input type="search" placeholder="Name oder Familie" value="${esc(suchtext)}" data-suche></div>
+        </div>
+        <div class="liste" data-liste>${listeHTML()}</div>
+      </div>
+      <div class="kasten2">${schildHTML()}</div>`;
+  }
+
+  /* Der zweite Reiter ist der Rest des heutigen Dialogs — unverändert im
+     Inhalt, nur nicht mehr unter dem Aussehen begraben. */
+  let sort = 'artist', ansicht = 'alben', ende = 'weiter', zufall = false, wach = false;
+  let laut = 72, stumm = false;
+  function wiedergabeHTML(){
+    const wk = (an, name, text, attr) =>
+      `<button class="wk${an ? ' an' : ''}" type="button" ${attr}>
+         <span class="n">${esc(name)}</span><span class="b">${esc(text)}</span></button>`;
+    return `<div class="weite">
+      <div class="satz">
+        <span class="kap">Sammlung</span>
+        <div class="felder">
+          <label>Sortierung
+            <select data-sort>${[['artist','Interpret, dann Album'],['album','Album'],
+              ['jahr','Jahr'],['neu','Zuletzt hinzugefügt'],['titel','Anzahl Titel']]
+              .map(([v,t]) => `<option value="${v}"${v===sort?' selected':''}>${t}</option>`).join('')}</select></label>
+          <label>Anzeigen
+            <select data-ansicht>${[['alben','Alle Alben'],['interpreten','Nach Interpret gruppiert']]
+              .map(([v,t]) => `<option value="${v}"${v===ansicht?' selected':''}>${t}</option>`).join('')}</select></label>
+        </div>
+        <div class="stand"><span><b>12</b> Alben · <b>107</b> Titel · zuletzt eingelesen heute, 8:04</span>
+          <button class="knopf" type="button" data-scan>Neu einlesen</button></div>
+      </div>
+      <div class="satz">
+        <span class="kap">Am Ende der Warteschlange</span>
+        <div class="reihe">
+          ${wk(ende==='weiter','Nächstes Album','Es läuft das nächste Album der Sammlung.','data-e="weiter"')}
+          ${wk(ende==='wiederholen','Wiederholen','Dasselbe Album noch einmal.','data-e="wiederholen"')}
+          ${wk(ende==='halt','Anhalten','Nach dem letzten Titel ist Schluss.','data-e="halt"')}
+        </div>
+      </div>
+      <div class="satz">
+        <span class="kap">Reihenfolge</span>
+        <div class="reihe">
+          ${wk(!zufall,'Der Reihe nach','Ein Album läuft, wie es steht.','data-zf="0"')}
+          ${wk(zufall,'Zufall','Beim Laden gemischt; der angetippte Titel bleibt vorn.','data-zf="1"')}
+        </div>
+      </div>
+      <div class="satz">
+        <span class="kap">Lautstärke</span>
+        <div class="felder">
+          <button class="knopf${stumm ? ' an' : ''}" type="button" data-stumm>${stumm ? 'Ton an' : 'Stumm'}</button>
+          <input type="range" min="0" max="100" value="${laut}" data-laut>
+          <span style="font-variant-numeric:tabular-nums;color:var(--tinte-2);font-size:12.5px">${
+            stumm ? '—' : laut + ' %'}</span>
+        </div>
+      </div>
+      <div class="satz">
+        <span class="kap">Bildschirm</span>
+        <div class="reihe">
+          ${wk(!wach,'Geht aus','Der Bildschirm verhält sich wie gewohnt.','data-wa="0"')}
+          ${wk(wach,'Bleibt an','Solange Musik läuft. Hält am iPhone auch das WLAN wach. Kostet Akku.','data-wa="1"')}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function zeichne(){
+    w.querySelectorAll('.reiter button').forEach(b =>
+      b.classList.toggle('an', b.dataset.r === reiter));
+    krumpf.classList.toggle('einspaltig', reiter !== 'aussehen');
+    krumpf.innerHTML = reiter === 'aussehen' ? aussehenHTML() : wiedergabeHTML();
+    w.querySelector('[data-fuss]').innerHTML = reiter === 'aussehen'
+      ? `${fuerZiel(ziel).length} von ${AUSLAGEN.length} Ansichten für ${esc(zielName(ziel))}`
+      : 'Gilt für alle Ansichten gemeinsam';
+    binde();
+  }
+
+  function binde(){
+    const q = s => w.querySelectorAll(s);
+    q('.reiter button').forEach(b => b.onclick = () => { reiter = b.dataset.r; zeichne(); });
+    q('[data-z]').forEach(b => b.onclick = () => {
+      ziel = b.dataset.z;
+      /* Zeigt die Voransicht auf etwas, das es hier nicht gibt, rutscht sie
+         auf die erste des neuen Formats — nie auf nichts. */
+      const da = AUSLAGEN.find(x => x.id === vorschau);
+      if (!alle && !da.ziele.includes(ziel)) vorschau = (fuerZiel(ziel)[0] || da).id;
+      zeichne();
+    });
+    q('[data-l]').forEach(b => b.onclick = () => { vorschau = b.dataset.l; zeichne(); });
+    const mehr = w.querySelector('[data-mehr]');
+    if (mehr) mehr.onclick = () => { alle = !alle; zeichne(); };
+    const feld = w.querySelector('[data-suche]');
+    if (feld) feld.oninput = () => {
+      suchtext = feld.value;
+      const liste = w.querySelector('[data-liste]');
+      liste.innerHTML = listeHTML();
+      binde();
+      feld.focus();
+    };
+    const nehmen = w.querySelector('[data-nehmen]');
+    if (nehmen) nehmen.onclick = () => {
+      laeuft = vorschau;
+      toast(`„${AUSLAGEN.find(x => x.id === laeuft).name}" übernommen`);
+      zeichne();
+    };
+    q('[data-ak]').forEach(b => b.onclick = () => {
+      akzent[vorschau] = b.dataset.ak; zeichne();
+    });
+    q('[data-esc], .zu').forEach(b => b.onclick = () => toast('Zu — es bleibt, wie es war'));
+    q('[data-e]').forEach(b => b.onclick = () => { ende = b.dataset.e; zeichne(); });
+    q('[data-zf]').forEach(b => b.onclick = () => { zufall = b.dataset.zf === '1'; zeichne(); });
+    q('[data-wa]').forEach(b => b.onclick = () => { wach = b.dataset.wa === '1'; zeichne(); });
+    q('[data-stumm]').forEach(b => b.onclick = () => { stumm = !stumm; zeichne(); });
+    const lautf = w.querySelector('[data-laut]');
+    if (lautf) lautf.oninput = () => { laut = +lautf.value; stumm = false; zeichne(); };
+    const sortf = w.querySelector('[data-sort]');
+    if (sortf) sortf.onchange = () => { sort = sortf.value; toast('Sortierung: ' +
+      sortf.options[sortf.selectedIndex].text); };
+    const ansf = w.querySelector('[data-ansicht]');
+    if (ansf) ansf.onchange = () => { ansicht = ansf.value; toast('Sammlung: ' +
+      ansf.options[ansf.selectedIndex].text); };
+    const scan = w.querySelector('[data-scan]');
+    if (scan) scan.onclick = () => toast('Einlesen gestartet — der Ton läuft weiter');
+  }
+
+  /* Tastatur: der Dialog gehört dem, der ihn offen hat. Pfeile blättern
+     durch die sichtbare Liste, Enter nimmt. */
+  w.tabIndex = 0;
+  w.addEventListener('keydown', ev => {
+    if (reiter !== 'aussehen') return;
+    const {eigen, fremd} = sichtbar();
+    const reihe = eigen.concat(alle ? fremd : []);
+    const i = reihe.findIndex(L => L.id === vorschau);
+    if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp'){
+      ev.preventDefault();
+      const j = clamp(i + (ev.key === 'ArrowDown' ? 1 : -1), 0, reihe.length - 1);
+      vorschau = reihe[j].id; zeichne();
+      const el = w.querySelector('.zeile.zeigt');
+      if (el) el.scrollIntoView({block:'nearest'});
+    } else if (ev.key === 'Enter' && vorschau !== laeuft){
+      ev.preventDefault();
+      laeuft = vorschau;
+      toast(`„${AUSLAGEN.find(x => x.id === laeuft).name}" übernommen`);
+      zeichne();
+    } else if (ev.key === 'Escape'){
+      toast('Zu — es bleibt, wie es war');
+    }
+  });
+  w.addEventListener('pointerdown', () => w.focus());
+
+  zeichne();
+}
+
+/* Die Wurzel wird als Element übergeben, nicht als Kennung: _buendeln.py
+   macht die IDs im Bündel eindeutig, indem es genau diesen Aufruf
+   umschreibt. Eine Kennung in einer Variablen fände es nicht. */
+bauSchaukasten(document.getElementById('v1'), false);
+bauSchaukasten(document.getElementById('v2'), true);
+</script>
