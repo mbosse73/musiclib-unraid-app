@@ -32,10 +32,17 @@ Portierungsrezept festzurren lässt, bevor die aufwendigeren folgen.
 | 29 Rewind Deck | 30 iPod Weiß | 32 Seattle Skeuo |
 | 33 Glass Musiknote | | |
 
-Die ersten neun in einem Zug, 33 schon vorher (dort waren zwei Fassungen zur
-Auswahl offen, und die Frage hat sich mit dem Löschen erledigt). Mit ihnen sind
-`d17` bis `d32` aus `design/src/designs3.py` verschwunden — der Generator baut
-nur noch, was es noch gibt.
+Die ersten neun in einem Zug, 33 schon vorher. Mit ihnen sind `d17` bis `d32`
+aus `design/src/designs3.py` verschwunden — der Generator baut nur noch, was es
+noch gibt.
+
+**Bei 33 ist das Löschen zu weit gegangen.** Gestrichen war das gelieferte
+Blatt; mitgelöscht wurden seine beiden Abwandlungen `foto33a_…-Ohne` und
+`foto33b_…-Dezent`, die gerade *wegen* ihrer besseren Lesbarkeit gebaut worden
+waren. Sie sind aus der Git-Historie (`f263c53^`) zurückgeholt und liegen jetzt
+in `design/html/`. **Sie sind die einzigen zwei Dateien dort, zu denen es keinen
+Generator gibt** — `baualle.py` erzeugt sie nicht und überschreibt sie auch
+nicht. Offen ist, ob eine der beiden 33 ersetzt oder ob 33 endgültig wegfällt.
 
 Damit bleibt von der Familie *Gerät* nur ein Blatt übrig — und das nur im
 Querformat. Die Gruppierung nach Familien im Einstellungsdialog lohnt sich
@@ -88,11 +95,12 @@ nach der Durchsicht durch den Eigentümer sind sechs davon geblieben —
 56 Punktring, 58 Zeigerfront. 58 fasst zwei Fotos desselben Geräts zusammen,
 wie es 44 schon vormacht.
 
-Dazu kommt **60 Klimaxfront**, das als einziges kein Foto zur Vorlage hat,
-sondern ein benanntes Gerät: die Anzeige des Linn Klimax DSM, im Rechner-Blatt
-in Originalgrösse (1600 × 480).
+Dazu kommen drei ohne Fotoordner: **60 Klimaxfront** nach einem benannten Gerät
+(die Anzeige des Linn Klimax DSM, im Rechner-Blatt in Originalgrösse
+1600 × 480), **61 Fernanzeige** nach einer Bildschirmeinblendung und
+**62 Leuchtmarke** nach der Nahaufnahme einer Skala.
 
-Alle elf liegen unter
+Alle dreizehn liegen unter
 `design/entwuerfe/`, halten dieselben Regeln ein wie das Paket und sind bisher
 **nicht** Teil der Auswahl oben: welche davon gebaut werden, ist noch nicht
 entschieden. Begründung je Entwurf in `design/entwuerfe/LIESMICH.md`.

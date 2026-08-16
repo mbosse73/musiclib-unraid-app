@@ -1,0 +1,81 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1600px;height:1000px;overflow:hidden}
+.stage{position:relative;width:1600px;height:1000px;overflow:hidden}
+
+.stage{background:
+    radial-gradient(150% 120% at 50% 42%,#222427 0%,#101113 62%,#08090A 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#ECEEF0;-webkit-font-smoothing:antialiased}
+
+.kap{letter-spacing:.26em;text-transform:uppercase;color:rgba(236,238,240,.34);font-weight:500}
+.bib{display:inline-flex;align-items:center;color:rgba(236,238,240,.34);letter-spacing:.26em;
+  text-transform:uppercase;font-weight:500}
+.titel{font-weight:300;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.unter{color:rgba(236,238,240,.60);font-weight:300;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+
+/* ── Die Skala ──────────────────────────────────────────────────────────
+   Ein gefrästes Blech: oben eine helle Kante, unten Schatten. Die Striche
+   sitzen darauf, nicht darin. */
+.skala{position:relative;border-radius:4px;
+  background:linear-gradient(180deg,#1A1C1F 0%,#0C0D0F 46%,#141619 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 -1px 0 rgba(0,0,0,.8),
+    0 10px 26px rgba(0,0,0,.6)}
+.strich{position:absolute;top:0;background:rgba(236,238,240,.42);transform:translateX(-50%)}
+.strich.gross{background:rgba(236,238,240,.88)}
+/* Die Titelgrenze ist der einzige Strich, der durchgeht. */
+.strich.grenze{background:rgba(236,238,240,.88);opacity:.55}
+.zahl{position:absolute;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(236,238,240,.80);transform:translateX(-50%);
+  font-variant-numeric:tabular-nums}
+
+/* Die Schärfentiefe: ein Schleier, der genau dort durchsichtig ist, wo der
+   Keil steht, und zu beiden Enden hin zumacht. Er liegt ÜBER den Strichen und
+   nimmt ihnen den Kontrast — ein blur() auf der Skala würde auch den Keil
+   weichzeichnen, und der ist das Einzige, was scharf bleiben muss.
+   Deshalb wandert die klare Stelle mit der Marke: die Schärfe gehört zur
+   Gegenwart, nicht zur Mitte des Blechs. */
+.tiefe{position:absolute;inset:0;pointer-events:none;border-radius:inherit}
+
+/* ── Der Keil ── Das einzige Licht im Bild. Kein Rahmen, keine Fläche:
+   ein Dreieck, das glüht, und der Schein, den es auf das Blech wirft. */
+.keil{position:absolute;transform:translateX(-50%)}
+.keil .glut{position:absolute;left:50%;transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(circle,rgba(255,45,22,.60) 0%,rgba(255,45,22,0) 70%)}
+.keil .spitze{position:relative;
+  background:linear-gradient(180deg,#FF6A4E 0%,#FF2D16 42%,#B01608 100%);
+  clip-path:polygon(50% 0%,100% 100%,0% 100%);
+  filter:drop-shadow(0 0 9px rgba(255,45,22,.9))}
+
+.taste{display:flex;align-items:center;justify-content:center;color:rgba(236,238,240,.60)}
+.taste.haupt{color:#ECEEF0}
+.zeit{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(236,238,240,.34);font-variant-numeric:tabular-nums}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;display:flex;flex-direction:column;
+  justify-content:space-between;padding:64px 96px 72px">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;
+  gap:40px">
+  <span class="bib" style="gap:13px;font-size:20px">
+    <svg width="21" height="21" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="rgba(236,238,240,.34)"/><rect x="8" y="4" width="3" height="16" rx="1" fill="rgba(236,238,240,.34)"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="rgba(236,238,240,.34)"/></svg>Sammlung · 240 Alben</span>
+  <span class="kap" style="font-size:19px">Warteschlange · Minuten</span>
+</div>
+  <div style="display:flex;flex-direction:column;gap:56px">
+    <div>
+  <div class="titel" style="font-size:74px">Blue in Green</div>
+  <div class="unter" style="font-size:30px;margin-top:12px">
+    Miles Davis · Kind of Blue · 1959</div>
+</div>
+    <div class="skala" style="width:100%;height:216px"><span class="strich gross" style="left:5.000%;width:2px;height:99px"></span><span class="strich" style="left:6.636%;width:1px;height:58px"></span><span class="strich" style="left:8.273%;width:1px;height:58px"></span><span class="strich" style="left:9.909%;width:1px;height:58px"></span><span class="strich" style="left:11.545%;width:1px;height:58px"></span><span class="strich gross" style="left:13.182%;width:2px;height:99px"></span><span class="strich" style="left:14.818%;width:1px;height:58px"></span><span class="strich" style="left:16.455%;width:1px;height:58px"></span><span class="strich" style="left:18.091%;width:1px;height:58px"></span><span class="strich" style="left:19.727%;width:1px;height:58px"></span><span class="strich gross" style="left:21.364%;width:2px;height:99px"></span><span class="strich" style="left:23.000%;width:1px;height:58px"></span><span class="strich" style="left:24.636%;width:1px;height:58px"></span><span class="strich" style="left:26.273%;width:1px;height:58px"></span><span class="strich" style="left:27.909%;width:1px;height:58px"></span><span class="strich gross" style="left:29.545%;width:2px;height:99px"></span><span class="strich" style="left:31.182%;width:1px;height:58px"></span><span class="strich" style="left:32.818%;width:1px;height:58px"></span><span class="strich" style="left:34.455%;width:1px;height:58px"></span><span class="strich" style="left:36.091%;width:1px;height:58px"></span><span class="strich gross" style="left:37.727%;width:2px;height:99px"></span><span class="strich" style="left:39.364%;width:1px;height:58px"></span><span class="strich" style="left:41.000%;width:1px;height:58px"></span><span class="strich" style="left:42.636%;width:1px;height:58px"></span><span class="strich" style="left:44.273%;width:1px;height:58px"></span><span class="strich gross" style="left:45.909%;width:2px;height:99px"></span><span class="strich" style="left:47.545%;width:1px;height:58px"></span><span class="strich" style="left:49.182%;width:1px;height:58px"></span><span class="strich" style="left:50.818%;width:1px;height:58px"></span><span class="strich" style="left:52.455%;width:1px;height:58px"></span><span class="strich gross" style="left:54.091%;width:2px;height:99px"></span><span class="strich" style="left:55.727%;width:1px;height:58px"></span><span class="strich" style="left:57.364%;width:1px;height:58px"></span><span class="strich" style="left:59.000%;width:1px;height:58px"></span><span class="strich" style="left:60.636%;width:1px;height:58px"></span><span class="strich gross" style="left:62.273%;width:2px;height:99px"></span><span class="strich" style="left:63.909%;width:1px;height:58px"></span><span class="strich" style="left:65.545%;width:1px;height:58px"></span><span class="strich" style="left:67.182%;width:1px;height:58px"></span><span class="strich" style="left:68.818%;width:1px;height:58px"></span><span class="strich gross" style="left:70.455%;width:2px;height:99px"></span><span class="strich" style="left:72.091%;width:1px;height:58px"></span><span class="strich" style="left:73.727%;width:1px;height:58px"></span><span class="strich" style="left:75.364%;width:1px;height:58px"></span><span class="strich" style="left:77.000%;width:1px;height:58px"></span><span class="strich gross" style="left:78.636%;width:2px;height:99px"></span><span class="strich" style="left:80.273%;width:1px;height:58px"></span><span class="strich" style="left:81.909%;width:1px;height:58px"></span><span class="strich" style="left:83.545%;width:1px;height:58px"></span><span class="strich" style="left:85.182%;width:1px;height:58px"></span><span class="strich gross" style="left:86.818%;width:2px;height:99px"></span><span class="strich" style="left:88.455%;width:1px;height:58px"></span><span class="strich" style="left:90.091%;width:1px;height:58px"></span><span class="strich" style="left:91.727%;width:1px;height:58px"></span><span class="strich" style="left:93.364%;width:1px;height:58px"></span><span class="strich gross" style="left:95.000%;width:2px;height:99px"></span><span class="zahl" style="left:5.00%;top:112px;font-size:25px">85</span><span class="zahl" style="left:13.18%;top:112px;font-size:25px">80</span><span class="zahl" style="left:21.36%;top:112px;font-size:25px">75</span><span class="zahl" style="left:29.55%;top:112px;font-size:25px">70</span><span class="zahl" style="left:37.73%;top:112px;font-size:25px">65</span><span class="zahl" style="left:45.91%;top:112px;font-size:25px">60</span><span class="zahl" style="left:54.09%;top:112px;font-size:25px">55</span><span class="zahl" style="left:62.27%;top:112px;font-size:25px">50</span><span class="zahl" style="left:70.45%;top:112px;font-size:25px">45</span><span class="zahl" style="left:78.64%;top:112px;font-size:25px">40</span><span class="zahl" style="left:86.82%;top:112px;font-size:25px">35</span><span class="zahl" style="left:95.00%;top:112px;font-size:25px">30</span><span class="strich grenze" style="left:16.45%;width:2px;height:181px"></span><span class="strich grenze" style="left:36.09%;width:2px;height:181px"></span><span class="strich grenze" style="left:60.64%;width:2px;height:181px"></span><span class="strich grenze" style="left:80.27%;width:2px;height:181px"></span><span class="tiefe" style="background:linear-gradient(90deg,rgba(16,17,19,.92) 0%,rgba(16,17,19,0) 26.9%,rgba(16,17,19,0) 64.9%,rgba(16,17,19,.92) 100%)"></span><span class="keil" style="left:45.91%;top:65px;width:46px;height:40px"><span class="glut" style="top:-51px;width:150px;height:150px"></span><span class="spitze" style="display:block;width:46px;height:40px"></span></span></div>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between">
+  <span class="zeit" style="font-size:22px">02:14</span>
+  <div style="display:flex;align-items:center;gap:52px">
+    <span class="taste"><svg width="30" height="30" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="rgba(236,238,240,.60)" stroke-width="2" fill="rgba(236,238,240,.60)" stroke-linejoin="round"/></svg></span>
+    <span class="taste haupt"><svg width="38" height="38" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#ECEEF0"/><rect x="14" y="5" width="4" height="14" fill="#ECEEF0"/></svg></span>
+    <span class="taste"><svg width="30" height="30" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="rgba(236,238,240,.60)" stroke-width="2" fill="rgba(236,238,240,.60)" stroke-linejoin="round"/></svg></span>
+    <span class="taste"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(236,238,240,.60)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 L21 21"/></svg></span>
+    <span class="taste"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(236,238,240,.60)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z" fill="rgba(236,238,240,.60)"/><path d="M17 9.5a4 4 0 0 1 0 5"/><path d="M19.5 7a7.5 7.5 0 0 1 0 10"/></svg></span>
+  </div>
+  <span class="zeit" style="font-size:22px">-03:23</span>
+</div>
+</div></div></body></html>

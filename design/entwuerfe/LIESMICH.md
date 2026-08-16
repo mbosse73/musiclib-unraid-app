@@ -1,9 +1,10 @@
-# Eigene Entwürfe: zwölf Spieler aus `player2/`, `player3/`, einem Gerät und einer Anzeige
+# Eigene Entwürfe: dreizehn Spieler aus `player2/`, `player3/` und drei Vorlagen ohne Ordner
 
-Zwölf Entwürfe: zehn aus den Fotos in `player2/` (vier, Nummern 39–46) und
+Dreizehn Entwürfe: zehn aus den Fotos in `player2/` (vier, Nummern 39–46) und
 `player3/` (sechs, Nummern 48–58) im Wurzelverzeichnis, dazu **60 Klimaxfront**,
-das ein benanntes Gerät zur Vorlage hat statt eines Fotos, und **61 Fernanzeige**
-nach einer Bildschirmeinblendung. Ursprünglich waren es
+das ein benanntes Gerät zur Vorlage hat statt eines Fotos, **61 Fernanzeige**
+nach einer Bildschirmeinblendung und **62 Leuchtmarke** nach der Nahaufnahme
+einer Skala. Ursprünglich waren es
 siebzehn; **47, 49, 52, 54, 55, 57 und 59 sind auf Wunsch des Eigentümers samt
 Dateien wieder entfernt worden**, und von **51** ist das Querformat weg. Sie
 sind kein Teil des gelieferten Design-Pakets, halten sich aber an dessen Regeln,
@@ -140,6 +141,39 @@ Der Zugang zur Sammlung ist die einzige Zutat gegenüber der Vorlage — er muss
 in jedem Blatt vorkommen und sitzt als schmale Zeile oben in der Mitte, wo an
 einem Gerät der Quellenname stünde. Die untere Reihe bleibt damit unangetastet.
 
+## 62 Leuchtmarke — die Skala ist scharf, wo man steht
+
+Vorlage ist eine Nahaufnahme: schwarze Skala, feine weisse Striche, Zahlen, die
+nach rechts kleiner werden, und darauf ein **roter, von innen leuchtender
+Keil**. Die Aufnahme hat sehr wenig Schärfentiefe — nur ein Streifen um den
+Keil steht klar.
+
+Was daraus ein Entwurf wird und keine Dekoration:
+
+- **Die Skala trägt die ganze Warteschlange in Minuten**, nicht einen Titel.
+  Die Zahlen sind die verbleibenden Minuten; deshalb werden sie nach rechts
+  kleiner, genau wie in der Vorlage. Die **Titelgrenzen** stehen als hohe
+  Striche zwischen den feinen — man sieht ohne Liste, wie weit es bis zum
+  nächsten Stück ist.
+- **Scharf ist nur, wo die Marke steht**, und die klare Stelle wandert mit ihr.
+  Das ist die Übersetzung der Schärfentiefe in eine Aussage: neben der
+  Gegenwart liest man genau ab, am Rand nur noch ungefähr. Umgesetzt als
+  Schleier *über* den Strichen, nicht als `blur()` auf der Skala — ein Filter
+  würde auch den Keil weichzeichnen, und der ist das Einzige, was scharf
+  bleiben muss.
+- **Der Keil ist das einzige Licht.** Rot kommt sonst nirgends vor. Wo Rot ist,
+  ist die Gegenwart.
+
+Striche und Zahlen laufen durch **dieselbe Abbildung** (`_anteil()`, mit einem
+Rand von 5 %): sonst stünde die erste Zahl nicht auf ihrem Strich, und der
+Fehler wäre am Rand am grössten — also genau dort, wo er auffällt. Die erste
+und letzte Zahl brauchen diesen Rand ohnehin, sonst hängen sie zur Hälfte über
+der Blechkante.
+
+Abgegrenzt: 15 Weltempfänger hat auch ein Band mit Skala, aber dort *wählt* das
+Band das Album. Hier wählt es nichts — es zeigt die Position in der
+Warteschlange und ist zugleich die Spulfläche.
+
 ## 43 Sonnenglas — drei Scheiben
 
 Von 43 gibt es zwei zusätzliche Fassungen. **Die Farbe bleibt in allen gleich**
@@ -221,7 +255,7 @@ cd design/entwuerfe/src
 python3 baualle.py          # schreibt alle 25 Dateien nach ../html/
 ```
 
-`werkzeug.py` hält, was alle zwölf teilen: das eine Beispielalbum, die Zeichen
+`werkzeug.py` hält, was alle dreizehn teilen: das eine Beispielalbum, die Zeichen
 (Bibliothek, Lupe, Mischen, Wiederholen, Lautstärke), das abstrakte Cover, die
 Schallplatte, die Kassette und die Wellenform. Dokumentgerüst, Zeigerinstrument
 und die Transportzeichen kommen aus `../../src/lib.py`, also aus dem Paket selbst —
@@ -236,6 +270,6 @@ gesetzt, nicht skaliert.
 
 ## Was noch offen ist
 
-Diese zwölf sind **Entwürfe zum Ansehen**, noch kein Layout in `player.html`.
+Diese dreizehn sind **Entwürfe zum Ansehen**, noch kein Layout in `player.html`.
 Ob und welche davon portiert werden, steht in `design/AUSWAHL.md` — dort sind
 sie bisher nicht eingetragen, weil die Auswahl beim Eigentümer liegt.
