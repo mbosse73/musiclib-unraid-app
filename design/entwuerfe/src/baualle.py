@@ -2,7 +2,7 @@
 """Alle Blätter neu erzeugen: python3 baualle.py"""
 import importlib
 
-for nr in range(39, 61):
+for nr in range(39, 70):
     try:
         modul = importlib.import_module(f'd{nr}')
     except ModuleNotFoundError:

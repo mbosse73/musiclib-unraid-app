@@ -1,8 +1,9 @@
-# Eigene Entwürfe: elf Spieler aus `player2/`, `player3/` und einem Gerät
+# Eigene Entwürfe: zwölf Spieler aus `player2/`, `player3/`, einem Gerät und einer Anzeige
 
-Elf Entwürfe: zehn aus den Fotos in `player2/` (vier, Nummern 39–46) und
+Zwölf Entwürfe: zehn aus den Fotos in `player2/` (vier, Nummern 39–46) und
 `player3/` (sechs, Nummern 48–58) im Wurzelverzeichnis, dazu **60 Klimaxfront**,
-das kein Foto zur Vorlage hat, sondern ein benanntes Gerät. Ursprünglich waren es
+das ein benanntes Gerät zur Vorlage hat statt eines Fotos, und **61 Fernanzeige**
+nach einer Bildschirmeinblendung. Ursprünglich waren es
 siebzehn; **47, 49, 52, 54, 55, 57 und 59 sind auf Wunsch des Eigentümers samt
 Dateien wieder entfernt worden**, und von **51** ist das Querformat weg. Sie
 sind kein Teil des gelieferten Design-Pakets, halten sich aber an dessen Regeln,
@@ -112,6 +113,33 @@ die Quelle, hier ist die Sammlung eine Quelle wie jede andere — kein Knopf, de
 es am Klimax nicht gibt. 44 Gerätezeile geht auf dasselbe Haus zurück (Selekt
 DSM), ist aber die schmale Zeile; hier ist es die ganze Breite.
 
+## 61 Fernanzeige — eine Einblendung statt eines Geräts
+
+Vorlage ist keine Front und kein Foto aus den beiden Ordnern, sondern eine
+**Bildschirmanzeige**: grauer Schleier über die ganze Fläche, mittig der Titel
+in zwei Zeilen, darunter der Interpret, eine Haarlinie als Stand, und in den
+unteren Ecken genau zwei Zeichen — links die Lautstärke als **Zahl**, rechts
+die Wiedergabe.
+
+Drei Entscheidungen tragen das Blatt:
+
+- **Der Schleier ist das Cover**, nur so weit weggezogen, dass nichts mehr davon
+  zu erkennen ist — deshalb kein flaches Grau, sondern ein Verlauf mit einer
+  hellen Stelle. Gebaut aus Verläufen, nicht aus einer Datei, wie überall hier.
+- **Der Titel darf zwei und drei Zeilen brauchen.** Lange Werktitel sind bei
+  klassischer Musik der Normalfall; ein Blatt, das sie abschneidet, ist für
+  diese Sammlung falsch gebaut. Nachgemessen mit
+  „Goldberg Variations, BWV 988, (Arr. by Józef Koffler for Small Orchestra):
+  I. Aria“ — drei Zeilen, nichts läuft über die Bühne hinaus.
+- **Die Lautstärke steht als Zahl.** Eine Zahl liest man aus drei Metern, einen
+  Reglerstand nicht. Das ist der ganze Unterschied zu 44 Gerätezeile, wo
+  dieselbe Zahl an einem schmalen Gerät steht, und zu 60 Klimaxfront, wo sie
+  hinter Glas sitzt.
+
+Der Zugang zur Sammlung ist die einzige Zutat gegenüber der Vorlage — er muss
+in jedem Blatt vorkommen und sitzt als schmale Zeile oben in der Mitte, wo an
+einem Gerät der Quellenname stünde. Die untere Reihe bleibt damit unangetastet.
+
 ## 43 Sonnenglas — drei Scheiben
 
 Von 43 gibt es zwei zusätzliche Fassungen. **Die Farbe bleibt in allen gleich**
@@ -193,7 +221,7 @@ cd design/entwuerfe/src
 python3 baualle.py          # schreibt alle 25 Dateien nach ../html/
 ```
 
-`werkzeug.py` hält, was alle elf teilen: das eine Beispielalbum, die Zeichen
+`werkzeug.py` hält, was alle zwölf teilen: das eine Beispielalbum, die Zeichen
 (Bibliothek, Lupe, Mischen, Wiederholen, Lautstärke), das abstrakte Cover, die
 Schallplatte, die Kassette und die Wellenform. Dokumentgerüst, Zeigerinstrument
 und die Transportzeichen kommen aus `../../src/lib.py`, also aus dem Paket selbst —
@@ -208,6 +236,6 @@ gesetzt, nicht skaliert.
 
 ## Was noch offen ist
 
-Diese elf sind **Entwürfe zum Ansehen**, noch kein Layout in `player.html`.
+Diese zwölf sind **Entwürfe zum Ansehen**, noch kein Layout in `player.html`.
 Ob und welche davon portiert werden, steht in `design/AUSWAHL.md` — dort sind
 sie bisher nicht eingetragen, weil die Auswahl beim Eigentümer liegt.
