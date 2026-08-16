@@ -36,24 +36,25 @@ def d18():
     counter=lambda fs:f'''<div style="background:#160604;border-radius:6px;padding:12px 26px;box-shadow:inset 0 3px 9px #000;display:inline-block">
       <span style="font-family:{MONO};color:{LED};font-size:{fs}px;letter-spacing:8px;text-shadow:0 0 14px rgba(255,42,18,.85)">0:54:23</span></div>'''
     def reels(s,gap): return f'<div style="display:flex;gap:{gap}px;justify-content:center">{bigreel(s,face="#fbfbfa",tape="#3a3a38",rim="#d2d2ce")}{bigreel(s,face="#fbfbfa",tape="#3a3a38",rim="#d2d2ce")}</div>'
-    vustrip=lambda w,h:f'''<div style="background:#f2ecd0;border:1.5px solid #b9b39a;border-radius:5px;padding:10px;display:flex;gap:10px">
-      {vumeter(w,h,'#f7f2dc','#2a2a26','#6b6b62','L',0.55)}{vumeter(w,h,'#f7f2dc','#2a2a26','#6b6b62','R',0.68)}</div>'''
-    pc=f'''<div style="position:absolute;inset:0;background-color:#5c3a20;padding:24px">
-      <div style="height:100%;background:{PANEL};border-radius:10px;padding:26px 34px;display:flex;flex-direction:column;box-shadow:0 12px 34px rgba(0,0,0,.5),inset 0 3px 4px #fff">
-        <div style="display:flex;align-items:center;gap:34px;flex:1;min-height:0">
-          <div style="display:flex;flex-direction:column;align-self:flex-start">{reels(300,22)}<div style="margin-top:16px">{''.join(f'<div style="display:flex;justify-content:space-between;padding:11px 4px;border-bottom:1px solid #bcbcb8;font-family:{SANS};font-size:20px;color:{"#2b2b28" if i==1 else "#7f7f7a"}"><span>{n}</span><span style="flex:1;text-align:left;margin-left:18px">{t}</span><span>{d}</span></div>' for i,(n,t,d) in enumerate([('01','Autobahn','7:12'),('02','Kometenmelodie','6:20'),('03','Mitternacht','3:44')]))}</div></div>
-          <div style="flex:1;display:flex;flex-direction:column;gap:34px;align-items:center;justify-content:center">
-            {counter(52)}{vustrip(392,244)}</div>
-        </div>
-        <div style="display:flex;align-items:flex-end;gap:40px;margin-top:auto">
-          <div style="flex:1">
-            <div style="font-family:{SANS};font-size:44px;font-weight:600;color:#2b2b28">Autobahn</div>
-            <div style="font-family:{SANS};font-size:21px;color:#6f6f6a;margin-top:5px">Kraftwerk · Reel B — 4 Track Stereo</div>
-            <div style="margin-top:16px">{pbar(38,'#bcbcb8','#d63a1e',8,knob=20,kc='#fbfbfa')}{hb('00:54','07:12','#6f6f6a',20,MONO,1,8)}</div></div>
-          <div style="width:700px;display:flex;gap:11px">
+    # Ein einziges Instrument, ohne Kanalbuchstabe: die Anzeige ist die Mitte
+    # der rechten Spalte, nicht ein Paar am Rand.
+    vufeld=lambda w,h:f'''<div style="background:#f2ecd0;border:1.5px solid #b9b39a;border-radius:5px;padding:12px">
+      {vumeter(w,h,'#f7f2dc','#2a2a26','#6b6b62','',0.62)}</div>'''
+    tasten=f'''<div style="width:100%;max-width:720px;display:flex;gap:11px">
             {sqbtn(rew(32,'#3a3a36'),'REW')}{sqbtn(tri(34,'#3a3a36'),'PLAY','#2ecc40')}{sqbtn(pausei(32,'#3a3a36'),'PAUSE','#f5c400')}
             {sqbtn(ffwd(32,'#3a3a36'),'F.FWD')}{sqbtn('<div style="width:20px;height:20px;background:#3a3a36"></div>','STOP')}
-            {sqbtn(eject(32,'#d63a1e'),'LIBRARY')}</div>
+            {sqbtn(eject(32,'#d63a1e'),'LIBRARY')}</div>'''
+    pc=f'''<div style="position:absolute;inset:0;background-color:#5c3a20;padding:24px">
+      <div style="height:100%;background:{PANEL};border-radius:10px;padding:26px 34px;display:flex;flex-direction:column;box-shadow:0 12px 34px rgba(0,0,0,.5),inset 0 3px 4px #fff">
+        <div style="display:flex;align-items:center;gap:40px;flex:1;min-height:0">
+          <div style="display:flex;flex-direction:column;align-self:flex-start">{reels(300,22)}<div style="margin-top:16px">{''.join(f'<div style="display:flex;justify-content:space-between;padding:11px 4px;border-bottom:1px solid #bcbcb8;font-family:{SANS};font-size:20px;color:{"#2b2b28" if i==1 else "#7f7f7a"}"><span>{n}</span><span style="flex:1;text-align:left;margin-left:18px">{t}</span><span>{d}</span></div>' for i,(n,t,d) in enumerate([('01','Autobahn','7:12'),('02','Kometenmelodie','6:20'),('03','Mitternacht','3:44')]))}</div></div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:30px;align-items:center;justify-content:center">
+            {counter(52)}{vufeld(560,352)}{tasten}</div>
+        </div>
+        <div style="margin-top:auto;padding-top:26px">
+          <div style="font-family:{SANS};font-size:44px;font-weight:600;color:#2b2b28">Autobahn</div>
+          <div style="font-family:{SANS};font-size:21px;color:#6f6f6a;margin-top:5px">Kraftwerk · Reel B — 4 Track Stereo</div>
+          <div style="margin-top:16px">{pbar(38,'#bcbcb8','#d63a1e',8,knob=20,kc='#fbfbfa')}{hb('00:54','07:12','#6f6f6a',20,MONO,1,8)}</div>
         </div></div></div>'''
     add('18','Akai-747','pc',pc)   # kein Hochformat: auf Wunsch des Eigentuemers entfallen
 d18()
@@ -124,8 +125,8 @@ def d22():
           </div>
           {pbar(54,'#d8d5cc',OR,8,mt=22)}
           {hb('02:41','04:58',SUB,20,MONO,1,10)}
-          {ctrlbar(18)}
-          <div style="font-size:15px;letter-spacing:2px;color:{SUB};margin-top:auto;padding-top:14px">DOCUMENT NO. EA.032.1963</div>
+          <div style="flex:1;display:flex;flex-direction:column;justify-content:center">{ctrlbar(0)}</div>
+          <div style="font-size:15px;letter-spacing:2px;color:{SUB};padding-top:14px">DOCUMENT NO. EA.032.1963</div>
         </div></div></div>'''
     add('22','EA-Archive','iphone',ph); add('22','EA-Archive','pc',pc)
 d22()
@@ -169,7 +170,7 @@ def d24():
         <div style="margin-top:28px">{rowh('3:12','Sunday Drive')}{rowh('4:05','Neon Rain',True)}{rowh('2:58','Late Ferry')}{rowh('5:20','Blue Hour')}</div>
         {pbar(44,'#e4e4e0',RED,6,mt=28,knob=20,kc=RED)}
         {hb('01:48','04:05',SUB,20,MONO,1,10)}
-        <div style="display:flex;align-items:center;gap:26px;margin-top:34px">
+        <div style="height:200px;display:flex;align-items:center;justify-content:center;gap:26px">
           {circbtn(shuffle(28,SUB),76)}{circbtn(prev(30,INK),86)}
           {circbtn(tri(40,'#fff'),116,RED,RED)}
           {circbtn(nexti(30,INK),86)}{circbtn(libicon(28,RED),76)}</div>
@@ -389,7 +390,7 @@ def d31():
             {''.join(f'<div style="display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid {LINE};font-family:{SANS};font-size:22px;color:{INK if i==1 else SUB}"><span>{n}</span><span style="flex:1;text-align:left;margin-left:20px">{t}</span><span>{d}</span></div>' for i,(n,t,d) in enumerate([('A1','Betty Ford','4:02'),('A2','Tough Love','5:18'),('A3','Golden','3:44')]))}</div>
           <div style="display:flex;justify-content:flex-end;margin-top:22px">{tooltip('03:23')}</div>
           <div style="margin-top:8px">{slider(640)}</div>
-          <div style="display:flex;gap:26px;margin-top:28px">{rbtn(rew(30,'#fff'),78)}{rbtn(tri(36,'#fff'),98)}{rbtn(ffwd(30,'#fff'),78)}</div>
+          <div style="height:190px;display:flex;align-items:center;justify-content:center;gap:26px">{rbtn(rew(30,'#fff'),78)}{rbtn(tri(36,'#fff'),98)}{rbtn(ffwd(30,'#fff'),78)}</div>
         </div></div></div>'''
     add('31','Vinyl-Rote-Tasten','iphone',ph); add('31','Vinyl-Rote-Tasten','pc',pc)
 d31()
