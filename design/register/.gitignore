@@ -1,0 +1,8 @@
+# Das Register selbst ist erzeugt: 8,7 MB, weil jede Aufnahme als data-URI
+# darin steckt — dieselben Bilder liegen daneben in kb/. Es waere bei jedem
+# Bau ein komplett neuer Blob im Verlauf. Gebaut wird mit bauen.py.
+konzeptregister.html
+
+# Testsammlung und Katalog, wenn sammlung.py von Hand laeuft
+musik/
+daten/
