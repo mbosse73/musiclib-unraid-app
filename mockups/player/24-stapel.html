@@ -1,0 +1,592 @@
+<title>17 · Stapel</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 24 — Vorlage: drei Karten aus Milchglas, schräg gestellt, jede mit
+   einem Zeichen links, zwei Zeilen Schrift und einem Winkel rechts. Von oben
+   nach unten wird die Farbe wärmer.
+
+   Genommen: die Wärme als Auskunft. Nicht alle Karten sind gleich — die eine,
+   um die es geht, ist die warme. Und der Winkel rechts ist kein Zierat: er
+   sagt, dass die Karte sich öffnen lässt.
+   ══════════════════════════════════════════════════════════════════════════ */
+.st{
+  /* Aus der Vorlage gemessen: die Karten laufen *quer* von kühl nach warm —
+     „Mentions" geht von #ACB6CC links nach #F6D5C0 rechts, „System" von
+     #F0B19A nach #F7DEB0. Das Zeichenquadrat ist mit #081119 fast schwarz,
+     das freie Herz #DF7932. Ein zarter Verlauf über die ganze Karte wäre die
+     Vorlage nicht — die Wärme muss über die Kartenbreite laufen.        */
+  --grund:#D3DDEA;
+  --kuehl:#B4BED3; --kuehl-2:#E6E7F0;
+  --kalt:#A9B4CB; --kalt-2:#D2D6E4;
+  --lau:#B6C0D4; --lau-2:#F7DCC6;
+  --warm:#F1B69E; --warm-2:#FBE5BC;
+  --kante:rgba(255,255,255,.88); --kante-2:rgba(255,255,255,.46);
+  /* Für alles, was keine Karte ist: Knöpfe, Suchzeile, Bibliothekszeilen. */
+  --glas:rgba(255,255,255,.56); --glas-2:rgba(226,234,244,.44);
+  --tinte:#182031; --tinte-2:#525C71; --tinte-3:#8A93A5;
+  --dunkel:#0B131C; --glut:#DF7932; --glut-2:#F5A55F; --rot:#E8332E;
+  --wurf:rgba(28,40,64,.42); --wurf-2:rgba(28,40,64,.16);
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  background:var(--grund);color:var(--tinte);font-family:var(--sans);height:100%;overflow:hidden;
+  position:relative}
+.st *{font-family:inherit}
+.st .kap{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--tinte-3)}
+
+.st .grund{position:absolute;inset:-16%;filter:blur(72px) saturate(1.4);opacity:.8;z-index:0}
+.st .grund::after{content:'';position:absolute;inset:0;background:rgba(226,234,246,.38)}
+
+/* ── Das rote Abzeichen: in der Vorlage eine Zahl im Kreis ── */
+.st .abzeichen{position:absolute;z-index:20;min-width:40px;height:40px;padding:0 13px;border-radius:20px;
+  background:var(--rot);color:#fff;font-size:15px;font-weight:700;display:grid;place-items:center;
+  font-variant-numeric:tabular-nums;box-shadow:0 10px 24px rgba(232,51,46,.46)}
+
+/* ── Reiter mit rotem Strich, wie oben in der Vorlage ── */
+.st .reiter{display:flex;gap:26px;align-items:baseline}
+.st .reiter button{position:relative;font-size:15px;color:var(--tinte-3);padding-bottom:9px}
+.st .reiter button.an{color:var(--tinte);font-weight:600}
+.st .reiter button.an::after{content:'';position:absolute;left:0;right:0;bottom:0;height:4px;
+  border-radius:2px;background:var(--rot)}
+
+/* ══ Die Karte ═════════════════════════════════════════════════════════════
+   Sie schwebt: großer, dunkler Wurf nach unten, dazu ein heller Rand an der
+   Oberkante. Kein Milchglas mit Hauch — ein Körper mit Licht darauf.     */
+.st .karte{position:relative;display:flex;align-items:center;gap:17px;padding:15px 20px;
+  border-radius:24px;background:linear-gradient(100deg,var(--kuehl),var(--kuehl-2));
+  cursor:pointer;
+/* In der Vorlage sitzt der helle Saum nur an der Oberkante und läuft nach
+     rechts aus; ringsum gibt es keinen Rahmen. Der Wurf ist groß und weich. */
+  box-shadow:inset 0 2px 0 var(--kante),inset 0 0 0 1px var(--kante-2),
+    0 3px 8px var(--wurf-2),0 26px 40px -14px var(--wurf)}
+.st .karte:hover{box-shadow:inset 0 2px 0 var(--kante),inset 0 0 0 1px rgba(255,255,255,.72),
+  0 5px 12px var(--wurf-2),0 32px 50px -14px var(--wurf)}
+
+/* ── Das Zeichen ── ein fast schwarzes Quadrat mit weißem Inhalt ── */
+.st .karte .zeichen{width:var(--zg,50px);height:var(--zg,50px);border-radius:16px;flex:none;
+  display:grid;place-items:center;overflow:hidden;position:relative;background:var(--dunkel);
+  color:#EEF2F8;font-size:var(--zg,50px);box-shadow:0 4px 10px rgba(11,19,28,.35)}
+.st .karte .zeichen img{width:100%;height:100%;object-fit:cover}
+.st .karte .ini{font-size:.4em;font-weight:300;color:rgba(255,255,255,.94)}
+.st .karte .m{flex:1;min-width:0}
+.st .karte .t{display:block;font-size:18px;font-weight:700;letter-spacing:-.008em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st .karte .s{display:block;font-size:11.5px;color:var(--tinte-2);margin-top:3px;letter-spacing:.01em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st .karte .chev{flex:none;color:#20283A;opacity:.85;transition:transform .22s}
+.st .karte.auf .chev{transform:rotate(180deg)}
+
+/* Vier Stufen quer über die Karte: gespielt (kalt), kommt (kühl), als
+   nächstes (schon angewärmt), läuft (warm). */
+.st .karte.kalt{background:linear-gradient(100deg,var(--kalt),var(--kalt-2));opacity:.72}
+.st .karte.kalt .t{font-weight:600;color:var(--tinte-2)}
+.st .karte.naechst{background:linear-gradient(100deg,var(--lau),var(--lau-2))}
+.st .karte.an{background:linear-gradient(100deg,var(--warm),var(--warm-2));
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.92),inset 0 0 0 1px rgba(255,255,255,.5),
+    0 6px 14px rgba(120,60,20,.20),0 28px 44px -12px rgba(150,80,30,.5)}
+/* Die laufende Karte trägt ihr Zeichen frei und orange — genau die eine
+   Ausnahme, die in der Vorlage das Herz macht. */
+.st .karte.an .zeichen{background:none;box-shadow:none;color:var(--glut)}
+.st .karte.an .ini{color:var(--glut);font-weight:400}
+.st .karte.an .chev{color:#7A4218;opacity:.8}
+
+/* ── Aufgeklappter Inhalt ── */
+.st .karte .inhalt{display:none}
+.st .karte.auf{flex-wrap:wrap;align-items:flex-start;padding-bottom:9px}
+.st .karte.auf .inhalt{display:block;flex-basis:100%;margin-top:13px;
+  border-top:1px solid rgba(24,32,49,.14);padding-top:4px}
+.st .tz{position:relative;display:flex;align-items:center;gap:13px;padding:9px 6px 11px;
+  border-radius:11px;font-size:13.5px;cursor:pointer}
+.st .tz:hover{background:rgba(255,255,255,.45)}
+.st .tz .nr{width:22px;font-size:11px;color:var(--tinte-3);font-variant-numeric:tabular-nums;flex:none}
+.st .tz .tt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st .tz .dd{font-size:11.5px;color:var(--tinte-3);font-variant-numeric:tabular-nums;flex:none}
+.st .tz.laeuft{font-weight:600}
+/* Die Position steht in der Zeile des Titels, der läuft — nicht daneben. */
+.st .tz .bahn{position:absolute;left:6px;right:6px;bottom:2px;height:3px;border-radius:2px;
+  background:rgba(24,32,49,.16);display:none;cursor:pointer;touch-action:none}
+.st .tz.laeuft .bahn{display:block}
+.st .tz .bahn::before{content:'';position:absolute;left:-4px;right:-4px;top:-11px;bottom:-9px}
+.st .tz .bahn i{position:absolute;left:0;top:0;bottom:0;border-radius:2px;background:var(--dunkel)}
+
+/* ── Cover ── */
+.st .cov,.st .pl{position:relative;overflow:hidden;display:grid;place-items:center;flex:none}
+.st .cov img,.st .pl img{width:100%;height:100%;object-fit:cover}
+.st .ini{font-size:.4em;font-weight:300;color:rgba(255,255,255,.92)}
+
+/* ── Transport ── */
+.st .transport{display:flex;align-items:center;gap:var(--tg,16px)}
+.st .transport button{width:var(--tk,46px);height:var(--tk,46px);border-radius:16px;display:grid;
+  place-items:center;color:var(--tinte-2);background:var(--glas);
+  box-shadow:inset 0 1px 0 var(--kante),0 6px 16px rgba(26,33,48,.10)}
+.st .transport button:hover{color:var(--tinte)}
+.st .transport .pp{width:var(--pk,62px);height:var(--pk,62px);border-radius:21px;color:#fff;
+  background:linear-gradient(160deg,var(--glut-2),var(--glut));
+  box-shadow:0 10px 26px rgba(242,144,58,.42)}
+.st .uhr{font-size:12px;color:var(--tinte-3);font-variant-numeric:tabular-nums}
+
+/* ── Suchzeile ── */
+.st .suchzeile{display:flex;align-items:center;gap:13px;height:50px;padding:0 20px;border-radius:25px;
+  background:var(--glas);backdrop-filter:blur(14px);
+  box-shadow:inset 0 1px 0 var(--kante),inset 0 0 0 1px rgba(255,255,255,.4)}
+.st .suchzeile svg{color:var(--tinte-3);flex:none}
+.st .suchzeile input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--tinte);
+  font-size:15px}
+.st .suchzeile input::placeholder{color:var(--tinte-3)}
+
+/* ── Lautstärke ── */
+.st .vol{position:relative;width:118px;height:22px;display:flex;align-items:center;cursor:pointer;
+  touch-action:none;flex:none}
+.st .vol .bn{width:100%;height:5px;border-radius:3px;background:rgba(26,33,48,.15)}
+.st .vol .vl{position:absolute;left:0;height:5px;border-radius:3px;background:var(--tinte-2)}
+.st .vol .kn{position:absolute;width:13px;height:13px;border-radius:50%;background:#fff;
+  margin-left:-6.5px;box-shadow:0 1px 5px rgba(26,33,48,.4)}
+
+/* ── Bibliothek als Blende (Variante 2) ── */
+.st .bib{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;padding:44px 54px 38px;
+  background:rgba(222,231,242,.93);backdrop-filter:blur(22px);
+  opacity:0;pointer-events:none;transform:translateY(12px);transition:opacity .22s,transform .22s}
+.st .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.st .bib .bkopf{display:flex;align-items:center;gap:20px;flex:none;margin-bottom:22px}
+.st .bib h2{font-size:21px;font-weight:700;flex:none}
+.st .bib .suchzeile{flex:1;min-width:0}
+.st .bib .zu{flex:none;width:46px;height:46px;border-radius:16px;background:var(--glas);
+  color:var(--tinte-2);display:grid;place-items:center;box-shadow:inset 0 1px 0 var(--kante)}
+.st .bib .bliste{flex:1;min-height:0;overflow:hidden;display:grid;grid-template-columns:repeat(2,1fr);
+  gap:11px;align-content:start}
+.st .bib .bz{display:flex;align-items:center;gap:15px;padding:11px 18px;border-radius:20px;
+  background:linear-gradient(118deg,var(--glas),var(--glas-2));cursor:pointer;
+  box-shadow:inset 0 1px 0 var(--kante)}
+.st .bib .bz .pl{width:46px;height:46px;border-radius:14px;font-size:46px}
+.st .bib .bz .m{flex:1;min-width:0}
+.st .bib .bz .t{display:block;font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.st .bib .bz .s{display:block;font-size:11.5px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.st .bib .bz.an{background:linear-gradient(100deg,var(--warm),var(--warm-2))}
+.st .bib .bfuss{flex:none;padding-top:18px}
+@media (prefers-reduced-motion:reduce){.st .bib{transition:none}}
+
+/* ══ Variante 1 · Stapel ═════════════════════════════════════════════════ */
+.st.regal .raum{position:absolute;inset:36px 44px 36px;z-index:2;display:grid;
+  grid-template-columns:400px minmax(0,1fr);gap:46px}
+.st.regal .links{display:flex;flex-direction:column}
+.st.regal .links .cov{width:100%;aspect-ratio:1;border-radius:30px;font-size:180px;
+  box-shadow:0 26px 60px rgba(26,33,48,.26)}
+.st.regal h1{margin-top:26px;font-size:28px;font-weight:700;letter-spacing:-.012em;line-height:1.2;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.st.regal .ar{margin-top:8px;font-size:14px;color:var(--tinte-2)}
+.st.regal .zeitz{margin-top:auto;display:flex;justify-content:space-between;align-items:center}
+.st.regal .transport{margin-top:14px}
+.st.regal .volz{margin-top:18px;display:flex;align-items:center;gap:13px;color:var(--tinte-3)}
+/* Rasterelemente haben min-height:auto — ohne min-height:0 wächst die Spalte
+   über ihre Zeile hinaus, und der Stapel rollt nicht, sondern läuft über. */
+.st.regal .rechts{display:flex;flex-direction:column;min-width:0;min-height:0;position:relative}
+.st.regal .links{min-height:0}
+.st.regal .rkopf{display:flex;align-items:center;justify-content:space-between;flex:none;
+  margin-bottom:18px;padding-right:118px}
+.st.regal .abzeichen{right:0;top:-4px}
+.st.regal .suchzeile{flex:none;margin-bottom:16px}
+/* Der Stapel rollt. Damit eine halb sichtbare Karte am Rand nicht wie ein
+   Fehler aussieht, blendet er oben und unten aus — und braucht seitlich Luft,
+   sonst schneidet er den eigenen Wurf ab. */
+.st.regal .stapel{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:14px;
+  padding:6px 8px 10px;margin:-6px -8px -10px;scrollbar-width:thin;
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 3.5%,#000 96%,transparent);
+  mask-image:linear-gradient(180deg,transparent,#000 3.5%,#000 96%,transparent)}
+
+/* ══ Variante 2 · Stapel, schräg ═════════════════════════════════════════ */
+/* Die Vorlage ist gekippt. Am iPad bleibt sie das: die Warteschlange steht
+   perspektivisch im Raum, und nur die laufende Karte liegt flach vorn.     */
+.st.schraeg{--zg:44px}
+.st.schraeg .kz{position:absolute;left:0;right:0;top:0;z-index:6;display:flex;align-items:center;
+  justify-content:space-between;padding:26px 36px}
+.st.schraeg .kz button{display:flex;align-items:center;gap:10px;height:44px;padding:0 20px;
+  border-radius:22px;background:var(--glas);color:var(--tinte-2);font-size:13.5px;
+  box-shadow:inset 0 1px 0 var(--kante)}
+.st.schraeg .kz button:hover{color:var(--tinte)}
+.st.schraeg .raum{position:absolute;inset:96px 46px 40px;z-index:2;display:grid;
+  grid-template-columns:376px minmax(0,1fr);gap:36px;align-items:center}
+.st.schraeg .links{display:flex;flex-direction:column;align-items:center}
+.st.schraeg .links .cov{width:330px;height:330px;border-radius:34px;font-size:330px;
+  box-shadow:0 30px 66px rgba(26,33,48,.3)}
+.st.schraeg h1{margin-top:24px;font-size:25px;font-weight:700;text-align:center;line-height:1.2;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.st.schraeg .ar{margin-top:7px;font-size:13.5px;color:var(--tinte-2);text-align:center}
+.st.schraeg .transport{margin-top:22px}
+.st.schraeg .zeitz{margin-top:16px;display:flex;align-items:center;gap:20px}
+.st.schraeg .buehne3d{perspective:1400px;perspective-origin:70% 50%;height:100%;display:flex;
+  flex-direction:column;justify-content:center;gap:13px;position:relative}
+.st.schraeg .abzeichen{right:6px;top:2px}
+.st.schraeg .karte{transform-style:preserve-3d;transition:transform .3s cubic-bezier(.4,0,.2,1),
+  opacity .3s}
+/* Je weiter ein Titel von der Gegenwart weg ist, desto tiefer steht er. */
+.st.schraeg .karte{transform:rotateY(-15deg) rotateX(7deg) translateZ(calc(var(--tief,0) * -34px))
+  translateX(calc(var(--tief,0) * 14px));opacity:calc(1 - var(--tief,0) * .14)}
+.st.schraeg .karte.an{transform:none;opacity:1}
+.st.schraeg .karte .nrz{font-size:17px;font-weight:600;color:#EEF2F8}
+.st.schraeg .karte .bahn{position:absolute;left:18px;right:18px;bottom:6px;height:3px;border-radius:2px;
+  background:rgba(26,33,48,.16);display:none;cursor:pointer;touch-action:none}
+.st.schraeg .karte.an .bahn{display:block}
+.st.schraeg .karte .bahn::before{content:'';position:absolute;left:-4px;right:-4px;top:-12px;bottom:-6px}
+.st.schraeg .karte .bahn i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:2px;
+  background:var(--glut);box-shadow:0 0 8px rgba(242,144,58,.8)}
+@media (prefers-reduced-motion:reduce){.st.schraeg .karte{transition:none}}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 24</div>
+      <h1>Stapel</h1>
+      <p class="lede">Die Vorlage stapelt drei Karten aus Milchglas und macht sie von oben nach unten
+      wärmer. Das ist keine Laune: <b>Wärme ist hier eine Auskunft</b>. Übertragen auf einen Spieler
+      heißt das — kalt ist, was gespielt wurde, warm ist, was läuft, und der Winkel rechts sagt, dass
+      sich eine Karte öffnen lässt.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <img src="../../mckups_player_2/Bildschirmfoto%202026-08-13%20um%2016.45.08.png" alt="Vorlage">
+      <figcaption>Vorlage · 16.45.08</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Stapel</h2><span class="marke geraet">PC · 1440 × 900</span></div>
+    <p class="etext">Rechts steht die <b>Sammlung</b> als Stapel: eine Karte je Album, Cover als
+    Zeichen, Interpret und Länge als zweite Zeile. Die Karte des laufenden Albums ist warm und
+    <b>aufgeklappt</b> — darin die Titel, und in der Zeile des Titels, der gerade läuft, sitzt die
+    Position als dünner Streifen. Es gibt damit keine Fortschrittsleiste irgendwo am Rand; sie steht
+    dort, wo sie hingehört.
+    <span class="probier"><b>Ausprobieren:</b> eine andere Karte anklicken — sie klappt auf und wird
+    warm. In der Zeile des laufenden Titels am Streifen ziehen.</span></p>
+    <div class="buehne">
+      <div class="rahmen pc">
+        <div class="schirm">
+          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
+          <div class="flaeche"><div class="st regal" id="v1"></div></div>
+        </div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Sammlung, Titelliste und Position in <b>einer</b> Spalte</dd></div>
+      <div><dt>Schwäche</dt><dd>Die aufgeklappte Karte schiebt die anderen nach unten</dd></div>
+      <div><dt>Spulen</dt><dd>Am Streifen in der Zeile des laufenden Titels</dd></div>
+      <div><dt>Zeichen</dt><dd>Fast schwarzes Quadrat; bei der laufenden Karte <b>frei und orange</b></dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Stapel, schräg</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
+    <p class="etext">Hier bleibt die Vorlage, was sie ist: <b>gekippt</b>. Die Warteschlange steht
+    perspektivisch im Raum, jeder Titel eine Karte, und je weiter er von der Gegenwart entfernt ist,
+    desto tiefer steht er. Nur die laufende Karte liegt flach vorn und in voller Farbe — die Kippung
+    selbst wird zur Anzeige. Die Sammlung liegt nicht offen, sondern hinter einem Knopf oben links.
+    <span class="probier"><b>Ausprobieren:</b> eine Karte weiter hinten antippen — der Stapel richtet
+    sich neu aus. Am Streifen der vorderen Karte ziehen.</span></p>
+    <div class="buehne">
+      <div class="rahmen ipad-quer">
+        <div class="schirm"><div class="st schraeg" id="v2"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Die Warteschlange ist <b>räumlich</b> lesbar, nicht nur der Reihe nach</dd></div>
+      <div><dt>Schwäche</dt><dd>Gekippte Schrift ist am Rand schlechter zu lesen</dd></div>
+      <div><dt>Spulen</dt><dd>Am Streifen der vorderen Karte</dd></div>
+      <div><dt>Bibliothek</dt><dd>Hinter einem Knopf oben links, als Blende</dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Die Position gehört in die Zeile, nicht an den Rand.</b> Der Streifen sitzt in der
+      Zeile des laufenden Titels — 3 px hoch, mit einer unsichtbaren Greiffläche von 23 px darüber
+      (<code>::before</code> mit negativen Rändern). Ohne die trifft ihn niemand.</span></li>
+      <li><span><b>Die Wärme läuft quer über die Karte, nicht über den Stapel.</b> In der Vorlage
+      geht eine Karte von <code>#ACB6CC</code> links nach <code>#F6D5C0</code> rechts — der Verlauf
+      steckt <em>in</em> der Karte. Ein zarter Verlauf über den ganzen Stapel sieht auf den ersten
+      Blick ähnlich aus und ist beim zweiten nicht dasselbe Bild.</span></li>
+      <li><span><b>Vier Stufen, mehr nicht.</b> <code>kalt</code> (gespielt), nichts (kommt),
+      <code>naechst</code> (als nächstes, schon angewärmt), <code>an</code> (läuft). Alle vier kommen
+      aus dem Vergleich mit <code>deck.qi</code>. Eine stufenlose Wärme je Karte sähe hübscher aus
+      und wäre nicht mehr ablesbar.</span></li>
+      <li><span><b>Die Kippung ist eine einzige Variable.</b> Jede Karte bekommt
+      <code>--tief</code> = Abstand zur Gegenwart; Drehung, Versatz und Deckkraft rechnen alle daraus.
+      Beim Titelwechsel wird nur diese Zahl neu gesetzt, nicht das Markup — deshalb fährt der Stapel
+      weich und baut sich nicht neu auf.</span></li>
+      <li><span><b>Die Kurve aus der Vorlage ist gestrichen.</b> Im Hintergrund liegt dort ein
+      Diagramm. In einem Spieler steht es für nichts — dieselbe Entscheidung wie beim Liniennetz in
+      „Sternkarte". Übrig bleibt das verwischte Cover.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für pc.html und ipad.html</span><span>Blatt 24 · Stapel</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+
+const volHTML = `<div class="vol" data-vol><span class="bn"></span><span class="vl"></span>
+  <span class="kn"></span></div>`;
+const suchzeileHTML = `
+  <label class="suchzeile">${I.search(18)}
+    <input type="search" placeholder="Album, Interpret oder Titel" data-suche></label>`;
+
+function volBinden(w, deck){
+  const v = w.querySelector('[data-vol]');
+  bindDrag(v, f => deck.setVol(f));
+  return x => {
+    v.querySelector('.vl').style.width = (x*100).toFixed(1) + '%';
+    v.querySelector('.kn').style.left  = (x*100).toFixed(1) + '%';
+  };
+}
+
+/* ══ Variante 1 · Stapel ════════════════════════════════════════════════ */
+(() => {
+const deck = new Deck('ohi', {qi:0, pos:118, speed:12});
+const w = document.getElementById('v1');
+const q = s => w.querySelector(s), qq = s => [...w.querySelectorAll(s)];
+
+w.innerHTML = `
+  <div class="grund" data-grund></div>
+  <div class="raum">
+    <div class="links">
+      <div class="cov" data-cov></div>
+      <h1 data-titel></h1>
+      <div class="ar" data-ar></div>
+      <div class="zeitz"><span class="uhr" data-jetzt></span>
+        <span class="kap" data-lauf></span>
+        <span class="uhr" data-ende></span></div>
+      <div class="transport">
+        <button data-prev aria-label="Zurück">${I.prev(21)}</button>
+        <button class="pp" data-pp aria-label="Abspielen">${I.pause(23)}</button>
+        <button data-next aria-label="Weiter">${I.next(21)}</button>
+      </div>
+      <div class="volz">${I.vol(17)}${volHTML}</div>
+    </div>
+    <div class="rechts">
+      <div class="rkopf">
+        <div class="reiter"><button class="an">Sammlung</button></div>
+        <span class="kap" data-btreffer></span>
+      </div>
+      <span class="abzeichen" data-abz></span>
+      ${suchzeileHTML}
+      <div class="stapel" data-bibliothek></div>
+    </div>
+  </div>`;
+
+const zeichneVol = volBinden(w, deck);
+q('[data-pp]').onclick   = () => deck.toggle();
+q('[data-next]').onclick = () => deck.next();
+q('[data-prev]').onclick = () => deck.prev();
+
+/* Die Karte des laufenden Albums klappt auf und zeigt ihre Titel. Das
+   Markup dafür baut bindBibliothek nicht — es liefert die Zeile, den Rest
+   hängt der Entwurf danach an. */
+const bib = bindBibliothek({
+  blende: q('.rechts'), feld: q('[data-suche]'), liste: q('[data-bibliothek]'),
+  treffer: q('[data-btreffer]'), deck,
+  zeile: a => `<div class="karte" data-alb="${a.id}">
+      <span class="zeichen"><span class="ini">${esc(ini(a))}</span></span>
+      <span class="m"><span class="t">${esc(a.t)}</span>
+        <span class="s">${esc(a.ar)} · ${a.y} · ${a.tr.length} Titel · ${fmtLang(albDur(a))}</span></span>
+      <span class="chev">${I.down(19)}</span>
+      <div class="inhalt"></div></div>`,
+  leer: '<div class="karte" style="cursor:default"><span class="m"><span class="t">Nichts gefunden.</span></span></div>',
+});
+
+/* Nach jedem Neuzeichnen der Liste muss der Inhalt der laufenden Karte
+   zurück — bindBibliothek kennt ihn nicht. */
+const urspruenglich = bib.zeichne;
+let letzterInhalt = null;
+function fuelleKarte(d){
+  const karte = q(`[data-alb="${d.album.id}"]`), stapel = q('.stapel');
+  qq('.stapel .karte').forEach(k => k.classList.remove('auf'));
+  if (!karte){ letzterInhalt = null; return; }
+  karte.classList.add('auf');
+  const schluessel = d.album.id + '|' + d.queue.join();
+  if (letzterInhalt !== schluessel){
+    letzterInhalt = schluessel;
+    karte.querySelector('.inhalt').innerHTML = d.queue.map((id,i) => {
+      const t = TRACKS[id];
+      return `<div class="tz" data-q="${i}"><span class="nr">${String(i+1).padStart(2,'0')}</span>
+        <span class="tt">${esc(t.t)}</span><span class="dd">${fmt(t.d)}</span>
+        <span class="bahn"><i></i></span></div>`;
+    }).join('');
+    qq('.stapel .tz').forEach(el => {
+      el.onclick = ev => { if (!ev.target.closest('.bahn')) d.jump(+el.dataset.q); };
+      bindDrag(el.querySelector('.bahn'), f => { if (+el.dataset.q === d.qi) d.seek(f); });
+    });
+  }
+  markiereZeilen(d);
+  /* Erst rollen, wenn der Inhalt drin ist — vorher steht die Höhe des Stapels
+     noch auf dem alten Stand. Und nur den Stapel: scrollIntoView() nähme jeden
+     rollenden Vorfahren mit, im Blatt also das Dokument. offsetTop rechnet in
+     Layoutpunkten und ist damit auch im herunterskalierten Rahmen richtig. */
+  stapel.scrollTop = karte.offsetTop - stapel.offsetTop;
+}
+/* Das Zeichen ist ein fast schwarzes Quadrat mit weißem Inhalt, nicht das
+   Cover: coverHTML() setzte einen Verlauf als Inline-Stil und überschrieb
+   damit genau das. Im echten Spieler steht dort ein <img> im selben Quadrat.
+   Und die Karte *nach* der laufenden ist schon angewärmt — die Wanderung der
+   Wärme aus der Vorlage, hier mit einer Bedeutung. */
+function markiereZeilen(d){
+  qq('.stapel .tz').forEach((el,i) => el.classList.toggle('laeuft', i === d.qi));
+  const karten = qq('.stapel .karte');
+  const lauf = karten.findIndex(k => k.dataset.alb === d.album.id);
+  karten.forEach((k,i) => {
+    k.classList.toggle('an', i === lauf);
+    k.classList.toggle('naechst', lauf >= 0 && i === lauf + 1);
+  });
+}
+/* Ein Klick auf eine Karte lädt das Album — das macht bindBibliothek schon;
+   danach muss nur der Inhalt neu hinein. */
+bib.zeichne = () => { urspruenglich(); letzterInhalt = null; fuelleKarte(deck); };
+q('[data-suche]').oninput = bib.zeichne;
+
+let letzter = null, letztesAlbum = null;
+deck.onRender = d => {
+  const t = d.track, a = d.album;
+  if (letztesAlbum !== a.id){
+    letztesAlbum = a.id;
+    q('[data-cov]').outerHTML = coverHTML(a, 'cov', ' data-cov');
+    q('[data-grund]').style.background = `radial-gradient(58% 58% at 22% 26%,${a.c[0]},transparent 62%),
+     radial-gradient(64% 64% at 78% 74%,${a.c[1]},transparent 64%),
+     linear-gradient(148deg,${a.c[1]},${a.c[0]})`;
+    letzterInhalt = null;
+    fuelleKarte(d);
+  }
+  if (letzter !== t.id){
+    letzter = t.id;
+    q('[data-titel]').textContent = t.t;
+    q('[data-ar]').textContent = a.ar + ' · ' + a.t;
+    q('[data-lauf]').textContent = 'Titel ' + (d.qi+1) + ' von ' + d.queue.length;
+    q('[data-abz]').textContent = (d.queue.length - d.qi - 1) + ' offen';
+    markiereZeilen(d);
+  }
+  const bahn = q('.stapel .tz.laeuft .bahn i');
+  if (bahn) bahn.style.width = (d.frac*100).toFixed(2) + '%';
+  q('[data-jetzt]').textContent = fmt(d.pos);
+  q('[data-ende]').textContent  = '−' + fmt(d.rest);
+  q('[data-pp]').innerHTML = d.playing ? I.pause(23) : I.play(23);
+  zeichneVol(d.vol);
+};
+fuelleKarte(deck);
+deck.render();
+})();
+
+/* ══ Variante 2 · Stapel, schräg ════════════════════════════════════════ */
+(() => {
+const deck = new Deck('sat', {qi:2, pos:96, speed:11});
+const w = document.getElementById('v2');
+const q = s => w.querySelector(s), qq = s => [...w.querySelectorAll(s)];
+
+w.innerHTML = `
+  <div class="grund" data-grund></div>
+  <div class="kz">
+    <button data-bib>${I.grid(17)} Bibliothek</button>
+    <button data-shuffle>${I.shuffle(17)} Zufall</button>
+  </div>
+  <div class="raum">
+    <div class="links">
+      <div class="cov" data-cov></div>
+      <h1 data-titel></h1>
+      <div class="ar" data-ar></div>
+      <div class="transport">
+        <button data-prev aria-label="Zurück">${I.prev(21)}</button>
+        <button class="pp" data-pp aria-label="Abspielen">${I.pause(23)}</button>
+        <button data-next aria-label="Weiter">${I.next(21)}</button>
+      </div>
+      <div class="zeitz"><span class="uhr" data-jetzt></span>${volHTML}
+        <span class="uhr" data-ende></span></div>
+    </div>
+    <div class="buehne3d">
+      <span class="abzeichen" data-abz></span>
+      <div class="stapel" data-stapel style="display:flex;flex-direction:column;gap:13px"></div>
+    </div>
+  </div>
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Bibliothek</h2>
+      ${suchzeileHTML}
+      <button class="zu" data-bib-zu aria-label="Schließen">${I.x(19)}</button>
+    </div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss kap" data-btreffer></div>
+  </div>`;
+
+const zeichneVol = volBinden(w, deck);
+q('[data-pp]').onclick   = () => deck.toggle();
+q('[data-next]').onclick = () => deck.next();
+q('[data-prev]').onclick = () => deck.prev();
+q('[data-shuffle]').onclick = () => { deck.shuffle = !deck.shuffle;
+  q('[data-shuffle]').style.color = deck.shuffle ? 'var(--glut)' : ''; };
+
+const bib = bindBibliothek({
+  knopf: q('[data-bib]'), zu: q('[data-bib-zu]'), blende: q('[data-bib-blende]'),
+  feld: q('[data-suche]'), liste: q('[data-bibliothek]'), treffer: q('[data-btreffer]'), deck,
+  zeile: a => `<div class="bz" data-alb="${a.id}">${coverHTML(a,'pl')}
+      <span class="m"><span class="t">${esc(a.t)}</span>
+      <span class="s">${esc(a.ar)} · ${a.y} · ${fmtLang(albDur(a))}</span></span></div>`,
+  leer: '<div class="bz" style="grid-column:1/-1;cursor:default"><span class="m"><span class="t">Nichts gefunden.</span></span></div>',
+});
+
+/* Eine Karte je Titel der Warteschlange. Gebaut wird nur bei geänderter
+   Warteschlange; die Kippung ist danach eine Zahl je Karte. */
+let letzteQ = null, letzter = null, letztesAlbum = null;
+function baueStapel(d){
+  q('[data-stapel]').innerHTML = d.queue.map((id,i) => {
+    const t = TRACKS[id];
+    return `<div class="karte" data-q="${i}">
+      <span class="zeichen"><span class="nrz">${String(i+1).padStart(2,'0')}</span></span>
+      <span class="m"><span class="t">${esc(t.t)}</span>
+        <span class="s">${esc(d.album.ar)} · ${fmt(t.d)}</span></span>
+      <span class="chev">${I.fwd(18)}</span>
+      <span class="bahn"><i></i></span></div>`;
+  }).join('');
+  qq('[data-stapel] .karte').forEach(el => {
+    el.onclick = ev => { if (!ev.target.closest('.bahn')) d.jump(+el.dataset.q); };
+    bindDrag(el.querySelector('.bahn'), f => { if (+el.dataset.q === d.qi) d.seek(f); });
+  });
+  letzteQ = d.queue.join();
+}
+
+deck.onRender = d => {
+  const t = d.track, a = d.album;
+  if (letzteQ !== d.queue.join()) baueStapel(d);
+  if (letztesAlbum !== a.id){
+    letztesAlbum = a.id;
+    q('[data-cov]').outerHTML = coverHTML(a, 'cov', ' data-cov');
+    q('[data-grund]').style.background = `radial-gradient(58% 58% at 22% 26%,${a.c[0]},transparent 62%),
+     radial-gradient(64% 64% at 78% 74%,${a.c[1]},transparent 64%),
+     linear-gradient(148deg,${a.c[1]},${a.c[0]})`;
+    bib.markiere();
+  }
+  if (letzter !== t.id){
+    letzter = t.id;
+    q('[data-titel]').textContent = t.t;
+    q('[data-ar]').textContent = a.ar + ' · ' + a.t + ' · ' + a.y;
+    q('[data-abz]').textContent = (d.qi+1) + ' / ' + d.queue.length;
+    qq('[data-stapel] .karte').forEach((el,i) => {
+      /* Eine Variable trägt die ganze Kippung: der Abstand zur Gegenwart. */
+      el.style.setProperty('--tief', Math.abs(i - d.qi));
+      el.classList.toggle('an', i === d.qi);
+      el.classList.toggle('kalt', i < d.qi);
+      el.classList.toggle('naechst', i === d.qi + 1);
+    });
+  }
+  const bahn = q('[data-stapel] .karte.an .bahn i');
+  if (bahn) bahn.style.width = (d.frac*100).toFixed(2) + '%';
+  q('[data-jetzt]').textContent = fmt(d.pos);
+  q('[data-ende]').textContent  = '−' + fmt(d.rest);
+  q('[data-pp]').innerHTML = d.playing ? I.pause(23) : I.play(23);
+  zeichneVol(d.vol);
+};
+deck.render();
+})();
+
+})();
+</script>

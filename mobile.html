@@ -530,9 +530,6 @@ button{cursor:pointer}
 .fremd.mg .deck .arm::after{content:'';position:absolute;left:50%;top:calc(var(--al) + 4px);width:16px;
   height:22px;margin-left:-8px;border-radius:3px;background:linear-gradient(150deg,#FBFBFF,#C9C9D6);
   box-shadow:0 2px 5px rgba(30,30,60,.3)}
-.fremd.mg .deck .stift{position:absolute;right:11%;top:5%;width:8px;height:8px;border-radius:50%;
-  background:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
-.fremd.mg .deck .stift.zwei{right:15%}
 .fremd.mg .titel{text-align:center;margin-top:clamp(12px,2.6vh,26px);max-width:100%}
 .fremd.mg .titel h1{font-size:clamp(21px,3.4vh,30px);font-weight:700;letter-spacing:-.02em;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1805,7 +1802,6 @@ const SPIELER = {
       w.innerHTML = kopfHTML('rund', 'Jetzt läuft') + `
         <div class="spieler">
           <div class="deck">
-            <span class="stift"></span><span class="stift zwei"></span>
             <div class="teller" data-teller><div class="label" data-label></div></div>
             <div class="arm" data-arm></div>
           </div>

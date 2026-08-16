@@ -1,0 +1,1413 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Engere Wahl</title>
+</head>
+<body>
+<style>
+/* ══════════════════════════════════════════════════════════════════════
+   Engere Wahl — acht Behandlungen aus „Material & Oberflaeche", jede in
+   drei Farb- und Materialfassungen. Form und Behandlung bleiben; was sich
+   aendert, sind Farbe, Stoff und Kante.
+
+   Aufbau: Grundform (.pM .pP .pV .pY) aus vorbilder.html, Behandlung
+   (.v-echt .v-idee .v-glanz) aus varianten.html, Fassung (.f-a .f-b .f-c)
+   neu. Drei Klassen an einem Telefon, kein eigenes Javascript.
+
+   Durchgehend: abgerundete Ecken — ausser bei den Sofortbildern, wo ein
+   Abzug rechte Winkel hat. Der Abspielknopf ist flach, wie in „Die Spur".
+   ══════════════════════════════════════════════════════════════════════ */
+:root{
+  --paper:#FBF9F5; --stage:#F1EDE4; --ink:#241E18; --ink-2:#6B6155; --ink-3:#A0968A;
+  --line:rgba(36,30,24,.10); --line-2:rgba(36,30,24,.22);
+  --brass:#8A6534; --brass-soft:rgba(138,101,52,.09);
+  --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--stage);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;padding-bottom:90px}
+::selection{background:rgba(138,101,52,.2)}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+button,input{font:inherit;color:inherit;background:none;border:none}
+
+.page{max-width:1200px;margin:0 auto;padding:0 32px}
+.caps{font-family:var(--sans);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3)}
+.masthead{padding:84px 0 46px;max-width:70ch}
+.masthead .caps{margin-bottom:26px}
+.masthead h1{font-family:var(--serif);font-weight:400;font-size:clamp(42px,6.4vw,68px);line-height:1.05;
+  letter-spacing:-.015em;text-wrap:balance}
+.masthead h1 em{font-style:italic;color:var(--brass)}
+.masthead .lede{margin-top:22px;color:var(--ink-2);font-size:16px;max-width:58ch}
+.masthead .lede b{color:var(--ink);font-weight:600}
+.rule{height:1px;background:var(--line-2)}
+
+/* ── Kapitel je Quelle ── */
+.chapter{padding:74px 0 0}
+.chapter>.head{max-width:64ch}
+.chapter>.head .caps{color:var(--brass)}
+.chapter>.head h2{font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.6vw,38px);line-height:1.12;
+  margin-top:14px;letter-spacing:-.012em}
+.chapter>.head p{margin-top:16px;color:var(--ink-2);font-size:15px}
+.chapter>.head p b{color:var(--ink);font-weight:600}
+.source{margin-top:20px;padding:16px 18px;background:var(--paper);border:1px solid var(--line);
+  font-size:13.5px;color:var(--ink-2);max-width:64ch}
+.source b{color:var(--ink);font-weight:600}
+.source .caps{display:block;margin-bottom:7px}
+
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:64px;padding:46px 0 0;align-items:start}
+/* Das liegende Telefon ist breiter als eine Spalte — es bekommt eine Reihe. */
+.solo{display:grid;grid-template-columns:auto minmax(300px,1fr);gap:54px;padding:46px 0 0;align-items:start}
+.solo>.col{align-items:flex-start}
+@media (max-width:1180px){.solo{grid-template-columns:1fr;gap:38px;justify-items:center}
+  .solo .text{max-width:430px}}
+@media (max-width:1000px){.pair{grid-template-columns:1fr;gap:72px;justify-items:center}}
+.col{display:flex;flex-direction:column;align-items:center;gap:32px;max-width:430px}
+.col .text{width:100%}
+.col h3{font-family:var(--serif);font-size:28px;font-weight:400;letter-spacing:-.01em;line-height:1.15}
+.col h3 .no{display:block;margin-bottom:11px;font-family:var(--sans);font-size:10px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--brass)}
+.col p{margin-top:13px;color:var(--ink-2);font-size:14.5px}
+.col p b{color:var(--ink);font-weight:600}
+.col .swatches{display:flex;gap:0;margin-top:18px;border:1px solid var(--line-2);border-radius:2px;overflow:hidden}
+.col .swatches i{flex:1;height:26px;display:block}
+.col .note{margin-top:15px;padding-left:14px;border-left:2px solid var(--brass);font-size:13px;color:var(--ink-2)}
+.col .note b{color:var(--ink);font-weight:600}
+.col dl{margin-top:20px;border-top:1px solid var(--line-2)}
+.col dl>div{display:grid;grid-template-columns:104px 1fr;gap:14px;padding:10px 0;border-bottom:1px solid var(--line);
+  font-size:13px}
+.col dt{font-family:var(--sans);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);
+  padding-top:3px}
+.col dd{color:var(--ink-2)}
+.col dd b{color:var(--ink);font-weight:600}
+
+/* ══════════ Telefon ══════════ */
+.phone{width:390px;height:844px;border-radius:46px;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;flex-shrink:0;
+  box-shadow:0 0 0 9px #E7E1D5,0 0 0 10px rgba(36,30,24,.16),0 40px 80px rgba(36,30,24,.20);
+  touch-action:none;isolation:isolate}
+@media (max-width:620px){.phone{zoom:.72}}
+@media (max-width:460px){.phone{zoom:.58}}
+.notch{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:112px;height:31px;
+  border-radius:18px;background:#1A1512;z-index:300}
+.homeind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:126px;height:4px;
+  border-radius:3px;background:rgba(36,30,24,.22);z-index:300}
+.sbar{height:54px;flex-shrink:0;display:flex;align-items:flex-end;justify-content:space-between;
+  padding:0 30px 9px;font-size:13px;font-weight:600;font-family:var(--sans);position:relative;z-index:30}
+.sbar .ic{display:flex;gap:6px;align-items:center}
+.screen{flex:1;min-height:0;display:flex;flex-direction:column;position:relative}
+
+/* Hülle und Scheibe stehen für das echte Cover aus /api/cover */
+.art{position:relative;overflow:hidden}
+.art .sheen{position:absolute;inset:0;
+  background:radial-gradient(ellipse at 26% 16%,rgba(255,255,255,.34),transparent 56%),
+             radial-gradient(ellipse at 82% 96%,rgba(0,0,0,.22),transparent 62%)}
+.art .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);
+  font-style:italic;font-weight:400;color:rgba(255,255,255,.86)}
+/* Die gesponnene Scheibe: dasselbe Cover, nur im Kreis verwirbelt */
+.disc{position:relative;border-radius:50%;overflow:hidden;flex-shrink:0}
+.disc .wash{position:absolute;inset:-16%;filter:blur(17px);
+  background:conic-gradient(from 205deg,#6E86B8,#63B49C,#F0CE6A,#EE8A45,#E2645F,#A95F97,#6E86B8)}
+.disc .core{position:absolute;inset:27%;border-radius:50%;filter:blur(11px);
+  background:radial-gradient(circle at 46% 42%,#FBA43A,#E2645F 62%,rgba(226,100,95,0) 78%)}
+.spin{animation:spin 34s linear infinite;animation-play-state:paused}
+.playing .spin{animation-play-state:running}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Gemeinsame Bauteile: Warteschlangen-Blatt und Zeile */
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:40;max-height:66%;display:flex;flex-direction:column;
+  padding:10px 24px 26px;border-radius:26px 26px 0 0;background:#fff;
+  box-shadow:0 -18px 46px rgba(36,30,24,.16);transform:translateY(101%);
+  transition:transform .42s cubic-bezier(.3,.8,.25,1)}
+.open .sheet{transform:none}
+.sheet .grip{width:38px;height:4px;border-radius:3px;background:rgba(36,30,24,.14);margin:0 auto 14px;flex-shrink:0}
+.sheet .qh{font-family:var(--sans);font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:8px;flex-shrink:0}
+.sheet .qbody{overflow-y:auto;min-height:0}
+.scrim{position:absolute;inset:0;z-index:35;background:rgba(36,30,24,.18);opacity:0;pointer-events:none;
+  transition:opacity .35s}
+.open .scrim{opacity:1;pointer-events:auto}
+.qrow{display:flex;align-items:baseline;gap:12px;width:100%;text-align:left;padding:10px 0;cursor:pointer;
+  border-bottom:1px solid rgba(36,30,24,.07)}
+.qrow .n{width:15px;flex-shrink:0;font-size:10px;letter-spacing:.1em;color:var(--ink-3);
+  font-variant-numeric:tabular-nums}
+.qrow .t{flex:1;min-width:0;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qrow .d{flex-shrink:0;font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.qrow.now .t{font-weight:600}
+.qrow.past{opacity:.42}
+</style>
+<style>
+/* ═══════════ Die vier Grundformen (aus vorbilder.html) ═══════════ */
+/* ══════════════════ M · SOFORTBILD ══════════════════
+   Quelle 4: der Player ist ein Gegenstand, kein Bildschirm. Ein Abzug aus
+   Karton, leicht schief auf dem Tisch, mit einer breiten weißen Kinnlade. */
+.pM{background:radial-gradient(120% 80% at 50% 18%,#FBFAF8,#E9E5DF 68%,#DED9D1);color:#221F1C;
+  --m-3:#A29B93;--m-2:#5E574F;--m-a:#D8443A}
+.pM .lid{display:flex;align-items:center;justify-content:space-between;padding:4px 26px 0;flex-shrink:0}
+.pM .lid .cap{font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--m-3)}
+.pM .ic{width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--m-3);cursor:pointer}
+.pM .tisch{flex:1;min-height:0;display:grid;place-items:center;padding:0 28px 22px;position:relative}
+.pM .hinten{position:absolute;width:min(74vw,270px);background:#FDFCFA;border-radius:4px;height:62%;
+  transform:rotate(4.2deg) translate(9px,-8px);box-shadow:0 14px 30px rgba(34,31,28,.14);cursor:pointer}
+.pM .abzug{position:relative;width:min(78vw,286px);background:#FEFDFB;border-radius:4px;padding:15px 15px 0;
+  transform:rotate(-1.4deg);box-shadow:0 22px 46px rgba(34,31,28,.22),0 2px 4px rgba(34,31,28,.10)}
+.pM .abzug::after{content:'';position:absolute;inset:0;border-radius:4px;pointer-events:none;
+  background:repeating-linear-gradient(112deg,rgba(34,31,28,.018) 0 2px,transparent 2px 4px)}
+.pM .cover{width:100%;aspect-ratio:1;border-radius:1px;box-shadow:inset 0 0 0 1px rgba(34,31,28,.09)}
+.pM .kinn{padding:16px 4px 20px;text-align:center}
+.pM .tt{font-size:19px;font-weight:700;letter-spacing:-.01em;line-height:1.22;text-wrap:balance}
+.pM .by{margin-top:4px;font-size:11.5px;color:var(--m-3)}
+.pM .seek{margin-top:15px;padding:7px 2px;cursor:pointer;touch-action:none}
+.pM .line{height:4px;border-radius:3px;background:rgba(34,31,28,.10);position:relative}
+.pM .fill{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--m-a)}
+.pM .knob{position:absolute;top:50%;width:13px;height:13px;border-radius:50%;background:var(--m-a);
+  transform:translate(-50%,-50%);box-shadow:0 2px 5px rgba(216,68,58,.5)}
+.pM .times{display:flex;justify-content:space-between;margin-top:7px;font-size:10px;color:var(--m-3);
+  font-variant-numeric:tabular-nums}
+.pM .transport{display:flex;align-items:center;justify-content:center;gap:30px;margin-top:12px}
+.pM .tb{width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#C9C2B9;cursor:pointer}
+.pM .tb:active{color:var(--m-2)}
+.pM .play{width:54px;height:54px;border-radius:50%;background:var(--m-a);color:#fff;display:flex;
+  align-items:center;justify-content:center;cursor:pointer;transition:transform .12s;
+  box-shadow:0 8px 18px rgba(216,68,58,.4)}
+.pM .play:active{transform:scale(.94)}
+.pM .unten{flex-shrink:0;text-align:center;padding:0 30px 28px;font-size:9px;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--m-3)}
+
+/* ══════════════════ P · DIE LISTE ══════════════════
+   Quelle 5, umgekehrt: kein zweiter Bildschirm für „Jetzt läuft". Die
+   laufende Zeile klappt an ihrem Platz in der Liste auf. */
+.pP{background:#FDFBFA;color:#1E1B19;--p-3:#A29A93;--p-2:#5C554E;--acc:#E24A6E;
+  --acc-soft:rgba(226,74,110,.09)}
+.pP .kopf{flex-shrink:0;padding:6px 24px 12px}
+.pP .kopf .k{font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--p-3)}
+.pP .kopf h4{font-size:27px;font-weight:700;letter-spacing:-.02em;margin-top:8px}
+.pP .kopf .sub{font-size:12px;color:var(--p-3);margin-top:3px}
+.pP .rollen{flex:1;min-height:0;overflow-y:auto;padding:0 16px 100px}
+.pP .z{display:flex;align-items:center;gap:13px;width:100%;text-align:left;padding:11px 10px;
+  border-radius:18px;cursor:pointer;transition:background .3s}
+.pP .z .pl{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;
+  justify-content:center;background:rgba(30,27,25,.06);color:var(--p-2)}
+.pP .z .tx{flex:1;min-width:0;display:flex;flex-direction:column}
+.pP .z .t{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pP .z .s{font-size:11.5px;color:var(--p-3);margin-top:1px}
+.pP .z .d{flex-shrink:0;font-size:11px;color:var(--p-3);font-variant-numeric:tabular-nums}
+.pP .z.past{opacity:.45}
+/* die laufende Zeile: aus der Zeile wird eine Karte. Solange sie nicht läuft,
+   löst sich ihre innere Zeile per display:contents auf — dann sind Knopf,
+   Titel und Zeit direkt Kinder der Zeile und stehen wie überall sonst. */
+.pP .zeile1{display:contents}
+.pP .z .cover{display:none}
+.pP .z.now{display:block;background:var(--acc-soft);padding:16px;margin:8px 0}
+.pP .z.now .zeile1{display:flex;align-items:center;gap:14px}
+.pP .z.now .cover{display:block;width:64px;height:64px;border-radius:14px;flex-shrink:0;
+  box-shadow:0 8px 18px rgba(226,74,110,.22)}
+.pP .z.now .t{font-size:17px;white-space:normal}
+.pP .z.now .pl,.pP .z.now .d{display:none}
+.pP .z .aus{display:none}
+.pP .z.now .aus{display:block;margin-top:14px}
+.pP .seek{display:block;padding:6px 0;cursor:pointer;touch-action:none}
+.pP .line{display:block;height:3px;border-radius:3px;background:rgba(30,27,25,.12);position:relative}
+.pP .fill{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--acc)}
+.pP .knob{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;background:var(--acc);
+  transform:translate(-50%,-50%);box-shadow:0 2px 6px rgba(226,74,110,.45)}
+.pP .times{display:flex;justify-content:space-between;margin-top:7px;font-size:10.5px;color:var(--p-3);
+  font-variant-numeric:tabular-nums}
+.pP .transport{display:flex;align-items:center;justify-content:center;gap:28px;margin-top:8px}
+.pP .tb{width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:var(--p-2);cursor:pointer}
+.pP .play{width:54px;height:54px;border-radius:50%;background:var(--acc);color:#fff;display:flex;
+  align-items:center;justify-content:center;cursor:pointer;transition:transform .12s;
+  box-shadow:0 8px 20px rgba(226,74,110,.36)}
+.pP .play:active{transform:scale(.94)}
+.pP .pille{position:absolute;left:50%;bottom:30px;z-index:20;transform:translateX(-50%);
+  display:flex;align-items:center;gap:10px;padding:11px 20px;border-radius:30px;background:var(--acc);
+  color:#fff;cursor:pointer;box-shadow:0 10px 26px rgba(226,74,110,.38);
+  font-size:10px;letter-spacing:.22em;text-transform:uppercase}
+.pP .pille .bar{display:flex;align-items:flex-end;gap:2px;height:11px}
+.pP .pille .bar i{width:2px;background:#fff;border-radius:1px;animation:eq .9s ease-in-out infinite alternate;
+  animation-play-state:paused}
+.pP.playing .pille .bar i{animation-play-state:running}
+.pP .pille .bar i:nth-child(1){height:5px;animation-delay:0s}
+.pP .pille .bar i:nth-child(2){height:11px;animation-delay:.22s}
+.pP .pille .bar i:nth-child(3){height:7px;animation-delay:.44s}
+@keyframes eq{to{height:3px}}
+
+/* ══════════════════ V · DIE PLATTE ══════════════════
+   Dasselbe Material hochkant: drei Platten übereinander, jede mit eigener
+   Kante. Was oben liegt, ist das Bild; was unten liegt, ist die Liste. */
+.pV{background:linear-gradient(168deg,#F8F3EA,#EBE1D2);color:#2A2620;
+  --v-3:#A79C8B;--v-2:#5E564A;--v-a:#3FBF6A;--v-tief:rgba(150,136,116,.30);--v-hoch:rgba(255,255,255,.95)}
+.pV .lid{display:flex;align-items:center;justify-content:space-between;padding:4px 26px 0;flex-shrink:0}
+.pV .lid .cap{font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--v-3)}
+.pV .ic{width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--v-2);cursor:pointer}
+.pV .stapel{flex:1;min-height:0;display:flex;flex-direction:column;gap:16px;padding:14px 24px 22px;
+  overflow:hidden}
+.pV .platte{border-radius:22px;background:linear-gradient(#FDFAF4,#F0E7D9);
+  box-shadow:0 6px 0 #DED2BE,0 14px 22px rgba(120,104,84,.18),inset 0 1px 0 var(--v-hoch)}
+.pV .p1{padding:12px;flex-shrink:0}
+.pV .cover{width:min(100%,206px);aspect-ratio:1;border-radius:14px;margin:0 auto}
+.pV .p2{padding:16px 18px 18px;flex-shrink:0;text-align:center}
+.pV .tt{font-size:21px;font-weight:700;letter-spacing:-.012em;line-height:1.2;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.pV .by{margin-top:3px;font-size:11.5px;color:var(--v-2)}
+.pV .seek{margin-top:13px;padding:7px 0;cursor:pointer;touch-action:none}
+.pV .schnur{height:6px;border-radius:4px;background:#E4DACA;position:relative;
+  box-shadow:inset 0 2px 4px var(--v-tief)}
+.pV .fill{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--v-a)}
+.pV .knopf{position:absolute;top:50%;width:15px;height:15px;border-radius:50%;transform:translate(-50%,-50%);
+  background:var(--v-a);box-shadow:0 2px 4px rgba(60,52,40,.26)}
+.pV .times{display:flex;justify-content:space-between;margin-top:7px;font-size:10.5px;color:var(--v-3);
+  font-variant-numeric:tabular-nums}
+.pV .transport{display:flex;align-items:center;justify-content:center;gap:28px;margin-top:10px}
+.pV .tb{width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#2A2620;cursor:pointer}
+.pV .play{width:56px;height:56px;border-radius:50%;background:var(--v-a);color:#fff;display:flex;
+  align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 5px 0 #2E9351,0 11px 18px rgba(63,191,106,.32),inset 0 2px 3px rgba(255,255,255,.4)}
+.pV .play:active{transform:translateY(4px);box-shadow:0 1px 0 #2E9351}
+.pV .p3{flex:1;min-height:0;display:flex;flex-direction:column;padding:12px 8px 8px}
+.pV .p3 .k{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--v-3);padding:0 12px 6px}
+.pV .p3 .rollen{overflow-y:auto;min-height:0;padding:0 8px 4px}
+.pV .vz{display:flex;align-items:baseline;gap:11px;width:100%;text-align:left;padding:8px 10px;
+  border-radius:11px;cursor:pointer;font-size:13.5px;color:var(--v-2)}
+.pV .vz .n{font-size:9.5px;color:var(--v-3);font-variant-numeric:tabular-nums}
+.pV .vz .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pV .vz .d{font-size:10px;color:var(--v-3);font-variant-numeric:tabular-nums}
+.pV .vz.now{color:#2A2620;font-weight:600;background:rgba(63,191,106,.13)}
+.pV .vz.past{opacity:.45}
+
+/* ══════════════════ Y · DIE KLAPPTAFEL ══════════════════
+   Retro, dritte Lesart: die Anzeigetafel im Bahnhof. Beim Titelwechsel
+   klappt die Zeile um; darunter steht, was noch abfährt. */
+.pY{background:linear-gradient(172deg,#FAF7F1,#EFEAE0 62%,#E6DFD2);color:#26221C;
+  --y-3:#A69C8D;--y-2:#5C554A;--y-a:#8A6534}
+.pY .lid{display:flex;align-items:center;justify-content:space-between;padding:4px 26px 0;flex-shrink:0}
+.pY .lid .cap{font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--y-3)}
+.pY .ic{width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--y-3);cursor:pointer}
+.pY .halle{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;padding:0 24px}
+.pY .tafel{border-radius:6px;padding:12px;background:linear-gradient(#F6F1E7,#EDE6D9);
+  border:1px solid rgba(38,34,28,.16);
+  box-shadow:0 18px 34px rgba(60,50,38,.18),inset 0 1px 0 rgba(255,255,255,.8)}
+.pY .rahmen{border:1px solid var(--y-a);border-radius:3px;padding:10px;background:#FBF8F2}
+/* Ein Klappschild: zwei Hälften mit einer dunklen Naht dazwischen */
+.pY .schild{position:relative;border-radius:2px;overflow:hidden;perspective:600px;
+  background:linear-gradient(#FEFCF7 0 calc(50% - 1px),rgba(38,34,28,.34) calc(50% - 1px) calc(50% + 1px),
+    #F4EFE4 calc(50% + 1px) 100%);
+  box-shadow:inset 0 0 0 1px rgba(38,34,28,.10)}
+.pY .schild .zeile{padding:14px 14px 15px;display:flex;align-items:baseline;gap:12px}
+.pY .schild.klappt{animation:klapp .42s cubic-bezier(.3,.8,.25,1)}
+@keyframes klapp{
+  0%{transform:rotateX(-58deg);opacity:.55}
+  60%{transform:rotateX(6deg);opacity:1}
+  100%{transform:rotateX(0);opacity:1}}
+.pY .gross .nr{font-size:11px;letter-spacing:.18em;color:var(--y-a);font-variant-numeric:tabular-nums;
+  flex-shrink:0;padding-top:5px}
+.pY .gross .tx{flex:1;min-width:0;display:flex;flex-direction:column}
+.pY .gross .t{font-family:var(--serif);font-size:19px;line-height:1.2;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.pY .gross .s{margin-top:5px;font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--y-2)}
+.pY .gross .z{flex-shrink:0;font-size:15px;font-variant-numeric:tabular-nums;color:var(--y-2);padding-top:4px}
+.pY .lauf{margin-top:11px;padding:7px 0;cursor:pointer;touch-action:none}
+.pY .schiene{height:2px;background:rgba(38,34,28,.14);position:relative;border-radius:2px}
+.pY .fill{position:absolute;left:0;top:0;bottom:0;background:var(--y-a);border-radius:2px}
+.pY .times{display:flex;justify-content:space-between;margin-top:7px;font-size:9.5px;letter-spacing:.12em;
+  color:var(--y-3);font-variant-numeric:tabular-nums}
+.pY .abfahrt{margin-top:12px}
+.pY .ak{font-size:8.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--y-3);padding:0 2px 6px}
+.pY .az{display:flex;align-items:baseline;gap:12px;width:100%;text-align:left;padding:9px 12px;cursor:pointer;
+  border-radius:2px;margin-top:5px;font-size:13.5px;color:var(--y-2);
+  background:linear-gradient(#FDFBF6 0 calc(50% - 1px),rgba(38,34,28,.16) calc(50% - 1px) calc(50% + 1px),
+    #F5F1E8 calc(50% + 1px) 100%);box-shadow:inset 0 0 0 1px rgba(38,34,28,.08)}
+.pY .az .n{font-size:9px;color:var(--y-3);font-variant-numeric:tabular-nums}
+.pY .az .t{flex:1;min-width:0;font-family:var(--serif);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pY .az .d{font-size:10.5px;color:var(--y-3);font-variant-numeric:tabular-nums}
+/* Unter „Danach“ steht nur, was noch kommt — Gelaufenes und der laufende
+   Titel (der oben im Schild steht) fallen aus der Tafel. */
+.pY .az.past,.pY .az.now{display:none}
+.pY .foot{flex-shrink:0;padding:0 30px 28px;display:flex;align-items:center;justify-content:center;gap:30px}
+.pY .tb{width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:var(--y-2);cursor:pointer}
+.pY .play{width:58px;height:58px;border-radius:50%;border:1px solid var(--y-a);color:var(--y-a);display:flex;
+  align-items:center;justify-content:center;cursor:pointer;transition:background .2s,color .2s,transform .12s}
+.pY.playing .play{background:var(--y-a);color:#FBF8F2}
+.pY .play:active{transform:scale(.95)}
+</style>
+<style>
+/* ═══════════ Die acht gewählten Behandlungen (aus varianten.html) ═══════════ */
+/* M4 · realistischer — die Kinnlade eines echten Abzugs ist tiefer als der Rand */
+.pM.v-echt{background:radial-gradient(120% 80% at 50% 20%,#F8F6F2,#E4E0D9 66%,#D5D0C7)}
+.pM.v-echt .abzug{padding:13px 13px 0;border-radius:2px;
+  transform:rotate(-1.1deg) perspective(900px) rotateX(2.2deg);
+  box-shadow:0 1px 2px rgba(34,31,28,.30),0 20px 30px -10px rgba(34,31,28,.34)}
+.pM.v-echt .cover{border-radius:2px;filter:contrast(1.05) saturate(.94) sepia(.05);
+  box-shadow:inset 0 0 34px rgba(40,30,20,.22),inset 0 0 0 1px rgba(34,31,28,.12)}
+.pM.v-echt .kinn{padding:14px 4px 30px}
+.pM.v-echt .tt{font-size:17px}
+.pM.v-echt .times{font-size:9px}
+.pM.v-echt .play{width:48px;height:48px;box-shadow:0 4px 9px rgba(216,68,58,.42)}
+
+/* M5 · Idee — Die Entwicklung: das Bild kommt, während der Titel läuft */
+.pM.v-idee{background:radial-gradient(120% 80% at 50% 18%,#FBFAF8,#E9E5DF 68%,#DED9D1)}
+.pM.v-idee .cover{filter:saturate(calc(min(1,var(--p,0)*5))) contrast(calc(.6 + min(.4,var(--p,0)*2)))}
+.pM.v-idee .cover::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:#D8D6CA;opacity:calc(1 - min(1,var(--p,0)*5))}
+.pM.v-idee .abzug{box-shadow:0 22px 46px rgba(34,31,28,.22),0 2px 4px rgba(34,31,28,.10)}
+
+/* P3 · Glanz — Zeilen aus Milchglas, der Akzent leuchtet */
+.pP.v-glanz{background:linear-gradient(176deg,#FFFFFF,#F4F1F4 60%,#EFE9F0);--acc:#E0335F;
+  --acc-soft:rgba(224,51,95,.10)}
+.pP.v-glanz .z{background:rgba(255,255,255,.62);box-shadow:0 4px 14px rgba(60,40,50,.07),
+  inset 0 1px 0 rgba(255,255,255,.9);margin-top:7px;backdrop-filter:blur(8px)}
+.pP.v-glanz .z .pl{background:rgba(255,255,255,.8);box-shadow:inset 0 1px 0 #fff,0 2px 5px rgba(60,40,50,.10)}
+.pP.v-glanz .z.now{background:linear-gradient(rgba(255,255,255,.86),rgba(255,236,241,.86));
+  box-shadow:0 10px 26px rgba(224,51,95,.16),inset 0 1px 0 #fff}
+.pP.v-glanz .z.now .cover{box-shadow:0 8px 20px rgba(224,51,95,.34)}
+.pP.v-glanz .play{background:radial-gradient(circle at 36% 26%,#FF6E92,#C71E48 68%);
+  box-shadow:0 8px 22px rgba(224,51,95,.5),inset 0 2px 2px rgba(255,255,255,.6)}
+.pP.v-glanz .pille{background:radial-gradient(circle at 30% 20%,#FF6E92,#D42356);
+  box-shadow:0 8px 26px rgba(224,51,95,.55),inset 0 1px 0 rgba(255,255,255,.5)}
+
+/* P4 · realistischer — ein gedrucktes Programm: Bleistifthaken und Textmarker */
+.pP.v-echt{background:#FAF7EF;--acc:#C4462F;--acc-soft:rgba(244,222,110,.55);--p-3:#9A9184}
+.pP.v-echt .kopf h4{font-family:var(--serif);font-weight:400;font-size:27px}
+.pP.v-echt .kopf .k{color:#9A9184}
+.pP.v-echt .z{position:relative;border-radius:0;padding:11px 10px 11px 34px;
+  border-bottom:1px dotted rgba(38,34,28,.30)}
+.pP.v-echt .z .pl{display:none}
+.pP.v-echt .z .t{font-family:var(--serif);font-weight:400;font-size:16px}
+.pP.v-echt .z.past::before{content:'✓';position:absolute;left:10px;top:11px;font-size:14px;color:#6E6A62;
+  transform:rotate(-11deg)}
+.pP.v-echt .z.now{background:var(--acc-soft);border-radius:2px;padding:15px 12px;margin:6px 0;
+  border-bottom:1px solid rgba(38,34,28,.16)}
+.pP.v-echt .z.now .cover{border-radius:0;box-shadow:0 2px 6px rgba(38,34,28,.24)}
+.pP.v-echt .play{border-radius:0;box-shadow:none}
+.pP.v-echt .pille{border-radius:2px;box-shadow:none;background:#C4462F}
+
+/* P5 · Idee — Die Spur: jede Zeile trägt ihren eigenen Stand */
+.pP.v-idee{background:#FCFBFA;--acc:#2E7D6B;--acc-soft:rgba(46,125,107,.08)}
+.pP.v-idee .z{position:relative;padding-bottom:15px}
+.pP.v-idee .z::after{content:'';position:absolute;left:10px;right:10px;bottom:6px;height:2px;
+  background:rgba(30,27,25,.10)}
+.pP.v-idee .z::before{content:'';position:absolute;left:10px;bottom:6px;height:2px;width:0;
+  background:var(--acc);z-index:2}
+.pP.v-idee .z.past::before{width:calc(100% - 20px)}
+.pP.v-idee .z.now::before{width:calc((100% - 32px) * var(--p,0))}
+.pP.v-idee .z.now{padding-bottom:20px}
+.pP.v-idee .z.now .seek,.pP.v-idee .z.now .times{opacity:.55}
+.pP.v-idee .z .pl{background:rgba(46,125,107,.10)}
+.pP.v-idee .play{box-shadow:0 8px 20px rgba(46,125,107,.34)}
+.pP.v-idee .pille{box-shadow:0 10px 26px rgba(46,125,107,.34)}
+.pP.v-idee .z.now .cover{box-shadow:0 8px 18px rgba(46,125,107,.22)}
+.pP.v-idee .knob{box-shadow:0 2px 6px rgba(46,125,107,.4)}
+
+/* V3 · Glanz — Emaille: jede Platte hat ein Licht an der Oberkante */
+.pV.v-glanz{background:linear-gradient(168deg,#FBF8F2,#E9E2D6)}
+.pV.v-glanz .platte{position:relative;overflow:hidden;
+  background:linear-gradient(rgba(255,255,255,.75),rgba(255,255,255,0) 38%),
+    linear-gradient(#FFFFFF 0%,#FEFBF5 16%,#F2EADC 100%);
+  box-shadow:0 6px 0 #DDD1BC,0 16px 26px rgba(110,96,74,.24),inset 0 1px 0 #fff}
+/* kein ::after mehr: die Lichtkante liegt als erste Ebene im Hintergrund */
+.pV.v-glanz .cover{box-shadow:0 6px 16px rgba(90,74,50,.28),inset 0 1px 0 rgba(255,255,255,.5)}
+.pV.v-glanz .play{background:radial-gradient(circle at 36% 24%,#7BE3A2,#279A50 66%);
+  box-shadow:0 6px 0 #1F7A40,0 14px 22px rgba(39,154,80,.42),inset 0 2px 3px rgba(255,255,255,.7)}
+.pV.v-glanz .knopf{background:radial-gradient(circle at 36% 30%,#8CEDAF,#2E9351);
+  box-shadow:0 2px 5px rgba(46,147,81,.5),inset 0 1px 1px rgba(255,255,255,.7)}
+
+/* V4 · realistischer — gespritztes ABS: Trennnaht, Schraubdome, weiche Fase */
+.pV.v-echt{background:linear-gradient(170deg,#F4F0E8,#E4DCCE)}
+.pV.v-echt .platte{position:relative;border-radius:14px;
+  background:linear-gradient(#FAF6EE,#EFE7D8);
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 -1px 0 rgba(120,104,80,.22) inset,
+    0 2px 3px rgba(90,76,54,.22),0 16px 22px -10px rgba(90,76,54,.34)}
+/* Die Trennnaht eines Spritzteils liegt an der Seitenwand, nicht im Gesicht:
+   deshalb sitzt sie knapp über der Unterkante und nicht auf halber Höhe. */
+.pV.v-echt .platte::after{content:'';position:absolute;left:8px;right:8px;bottom:7px;height:1px;
+  pointer-events:none;background:rgba(255,255,255,.75);box-shadow:0 1px 0 rgba(120,104,80,.16)}
+.pV.v-echt .p1{background-image:radial-gradient(circle at 10px 10px,rgba(120,104,80,.16) 1.5px,transparent 2px),
+  radial-gradient(circle at calc(100% - 10px) 10px,rgba(120,104,80,.16) 1.5px,transparent 2px);
+  background-repeat:no-repeat}
+.pV.v-echt .cover{border-radius:10px;box-shadow:0 1px 2px rgba(90,76,54,.3)}
+.pV.v-echt .play{box-shadow:0 2px 3px rgba(30,80,50,.4),0 10px 16px -6px rgba(30,80,50,.5),
+  inset 0 1px 0 rgba(255,255,255,.4),inset 0 -2px 3px rgba(20,60,36,.3)}
+
+/* Y5 · Idee — Der Abreißkalender: der laufende Titel steht auf dem obersten Blatt */
+.pY.v-idee{background:linear-gradient(172deg,#FBF9F4,#EDE9E0);--y-a:#A8563C}
+.pY.v-idee .tafel{background:none;border:none;box-shadow:none;padding:0}
+.pY.v-idee .rahmen{border:none;background:#FDFBF6;padding:0 0 14px;border-radius:2px;
+  box-shadow:0 4px 0 #F4F0E6,0 5px 0 rgba(38,34,28,.10),0 9px 0 #F1EDE2,0 10px 0 rgba(38,34,28,.08),
+    0 14px 0 #EDE9DE,0 15px 0 rgba(38,34,28,.06),0 26px 34px rgba(60,50,38,.18)}
+.pY.v-idee .schild{background:#FFFDF8;border-radius:0;box-shadow:none;
+  border-bottom:1px dashed rgba(38,34,28,.30);
+  padding-top:12px;
+  background-image:repeating-linear-gradient(90deg,#FFFDF8 0 7px,rgba(38,34,28,.07) 7px 8px);
+  background-size:100% 7px;background-repeat:no-repeat;background-position:top}
+.pY.v-idee .schild .zeile{padding:16px 14px 18px}
+.pY.v-idee .gross .t{font-family:var(--serif);font-size:22px}
+.pY.v-idee .gross .nr{color:var(--y-a)}
+.pY.v-idee .lauf{padding:10px 14px 0}
+.pY.v-idee .az{background:none;box-shadow:none;border-radius:0;padding:9px 14px;
+  border-bottom:1px dotted rgba(38,34,28,.22)}
+.pY.v-idee .ak{padding-left:14px}
+.pY.v-idee .times{padding:0 14px}
+</style>
+<style>
+/* ═══════════ Die Seite: eine Matrix statt zweier Spalten ═══════════ */
+.page{max-width:1460px}
+.matrix{display:grid;grid-template-columns:repeat(auto-fit,minmax(352px,1fr));gap:54px 30px;padding:44px 0 0}
+.probe{display:flex;flex-direction:column;align-items:center;gap:20px}
+.probe .phone{zoom:.82}
+.probe .txt{width:100%;max-width:392px}
+.probe h4{font-family:var(--serif);font-size:22px;font-weight:400;line-height:1.2}
+.probe h4 .no{display:block;margin-bottom:8px;font-family:var(--sans);font-size:9.5px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--brass)}
+.probe p{margin-top:10px;font-size:13.5px;color:var(--ink-2)}
+.probe p b{color:var(--ink);font-weight:600}
+.probe .stoff{margin-top:11px;font-family:var(--sans);font-size:9.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink-3)}
+.legende{display:grid;grid-template-columns:repeat(auto-fit,minmax(212px,1fr));margin-top:26px;
+  border-top:1px solid var(--line-2);max-width:64ch}
+.legende>div{padding:12px 16px 14px 0}
+.legende dt{font-family:var(--sans);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--brass);margin-bottom:5px}
+.legende dd{font-size:13px;color:var(--ink-2)}
+</style>
+<style>
+/* ══════════════════════════════════════════════════════════════════════
+   Die Fassungen: Farbe und Stoff, drei je Behandlung.
+   Eine Fassung setzt nur Töne, Texturen und Kanten — nie die Anordnung.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* Stoffe, die mehrfach vorkommen. Alle sind reine Verläufe: kein Bild,
+   kein Netz, nichts, was geladen werden müsste. */
+.st-leinen{background-image:
+  repeating-linear-gradient(90deg,rgba(70,58,44,.05) 0 1px,transparent 1px 3px),
+  repeating-linear-gradient(0deg,rgba(70,58,44,.04) 0 1px,transparent 1px 3px)}
+.st-buetten{background-image:repeating-linear-gradient(0deg,rgba(70,58,44,.055) 0 1px,transparent 1px 4px)}
+.st-perlmutt{background-image:linear-gradient(122deg,rgba(255,255,255,.66),rgba(238,238,246,.24) 42%,
+  rgba(255,250,246,.55))}
+.st-stein{background-image:radial-gradient(rgba(90,80,64,.11) .8px,transparent 1.1px);background-size:7px 7px}
+.st-holz{background-image:repeating-linear-gradient(90deg,rgba(122,92,56,.055) 0 2px,transparent 2px 7px,
+  rgba(122,92,56,.03) 7px 8px,transparent 8px 15px)}
+
+/* ══════════════════ 1 · DER ECHTE ABZUG (M4) ══════════════════
+   Rechte Winkel bleiben: ein Abzug hat keine runden Ecken. */
+/* 1a · Leinen & Tinte */
+.pM.v-echt.f-a{background:radial-gradient(120% 80% at 50% 18%,#F8F8F6,#EAEAE6 66%,#DDDDD9);
+  --m-a:#2C3E63;--m-3:#9E9E9C;--m-2:#4E5561}
+.pM.v-echt.f-a .abzug{background:#FDFCF9}
+.pM.v-echt.f-a .abzug::after{background:
+  repeating-linear-gradient(90deg,rgba(70,58,44,.032) 0 1px,transparent 1px 4px),
+  repeating-linear-gradient(0deg,rgba(70,58,44,.026) 0 1px,transparent 1px 4px)}
+.pM.v-echt.f-a .cover{filter:contrast(1.04) saturate(.86) hue-rotate(-6deg)}
+.pM.v-echt.f-a .knob{box-shadow:0 2px 5px rgba(44,62,99,.45)}
+.pM.v-echt.f-a .play{box-shadow:0 4px 9px rgba(44,62,99,.38)}
+
+/* 1b · Sand & Ton */
+.pM.v-echt.f-b{background:radial-gradient(120% 80% at 50% 18%,#FBF6EC,#EDE3D3 66%,#E0D4C0);
+  --m-a:#A9603F;--m-3:#A89880;--m-2:#5E5344}
+.pM.v-echt.f-b .abzug{background:#FDF8EF}
+.pM.v-echt.f-b .abzug::after{background:repeating-linear-gradient(0deg,rgba(90,70,44,.05) 0 1px,transparent 1px 4px)}
+.pM.v-echt.f-b .cover{filter:contrast(1.05) saturate(1.02) sepia(.12)}
+.pM.v-echt.f-b .knob{box-shadow:0 2px 5px rgba(169,96,63,.45)}
+.pM.v-echt.f-b .play{box-shadow:0 4px 9px rgba(169,96,63,.38)}
+
+/* 1c · Graphit & Perlmutt */
+.pM.v-echt.f-c{background:radial-gradient(120% 80% at 50% 16%,#FAFAFC,#E7E7EB 66%,#D9D9DE);
+  --m-a:#3A3D42;--m-3:#9B9CA1;--m-2:#4C4E53}
+.pM.v-echt.f-c .abzug{background:#FBFBFC}
+.pM.v-echt.f-c .abzug::after{background:linear-gradient(122deg,rgba(255,255,255,.66),
+  rgba(238,238,246,.24) 42%,rgba(255,250,246,.55))}
+.pM.v-echt.f-c .cover{filter:contrast(1.06) saturate(.72)}
+.pM.v-echt.f-c .knob{box-shadow:0 2px 5px rgba(58,61,66,.4)}
+.pM.v-echt.f-c .play{box-shadow:0 4px 9px rgba(58,61,66,.32)}
+
+/* ══════════════════ 2 · DIE ENTWICKLUNG (M5) ══════════════════ */
+/* 2a · Salbei */
+.pM.v-idee.f-a{background:radial-gradient(120% 80% at 50% 18%,#F7F9F3,#E8ECE2 68%,#DCE1D4);
+  --m-a:#5B7355;--m-3:#9AA394;--m-2:#4E5748}
+.pM.v-idee.f-a .abzug{background:#FBFCF7}
+.pM.v-idee.f-a .cover::after{background:#D6DACE}
+.pM.v-idee.f-a .play{box-shadow:0 6px 14px rgba(91,115,85,.34)}
+.pM.v-idee.f-a .knob{box-shadow:0 2px 5px rgba(91,115,85,.45)}
+
+/* 2b · Elfenbein & Messing */
+.pM.v-idee.f-b{background:radial-gradient(120% 80% at 50% 18%,#FDFAF2,#F0E9DA 68%,#E4DBC8);
+  --m-a:#8A6534;--m-3:#A99D86;--m-2:#5C5343}
+.pM.v-idee.f-b .abzug{background:#FFFDF6}
+.pM.v-idee.f-b .cover::after{background:#DED6C4}
+.pM.v-idee.f-b .play{box-shadow:0 6px 14px rgba(138,101,52,.34)}
+.pM.v-idee.f-b .knob{box-shadow:0 2px 5px rgba(138,101,52,.45)}
+
+/* 2c · Schiefer */
+.pM.v-idee.f-c{background:radial-gradient(120% 80% at 50% 18%,#F7F8F9,#E7E9EA 68%,#DADDDF);
+  --m-a:#33383D;--m-3:#9AA0A4;--m-2:#4A5055}
+.pM.v-idee.f-c .abzug{background:#FAFAFB}
+.pM.v-idee.f-c .cover::after{background:#CFD3D6}
+.pM.v-idee.f-c .play{box-shadow:0 6px 14px rgba(51,56,61,.30)}
+.pM.v-idee.f-c .knob{box-shadow:0 2px 5px rgba(51,56,61,.4)}
+
+/* ══════════════════ 3 · MILCHGLASZEILEN (P3) ══════════════════ */
+/* 3a · Perlmutt & Flieder */
+.pP.v-glanz.f-a{background:linear-gradient(176deg,#FFFFFF,#F4F2F7 58%,#EDE9F2);--acc:#6E5C86;
+  --acc-soft:rgba(110,92,134,.10);--p-3:#A19BAA}
+.pP.v-glanz.f-a .z.now{background:linear-gradient(rgba(255,255,255,.88),rgba(243,238,248,.88));
+  box-shadow:0 10px 26px rgba(110,92,134,.14),inset 0 1px 0 #fff}
+.pP.v-glanz.f-a .z.now .cover{box-shadow:0 8px 20px rgba(110,92,134,.28)}
+.pP.v-glanz.f-a .play{background:var(--acc);box-shadow:0 6px 16px rgba(110,92,134,.34)}
+.pP.v-glanz.f-a .pille{background:var(--acc);box-shadow:0 8px 20px rgba(110,92,134,.32)}
+
+/* 3b · Seeglas & Petrol */
+.pP.v-glanz.f-b{background:linear-gradient(176deg,#FDFFFE,#EDF5F3 58%,#E3EEEC);--acc:#2A6B6B;
+  --acc-soft:rgba(42,107,107,.10);--p-3:#93A6A4}
+.pP.v-glanz.f-b .z.now{background:linear-gradient(rgba(255,255,255,.88),rgba(232,244,242,.88));
+  box-shadow:0 10px 26px rgba(42,107,107,.14),inset 0 1px 0 #fff}
+.pP.v-glanz.f-b .z.now .cover{box-shadow:0 8px 20px rgba(42,107,107,.28)}
+.pP.v-glanz.f-b .play{background:var(--acc);box-shadow:0 6px 16px rgba(42,107,107,.34)}
+.pP.v-glanz.f-b .pille{background:var(--acc);box-shadow:0 8px 20px rgba(42,107,107,.32)}
+
+/* 3c · Rauchquarz & Bronze */
+.pP.v-glanz.f-c{background:linear-gradient(176deg,#FDFBF9,#F3EDE7 58%,#EAE1D8);--acc:#8A6A4B;
+  --acc-soft:rgba(138,106,75,.10);--p-3:#A99D90}
+.pP.v-glanz.f-c .z.now{background:linear-gradient(rgba(255,255,255,.88),rgba(246,238,229,.88));
+  box-shadow:0 10px 26px rgba(138,106,75,.16),inset 0 1px 0 #fff}
+.pP.v-glanz.f-c .z.now .cover{box-shadow:0 8px 20px rgba(138,106,75,.30)}
+.pP.v-glanz.f-c .play{background:var(--acc);box-shadow:0 6px 16px rgba(138,106,75,.34)}
+.pP.v-glanz.f-c .pille{background:var(--acc);box-shadow:0 8px 20px rgba(138,106,75,.32)}
+
+/* ══════════════════ 4 · DAS PROGRAMMHEFT (P4) ══════════════════
+   Runde Ecken: das Heft bleibt gedruckt, aber die Zeilen bekommen Radius. */
+.pP.v-echt.f-a,.pP.v-echt.f-b,.pP.v-echt.f-c{}
+.pP.v-echt.f-a .z,.pP.v-echt.f-b .z,.pP.v-echt.f-c .z{border-radius:12px}
+.pP.v-echt.f-a .z.now,.pP.v-echt.f-b .z.now,.pP.v-echt.f-c .z.now{border-radius:14px;border-bottom:none}
+.pP.v-echt.f-a .play,.pP.v-echt.f-b .play,.pP.v-echt.f-c .play{border-radius:50%}
+.pP.v-echt.f-a .pille,.pP.v-echt.f-b .pille,.pP.v-echt.f-c .pille{border-radius:30px;background:var(--acc)}
+/* 4a · Umbra & Oliv */
+.pP.v-echt.f-a{background:#F7F2E7;--acc:#6B6B3A;--acc-soft:rgba(206,199,150,.55);--p-3:#A29878;
+  --p-2:#5A5236;color:#3E3A28;
+  background-image:repeating-linear-gradient(0deg,rgba(90,74,44,.045) 0 1px,transparent 1px 4px)}
+.pP.v-echt.f-a .z{border-bottom-color:rgba(90,74,44,.26)}
+.pP.v-echt.f-a .z.past::before{color:#7C7458}
+/* 4b · Kreide & Kobalt */
+.pP.v-echt.f-b{background:#FAFAFA;--acc:#2F4E86;--acc-soft:rgba(198,216,240,.62);--p-3:#9AA0A8;
+  --p-2:#404A56;color:#242A33}
+.pP.v-echt.f-b .z{border-bottom-color:rgba(40,50,64,.22)}
+.pP.v-echt.f-b .z.past::before{color:#6C7480}
+/* 4c · Leinen & Moos */
+.pP.v-echt.f-c{background:#F6F4EE;--acc:#4A6B4A;--acc-soft:rgba(203,219,199,.62);--p-3:#9EA598;
+  --p-2:#46503F;color:#2F362C;
+  background-image:repeating-linear-gradient(90deg,rgba(70,80,60,.032) 0 1px,transparent 1px 4px),
+    repeating-linear-gradient(0deg,rgba(70,80,60,.026) 0 1px,transparent 1px 4px)}
+.pP.v-echt.f-c .z{border-bottom-color:rgba(60,70,52,.24)}
+.pP.v-echt.f-c .z.past::before{color:#6E7668}
+
+/* ══════════════════ 5 · DIE SPUR (P5) ══════════════════ */
+/* 5a · Tinte auf Bein */
+.pP.v-idee.f-a{background:#FBFAF7;--acc:#2C3E63;--acc-soft:rgba(44,62,99,.07);--p-3:#A39C90;
+  background-image:repeating-linear-gradient(0deg,rgba(70,58,44,.03) 0 1px,transparent 1px 4px)}
+.pP.v-idee.f-a .z .pl{background:rgba(44,62,99,.09)}
+.pP.v-idee.f-a .play{background:var(--acc);box-shadow:none}
+.pP.v-idee.f-a .pille{box-shadow:0 8px 20px rgba(44,62,99,.26)}
+.pP.v-idee.f-a .z.now .cover{box-shadow:0 8px 18px rgba(44,62,99,.20)}
+.pP.v-idee.f-a .knob{box-shadow:none}
+
+/* 5b · Bordeaux auf Elfenbein */
+.pP.v-idee.f-b{background:#FCFAF6;--acc:#7A2E3E;--acc-soft:rgba(122,46,62,.07);--p-3:#A79A8C;
+  background-image:linear-gradient(122deg,rgba(255,255,255,.5),rgba(246,240,232,.3) 44%,rgba(255,252,246,.5))}
+.pP.v-idee.f-b .z .pl{background:rgba(122,46,62,.09)}
+.pP.v-idee.f-b .play{background:var(--acc);box-shadow:none}
+.pP.v-idee.f-b .pille{box-shadow:0 8px 20px rgba(122,46,62,.26)}
+.pP.v-idee.f-b .z.now .cover{box-shadow:0 8px 18px rgba(122,46,62,.22)}
+.pP.v-idee.f-b .knob{box-shadow:none}
+
+/* 5c · Messing auf Rauch */
+.pP.v-idee.f-c{background:#F6F5F2;--acc:#8A6534;--acc-soft:rgba(138,101,52,.08);--p-3:#A29B90;
+  background-image:radial-gradient(rgba(90,80,64,.055) .8px,transparent 1.1px);background-size:7px 7px}
+.pP.v-idee.f-c .z .pl{background:rgba(138,101,52,.10)}
+.pP.v-idee.f-c .play{background:var(--acc);box-shadow:none}
+.pP.v-idee.f-c .pille{box-shadow:0 8px 20px rgba(138,101,52,.26)}
+.pP.v-idee.f-c .z.now .cover{box-shadow:0 8px 18px rgba(138,101,52,.22)}
+.pP.v-idee.f-c .knob{box-shadow:none}
+
+/* ══════════════════ 6 · EMAILLE (V3) ══════════════════
+   Der Knopf wird flach — eine Scheibe in der Akzentfarbe, wie in „Die Spur". */
+.pV.v-glanz.f-a .play,.pV.v-glanz.f-b .play,.pV.v-glanz.f-c .play,
+.pV.v-echt.f-a .play,.pV.v-echt.f-b .play,.pV.v-echt.f-c .play{
+  background:var(--v-a);box-shadow:none;transition:transform .12s,opacity .2s}
+.pV.v-glanz.f-a .play:active,.pV.v-glanz.f-b .play:active,.pV.v-glanz.f-c .play:active,
+.pV.v-echt.f-a .play:active,.pV.v-echt.f-b .play:active,.pV.v-echt.f-c .play:active{
+  transform:none;opacity:.78}
+.pV.v-glanz.f-a .knopf,.pV.v-glanz.f-b .knopf,.pV.v-glanz.f-c .knopf,
+.pV.v-echt.f-a .knopf,.pV.v-echt.f-b .knopf,.pV.v-echt.f-c .knopf{background:var(--v-a);box-shadow:none}
+/* 6a · Elfenbein & Salbei */
+.pV.v-glanz.f-a{background:linear-gradient(168deg,#FBFAF4,#EBE9DE);--v-a:#5B7355;--v-3:#A5A392;--v-2:#565A4C}
+.pV.v-glanz.f-a .platte{background:linear-gradient(rgba(255,255,255,.7),rgba(255,255,255,0) 38%),
+    linear-gradient(#FFFFFF 0%,#FEFDF8 16%,#F2F0E4 100%);
+  box-shadow:0 6px 0 #DEDCCC,0 16px 26px rgba(96,100,78,.20),inset 0 1px 0 #fff}
+.pV.v-glanz.f-a .vz.now{background:rgba(91,115,85,.12)}
+/* 6b · Alabaster & Tinte */
+.pV.v-glanz.f-b{background:linear-gradient(168deg,#FAFAFB,#E8E9EC);--v-a:#2C3E63;--v-3:#9EA1AA;--v-2:#4C5260}
+.pV.v-glanz.f-b .platte{background:linear-gradient(rgba(255,255,255,.7),rgba(255,255,255,0) 38%),
+    linear-gradient(#FFFFFF 0%,#FDFDFE 16%,#EFF0F3 100%);
+  box-shadow:0 6px 0 #DBDDE3,0 16px 26px rgba(70,78,98,.20),inset 0 1px 0 #fff}
+.pV.v-glanz.f-b .vz.now{background:rgba(44,62,99,.10)}
+/* 6c · Sand & Bordeaux */
+.pV.v-glanz.f-c{background:linear-gradient(168deg,#FBF6EC,#EBE0CE);--v-a:#7A2E3E;--v-3:#AB9C86;--v-2:#5C5140}
+.pV.v-glanz.f-c .platte{background:linear-gradient(rgba(255,255,255,.7),rgba(255,255,255,0) 38%),
+    linear-gradient(#FFFEFA 0%,#FDF9F0 16%,#F2E9D8 100%);
+  box-shadow:0 6px 0 #E0D3BC,0 16px 26px rgba(110,92,62,.22),inset 0 1px 0 #fff}
+.pV.v-glanz.f-c .vz.now{background:rgba(122,46,62,.10)}
+
+/* ══════════════════ 7 · GESPRITZT (V4) ══════════════════ */
+/* Die Schraubdome der Grundbehandlung liegen auf der Textur, nicht darunter */
+.pV.v-echt.f-a .p1::before,.pV.v-echt.f-b .p1::before,.pV.v-echt.f-c .p1::before{content:'';
+  position:absolute;left:0;right:0;top:0;height:24px;pointer-events:none;
+  background:radial-gradient(circle at 10px 10px,rgba(120,104,80,.20) 1.5px,transparent 2px),
+    radial-gradient(circle at calc(100% - 10px) 10px,rgba(120,104,80,.20) 1.5px,transparent 2px)}
+/* 7a · Kalkstein & Graphit */
+.pV.v-echt.f-a{background:linear-gradient(170deg,#F5F4F0,#E5E4DE);--v-a:#3A3D42;--v-3:#A3A199;--v-2:#53554F}
+.pV.v-echt.f-a .platte{background:linear-gradient(#FAF9F5,#EFEEE8);
+  background-image:radial-gradient(rgba(90,88,74,.07) .7px,transparent 1px),
+    radial-gradient(rgba(90,88,74,.05) .6px,transparent .9px),
+    linear-gradient(#FAF9F5,#EFEEE8);
+  background-size:9px 9px,13px 13px,100% 100%;background-position:0 0,4px 6px,0 0}
+.pV.v-echt.f-a .vz.now{background:rgba(58,61,66,.09)}
+/* 7b · Perlweiß & Petrol */
+.pV.v-echt.f-b{background:linear-gradient(170deg,#F6F8F8,#E4E9E9);--v-a:#2A6B6B;--v-3:#9BA6A6;--v-2:#4C5757}
+.pV.v-echt.f-b .platte{background:linear-gradient(#FBFCFC,#EFF3F3);
+  background-image:linear-gradient(122deg,rgba(255,255,255,.55),rgba(236,242,242,.2) 44%,rgba(255,255,255,.45)),
+    linear-gradient(#FBFCFC,#EFF3F3)}
+.pV.v-echt.f-b .vz.now{background:rgba(42,107,107,.10)}
+/* 7c · Hellholz & Ton */
+.pV.v-echt.f-c{background:linear-gradient(170deg,#F7F1E6,#E9DECB);--v-a:#A9603F;--v-3:#AC9F88;--v-2:#5E5344}
+.pV.v-echt.f-c .platte{background:linear-gradient(#FCF7EC,#F1E9D9);
+  background-image:repeating-linear-gradient(90deg,rgba(122,92,56,.05) 0 2px,transparent 2px 7px,
+      rgba(122,92,56,.028) 7px 8px,transparent 8px 15px),
+    linear-gradient(#FCF7EC,#F1E9D9)}
+.pV.v-echt.f-c .vz.now{background:rgba(169,96,63,.11)}
+
+/* ══════════════════ 8 · DER ABREISSKALENDER (Y5) ══════════════════
+   Runde Ecken: der Block bekommt Radius, die gezackte Oberkante bleibt. */
+.pY.v-idee.f-a .rahmen,.pY.v-idee.f-b .rahmen,.pY.v-idee.f-c .rahmen{border-radius:14px;overflow:hidden}
+.pY.v-idee.f-a .play,.pY.v-idee.f-b .play,.pY.v-idee.f-c .play{border-width:1px}
+/* 8a · Bütten & Bordeaux */
+.pY.v-idee.f-a{background:linear-gradient(172deg,#FCFAF4,#EFEADF);--y-a:#7A2E3E;--y-3:#A79C8A;--y-2:#5A5246}
+.pY.v-idee.f-a .rahmen{background:#FEFCF7}
+.pY.v-idee.f-a .schild{background:#FFFEFA;
+  background-image:repeating-linear-gradient(0deg,rgba(90,74,44,.05) 0 1px,transparent 1px 4px),
+    repeating-linear-gradient(90deg,#FFFEFA 0 7px,rgba(38,34,28,.07) 7px 8px);
+  background-size:100% 100%,100% 7px;background-repeat:repeat,no-repeat;background-position:0 0,top}
+/* 8b · Recyclingpapier & Moos */
+.pY.v-idee.f-b{background:linear-gradient(172deg,#F6F5EE,#E8E7DC);--y-a:#4A6B4A;--y-3:#A1A493;--y-2:#525A4A}
+.pY.v-idee.f-b .rahmen{background:#F5F4EA}
+.pY.v-idee.f-b .schild{background:#F8F7EE;
+  background-image:radial-gradient(rgba(80,84,60,.10) .9px,transparent 1.2px),
+    repeating-linear-gradient(90deg,#F8F7EE 0 7px,rgba(38,34,28,.07) 7px 8px);
+  background-size:8px 8px,100% 7px;background-repeat:repeat,no-repeat;background-position:0 0,top}
+/* 8c · Elfenbein & Tinte */
+.pY.v-idee.f-c{background:linear-gradient(172deg,#FBFBF8,#EBEBE6);--y-a:#2C3E63;--y-3:#A0A099;--y-2:#4E5462}
+.pY.v-idee.f-c .rahmen{background:#FFFEFB}
+.pY.v-idee.f-c .schild{background:#FFFFFC;
+  background-image:linear-gradient(122deg,rgba(255,255,255,.6),rgba(240,242,246,.25) 44%,rgba(255,255,252,.5)),
+    repeating-linear-gradient(90deg,#FFFFFC 0 7px,rgba(38,34,28,.07) 7px 8px);
+  background-size:100% 100%,100% 7px;background-repeat:repeat,no-repeat;background-position:0 0,top}
+</style>
+<style>
+/* ── Schluss ── */
+.closing{margin-top:96px;padding-top:46px;border-top:1px solid var(--line-2);
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px}
+@media (max-width:1000px){.closing{grid-template-columns:1fr;gap:36px}}
+.closing h2{font-family:var(--serif);font-size:24px;font-weight:400;margin-bottom:16px}
+.closing p{color:var(--ink-2);font-size:14.5px;margin-bottom:14px}
+.closing p b{color:var(--ink);font-weight:600}
+.closing ul{list-style:none;border-top:1px solid var(--line)}
+.closing li{padding:13px 0;border-bottom:1px solid var(--line);font-size:14px;color:var(--ink-2);
+  display:grid;grid-template-columns:20px 1fr;gap:12px}
+.closing li .m{color:var(--brass)}
+.closing li b{color:var(--ink);font-weight:600}
+footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--line-2);font-family:var(--sans);
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+  display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}}
+</style>
+
+<div class="page">
+  <div class="masthead">
+    <div class="caps">Musiklib — Entwürfe, Jetzt läuft</div>
+    <h1>Engere <em>Wahl</em></h1>
+    <p class="lede">Acht Behandlungen, je drei Fassungen. Form und Behandlung bleiben unverändert — variiert
+    werden <b>Farbe, Stoff und Kante</b>. Durchgehend gilt: gedeckte Töne, ein Akzent, keine Verzierung.
+    Runde Ecken überall, <b>außer bei den beiden Sofortbildern</b> — ein Abzug hat rechte Winkel. Bei Emaille
+    und Gespritzt ist der Abspielknopf jetzt <b>flach</b>, eine Scheibe in der Akzentfarbe wie in „Die Spur".</p>
+    <div class="legende">
+      <div><dt>Fassung a</dt><dd>Die kühle: Tinte, Graphit, Salbei, Seeglas.</dd></div>
+      <div><dt>Fassung b</dt><dd>Die warme: Sand, Messing, Ton, Bordeaux.</dd></div>
+      <div><dt>Fassung c</dt><dd>Die stille: Perlmutt, Kalkstein, Schiefer, Leinen.</dd></div>
+    </div>
+  </div>
+  <div class="rule"></div>
+
+  <!-- 1 · M4 -->
+  <div class="chapter">
+    <div class="head">
+      <div class="caps">Behandlung 1 · M4</div>
+      <h2>Der echte Abzug</h2>
+      <p>Tiefe Kinnlade, Emulsionsstich, leichte Wölbung, Schatten an der Kante. <b>Rechte Winkel bleiben</b> —
+      hier variieren nur Karton, Farbstich des Bildes und der eine Akzent am Regler.</p>
+    </div>
+    <div class="matrix">
+      <div class="probe">
+        <div class="phone pM v-echt f-a" data-m="M"></div>
+        <div class="txt"><h4><span class="no">1a</span>Leinen &amp; Tinte</h4>
+          <p>Karton mit feiner <b>Leinenstruktur</b>, das Bild um eine Spur kühler entwickelt, der Regler in
+          Tintenblau. Der Tisch darunter ist neutralgrau — nichts wärmt hier künstlich nach.</p>
+          <div class="stoff">Leinen · Tintenblau · Neutralgrau</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pM v-echt f-b" data-m="M"></div>
+        <div class="txt"><h4><span class="no">1b</span>Sand &amp; Ton</h4>
+          <p>Warmer Karton mit Büttenrippen, das Bild leicht sepiastichig, der Regler in gebranntem Ton. Das
+          ist die Fassung, die am ehesten nach <b>Schublade</b> aussieht.</p>
+          <div class="stoff">Bütten · Ton · Sand</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pM v-echt f-c" data-m="M"></div>
+        <div class="txt"><h4><span class="no">1c</span>Graphit &amp; Perlmutt</h4>
+          <p>Kühles Papierweiß mit Perlmuttschimmer, das Bild entsättigt, der Akzent ist <b>keine Farbe</b>,
+          sondern Graphit. Am nächsten an einem Museumsschild.</p>
+          <div class="stoff">Perlmutt · Graphit · kein Buntton</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 · M5 -->
+  <div class="chapter">
+    <div class="head">
+      <div class="caps">Behandlung 2 · M5</div>
+      <h2>Die Entwicklung</h2>
+      <p>Das Bild kommt, während der Titel läuft. Entscheidend ist hier die <b>Farbe der milchigen Fläche</b>
+      am Anfang: sie steht die ersten Sekunden allein auf dem Bildschirm und bestimmt den Ton des ganzen
+      Entwurfs.</p>
+    </div>
+    <div class="matrix">
+      <div class="probe">
+        <div class="phone pM v-idee f-a" data-m="M"></div>
+        <div class="txt"><h4><span class="no">2a</span>Salbei</h4>
+          <p>Die Milch ist ein <b>graugrüner Ton</b>, wie ungebrauchtes Fotopapier. Salbei am Regler, alles
+          andere farblos — die einzige Farbe im Bild ist die, die gerade entsteht.</p>
+          <div class="stoff">Salbei · Graugrün · Papierweiß</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pM v-idee f-b" data-m="M"></div>
+        <div class="txt"><h4><span class="no">2b</span>Elfenbein &amp; Messing</h4>
+          <p>Warme Milch, Messing am Regler. Die Entwicklung wirkt dadurch weniger chemisch und mehr wie
+          <b>Licht, das langsam angeht</b> — die freundlichste der drei.</p>
+          <div class="stoff">Elfenbein · Messing · warme Milch</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pM v-idee f-c" data-m="M"></div>
+        <div class="txt"><h4><span class="no">2c</span>Schiefer</h4>
+          <p>Kühle, fast blaue Milch und ein Akzent knapp über Schwarz. Der Kontrast zum fertigen Bild ist hier
+          am größten: <b>aus Stein wird Farbe</b>.</p>
+          <div class="stoff">Schiefer · Blaugrau · Nachtschwarz</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 · P3 -->
+  <div class="chapter">
+    <div class="head">
+      <div class="caps">Behandlung 3 · P3</div>
+      <h2>Milchglaszeilen</h2>
+      <p>Jede Zeile eine eigene matte Scheibe mit Licht an der Oberkante. Milchglas nimmt die Farbe an, die
+      hinter ihm liegt — deshalb entscheidet hier der <b>Grundverlauf</b>, nicht der Akzent.</p>
+    </div>
+    <div class="matrix">
+      <div class="probe">
+        <div class="phone pP v-glanz f-a" data-m="P"></div>
+        <div class="txt"><h4><span class="no">3a</span>Perlmutt &amp; Flieder</h4>
+          <p>Ein Verlauf von Weiß nach hellem Flieder, der Akzent gedämpft violett. Das Glas wirkt dadurch
+          <b>kühl und trocken</b> statt seifig.</p>
+          <div class="stoff">Perlmutt · Flieder · Weißverlauf</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pP v-glanz f-b" data-m="P"></div>
+        <div class="txt"><h4><span class="no">3b</span>Seeglas &amp; Petrol</h4>
+          <p>Blassgrüner Grund wie geschliffenes Strandglas, Petrol als Akzent. Von den dreien die
+          <b>frischeste</b> — und die einzige, die auch bei viel Tageslicht Farbe behält.</p>
+          <div class="stoff">Seeglas · Petrol · Blassgrün</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pP v-glanz f-c" data-m="P"></div>
+        <div class="txt"><h4><span class="no">3c</span>Rauchquarz &amp; Bronze</h4>
+          <p>Warmes, leicht rauchiges Glas über Sand, Bronze als Akzent. Wärmer und schwerer als die anderen
+          beiden — <b>Abend statt Vormittag</b>.</p>
+          <div class="stoff">Rauchquarz · Bronze · Sand</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 · P4 -->
+  <div class="chapter">
+    <div class="head">
+      <div class="caps">Behandlung 4 · P4</div>
+      <h2>Das Programmheft</h2>
+      <p>Punktierte Linien, Bleistifthaken, Textmarker auf der laufenden Zeile. Neu in allen drei Fassungen:
+      <b>runde Ecken</b> an Zeilen, Knopf und Pille — das Heft bleibt gedruckt, aber es hat keine scharfen
+      Kanten mehr.</p>
+    </div>
+    <div class="matrix">
+      <div class="probe">
+        <div class="phone pP v-echt f-a" data-m="P"></div>
+        <div class="txt"><h4><span class="no">4a</span>Umbra &amp; Oliv</h4>
+          <p>Werkdruckpapier mit Rippung, olivgrüner Marker, Umbra als Schriftfarbe. Kein Schwarz und kein
+          Weiß — die <b>ruhigste</b> der drei.</p>
+          <div class="stoff">Werkdruck · Oliv · Umbra</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pP v-echt f-b" data-m="P"></div>
+        <div class="txt"><h4><span class="no">4b</span>Kreide &amp; Kobalt</h4>
+          <p>Glattes, fast weißes Papier, blasser blauer Marker, Kobalt als Akzent. Wirkt eher nach
+          <b>Konzertprogramm</b> als nach Setlist.</p>
+          <div class="stoff">Kreidepapier · Kobalt · Blaumarker</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pP v-echt f-c" data-m="P"></div>
+        <div class="txt"><h4><span class="no">4c</span>Leinen &amp; Moos</h4>
+          <p>Leinenpapier mit sichtbarer Webung, blassgrüner Marker, Moos als Schrift. Von den drei Fassungen
+          die, die am wenigsten nach <b>Bildschirm</b> aussieht.</p>
+          <div class="stoff">Leinen · Moos · Blassgrün</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 · P5 -->
+  <div class="chapter">
+    <div class="head">
+      <div class="caps">Behandlung 5 · P5</div>
+      <h2>Die Spur</h2>
+      <p>Jede Zeile trägt ihren eigenen Stand als feine Linie. Weil die Spur das einzige farbige Element ist,
+      wird der Akzent hier zur <b>Handschrift des ganzen Entwurfs</b> — und der Knopf bleibt flach.</p>
+    </div>
+    <div class="matrix">
+      <div class="probe">
+        <div class="phone pP v-idee f-a" data-m="P"></div>
+        <div class="txt"><h4><span class="no">5a</span>Tinte auf Bein</h4>
+          <p>Beinfarbenes Papier mit feiner Rippung, die Spur in Tintenblau. Liest sich wie ein
+          <b>Registerheft</b> — sachlich, ohne kalt zu sein.</p>
+          <div class="stoff">Bein · Tinte · Rippung</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pP v-idee f-b" data-m="P"></div>
+        <div class="txt"><h4><span class="no">5b</span>Bordeaux auf Elfenbein</h4>
+          <p>Elfenbein mit Perlmuttschimmer, die Spur in tiefem Wein. Die <b>wärmste und teuerste</b> wirkende
+          der drei — Wein auf hellem Grund ist ein alter Trick, und er trägt.</p>
+          <div class="stoff">Elfenbein · Bordeaux · Schimmer</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pP v-idee f-c" data-m="P"></div>
+        <div class="txt"><h4><span class="no">5c</span>Messing auf Rauch</h4>
+          <p>Grauer Grund mit feiner Körnung, die Spur in Messing. Das ist die Fassung, die zum <b>heutigen
+          Thema „Papier"</b> in <code>mobile.html</code> passt, ohne es zu wiederholen.</p>
+          <div class="stoff">Rauchgrau · Messing · Korn</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 · V3 -->
+  <div class="chapter">
+    <div class="head">
+      <div class="caps">Behandlung 6 · V3</div>
+      <h2>Emaille</h2>
+      <p>Drei Platten mit Licht über der oberen Hälfte. <b>Neu: der Knopf ist flach</b> — eine Scheibe in der
+      Akzentfarbe ohne Sockel und ohne Glanzpunkt. Das nimmt dem Entwurf das Spielzeughafte und lässt die
+      Emaille für sich sprechen.</p>
+    </div>
+    <div class="matrix">
+      <div class="probe">
+        <div class="phone pV v-glanz f-a" data-m="V"></div>
+        <div class="txt"><h4><span class="no">6a</span>Elfenbein &amp; Salbei</h4>
+          <p>Warmweiße Emaille, Salbei als Akzent. Die Kante unter jeder Platte ist einen Ton dunkler als die
+          Fläche — <b>eine Farbe, zwei Helligkeiten</b>, mehr braucht es nicht.</p>
+          <div class="stoff">Elfenbeinemail · Salbei</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pV v-glanz f-b" data-m="V"></div>
+        <div class="txt"><h4><span class="no">6b</span>Alabaster &amp; Tinte</h4>
+          <p>Kühles Alabasterweiß mit blaugrauem Sockel, Tinte als Akzent. Die <b>strengste</b> der drei —
+          näher an Laborgerät als an Küchengerät.</p>
+          <div class="stoff">Alabaster · Tinte · Blaugrau</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pV v-glanz f-c" data-m="V"></div>
+        <div class="txt"><h4><span class="no">6c</span>Sand &amp; Bordeaux</h4>
+          <p>Sandfarbene Emaille, Wein als Akzent. Zusammen ergibt das den Ton alter <b>Küchenwaagen</b> —
+          warm, ohne nostalgisch zu werden.</p>
+          <div class="stoff">Sandemail · Bordeaux</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7 · V4 -->
+  <div class="chapter">
+    <div class="head">
+      <div class="caps">Behandlung 7 · V4</div>
+      <h2>Gespritzt</h2>
+      <p>Trennnaht an der Unterkante, Schraubdome in den Ecken, weiche Fase. Auch hier ist der Knopf jetzt
+      <b>flach</b>; das Material trägt den Entwurf allein — und genau deshalb ist hier die Textur wichtiger als
+      die Farbe.</p>
+    </div>
+    <div class="matrix">
+      <div class="probe">
+        <div class="phone pV v-echt f-a" data-m="V"></div>
+        <div class="txt"><h4><span class="no">7a</span>Kalkstein &amp; Graphit</h4>
+          <p>Feine Sprenkel wie in geschliffenem Kalkstein, Akzent in Graphit. <b>Kein Buntton im ganzen
+          Entwurf</b> — die Farbe kommt allein vom Cover.</p>
+          <div class="stoff">Kalkstein · Graphit · Sprenkel</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pV v-echt f-b" data-m="V"></div>
+        <div class="txt"><h4><span class="no">7b</span>Perlweiß &amp; Petrol</h4>
+          <p>Perlmuttschimmer über kühlem Weiß, Petrol als Akzent. Der Schimmer <b>wandert nicht</b> — er liegt
+          fest im Material, so wie bei einem lackierten Gehäuse auch.</p>
+          <div class="stoff">Perlweiß · Petrol · Schimmer</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pV v-echt f-c" data-m="V"></div>
+        <div class="txt"><h4><span class="no">7c</span>Hellholz &amp; Ton</h4>
+          <p>Feine Maserung in Eichenhelligkeit, Akzent in gebranntem Ton. Das ist die einzige Fassung hier mit
+          <b>Holz</b> — und die, die am besten neben ein Möbel passt.</p>
+          <div class="stoff">Helle Eiche · Ton · Maserung</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8 · Y5 -->
+  <div class="chapter">
+    <div class="head">
+      <div class="caps">Behandlung 8 · Y5</div>
+      <h2>Der Abreißkalender</h2>
+      <p>Oberstes Blatt mit gezackter Kante und Perforation, darunter der Stapel. Neu in allen drei Fassungen:
+      der Block hat <b>runde Ecken</b>. Die Zacken bleiben — sie sind der Abriss, nicht die Kante.</p>
+    </div>
+    <div class="matrix">
+      <div class="probe">
+        <div class="phone pY v-idee f-a" data-m="Y"></div>
+        <div class="txt"><h4><span class="no">8a</span>Bütten &amp; Bordeaux</h4>
+          <p>Schweres Büttenpapier mit Rippung, Ziffern und Linie in Wein. Der Stapel darunter wirkt dadurch
+          dicker, als er ist — <b>Papier mit Gewicht</b>.</p>
+          <div class="stoff">Bütten · Bordeaux · Rippung</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pY v-idee f-b" data-m="Y"></div>
+        <div class="txt"><h4><span class="no">8b</span>Recycling &amp; Moos</h4>
+          <p>Graugrünliches Papier mit sichtbaren Einschlüssen, Moos als Akzent. Die <b>alltäglichste</b> der
+          drei — ein Kalender, der in der Küche hängt, nicht im Salon.</p>
+          <div class="stoff">Recyclingpapier · Moos · Einschlüsse</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone pY v-idee f-c" data-m="Y"></div>
+        <div class="txt"><h4><span class="no">8c</span>Elfenbein &amp; Tinte</h4>
+          <p>Glattes Elfenbein mit Perlmuttschimmer, Ziffern in Tinte. Die <b>klarste</b> Fassung: der Zacken
+          oben ist das einzige, was hier noch nach Handwerk aussieht.</p>
+          <div class="stoff">Elfenbein · Tinte · Schimmer</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="closing">
+    <div>
+      <h2>Was mir davon am besten gefällt</h2>
+      <p><b>5b — Die Spur in Bordeaux auf Elfenbein.</b> Sie ist die einzige, die ohne jeden Effekt auskommt:
+      kein Glanz, kein Schatten, keine Textur, die man erklären müsste. Nur eine Linie je Zeile, in einer
+      Farbe, die man nicht alle Tage sieht.</p>
+      <p><b>Dicht dahinter 7a — Gespritzt in Kalkstein und Graphit</b>, weil dort im ganzen Bildschirm kein
+      einziger Buntton steckt: die Farbe kommt vom Cover und sonst von nirgendwo. Das ist für eine Sammlung mit
+      sehr verschiedenen Hüllen die verträglichste Grundhaltung.</p>
+      <p><b>Und 2b — Die Entwicklung in Elfenbein und Messing</b>, wenn es eine Idee sein soll statt einer
+      Oberfläche. Die warme Milch macht aus dem chemischen Effekt etwas Freundliches.</p>
+      <p>Wenn du eine davon nennst, baue ich sie als Thema in <code>mobile.html</code> — neben „Papier" und
+      „Desert Rose", umschaltbar in den Einstellungen.</p>
+    </div>
+    <div>
+      <h2>Was das im Code bedeutet</h2>
+      <ul>
+        <li><span class="m">→</span><span><b>Drei Klassen an einem Telefon.</b> Grundform
+        (<code>.pP</code>), Behandlung (<code>.v-idee</code>), Fassung (<code>.f-b</code>). Keine der
+        vierundzwanzig Fassungen hat eigenes Javascript oder eigenes Markup.</span></li>
+        <li><span class="m">→</span><span><b>Texturen ohne Bilder.</b> Leinen, Bütten, Perlmutt, Kalkstein und
+        Maserung sind sämtlich Verläufe — nichts davon lädt eine Datei, nichts davon skaliert
+        schlecht.</span></li>
+        <li><span class="m">→</span><span><b>Der flache Knopf ist ein Rückbau.</b> In Emaille und Gespritzt
+        fällt der Sockel weg; gedrückt wird er nicht mehr durch Bewegung angezeigt, sondern durch
+        Aufhellen — eine Zeile weniger und ehrlicher auf einem Bildschirm, der nichts drücken kann.</span></li>
+        <li><span class="m">→</span><span><b>Runde Ecken kosten nichts</b> außer beim Abreißkalender: dort
+        braucht der Block <code>overflow:hidden</code>, damit die gezackte Oberkante nicht über die Rundung
+        hinausläuft.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <span>Musiklib — mobile.html</span>
+    <span>Acht Behandlungen × drei Fassungen</span>
+  </footer>
+</div>
+
+
+<script>
+'use strict';
+
+/* ═════════ Daten ═════════
+   Ein Album, zwölfmal dasselbe — damit die Entwürfe vergleichbar bleiben.
+   Die Farben stehen für das echte Cover aus /api/cover. */
+const ALBUM = {
+  t:'All Melody', ar:'Nils Frahm', y:2018,
+  c:['#F0B266','#E2645F','#6E86B8'],
+  tr:[['Sunson',536],['A Place',322],['My Friend The Forest',272],
+      ['Human Range',415],['Kaleidoscope',372],['Momentum',248]]
+};
+const grad = `linear-gradient(152deg,${ALBUM.c[0]},${ALBUM.c[1]} 54%,${ALBUM.c[2]})`;
+
+const fmt = s => { s = Math.max(0,Math.round(s)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
+const fmtLang = s => { s = Math.round(s); const h = Math.floor(s/3600), m = Math.round(s%3600/60);
+  return h ? `${h} Std ${m} Min` : `${m} Min`; };
+const clamp = (v,a,b) => Math.min(b,Math.max(a,v));
+const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+/* ═════════ Zeichen ═════════ */
+const PREV = '<svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 20L9 12l10-8v16zM5 4h2v16H5z"/></svg>';
+const NEXT = '<svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M5 4l10 8-10 8V4zm14 0h2v16h-2z"/></svg>';
+const TRI_L = '<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M18 4v16L6 12z"/></svg>';
+const TRI_R = '<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l12 8-12 8z"/></svg>';
+const PLAY = w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
+const PAUSE = w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4.5h3.4v15H6zM14.6 4.5H18v15h-3.4z"/></svg>`;
+const line = (d,w=1.5) => `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+  stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const CHEV  = line('<path d="M6 9l6 6 6-6"/>');
+const DOTS  = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>';
+const LISTE = line('<path d="M4 7h16M4 12h16M4 17h10"/>');
+const ZURUECK = line('<path d="M15 6l-6 6 6 6"/>');
+const NOTE  = line('<path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.6"/><circle cx="16.5" cy="16" r="2.6"/>');
+const LAUT  = line('<path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9.5a4 4 0 010 5"/>');
+const SCHEIBE = line('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="2.2"/>');
+const SBAR = `<div class="sbar"><span>9:41</span><div class="ic">
+ <svg width="15" height="11" viewBox="0 0 14 10" fill="currentColor"><rect y="6.5" width="2.2" height="3.5" rx="1"/><rect x="3.8" y="4" width="2.2" height="6" rx="1"/><rect x="7.6" y="1.5" width="2.2" height="8.5" rx="1"/><rect x="11.4" width="2.2" height="10" rx="1" opacity=".35"/></svg>
+ <svg width="23" height="11" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="20" height="11" rx="3.5" stroke="currentColor" stroke-opacity=".35"/><rect x="2" y="2" width="14" height="8" rx="2" fill="currentColor"/></svg>
+</div></div>`;
+
+/* Bausteine: Hülle (Quadrat), Scheibe (Kreis), Warteschlangenzeilen */
+const HUELLE = (size,cls='cover art',extra='') =>
+  `<div class="${cls}" style="background:${grad};${extra}"><div class="sheen"></div>
+   <span class="ini" style="font-size:${size}px">A</span></div>`;
+const SCHEIBEN = `<span class="wash"></span><span class="core"></span>`;
+const QROWS = () => ALBUM.tr.map(([t,d],i) => `<div class="qrow" data-jump="${i}" data-row="${i}">
+  <span class="n">${i+1}</span><span class="t">${esc(t)}</span><span class="d">${fmt(d)}</span></div>`).join('');
+const ZEILEN = () => ALBUM.tr.map(([t,d],i) => `<div class="zeile" data-jump="${i}" data-row="${i}">
+  <span class="n">${i+1}</span><span class="t">${esc(t)}</span><span class="d">${fmt(d)}</span></div>`).join('');
+const SHELL = inner => `<div class="notch"></div>${SBAR}<div class="screen">${inner}</div><div class="homeind"></div>`;
+
+/* Der Ring: Fortschritt über die ganze Warteschlange, ein Punkt je Titel.
+   Das SVG ist per CSS um 90° gedreht — Winkel 0 liegt damit oben. */
+const R_RING = 47, U_RING = 2 * Math.PI * R_RING;
+const punkt = (f,r) => [50 + r*Math.cos(2*Math.PI*f), 50 + r*Math.sin(2*Math.PI*f)];
+const RING = () => {
+  let o = [], a = 0;
+  for (const [,d] of ALBUM.tr){ o.push(a); a += d; }
+  const T = a;
+  const pins = o.map((v,i) => { const [x,y] = punkt(v/T, R_RING);
+    return `<circle class="pin" data-pin="${i}" cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="2.3"/>`; }).join('');
+  return `<svg viewBox="0 0 100 100">
+    <circle class="track" cx="50" cy="50" r="${R_RING}"/>
+    <circle class="prog" data-arc cx="50" cy="50" r="${R_RING}"
+      stroke-dasharray="${U_RING.toFixed(2)}" stroke-dashoffset="${U_RING.toFixed(2)}"/>
+    ${pins}<circle class="knob" data-rknob cx="${50+R_RING}" cy="50" r="4"/></svg>`;
+};
+
+/* ═════════ Die zwölf Entwürfe ═════════
+   Jeder liefert sein Markup und, falls er etwas Eigenes anzeigt, ein sync().
+   Alles Gemeinsame — Titel, Zeiten, Balken, Knopf, Zeilen — macht die Klasse. */
+const D = {};
+/* M · Sofortbild */
+D.M = { html: () => `
+  <div class="lid"><span class="ic">${CHEV}</span><span class="cap">Jetzt läuft</span>
+    <span class="ic" data-act="sheet">${LISTE}</span></div>
+  <div class="tisch">
+    <div class="hinten" data-act="next"></div>
+    <div class="abzug">
+      ${HUELLE(52)}
+      <div class="kinn">
+        <div class="tt" data-title></div>
+        <div class="by"><span data-artist></span> · <span data-album></span></div>
+        <div class="seek" data-seek><div class="line">
+          <div class="fill" data-bar></div><div class="knob" data-knob></div></div></div>
+        <div class="times"><span data-elapsed></span><span data-remain></span></div>
+        <div class="transport"><span class="tb" data-act="prev">${PREV}</span>
+          <span class="play" data-pp data-size="20"></span>
+          <span class="tb" data-act="next">${NEXT}</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="unten"><span data-count></span> · noch <span data-restq></span></div>
+  <div class="scrim" data-act="sheet"></div>
+  <div class="sheet"><div class="grip"></div><div class="qh">Warteschlange</div>
+    <div class="qbody">${QROWS()}</div></div>` };
+
+/* P · Die Liste */
+D.P = { html: () => `
+  <div class="kopf"><div class="k">Musiklib</div><h4>Warteschlange</h4>
+    <div class="sub"><span data-count></span> · <span data-album></span> · noch <span data-restq></span></div></div>
+  <div class="rollen" data-rollen>
+    ${ALBUM.tr.map(([t,d],i) => `<div class="z" data-jump="${i}" data-row="${i}">
+      <span class="zeile1">
+        ${HUELLE(20)}
+        <span class="pl">${PLAY(13)}</span>
+        <span class="tx"><span class="t">${esc(t)}</span><span class="s">${esc(ALBUM.ar)}</span></span>
+        <span class="d">${fmt(d)}</span>
+      </span>
+      <span class="aus">
+        <span class="seek" data-seek><span class="line">
+          <span class="fill" data-bar></span><span class="knob" data-knob></span></span></span>
+        <span class="times"><span data-elapsed></span><span data-remain></span></span>
+        <span class="transport"><span class="tb" data-act="prev">${PREV}</span>
+          <span class="play" data-pp data-size="20"></span>
+          <span class="tb" data-act="next">${NEXT}</span></span>
+      </span>
+    </div>`).join('')}
+  </div>
+  <div class="pille" data-act="tonow"><span class="bar"><i></i><i></i><i></i></span>Jetzt läuft</div>` };
+
+/* V · Die Platte */
+D.V = { html: () => `
+  <div class="lid"><span class="ic">${CHEV}</span><span class="cap">Jetzt läuft</span>
+    <span class="ic">${DOTS}</span></div>
+  <div class="stapel">
+    <div class="platte p1">${HUELLE(44)}</div>
+    <div class="platte p2">
+      <div class="tt" data-title></div>
+      <div class="by"><span data-artist></span> · <span data-album></span></div>
+      <div class="seek" data-seek><div class="schnur">
+        <div class="fill" data-bar></div><div class="knopf" data-knob></div></div></div>
+      <div class="times"><span data-elapsed></span><span data-remain></span></div>
+      <div class="transport">
+        <span class="tb" data-act="prev">${PREV}</span>
+        <span class="play" data-pp data-size="21"></span>
+        <span class="tb" data-act="next">${NEXT}</span>
+      </div>
+    </div>
+    <div class="platte p3">
+      <div class="k">Warteschlange · <span data-count></span></div>
+      <div class="rollen">
+        ${ALBUM.tr.map(([t,d],i) => `<div class="vz" data-jump="${i}" data-row="${i}">
+          <span class="n">${i+1}</span><span class="t">${esc(t)}</span><span class="d">${fmt(d)}</span></div>`).join('')}
+      </div>
+    </div>
+  </div>` };
+
+/* Y · Die Klapptafel */
+D.Y = { html: () => `
+  <div class="lid"><span class="ic">${CHEV}</span><span class="cap">Abfahrt</span>
+    <span class="ic" data-act="sheet">${LISTE}</span></div>
+  <div class="halle">
+    <div class="tafel">
+      <div class="rahmen">
+        <div class="schild gross" data-schild>
+          <div class="zeile">
+            <span class="nr" data-count></span>
+            <span class="tx"><span class="t" data-title></span>
+              <span class="s"><span data-artist></span> · <span data-album></span></span></span>
+            <span class="z" data-remain></span>
+          </div>
+        </div>
+        <div class="lauf" data-seek>
+          <div class="schiene"><div class="fill" data-bar></div></div>
+          <div class="times"><span data-elapsed></span><span>noch <span data-restq></span></span></div>
+        </div>
+        <div class="abfahrt">
+          <div class="ak">Danach</div>
+          ${ALBUM.tr.map(([t,d],i) => `<div class="az" data-jump="${i}" data-row="${i}">
+            <span class="n">${i+1}</span><span class="t">${esc(t)}</span><span class="d">${fmt(d)}</span></div>`).join('')}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">
+    <span class="tb" data-act="prev">${PREV}</span>
+    <span class="play" data-pp data-size="20"></span>
+    <span class="tb" data-act="next">${NEXT}</span>
+  </div>
+  <div class="scrim" data-act="sheet"></div>
+  <div class="sheet"><div class="grip"></div><div class="qh">Alle Abfahrten</div>
+    <div class="qbody">${QROWS()}</div></div>`,
+  sync(p){
+    // Beim Titelwechsel klappt das Schild um — einmal, nicht dauernd.
+    if (p._ly === undefined){ p._ly = p.qi; return; }
+    if (p._ly === p.qi) return;
+    p._ly = p.qi;
+    const sch = p.$('[data-schild]');
+    sch.classList.remove('klappt');
+    void sch.offsetWidth;
+    sch.classList.add('klappt');
+  } };
+
+/* ═════════ Das gemeinsame Modell ═════════ */
+class Player {
+  constructor(m, root){
+    this.m = m; this.root = root; this.d = D[m];
+    this.qi = 2; this.pos = 88; this.playing = true; this.open = false; this.drag = false;
+    root.innerHTML = SHELL(this.d.html());
+    this.wire();
+    this.sync(true);
+  }
+  $(s){ return this.root.querySelector(s); }
+  $$(s){ return [...this.root.querySelectorAll(s)]; }
+  txt(s,v){ this.$$(s).forEach(n => n.textContent = v); }
+  get cur(){ return ALBUM.tr[this.qi]; }
+  get offs(){ let o = [], a = 0; for (const [,d] of ALBUM.tr){ o.push(a); a += d; } return o; }
+  get total(){ return ALBUM.tr.reduce((s,[,d]) => s+d, 0); }
+  get gpos(){ return this.offs[this.qi] + this.pos; }
+  idxAt(v){ const o = this.offs; for (let k = o.length-1; k >= 0; k--) if (v >= o[k]) return k; return 0; }
+
+  /* ── Bedienung ── */
+  wire(){
+    this.$$('[data-act]').forEach(n => n.addEventListener('click', e => {
+      e.stopPropagation(); this.act(n.dataset.act); }));
+    // Jeder Abspielknopf schaltet um — auch die, die nur data-pp tragen.
+    this.$$('[data-pp]').forEach(n => { if (!n.dataset.act)
+      n.addEventListener('click', e => { e.stopPropagation(); this.toggle(); }); });
+    this.$$('[data-jump]').forEach(n => n.addEventListener('click', () => {
+      this.qi = +n.dataset.jump; this.pos = 0; this.playing = true; this.sync(true); }));
+    this.$$('[data-seek]').forEach(n => this.bindSeek(n, false));
+    this.$$('[data-seekq]').forEach(n => this.bindSeek(n, true));
+    const ring = this.$('[data-ring]');
+    if (ring) this.bindRing(ring);
+  }
+  act(a){
+    if (a === 'pp') this.toggle();
+    else if (a === 'next') this.next();
+    else if (a === 'prev') this.prev();
+    else if (a === 'sheet') this.setOpen(!this.open);
+    else if (a === 'tonow'){ const n = this.$(`[data-row="${this.qi}"]`);
+      if (n) n.scrollIntoView({block:'center', behavior:'smooth'}); }
+  }
+  setOpen(v){ this.open = v; this.root.classList.toggle('open', v); }
+  toggle(){ this.playing = !this.playing; this.sync(true); }
+  next(){ if (this.qi < ALBUM.tr.length-1){ this.qi++; this.pos = 0; } else this.pos = this.cur[1]-0.5;
+    this.sync(true); }
+  prev(){ if (this.pos > 3 || this.qi === 0) this.pos = 0; else { this.qi--; this.pos = 0; }
+    this.sync(true); }
+
+  /* Waagerechtes Ziehen: der Balken zeigt den laufenden Titel, nicht die Schlange. */
+  bindSeek(el, global){
+    const at = e => { const r = el.getBoundingClientRect();
+      return clamp((e.clientX - r.left)/r.width, 0, 1); };
+    // Manche Entwuerfe legen die ganze Warteschlange auf eine Achse (Kassette,
+    // Skala) statt nur den laufenden Titel — dann wird global gesetzt.
+    const setz = f => { if (!global){ this.pos = f * this.cur[1]; return; }
+      const v = clamp(f * this.total, 0, this.total - 0.5), i = this.idxAt(v);
+      this.qi = i; this.pos = v - this.offs[i]; };
+    // Der Balken liegt in Entwurf P innerhalb einer Zeile, die selbst anspringt —
+    // ohne dieses Abfangen wuerde jedes Spulen den Titel neu starten.
+    el.addEventListener('click', e => e.stopPropagation());
+    el.addEventListener('pointerdown', e => {
+      e.stopPropagation(); this.drag = true; el.setPointerCapture(e.pointerId);
+      setz(at(e)); this.sync(); });
+    el.addEventListener('pointermove', e => { if (this.drag){ setz(at(e)); this.sync(); } });
+    const end = () => { this.drag = false; this.sync(true); };
+    el.addEventListener('pointerup', end);
+    el.addEventListener('pointercancel', end);
+  }
+  /* Rundes Ziehen: der Ring trägt die ganze Warteschlange, also wird global
+     gesetzt — dieselbe Rechnung wie am Rand, nur mit einem Winkel. */
+  bindRing(el){
+    const at = e => { const r = el.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width/2), dy = e.clientY - (r.top + r.height/2);
+      let a = Math.atan2(dx, -dy); if (a < 0) a += 2*Math.PI;
+      return a / (2*Math.PI) * this.total; };
+    const setG = v => { v = clamp(v, 0, this.total - 0.5); const i = this.idxAt(v);
+      this.qi = i; this.pos = v - this.offs[i]; this.sync(); };
+    let moved = false, sx = 0, sy = 0, down = false;
+    el.addEventListener('pointerdown', e => {
+      // Nur am Ring wird gezogen — in der Mitte sitzt der Knopf.
+      const r = el.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width/2), dy = e.clientY - (r.top + r.height/2);
+      if (Math.hypot(dx,dy) < r.width * 0.30) return;
+      down = true; moved = false; sx = e.clientX; sy = e.clientY;
+      el.setPointerCapture(e.pointerId);
+    });
+    el.addEventListener('pointermove', e => {
+      if (!down) return;
+      if (!moved && Math.hypot(e.clientX-sx, e.clientY-sy) > 6){
+        moved = true; this.drag = true; el.classList.add('grabbing');
+      }
+      if (moved) setG(at(e));
+    });
+    const end = () => { if (!down) return; down = false;
+      if (moved){ this.drag = false; el.classList.remove('grabbing'); }
+      this.sync(true); };
+    el.addEventListener('pointerup', end);
+    el.addEventListener('pointercancel', end);
+  }
+
+  tick(dt){
+    if (!this.playing || this.drag) return;
+    this.pos += dt;
+    if (this.pos >= this.cur[1]){
+      if (this.qi < ALBUM.tr.length-1){ this.qi++; this.pos = 0; }
+      else { this.pos = this.cur[1]-0.5; this.playing = false; }
+      this.sync(true); return;
+    }
+    this.sync();
+  }
+
+  /* ── Anzeige ── */
+  sync(hart){
+    const [t,d] = this.cur, f = clamp(this.pos/d, 0, 1), p = (f*100).toFixed(2) + '%';
+    this.$$('[data-bar]').forEach(n => n.style.width = p);
+    this.$$('[data-knob]').forEach(n => n.style.left = p);
+    this.$$('[data-mark]').forEach(n => n.style.left = p);
+    const q = (this.gpos/this.total*100).toFixed(2) + '%';
+    this.$$('[data-barq]').forEach(n => n.style.width = q);
+    this.$$('[data-markq]').forEach(n => n.style.left = q);
+    // Der Stand als reine Zahl am Wurzelelement: Varianten koennen ihn in
+    // Verlaeufen und Filtern verwenden, ohne eigenes Javascript.
+    this.root.style.setProperty('--p', f.toFixed(4));
+    this.root.style.setProperty('--pq', (this.gpos/this.total).toFixed(4));
+    this.txt('[data-elapsed]', fmt(this.pos));
+    this.txt('[data-dur]', fmt(d));
+    this.txt('[data-remain]', '−' + fmt(d - this.pos));
+    this.txt('[data-restq]', fmtLang(this.total - this.gpos));
+
+    if (hart || this._lt !== t){
+      this._lt = t;
+      this.txt('[data-title]', t);
+      this.txt('[data-artist]', ALBUM.ar);
+      this.txt('[data-album]', ALBUM.t);
+      this.txt('[data-count]', `${this.qi+1} / ${ALBUM.tr.length}`);
+      this.txt('[data-nexttitle]', this.qi < ALBUM.tr.length-1
+        ? ALBUM.tr[this.qi+1][0] : 'Ende der Warteschlange');
+      this.$$('[data-row]').forEach(n => { const i = +n.dataset.row;
+        n.classList.toggle('now', i === this.qi);
+        n.classList.toggle('past', i < this.qi); });
+    }
+    if (hart || this._lp !== this.playing){
+      this._lp = this.playing;
+      this.root.classList.toggle('playing', this.playing);
+      this.$$('[data-pp]').forEach(n => { const w = +n.dataset.size || 22;
+        n.innerHTML = this.playing ? PAUSE(w) : PLAY(w+2); });
+    }
+    if (this.d.sync) this.d.sync(this);
+  }
+}
+
+/* ═════════ Start ═════════
+   Zwölf Telefone auf einer Seite: gerechnet wird zehnmal je Sekunde, nicht
+   sechzigmal — die Zeiten laufen sichtbar, das Gerät bleibt kühl. */
+
+/* ═════════ Start ═════════ */
+
+/* ═════════ Start ═════════ */
+const players = [...document.querySelectorAll('.phone')].map(el => new Player(el.dataset.m, el));
+setInterval(() => players.forEach(p => p.tick(0.12)), 120);
+</script>
+</body>
+</html>

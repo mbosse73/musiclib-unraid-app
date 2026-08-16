@@ -1,0 +1,534 @@
+<title>16 · Plaketten</title>
+<link rel="stylesheet" href="_seite.css">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Blatt 23 — Vorlage: eine helle, milchige Platte über einem unscharfen,
+   farbigen Grund. Darauf dunkle Pillen in Reihen, ein dunkles Suchband mit
+   warmem Licht dahinter, und genau eine helle Pille — die gewählte.
+
+   Genommen: die Pille als einzige Auszeichnung. Was wählbar ist, ist eine
+   Plakette; was gewählt ist, ist hell. Mehr Zustände gibt es nicht, und das
+   ist die Stärke: eine Oberfläche, die man in einem Blick liest.
+   ══════════════════════════════════════════════════════════════════════════ */
+.pk{
+  /* Gemessen: die Plakette ist flaches #1B2233 ohne Rand und ohne Verlauf,
+     darunter ein weicher Wurf. Die gewählte ist fast weiß und trägt einen
+     weißen Außenschein — kein Rahmen, kein Strich. */
+  --dunkel:#1B2233; --dunkel-2:#28304A; --dunkel-3:#4A5470;
+  --platte:rgba(255,255,255,.52); --platte-2:rgba(255,255,255,.34);
+  --rand:rgba(255,255,255,.62);
+  --hell:#EFEFF1; --auf:#DFE2EA;
+  --tinte:#141824; --tinte-2:#4E5568; --tinte-3:#858BA0;
+  --glut:#FF9A4D; --rot:#E12E2E;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+  background:#C9C6C8;color:var(--tinte);font-family:var(--sans);height:100%;overflow:hidden;
+  position:relative}
+.pk *{font-family:inherit}
+.pk .kap{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--tinte-3)}
+
+/* ── Der unscharfe Grund kommt vom Cover, nicht aus einer Datei ── */
+.pk .grund{position:absolute;inset:-14%;filter:blur(64px) saturate(1.5);opacity:.85;z-index:0}
+.pk .grund::after{content:'';position:absolute;inset:0;background:rgba(238,236,233,.42)}
+
+/* ── Platte ── */
+.pk .platte{position:relative;z-index:2;background:var(--platte);border-radius:32px;
+  backdrop-filter:blur(26px);box-shadow:inset 0 1px 0 var(--rand),0 22px 52px rgba(20,24,36,.20)}
+
+/* ── Plakette ── */
+.pk .plak{display:inline-flex;align-items:center;gap:9px;height:var(--ph,40px);padding:0 20px;
+  border-radius:99px;background:var(--dunkel);color:var(--auf);font-size:13px;cursor:pointer;
+  white-space:nowrap;max-width:100%;box-shadow:0 6px 13px -3px rgba(14,19,32,.48)}
+.pk .plak:hover{background:var(--dunkel-2)}
+.pk .plak .t{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.pk .plak .nr{font-size:10.5px;color:var(--tinte-3);font-variant-numeric:tabular-nums}
+.pk .plak .d{font-size:10.5px;color:var(--dunkel-3);font-variant-numeric:tabular-nums}
+.pk .plak.an{background:var(--hell);color:var(--tinte);
+  box-shadow:0 0 20px rgba(255,255,255,.75),0 6px 14px -3px rgba(14,19,32,.30)}
+.pk .plak.an .nr,.pk .plak.an .d{color:var(--tinte-2)}
+.pk .plak.war{background:rgba(23,28,43,.30);color:rgba(255,255,255,.60);box-shadow:none}
+.pk .plak.war .nr,.pk .plak.war .d{color:rgba(255,255,255,.38)}
+.pk .reihe{display:flex;gap:9px;flex-wrap:wrap}
+
+/* ── Suchband: dunkel, mit Licht dahinter ── */
+.pk .suchband{position:relative;display:flex;align-items:center;gap:14px;height:var(--sh,52px);
+  padding:0 24px;border-radius:99px;background:var(--dunkel);color:var(--auf);z-index:1}
+.pk .suchband::before{content:'';position:absolute;left:26%;right:26%;bottom:-9px;height:20px;
+  border-radius:50%;
+  background:radial-gradient(56% 100% at 50% 20%,#FFE0B0,#FF9A4D 44%,rgba(255,120,40,.34) 70%,transparent 86%);
+  filter:blur(7px);z-index:-1}
+.pk .suchband svg{color:var(--tinte-3);flex:none}
+.pk .suchband input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--auf);
+  font-size:15px}
+.pk .suchband input::placeholder{color:var(--dunkel-3)}
+
+/* ── Cover ── */
+.pk .cov,.pk .pl{position:relative;overflow:hidden;display:grid;place-items:center;flex:none}
+.pk .cov img,.pk .pl img{width:100%;height:100%;object-fit:cover}
+.pk .ini{font-size:.4em;font-weight:300;color:rgba(255,255,255,.92)}
+
+/* ── Bahn: eine dunkle Pille, in der ein heller Läufer steht ── */
+.pk .bahn{position:relative;height:var(--bh,44px);border-radius:99px;background:var(--dunkel);
+  cursor:pointer;touch-action:none;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,.35)}
+.pk .bahn .fuell{position:absolute;left:0;top:0;bottom:0;
+  background:linear-gradient(90deg,rgba(255,154,77,.14),rgba(255,154,77,.42))}
+.pk .bahn .teiler{position:absolute;inset:0;pointer-events:none}
+.pk .bahn .teiler i{position:absolute;top:26%;bottom:26%;width:1px;background:rgba(255,255,255,.14)}
+/* Der Läufer ist schmal: so ist die Stelle, an der man fasst, genau die
+   Stelle, an der er steht — eine breite Kapsel würde daneben liegen. */
+.pk .bahn .laeufer{position:absolute;top:5px;bottom:5px;width:5px;margin-left:-2.5px;border-radius:3px;
+  background:var(--hell);box-shadow:0 0 14px rgba(255,154,77,.9)}
+.pk .bahn .zeit{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:11.5px;
+  color:var(--dunkel-3);font-variant-numeric:tabular-nums;pointer-events:none}
+
+/* ── Transport ── */
+.pk .transport{display:flex;align-items:center;gap:var(--tg,14px);flex:none}
+.pk .transport button{width:var(--tk,44px);height:var(--tk,44px);border-radius:50%;display:grid;
+  place-items:center;color:var(--auf);background:var(--dunkel)}
+.pk .transport button:hover{background:var(--dunkel-2)}
+.pk .transport .pp{width:var(--pk,58px);height:var(--pk,58px);background:var(--hell);color:var(--tinte)}
+.pk .transport .pp:hover{background:#fff}
+.pk .uhr{font-size:12px;color:var(--tinte-2);font-variant-numeric:tabular-nums;flex:none}
+
+/* ── Lautstärke ── */
+.pk .vol{position:relative;width:112px;height:22px;display:flex;align-items:center;cursor:pointer;
+  touch-action:none;flex:none}
+.pk .vol .bn{width:100%;height:5px;border-radius:3px;background:rgba(20,24,36,.20)}
+.pk .vol .vl{position:absolute;left:0;height:5px;border-radius:3px;background:var(--dunkel)}
+.pk .vol .kn{position:absolute;width:13px;height:13px;border-radius:50%;background:var(--hell);
+  margin-left:-6.5px;box-shadow:0 1px 5px rgba(20,24,36,.4)}
+
+/* ── Bibliothek als Blende (nur Variante 2) ── */
+.pk .bib{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;padding:46px 56px 40px;
+  background:rgba(232,230,227,.92);backdrop-filter:blur(24px);
+  opacity:0;pointer-events:none;transform:translateY(12px);transition:opacity .22s,transform .22s}
+.pk .bib.auf{opacity:1;pointer-events:auto;transform:none}
+.pk .bib .bkopf{display:flex;align-items:center;gap:20px;flex:none;margin-bottom:24px}
+.pk .bib h2{font-size:21px;font-weight:600;flex:none}
+.pk .bib .suchband{flex:1;min-width:0}
+.pk .bib .zu{flex:none;width:46px;height:46px;border-radius:50%;background:var(--dunkel);
+  color:var(--auf);display:grid;place-items:center}
+.pk .bib .bliste{flex:1;min-height:0;overflow:hidden;display:grid;grid-template-columns:repeat(3,1fr);
+  gap:11px;align-content:start}
+.pk .bib .bz{display:flex;align-items:center;gap:13px;padding:9px 16px 9px 9px;border-radius:99px;
+  background:var(--platte);cursor:pointer;box-shadow:inset 0 1px 0 var(--rand)}
+.pk .bib .bz:hover{background:rgba(255,255,255,.78)}
+.pk .bib .bz .pl{width:42px;height:42px;border-radius:50%;font-size:42px}
+.pk .bib .bz .m{flex:1;min-width:0}
+.pk .bib .bz .t{display:block;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pk .bib .bz .s{display:block;font-size:11px;color:var(--tinte-2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.pk .bib .bz.an{background:var(--dunkel)}
+.pk .bib .bz.an .t{color:var(--auf)}
+.pk .bib .bz.an .s{color:var(--dunkel-3)}
+.pk .bib .bfuss{flex:none;padding-top:18px}
+@media (prefers-reduced-motion:reduce){.pk .bib{transition:none}}
+
+/* ══ Variante 1 · Plaketten ══════════════════════════════════════════════ */
+.pk.tafel .raum{position:absolute;inset:34px 40px 34px;z-index:2;display:grid;
+  grid-template-rows:auto minmax(0,1fr);gap:22px}
+.pk.tafel .oben{padding:26px 30px 28px}
+.pk.tafel .obenkopf{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.pk.tafel .obenkopf h2{font-size:19px;font-weight:600}
+.pk.tafel .merken{background:var(--rot);color:#fff;border-radius:99px;padding:9px 22px;font-size:13px;
+  font-weight:600;cursor:pointer;box-shadow:0 8px 22px rgba(225,46,46,.34)}
+.pk.tafel .merken:hover{background:#F03A3A}
+.pk.tafel .suchband{margin-bottom:20px}
+.pk.tafel .unten{display:grid;grid-template-columns:300px minmax(0,1fr);gap:26px;min-height:0}
+.pk.tafel .spieler{padding:24px;display:flex;flex-direction:column;align-items:center}
+.pk.tafel .spieler .cov{width:224px;height:224px;border-radius:26px;font-size:224px}
+.pk.tafel .spieler h1{margin-top:20px;font-size:19px;font-weight:600;text-align:center;line-height:1.25;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pk.tafel .spieler .ar{margin-top:6px;font-size:12.5px;color:var(--tinte-2);text-align:center}
+.pk.tafel .spieler .transport{margin-top:auto;padding-top:20px}
+.pk.tafel .felder{display:flex;flex-direction:column;gap:16px;min-height:0}
+.pk.tafel .feld{padding:20px 24px}
+.pk.tafel .feld .kap{display:block;margin-bottom:13px}
+.pk.tafel .feld.warte{flex:none}
+.pk.tafel .feld.alben{flex:1;min-height:0;display:flex;flex-direction:column}
+.pk.tafel .feld.alben .reihe{overflow:hidden;align-content:start;flex:1;min-height:0}
+.pk.tafel .bahnzeile{display:flex;align-items:center;gap:18px}
+.pk.tafel .bahnzeile .bahn{flex:1;min-width:0}
+
+/* ══ Variante 2 · Plakettenpult ══════════════════════════════════════════ */
+.pk.pult{--ph:42px;--bh:52px;--tk:50px;--pk:66px}
+.pk.pult .platte.gross{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:1010px;padding:38px 44px 42px;display:grid;grid-template-columns:300px minmax(0,1fr);
+  gap:44px;z-index:2}
+.pk.pult .kz{position:absolute;left:0;right:0;top:0;z-index:6;display:flex;align-items:center;
+  justify-content:space-between;padding:24px 34px}
+.pk.pult .kz .plak{--ph:40px}
+.pk.pult .cov{width:300px;height:300px;border-radius:30px;font-size:300px}
+.pk.pult .rechts{display:flex;flex-direction:column;min-width:0}
+.pk.pult h1{font-size:29px;font-weight:600;line-height:1.2;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pk.pult .ar{margin-top:9px;font-size:14.5px;color:var(--tinte-2)}
+.pk.pult .warte{margin-top:22px;flex:1;min-height:0}
+.pk.pult .warte .kap{display:block;margin-bottom:11px}
+.pk.pult .warte .reihe{max-height:104px;overflow:hidden;align-content:start}
+.pk.pult .bahn{margin-top:24px}
+.pk.pult .fuss{margin-top:22px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+</style>
+
+<div class="seite">
+  <header class="kopf">
+    <div>
+      <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 23</div>
+      <h1>Plaketten</h1>
+      <p class="lede">Die Vorlage kennt nur eine Form: die Pille. Alles, was man antippen kann, ist
+      eine — und genau <b>eine</b> davon ist hell. Das ist eine ganze Zustandslehre in einem Bild, und
+      sie überträgt sich ohne Verlust auf eine Warteschlange: jeder Titel eine Plakette, die laufende
+      hell, die gespielten blass, die kommenden dunkel.</p>
+      <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
+    </div>
+    <figure class="vorlage">
+      <img src="../../mckups_player_2/Bildschirmfoto%202026-08-13%20um%2016.44.43.png" alt="Vorlage">
+      <figcaption>Vorlage · 16.44.43</figcaption>
+    </figure>
+  </header>
+  <div class="regel"></div>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 1 · Plaketten</h2><span class="marke geraet">PC · 1440 × 900</span></div>
+    <p class="etext">Die Vorlage fast unverändert: oben die milchige Platte mit dem dunklen Suchband
+    und dem warmen Licht dahinter, darunter Reihen von Plaketten. Nur heißen sie hier etwas. Es sind
+    <b>drei Reihen mit drei Bedeutungen</b> — oben die Interpreten, die filtern; in der Mitte die
+    Warteschlange, die läuft; unten die Alben, die man wählt. Keine Reihe wechselt ihre Rolle, und
+    deshalb muss auch keine beschriftet erklären, was sie gerade ist. Der rote Knopf der Vorlage
+    bleibt rot und bleibt einer: er setzt das laufende Album an den Anfang zurück.
+    <span class="probier"><b>Ausprobieren:</b> oben einen Interpreten wählen — unten bleiben nur seine
+    Alben. Dann eine Plakette in der Warteschlange antippen und an der Bahn ziehen.</span></p>
+    <div class="buehne">
+      <div class="rahmen pc">
+        <div class="schirm">
+          <div class="browser"><i></i><i></i><i></i><div class="url">musiklib.local/pc</div></div>
+          <div class="flaeche"><div class="pk tafel" id="v1"></div></div>
+        </div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Ein Blick genügt: <b>hell heißt läuft</b>, blass heißt gespielt</dd></div>
+      <div><dt>Schwäche</dt><dd>Lange Titel müssen gekürzt werden, Pillen brechen nicht</dd></div>
+      <div><dt>Spulen</dt><dd>An der dunklen Bahn unter dem Spieler</dd></div>
+      <div><dt>Grund</dt><dd>Das unscharfe Cover — kein Bild aus einer Datei</dd></div>
+    </dl>
+  </section>
+
+  <section class="entwurf">
+    <div class="ekopf"><h2>Variante 2 · Plakettenpult</h2><span class="marke geraet">iPad quer · 1194 × 834</span></div>
+    <p class="etext">Am iPad schrumpft alles auf <b>eine</b> Platte, die frei über dem unscharfen Cover
+    steht — links das Bild, rechts Schrift, Warteschlange und Bahn. Die Sammlung liegt hier nicht offen
+    herum, sondern hinter einer Plakette oben links; sie öffnet sich als Blende über das Pult, in
+    derselben Sprache: runde Zeilen, dunkles Suchband, eine helle Zeile für das, was läuft.
+    <span class="probier"><b>Ausprobieren:</b> oben links „Bibliothek" öffnen, „satie" tippen; danach
+    an der Bahn ziehen.</span></p>
+    <div class="buehne">
+      <div class="rahmen ipad-quer">
+        <div class="schirm"><div class="pk pult" id="v2"></div></div>
+      </div>
+    </div>
+    <dl class="zettel">
+      <div><dt>Stärke</dt><dd>Eine Platte, ein Blick, aus dem Sessel bedienbar</dd></div>
+      <div><dt>Schwäche</dt><dd>Warteschlangen über zwölf Titel laufen aus der Reihe</dd></div>
+      <div><dt>Bibliothek</dt><dd>Hinter <b>einer</b> Plakette, als Blende</dd></div>
+      <div><dt>Bahn</dt><dd>Titelgrenzen als feine Teiler, Läufer über alles hinweg</dd></div>
+    </dl>
+  </section>
+
+  <div class="schluss">
+    <h2>Was das im Code bedeutet</h2>
+    <ol>
+      <li><span><b>Ein schmaler Läufer statt einer breiten Kapsel.</b> Eine 70 px breite Kapsel steht
+      nie da, wo man hinfasst — sie kann nur über <code>Breite − Kapselbreite</code> laufen, und dann
+      liegen Griff und Anzeige um bis zu 35 px auseinander. Der Läufer hier ist 5 px breit; damit ist
+      <code>bindDrag</code> ohne Umrechnung genau.</span></li>
+      <li><span><b>Der unscharfe Grund ist das Cover.</b> Ein <code>filter:blur(64px)</code> über einer
+      Fläche mit dem Albumverlauf — kein zweites Bild, kein neues Feld in
+      <code>library.json</code>. Im echten Spieler steht dort dasselbe <code>/api/cover</code>-Bild wie
+      vorn, nur groß und verwischt.</span></li>
+      <li><span><b><code>backdrop-filter</code> braucht etwas dahinter.</b> Die Platte ist nur milchig,
+      solange unter ihr etwas Farbiges liegt. Ohne Cover — und das ist der Normalfall bei einem frisch
+      gescannten Ordner — bleibt der Verlauf aus <code>farben(id)</code> übrig; deshalb sieht die
+      Platte auch dann noch aus wie eine Platte und nicht wie ein grauer Kasten.</span></li>
+      <li><span><b>Plaketten brechen nicht.</b> Eine Pille mit <code>white-space:nowrap</code> wird so
+      breit wie ihr Text, und „Wohltemperiertes Klavier I" sprengt jede Reihe. Deshalb
+      <code>max-width</code> plus <code>text-overflow</code> im Inneren — die Form bleibt eine Pille,
+      der Text wird gekürzt.</span></li>
+    </ol>
+  </div>
+
+  <footer><span>Musiklib — Entwurf für pc.html und ipad.html</span><span>Blatt 23 · Plaketten</span></footer>
+</div>
+
+<script src="_demo.js"></script>
+<script>
+'use strict';
+(() => {
+
+const volHTML = `<div class="vol" data-vol><span class="bn"></span><span class="vl"></span>
+  <span class="kn"></span></div>`;
+
+const bahnHTML = `
+  <div class="bahn" data-bahn><span class="fuell"></span><span class="teiler"></span>
+    <span class="laeufer"></span><span class="zeit" data-bzeit></span></div>`;
+
+const suchbandHTML = (platz = 'Album, Interpret oder Titel') => `
+  <label class="suchband">${I.search(18)}
+    <input type="search" placeholder="${platz}" data-suche></label>`;
+
+function volBinden(w, deck){
+  const v = w.querySelector('[data-vol]');
+  bindDrag(v, f => deck.setVol(f));
+  return x => {
+    v.querySelector('.vl').style.width = (x*100).toFixed(1) + '%';
+    v.querySelector('.kn').style.left  = (x*100).toFixed(1) + '%';
+  };
+}
+
+/* ══ Variante 1 · Plaketten ═════════════════════════════════════════════ */
+(() => {
+const deck = new Deck('kob', {qi:1, pos:210, speed:14});
+const w = document.getElementById('v1');
+const q = s => w.querySelector(s), qq = s => [...w.querySelectorAll(s)];
+
+w.innerHTML = `
+  <div class="grund" data-grund></div>
+  <div class="raum">
+    <div class="platte oben">
+      <div class="obenkopf"><h2>Sammlung</h2>
+        <button class="merken" data-merken>Von vorn</button></div>
+      ${suchbandHTML()}
+      <div class="reihe" data-interpreten></div>
+    </div>
+    <div class="unten">
+      <div class="platte spieler">
+        <div class="cov" data-cov></div>
+        <h1 data-titel></h1>
+        <div class="ar" data-ar></div>
+        <div class="transport">
+          <button data-prev aria-label="Zurück">${I.prev(20)}</button>
+          <button class="pp" data-pp aria-label="Abspielen">${I.pause(21)}</button>
+          <button data-next aria-label="Weiter">${I.next(20)}</button>
+        </div>
+      </div>
+      <div class="felder">
+        <div class="platte feld">
+          <span class="kap">Position</span>
+          <div class="bahnzeile">
+            <span class="uhr" data-jetzt></span>
+            ${bahnHTML}
+            <span class="uhr" data-ende></span>
+            ${volHTML}
+          </div>
+        </div>
+        <div class="platte feld warte">
+          <span class="kap" data-wkap></span>
+          <div class="reihe" data-warte></div>
+        </div>
+        <div class="platte feld alben">
+          <span class="kap" data-akap></span>
+          <div class="reihe" data-alben></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+const zeichneVol = volBinden(w, deck);
+q('[data-pp]').onclick   = () => deck.toggle();
+q('[data-next]').onclick = () => deck.next();
+q('[data-prev]').onclick = () => deck.prev();
+q('[data-merken]').onclick = () => { const a = deck.album; deck.queue = a.tr.map((_,i) => `${a.id}-${i}`);
+  deck.qi = 0; deck.pos = 0; deck.playing = true; deck.render(); };
+bindDrag(q('[data-bahn]'), f => deck.seek(f));
+
+/* Drei Reihen aus derselben Plakette, drei Bedeutungen: oben die
+   Interpreten (die filtern), in der Mitte die Warteschlange (die läuft),
+   unten die Alben (die man wählt). Kein Feld wechselt seine Rolle. */
+let filter = '';
+function baueInterpreten(){
+  const alben = suche(q('[data-suche]').value);
+  const namen = [...new Set(alben.map(a => a.ar))].sort((x,y) => x.localeCompare(y,'de'));
+  if (filter && !namen.includes(filter)) filter = '';
+  q('[data-interpreten]').innerHTML =
+    `<button class="plak${filter ? '' : ' an'}" data-ar=""><span class="t">Alle</span>
+       <span class="nr">${alben.length}</span></button>` +
+    namen.map(n => `<button class="plak${filter === n ? ' an' : ''}" data-ar="${esc(n)}">
+      <span class="t">${esc(n)}</span></button>`).join('');
+  qq('[data-interpreten] .plak').forEach(el => el.onclick = () => {
+    filter = el.dataset.ar;
+    baueInterpreten();
+  });
+  baueAlben();
+}
+function baueAlben(){
+  const alben = suche(q('[data-suche]').value).filter(a => !filter || a.ar === filter);
+  q('[data-akap]').textContent = filter ? 'Alben von ' + filter : 'Alle Alben';
+  q('[data-alben]').innerHTML = alben.map(a => `<button class="plak" data-alb="${a.id}">
+      <span class="t">${esc(a.t)}</span><span class="nr">${a.y}</span>
+      <span class="d">${a.tr.length} · ${fmtLang(albDur(a))}</span></button>`).join('')
+    || '<span class="kap">Nichts gefunden.</span>';
+  qq('[data-alben] [data-alb]').forEach(el => el.onclick = () => {
+    const a = ALBUMS.find(x => x.id === el.dataset.alb);
+    deck.queue = a.tr.map((_,i) => `${a.id}-${i}`);
+    deck.qi = 0; deck.pos = 0; deck.playing = true; deck.render();
+  });
+  markiereAlben();
+}
+const markiereAlben = () => qq('[data-alben] [data-alb]').forEach(el =>
+  el.classList.toggle('an', el.dataset.alb === deck.album.id));
+
+let letzteQ = null;
+function baueWarte(d){
+  q('[data-wkap]').textContent = 'Warteschlange · ' + d.album.t + ' · ' + fmtLang(d.total);
+  q('[data-warte]').innerHTML = d.queue.map((id,i) => {
+    const t = TRACKS[id];
+    return `<button class="plak" data-q="${i}"><span class="nr">${String(i+1).padStart(2,'0')}</span>
+      <span class="t">${esc(t.t)}</span><span class="d">${fmt(t.d)}</span></button>`;
+  }).join('');
+  qq('[data-warte] [data-q]').forEach(el => el.onclick = () => d.jump(+el.dataset.q));
+  letzteQ = d.queue.join();
+}
+q('[data-suche]').oninput = baueInterpreten;
+baueInterpreten();
+
+let letzter = null, letztesAlbum = null;
+deck.onRender = d => {
+  const t = d.track, a = d.album;
+  if (letzteQ !== d.queue.join()) baueWarte(d);
+  if (letztesAlbum !== a.id){
+    letztesAlbum = a.id;
+    q('[data-cov]').outerHTML = coverHTML(a, 'cov', ' data-cov');
+    q('[data-grund]').style.background = `radial-gradient(58% 58% at 22% 26%,${a.c[0]},transparent 62%),
+     radial-gradient(64% 64% at 78% 74%,${a.c[1]},transparent 64%),
+     linear-gradient(148deg,${a.c[1]},${a.c[0]})`;
+    markiereAlben();
+  }
+  if (letzter !== t.id){
+    letzter = t.id;
+    q('[data-titel]').textContent = t.t;
+    q('[data-ar]').textContent = a.ar + ' · ' + a.t + ' · ' + a.y;
+  }
+  qq('[data-warte] [data-q]').forEach((el,i) => {
+    el.classList.toggle('an', i === d.qi);
+    el.classList.toggle('war', i < d.qi);
+  });
+  q('[data-bahn] .fuell').style.width  = (d.frac*100).toFixed(2) + '%';
+  q('[data-bahn] .laeufer').style.left = (d.frac*100).toFixed(2) + '%';
+  q('[data-bzeit]').textContent = fmt(d.dur);
+  q('[data-jetzt]').textContent = fmt(d.pos);
+  q('[data-ende]').textContent  = '−' + fmt(d.rest);
+  q('[data-pp]').innerHTML = d.playing ? I.pause(21) : I.play(21);
+  zeichneVol(d.vol);
+};
+deck.render();
+})();
+
+/* ══ Variante 2 · Plakettenpult ═════════════════════════════════════════ */
+(() => {
+const deck = new Deck('par', {qi:0, pos:190, speed:20});
+const w = document.getElementById('v2');
+const q = s => w.querySelector(s), qq = s => [...w.querySelectorAll(s)];
+
+w.innerHTML = `
+  <div class="grund" data-grund></div>
+  <div class="kz">
+    <button class="plak" data-bib>${I.grid(16)} <span class="t">Bibliothek</span></button>
+    <button class="plak" data-shuffle>${I.shuffle(16)} <span class="t">Zufall</span></button>
+  </div>
+  <div class="platte gross">
+    <div class="cov" data-cov></div>
+    <div class="rechts">
+      <h1 data-titel></h1>
+      <div class="ar" data-ar></div>
+      <div class="warte">
+        <span class="kap" data-wkap></span>
+        <div class="reihe" data-warte></div>
+      </div>
+      ${bahnHTML}
+      <div class="fuss">
+        <span class="uhr" data-jetzt></span>
+        <div class="transport">
+          <button data-prev aria-label="Zurück">${I.prev(21)}</button>
+          <button class="pp" data-pp aria-label="Abspielen">${I.pause(23)}</button>
+          <button data-next aria-label="Weiter">${I.next(21)}</button>
+        </div>
+        <span class="uhr" data-ende></span>
+        ${volHTML}
+      </div>
+    </div>
+  </div>
+  <div class="bib" data-bib-blende>
+    <div class="bkopf">
+      <h2>Bibliothek</h2>
+      ${suchbandHTML()}
+      <button class="zu" data-bib-zu aria-label="Schließen">${I.x(19)}</button>
+    </div>
+    <div class="bliste" data-bibliothek></div>
+    <div class="bfuss kap" data-btreffer></div>
+  </div>`;
+
+const zeichneVol = volBinden(w, deck);
+q('[data-pp]').onclick   = () => deck.toggle();
+q('[data-next]').onclick = () => deck.next();
+q('[data-prev]').onclick = () => deck.prev();
+q('[data-shuffle]').onclick = () => {
+  deck.shuffle = !deck.shuffle;
+  q('[data-shuffle]').classList.toggle('an', deck.shuffle);
+};
+bindDrag(q('[data-bahn]'), f => deck.seekGlobal(f * deck.total));
+
+const bib = bindBibliothek({
+  knopf: q('[data-bib]'), zu: q('[data-bib-zu]'), blende: q('[data-bib-blende]'),
+  feld: q('[data-suche]'), liste: q('[data-bibliothek]'), treffer: q('[data-btreffer]'), deck,
+  zeile: a => `<div class="bz" data-alb="${a.id}">${coverHTML(a,'pl')}
+      <span class="m"><span class="t">${esc(a.t)}</span>
+      <span class="s">${esc(a.ar)} · ${a.y}</span></span></div>`,
+  leer: '<div class="bz" style="grid-column:1/-1;cursor:default"><span class="m"><span class="t">Nichts gefunden.</span></span></div>',
+});
+
+let letzteQ = null, letzter = null, letztesAlbum = null;
+deck.onRender = d => {
+  const t = d.track, a = d.album;
+  if (letzteQ !== d.queue.join()){
+    letzteQ = d.queue.join();
+    q('[data-wkap]').textContent = 'Warteschlange · ' + d.queue.length + ' Titel · ' + fmtLang(d.total);
+    q('[data-warte]').innerHTML = d.queue.map((id,i) => {
+      const tr = TRACKS[id];
+      return `<button class="plak" data-q="${i}"><span class="nr">${String(i+1).padStart(2,'0')}</span>
+        <span class="t">${esc(tr.t)}</span><span class="d">${fmt(tr.d)}</span></button>`;
+    }).join('');
+    qq('[data-warte] [data-q]').forEach(el => el.onclick = () => d.jump(+el.dataset.q));
+    /* Teiler an den Titelgrenzen — Prozente aus deck.offs, nicht pro Bild. */
+    q('[data-bahn] .teiler').innerHTML = d.offs.slice(1)
+      .map(v => `<i style="left:${(v/d.total*100).toFixed(3)}%"></i>`).join('');
+  }
+  if (letztesAlbum !== a.id){
+    letztesAlbum = a.id;
+    q('[data-cov]').outerHTML = coverHTML(a, 'cov', ' data-cov');
+    q('[data-grund]').style.background = `radial-gradient(58% 58% at 22% 26%,${a.c[0]},transparent 62%),
+     radial-gradient(64% 64% at 78% 74%,${a.c[1]},transparent 64%),
+     linear-gradient(148deg,${a.c[1]},${a.c[0]})`;
+    bib.markiere();
+  }
+  if (letzter !== t.id){
+    letzter = t.id;
+    q('[data-titel]').textContent = t.t;
+    q('[data-ar]').textContent = a.ar + ' · ' + a.t + ' · ' + a.y;
+  }
+  qq('[data-warte] [data-q]').forEach((el,i) => {
+    el.classList.toggle('an', i === d.qi);
+    el.classList.toggle('war', i < d.qi);
+  });
+  const fg = clamp(d.gpos / d.total, 0, 1);
+  q('[data-bahn] .fuell').style.width  = (fg*100).toFixed(3) + '%';
+  q('[data-bahn] .laeufer').style.left = (fg*100).toFixed(3) + '%';
+  q('[data-bzeit]').textContent = fmtLang(d.total);
+  q('[data-jetzt]').textContent = fmt(d.pos);
+  q('[data-ende]').textContent  = '−' + fmt(d.rest);
+  q('[data-pp]').innerHTML = d.playing ? I.pause(23) : I.play(23);
+  zeichneVol(d.vol);
+};
+deck.render();
+})();
+
+})();
+</script>

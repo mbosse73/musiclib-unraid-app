@@ -27,25 +27,45 @@
   box-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(0,0,0,.6),
     0 18px 40px rgba(0,0,0,.55)}
 
-/* ── obere Reihe: Cover als Leuchtflächen ── */
-.rk .reihe{flex:none;height:var(--rh,300px);border-radius:8px;padding:12px;display:flex;gap:12px}
-.rk .schirmchen{flex:1;min-width:0;border-radius:4px;position:relative;overflow:hidden;cursor:pointer;
-  background:#0A0A0C;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)}
+/* ── obere Reihe: das Plattenfach ── */
+/* ── Das Regal ──────────────────────────────────────────────────────────
+   In der Vorlage stehen die Platten in einem Fach, mehrere nebeneinander
+   und weitere dahinter — nicht drei Großbilder. Also: die ganze Sammlung
+   in einer Reihe, jede Hülle quadratisch und klein, dafür scharf. Die
+   Beschriftung steht *unter* der Hülle auf dem Metall, nicht als Schleier
+   darüber: eine Schrift auf einem Verlauf über einem Bild ist nie so
+   scharf wie dieselbe Schrift auf einer Fläche.                         */
+/* Die Kachelgroesse kommt aus der Fachhoehe, nicht aus der Fachbreite: bei
+   wenigen Alben wuerde eine breitenbasierte Kachel mit aspect-ratio:1 das
+   ganze Geraet sprengen. Schrumpfen duerfen sie, wachsen nicht. */
+.rk{--kh:min(160px,calc(var(--rh,196px) - 92px))}
+.rk .reihe{flex:none;height:var(--rh,196px);border-radius:8px;padding:14px 16px;display:flex;
+  gap:var(--rg,12px);align-items:stretch;justify-content:space-between}
+.rk .schirmchen{flex:0 1 var(--kh);min-width:0;display:flex;flex-direction:column;gap:9px;
+  cursor:pointer;background:none}
+.rk .schirmchen .huelle{position:relative;width:100%;aspect-ratio:1;border-radius:3px;overflow:hidden;
+  flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 5px 12px rgba(0,0,0,.5)}
+.rk .schirmchen .unter{text-align:center}
 .rk .schirmchen .bild{position:absolute;inset:0;display:grid;place-items:center;color:#fff;
-  font-size:56px;font-weight:600;filter:saturate(.85) brightness(.9)}
-.rk .schirmchen .glas{position:absolute;inset:0;
-  background:linear-gradient(118deg,rgba(255,255,255,.18) 0 22%,transparent 46%)}
-.rk .schirmchen .unter{position:absolute;left:0;right:0;bottom:0;padding:14px 16px;
-  background:linear-gradient(180deg,transparent,rgba(0,0,0,.82));display:flex;
-  justify-content:space-between;align-items:flex-end;gap:12px}
-.rk .schirmchen .t{font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;
-  text-overflow:ellipsis}
-.rk .schirmchen .s{font-size:11.5px;color:var(--hell-2);white-space:nowrap;overflow:hidden;
-  text-overflow:ellipsis}
-.rk .schirmchen.an{box-shadow:inset 0 0 0 2px var(--orange)}
-.rk .schirmchen.an .bild{filter:none}
-.rk .schirmchen .laeuft{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--orange);
-  white-space:nowrap;opacity:0}
+  font-size:var(--ig,26px);font-weight:600;letter-spacing:.02em}
+.rk .schirmchen .bild img{width:100%;height:100%;object-fit:cover}
+/* Ungespielte Hüllen stehen im Schatten des Fachs — abgedunkelt durch einen
+   Schleier, nicht durch einen Filter: ein brightness()-Filter nimmt auch der
+   Schrift die Kante. */
+.rk .schirmchen .huelle::after{content:'';position:absolute;inset:0;z-index:2;
+  background:rgba(8,8,10,.34)}
+.rk .schirmchen.an .huelle::after{background:none}
+.rk .schirmchen .glas{position:absolute;inset:0;z-index:1;
+  background:linear-gradient(118deg,rgba(255,255,255,.20) 0 20%,transparent 44%)}
+.rk .schirmchen .unter{min-width:0}
+.rk .schirmchen .t{font-size:11.5px;font-weight:600;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;color:var(--hell-2)}
+.rk .schirmchen .s{font-size:10px;color:var(--hell-3);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;margin-top:2px}
+.rk .schirmchen.an .huelle{box-shadow:inset 0 0 0 2px var(--orange),0 6px 16px rgba(0,0,0,.55)}
+.rk .schirmchen.an .t{color:var(--orange)}
+.rk .schirmchen .laeuft{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;
+  color:var(--orange);white-space:nowrap;opacity:0;margin-top:3px}
 .rk .schirmchen.an .laeuft{opacity:1}
 
 /* ── Bedienteil ── */
@@ -148,8 +168,9 @@
       <div class="caps">Musiklib · Spieler-Entwürfe · Blatt 11</div>
       <h1>Rack</h1>
       <p class="lede">Ein Gerät, kein Fenster: gebürstetes Metall, ein Rad zum Spulen, ein oranger Hebel
-      für die Lautstärke. Die Cover sind keine Kacheln, sondern <b>Leuchtflächen im Rahmen</b> — nur das
-      laufende Album ist hell, die Nachbarn liegen im Halbdunkel.</p>
+      für die Lautstärke. Oben das <b>Plattenfach</b>: die Sammlung in Regalordnung, jede Hülle klein
+      und scharf statt drei Großbilder — nur das laufende Album ist hell, die Nachbarn liegen im
+      Halbdunkel des Fachs.</p>
       <p style="margin-top:22px"><a class="zurueck" href="index.html">← alle Blätter</a></p>
     </div>
     <figure class="vorlage">
@@ -285,7 +306,7 @@ const pultHTML = `
 document.getElementById('v1').innerHTML = reiheHTML(3) + pultHTML + bibHTML;
 document.getElementById('v2').innerHTML = reiheHTML(2) + pultHTML + bibHTML;
 
-function verdrahte(wurzel, deck, stil, anzahl){
+function verdrahte(wurzel, deck, stil){
   const $  = s => wurzel.querySelector(s);
   const $$ = s => [...wurzel.querySelectorAll(s)];
   Object.entries(stil).forEach(([k,v]) => wurzel.style.setProperty(k, v));
@@ -328,15 +349,35 @@ function verdrahte(wurzel, deck, stil, anzahl){
     leer: '<div class="bz" style="box-shadow:none;background:none"><span class="s">Nichts gefunden.</span></div>',
   });
 
+  /* Das Fach zeigt die ganze Sammlung, in Backenordnung — nicht ein Fenster
+     von drei, das bei jedem Albumwechsel neu durchrutscht. */
   function zeigeReihe(d){
-    const start = ALBUMS.findIndex(a => a.id === d.album.id);
-    const um = Array.from({length:anzahl}, (_,k) => ALBUMS[(start + k) % ALBUMS.length]);
-    $('[data-reihe]').innerHTML = um.map((a,k) => `
-      <div class="schirmchen${k===0?' an':''}" data-alb="${a.id}">
-        <div class="bild" style="background:${grad(a)}">${ini(a)}</div>
-        <div class="glas"></div>
-        <div class="unter"><div style="min-width:0">
-          <div class="t">${esc(a.t)}</div><div class="s">${esc(a.ar)} · ${a.y}</div></div>
+    /* Wie viele Huellen ins Fach passen, entscheidet das Fach — nicht eine
+       Zahl im Aufruf. Sonst bleibt rechts eine leere Flaeche stehen, sobald
+       das Geraet breiter ist als gedacht. --kh steckt in einer min()-Formel
+       und laesst sich nur messen, nicht lesen: ein Probestueck erledigt das
+       in einem Zug und ohne zweiten Durchgang. */
+    const reihe = $('[data-reihe]'), cs = getComputedStyle(reihe);
+    const probe = document.createElement('i');
+    probe.style.cssText = 'display:block;width:var(--kh)';
+    reihe.appendChild(probe);
+    const kh = probe.offsetWidth || 160;
+    probe.remove();
+    const luft = parseFloat(cs.columnGap) || 12;
+    const innen = reihe.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const passt = Math.max(1, Math.floor((innen + luft) / (kh + luft)));
+    /* Regalordnung, aber das laufende Album ist immer dabei: bei mehr Alben
+       als Faechern wandert der Ausschnitt mit, statt bei Null zu bleiben. */
+    const n = Math.min(passt, ALBUMS.length);
+    const i = Math.max(0, ALBUMS.findIndex(a => a.id === d.album.id));
+    const ab = Math.min(Math.max(0, i - (n >> 1)), ALBUMS.length - n);
+    const um = ALBUMS.slice(ab, ab + n);
+    $('[data-reihe]').innerHTML = um.map(a => `
+      <div class="schirmchen${a.id === d.album.id ? ' an' : ''}" data-alb="${a.id}">
+        <span class="huelle"><span class="bild" style="background:${grad(a)}">${ini(a)}</span>
+          <span class="glas"></span></span>
+        <div class="unter">
+          <div class="t">${esc(a.t)}</div><div class="s">${esc(a.ar)} · ${a.y}</div>
           <span class="laeuft">▶ läuft</span></div>
       </div>`).join('');
     $$('[data-alb]').forEach(el => el.onclick = () => {
@@ -366,9 +407,9 @@ function verdrahte(wurzel, deck, stil, anzahl){
   deck.render();
 }
 verdrahte(document.getElementById('v1'), d1,
-  {'--rh':'430px','--rd':'180px','--tg':'26px','--hw':'160px','--bsp':'3'}, 3);
+  {'--rh':'252px','--rd':'180px','--tg':'26px','--hw':'160px','--bsp':'3','--ig':'30px'});
 verdrahte(document.getElementById('v2'), d2,
-  {'--rh':'380px','--rd':'220px','--tg':'28px','--hw':'150px','--pad':'30px','--pg':'34px','--pp':'34px',
-   '--tb':'56px','--bsp':'2'}, 2);
+  {'--rh':'232px','--rd':'220px','--tg':'28px','--hw':'150px','--pad':'30px','--pg':'34px','--pp':'34px','--ig':'26px','--rg':'10px',
+   '--tb':'56px','--bsp':'2'});
 })();
 </script>

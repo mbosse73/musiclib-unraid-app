@@ -28,7 +28,7 @@
   <header class="kopf">
     <div>
       <div class="caps">Musiklib · Entwürfe für ipad.html und pc.html</div>
-      <h1>Siebzehn Blätter, <em>siebenundzwanzig</em> Spieler</h1>
+      <h1>Zweiundzwanzig Blätter, <em>siebenunddreißig</em> Spieler</h1>
       <p class="lede">Aus dreizehn Vorlagen und sechsundzwanzig Entwürfen ist eine <b>engere Wahl</b>
       geworden: zehn Blätter, fünfzehn Varianten. Drei Blätter sind ganz gestrichen, fünf weitere
       Varianten einzeln — sie stehen in der Vorgeschichte des Zweigs, falls doch noch eine
@@ -66,6 +66,21 @@
   </div>
 
   <div class="gitter" id="gitter2"></div>
+
+  <div class="reihe2">
+    <div class="regel" style="margin-top:70px"></div>
+    <h2 style="font-family:var(--serif);font-size:27px;font-weight:400;margin-top:34px">Zweiter
+    Vorlagensatz</h2>
+    <p class="etext" style="margin-top:12px;max-width:70ch">Fünf Blätter, zehn Varianten, aus den
+    Fotos in <code style="font-family:var(--mono);font-size:13px">mckups_player_2/</code> — jedes
+    Blatt einmal für den Schreibtisch und einmal fürs iPad quer. Sie entstanden parallel zur zweiten
+    Reihe auf einem eigenen Zweig und sind dort liegengeblieben; wiedergefunden und von 14–18 auf
+    <b>21–25</b> umnummeriert, weil ihre alten Nummern hier längst vergeben sind. Zwei weitere
+    Vorlagen desselben Satzes (16.46.30 und 16.48.08) waren gezeichnet und sind wieder gestrichen
+    worden.</p>
+  </div>
+
+  <div class="gitter" id="gitter3"></div>
 
   <div class="tafel">
     <div class="regel" style="margin-bottom:34px"></div>
@@ -165,7 +180,8 @@
   </div>
 
   <footer><span>Musiklib — Spieler-Entwürfe</span>
-    <span>engere Wahl · 10 Blätter · 15 Varianten &nbsp;·&nbsp; zweite Reihe · 6 Blätter · 10 Varianten</span></footer>
+    <span>engere Wahl · 10 Blätter · 15 Varianten &nbsp;·&nbsp; zweite Reihe · 6 Blätter · 10 Varianten
+      &nbsp;·&nbsp; zweiter Vorlagensatz · 5 Blätter · 10 Varianten</span></footer>
 </div>
 
 <script>
@@ -294,6 +310,22 @@ const ZWEITE = [
    'Filz, Leder, eine gespannte Kordel auf Terrazzo — der Pegel ist gestickt.',['iPad quer']],
 ];
 
+/* ── zweiter Vorlagensatz (Blätter 21–25) ─────────────────────────────────
+   Wieder Fotos, aber aus dem zweiten Ordner. Die Nummern sind neu vergeben:
+   auf ihrem Zweig hiessen sie 14–18, und die sind hier belegt. */
+const DRITTE = [
+  ['21','glut','Glut','16.43.55',
+   'Ein glühender Schacht als Laufleiste; was gespielt ist, leuchtet nach.',['PC','iPad quer']],
+  ['22','lupe','Lupe','16.44.13',
+   'Das Suchfeld bleibt Suchfeld — der Schein unter seiner Kante wächst mit der Zeit.',['PC','iPad quer']],
+  ['23','plaketten','Plaketten','16.44.43',
+   'Jeder Titel eine Pille, genau eine ist hell: die Warteschlange als Zustandslehre.',['PC','iPad quer']],
+  ['24','stapel','Stapel','16.45.08',
+   'Karten aus Milchglas, von kalt nach warm: Wärme sagt, was gleich läuft.',['PC','iPad quer']],
+  ['25','eisblau','Eisblau','16.46.00',
+   'Aus einem Stück geformt, alles gedrückt statt gezeichnet; von drei Knöpfen ist einer gefüllt.',['PC','iPad quer']],
+];
+
 const karte = (nr, datei, name, bild, vorlage, text, ger) => `
   <a class="blatt" href="${nr}-${datei}.html">
     <div class="bild">${bild}</div>
@@ -311,4 +343,9 @@ document.getElementById('gitter').innerHTML = BLAETTER.map(([nr, datei, name, fo
 
 document.getElementById('gitter2').innerHTML = ZWEITE.map(([nr, datei, name, text, ger]) =>
   karte(nr, datei, name, SKIZZEN[nr], 'gezeichnet', text, ger)).join('');
+
+document.getElementById('gitter3').innerHTML = DRITTE.map(([nr, datei, name, foto, text, ger]) =>
+  karte(nr, datei, name,
+    `<img src="../../mckups_player_2/Bildschirmfoto%202026-08-13%20um%20${foto}.png" alt="">`,
+    foto, text, ger)).join('');
 </script>

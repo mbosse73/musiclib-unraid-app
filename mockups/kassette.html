@@ -1,0 +1,954 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fünf Kassetten</title>
+</head>
+<body>
+<style>
+/* ══════════════════════════════════════════════════════════════════════
+   Fuenf Kassetten — zweiter Anlauf fuer Entwurf W aus „Vorbilder".
+
+   Der erste hatte zuviel Schwarz, zu harte Ecken und zu wenig von dem,
+   was eine Kassette ausmacht. Hier ist die Schale gefast, das Fenster
+   rauchig statt dunkel, das Band braun statt schwarz — und Schreiblinien,
+   Schutznasen, Andruckfilz und die fuenf Loecher an der Unterkante sind
+   da, wo sie hingehoeren.
+
+   A Ferro · B Chrom · C Metall · D Rauchglas · E Mixtape
+   ══════════════════════════════════════════════════════════════════════ */
+:root{
+  --paper:#FBF9F5; --stage:#F1EDE4; --ink:#241E18; --ink-2:#6B6155; --ink-3:#A0968A;
+  --line:rgba(36,30,24,.10); --line-2:rgba(36,30,24,.22);
+  --brass:#8A6534; --brass-soft:rgba(138,101,52,.09);
+  --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
+  --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--stage);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;padding-bottom:90px}
+::selection{background:rgba(138,101,52,.2)}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+button,input{font:inherit;color:inherit;background:none;border:none}
+
+.page{max-width:1200px;margin:0 auto;padding:0 32px}
+.caps{font-family:var(--sans);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3)}
+.masthead{padding:84px 0 46px;max-width:70ch}
+.masthead .caps{margin-bottom:26px}
+.masthead h1{font-family:var(--serif);font-weight:400;font-size:clamp(42px,6.4vw,68px);line-height:1.05;
+  letter-spacing:-.015em;text-wrap:balance}
+.masthead h1 em{font-style:italic;color:var(--brass)}
+.masthead .lede{margin-top:22px;color:var(--ink-2);font-size:16px;max-width:58ch}
+.masthead .lede b{color:var(--ink);font-weight:600}
+.rule{height:1px;background:var(--line-2)}
+
+/* ── Kapitel je Quelle ── */
+.chapter{padding:74px 0 0}
+.chapter>.head{max-width:64ch}
+.chapter>.head .caps{color:var(--brass)}
+.chapter>.head h2{font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.6vw,38px);line-height:1.12;
+  margin-top:14px;letter-spacing:-.012em}
+.chapter>.head p{margin-top:16px;color:var(--ink-2);font-size:15px}
+.chapter>.head p b{color:var(--ink);font-weight:600}
+.source{margin-top:20px;padding:16px 18px;background:var(--paper);border:1px solid var(--line);
+  font-size:13.5px;color:var(--ink-2);max-width:64ch}
+.source b{color:var(--ink);font-weight:600}
+.source .caps{display:block;margin-bottom:7px}
+
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:64px;padding:46px 0 0;align-items:start}
+/* Das liegende Telefon ist breiter als eine Spalte — es bekommt eine Reihe. */
+.solo{display:grid;grid-template-columns:auto minmax(300px,1fr);gap:54px;padding:46px 0 0;align-items:start}
+.solo>.col{align-items:flex-start}
+@media (max-width:1180px){.solo{grid-template-columns:1fr;gap:38px;justify-items:center}
+  .solo .text{max-width:430px}}
+@media (max-width:1000px){.pair{grid-template-columns:1fr;gap:72px;justify-items:center}}
+.col{display:flex;flex-direction:column;align-items:center;gap:32px;max-width:430px}
+.col .text{width:100%}
+.col h3{font-family:var(--serif);font-size:28px;font-weight:400;letter-spacing:-.01em;line-height:1.15}
+.col h3 .no{display:block;margin-bottom:11px;font-family:var(--sans);font-size:10px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--brass)}
+.col p{margin-top:13px;color:var(--ink-2);font-size:14.5px}
+.col p b{color:var(--ink);font-weight:600}
+.col .swatches{display:flex;gap:0;margin-top:18px;border:1px solid var(--line-2);border-radius:2px;overflow:hidden}
+.col .swatches i{flex:1;height:26px;display:block}
+.col .note{margin-top:15px;padding-left:14px;border-left:2px solid var(--brass);font-size:13px;color:var(--ink-2)}
+.col .note b{color:var(--ink);font-weight:600}
+.col dl{margin-top:20px;border-top:1px solid var(--line-2)}
+.col dl>div{display:grid;grid-template-columns:104px 1fr;gap:14px;padding:10px 0;border-bottom:1px solid var(--line);
+  font-size:13px}
+.col dt{font-family:var(--sans);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);
+  padding-top:3px}
+.col dd{color:var(--ink-2)}
+.col dd b{color:var(--ink);font-weight:600}
+
+/* ══════════ Telefon ══════════ */
+.phone{width:390px;height:844px;border-radius:46px;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;flex-shrink:0;
+  box-shadow:0 0 0 9px #E7E1D5,0 0 0 10px rgba(36,30,24,.16),0 40px 80px rgba(36,30,24,.20);
+  touch-action:none;isolation:isolate}
+@media (max-width:620px){.phone{zoom:.72}}
+@media (max-width:460px){.phone{zoom:.58}}
+.notch{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:112px;height:31px;
+  border-radius:18px;background:#1A1512;z-index:300}
+.homeind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:126px;height:4px;
+  border-radius:3px;background:rgba(36,30,24,.22);z-index:300}
+.sbar{height:54px;flex-shrink:0;display:flex;align-items:flex-end;justify-content:space-between;
+  padding:0 30px 9px;font-size:13px;font-weight:600;font-family:var(--sans);position:relative;z-index:30}
+.sbar .ic{display:flex;gap:6px;align-items:center}
+.screen{flex:1;min-height:0;display:flex;flex-direction:column;position:relative}
+
+/* Hülle und Scheibe stehen für das echte Cover aus /api/cover */
+.art{position:relative;overflow:hidden}
+.art .sheen{position:absolute;inset:0;
+  background:radial-gradient(ellipse at 26% 16%,rgba(255,255,255,.34),transparent 56%),
+             radial-gradient(ellipse at 82% 96%,rgba(0,0,0,.22),transparent 62%)}
+.art .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);
+  font-style:italic;font-weight:400;color:rgba(255,255,255,.86)}
+/* Die gesponnene Scheibe: dasselbe Cover, nur im Kreis verwirbelt */
+.disc{position:relative;border-radius:50%;overflow:hidden;flex-shrink:0}
+.disc .wash{position:absolute;inset:-16%;filter:blur(17px);
+  background:conic-gradient(from 205deg,#6E86B8,#63B49C,#F0CE6A,#EE8A45,#E2645F,#A95F97,#6E86B8)}
+.disc .core{position:absolute;inset:27%;border-radius:50%;filter:blur(11px);
+  background:radial-gradient(circle at 46% 42%,#FBA43A,#E2645F 62%,rgba(226,100,95,0) 78%)}
+.spin{animation:spin 34s linear infinite;animation-play-state:paused}
+.playing .spin{animation-play-state:running}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Gemeinsame Bauteile: Warteschlangen-Blatt und Zeile */
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:40;max-height:66%;display:flex;flex-direction:column;
+  padding:10px 24px 26px;border-radius:26px 26px 0 0;background:#fff;
+  box-shadow:0 -18px 46px rgba(36,30,24,.16);transform:translateY(101%);
+  transition:transform .42s cubic-bezier(.3,.8,.25,1)}
+.open .sheet{transform:none}
+.sheet .grip{width:38px;height:4px;border-radius:3px;background:rgba(36,30,24,.14);margin:0 auto 14px;flex-shrink:0}
+.sheet .qh{font-family:var(--sans);font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:8px;flex-shrink:0}
+.sheet .qbody{overflow-y:auto;min-height:0}
+.scrim{position:absolute;inset:0;z-index:35;background:rgba(36,30,24,.18);opacity:0;pointer-events:none;
+  transition:opacity .35s}
+.open .scrim{opacity:1;pointer-events:auto}
+.qrow{display:flex;align-items:baseline;gap:12px;width:100%;text-align:left;padding:10px 0;cursor:pointer;
+  border-bottom:1px solid rgba(36,30,24,.07)}
+.qrow .n{width:15px;flex-shrink:0;font-size:10px;letter-spacing:.1em;color:var(--ink-3);
+  font-variant-numeric:tabular-nums}
+.qrow .t{flex:1;min-width:0;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qrow .d{flex-shrink:0;font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.qrow.now .t{font-weight:600}
+.qrow.past{opacity:.42}
+</style>
+<style>
+/* ═══════════ Die Seite: eine Matrix statt zweier Spalten ═══════════ */
+.page{max-width:1460px}
+.matrix{display:grid;grid-template-columns:repeat(auto-fit,minmax(352px,1fr));gap:54px 30px;padding:44px 0 0}
+.probe{display:flex;flex-direction:column;align-items:center;gap:20px}
+.probe .phone{zoom:.82}
+.probe .txt{width:100%;max-width:392px}
+.probe h4{font-family:var(--serif);font-size:22px;font-weight:400;line-height:1.2}
+.probe h4 .no{display:block;margin-bottom:8px;font-family:var(--sans);font-size:9.5px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--brass)}
+.probe p{margin-top:10px;font-size:13.5px;color:var(--ink-2)}
+.probe p b{color:var(--ink);font-weight:600}
+.probe .stoff{margin-top:11px;font-family:var(--sans);font-size:9.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink-3)}
+.legende{display:grid;grid-template-columns:repeat(auto-fit,minmax(212px,1fr));margin-top:26px;
+  border-top:1px solid var(--line-2);max-width:64ch}
+.legende>div{padding:12px 16px 14px 0}
+.legende dt{font-family:var(--sans);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--brass);margin-bottom:5px}
+.legende dd{font-size:13px;color:var(--ink-2)}
+
+.solo{display:grid;grid-template-columns:auto minmax(300px,1fr);gap:54px;padding:46px 0 0;align-items:start}
+.solo>.col{align-items:flex-start}
+@media (max-width:1180px){.solo{grid-template-columns:1fr;gap:38px;justify-items:center}
+  .solo .text{max-width:430px}}
+</style>
+<style>
+/* ══════════════════════════════════════════════════════════════════════
+   Die Kassette, dritter Anlauf
+
+   Zwei Dinge waren vorher schlicht falsch:
+
+   1. Das Format. Eine Compact Cassette misst 100,4 × 63,8 mm — sie ist
+      also deutlich breiter als hoch (1,57 : 1). Meine war fast quadratisch,
+      und deshalb sah sie nach allem Möglichen aus, nur nicht nach einer
+      Kassette. Jetzt hält die Schale das Verhältnis über aspect-ratio, und
+      alles darin ist aus ihrer Breite gerechnet.
+
+   2. Die Größe. Sie hing an festen Punktwerten und blieb auf dem Tablett
+      so klein wie am Telefon. Jetzt ist die Breite --kb = min(90cqw, 600px):
+      sie folgt dem Gerät (Container-Einheiten), wächst auf dem Tablett mit
+      und hört bei 600 Punkten auf. Jedes Maß im Entwurf ist ein Bruchteil
+      davon — Schriftgrößen eingeschlossen.
+
+   Dazu: das Etikett trägt jetzt, was ein Etikett trägt (Seitenfeld,
+   Schreiblinien, Typ- und Längenangabe am Rand), und die Tasten sind
+   gerundet und gefast statt hart geschnitten.
+   ══════════════════════════════════════════════════════════════════════ */
+.phone.kass{container-type:size}
+.kass{
+  --kb:min(90cqw,600px);           /* Kassettenbreite — alles folgt ihr */
+  --schale:#F4EFE4;--schale-2:#E9E1D1;--rand:rgba(60,50,34,.22);
+  --etikett:#FDFBF4;--etikett-2:#F3ECDC;--druck:#3A3226;--nebendruck:#8A7F6A;
+  --band:#7A5236;--band-2:#553420;--fenster:rgba(74,56,36,.26);
+  --kern:#EFE9DC;--akzent:#8A6534;--taste:#F7F3EA;--taste-2:#E7E0D0;
+  color:var(--druck)}
+
+.kass .lid{display:flex;align-items:center;justify-content:space-between;padding:4px 26px 0;flex-shrink:0}
+.kass .lid .cap{font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--nebendruck)}
+.kass .ic{width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  color:var(--nebendruck);cursor:pointer}
+.kass .tisch{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:calc(var(--kb) * .06)}
+
+/* ── Die Schale ──
+   Das Format ist gesetzt, nicht gestapelt: aspect-ratio hält 1,57 : 1,
+   der Inhalt verteilt sich darin. */
+.kass .schale{position:relative;width:var(--kb);aspect-ratio:1.573;
+  display:flex;flex-direction:column;
+  padding:calc(var(--kb) * .022) calc(var(--kb) * .026) 0;
+  border-radius:calc(var(--kb) * .022);
+  background:linear-gradient(163deg,var(--schale),var(--schale-2));
+  box-shadow:0 1px 0 rgba(255,255,255,.92) inset,0 -1px 0 rgba(60,50,34,.14) inset,
+    0 0 0 1px var(--rand),0 calc(var(--kb) * .05) calc(var(--kb) * .1) rgba(60,50,38,.20)}
+.kass .schale::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(163deg,rgba(255,255,255,.5),rgba(255,255,255,0) 32%)}
+.kass .schraube{position:absolute;width:calc(var(--kb) * .019);aspect-ratio:1;border-radius:50%;z-index:4;
+  background:radial-gradient(circle at 38% 32%,#FFFFFF,var(--schale-2) 60%,rgba(60,50,34,.30));
+  box-shadow:inset 0 0 0 1px rgba(60,50,34,.20)}
+.kass .schraube.o1{top:2.4%;left:1.8%}   .kass .schraube.o2{top:2.4%;right:1.8%}
+.kass .schraube.u1{bottom:2.4%;left:1.8%} .kass .schraube.u2{bottom:2.4%;right:1.8%}
+.kass .schraube.m{bottom:2.4%;left:50%;transform:translateX(-50%)}
+
+/* Obere Kante: die beiden Schutznasen */
+.kass .oben{display:flex;justify-content:space-between;flex-shrink:0;
+  padding:0 calc(var(--kb) * .06) calc(var(--kb) * .014)}
+.kass .nase{width:calc(var(--kb) * .046);height:calc(var(--kb) * .018);border-radius:0 0 2px 2px;
+  background:var(--schale-2);box-shadow:inset 0 -1px 0 rgba(255,255,255,.85),0 0 0 1px var(--rand)}
+
+/* ── Das Etikett ──
+   Links das Seitenfeld, rechts Typ und Länge, darunter die Schreiblinie:
+   so ist jedes Leeretikett aufgebaut. */
+.kass .etikett{position:relative;z-index:2;flex:1;min-height:0;display:flex;flex-direction:column;
+  border-radius:calc(var(--kb) * .008);padding:calc(var(--kb) * .026) calc(var(--kb) * .03);
+  background:linear-gradient(#FFFFFF,var(--etikett));border:1px solid rgba(60,50,34,.16);
+  box-shadow:0 1px 2px rgba(60,50,34,.10)}
+.kass .kopf{display:flex;align-items:center;gap:calc(var(--kb) * .028);flex-shrink:0}
+.kass .seite{flex-shrink:0;display:grid;place-items:center;
+  width:calc(var(--kb) * .058);height:calc(var(--kb) * .058);border-radius:2px;
+  background:var(--akzent);color:#FDFBF4;font-size:calc(var(--kb) * .033);line-height:1;
+  font-family:var(--sans);letter-spacing:0}
+.kass .kopf .zeile{flex:1;min-width:0}
+.kass .tt{font-family:var(--serif);font-style:italic;font-size:calc(var(--kb) * .056);line-height:1.15;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kass .by{margin-top:calc(var(--kb) * .008);font-size:calc(var(--kb) * .0245);letter-spacing:.2em;
+  text-transform:uppercase;color:var(--nebendruck);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.kass .typ{flex-shrink:0;text-align:right;font-size:calc(var(--kb) * .0215);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--nebendruck);line-height:1.5}
+/* Die Schreiblinie: eine Haarlinie am unteren Rand des Etiketts */
+.kass .linien{margin-top:auto;height:calc(var(--kb) * .026);flex-shrink:0;
+  background-image:repeating-linear-gradient(0deg,transparent 0 calc(var(--kb) * .0255),
+    rgba(60,50,34,.16) calc(var(--kb) * .0255) calc(var(--kb) * .028))}
+
+/* ── Das Fenster ──
+   Rauchig durchscheinend. Die Wickel füllen es fast aus, die Größe kommt
+   in Prozent aus dem Skript — damit skaliert sie mit. */
+.kass .fenster{position:relative;z-index:2;flex-shrink:0;
+  height:calc(var(--kb) * .248);margin-top:calc(var(--kb) * .022);
+  border-radius:calc(var(--kb) * .012);
+  display:flex;align-items:center;justify-content:space-between;padding:0 calc(var(--kb) * .052);
+  background:var(--fenster);
+  box-shadow:inset 0 2px 5px rgba(40,30,20,.28),inset 0 -1px 0 rgba(255,255,255,.32),
+    0 0 0 1px rgba(60,50,34,.16)}
+.kass .fenster::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(158deg,rgba(255,255,255,.4),rgba(255,255,255,.03) 44%)}
+.kass .hub{width:calc(var(--kb) * .2);height:calc(var(--kb) * .2);position:relative;
+  display:grid;place-items:center}
+.kass .wickel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;
+  background:repeating-radial-gradient(circle,var(--band) 0 1px,var(--band-2) 1px 3px);
+  transition:width .3s,height .3s;
+  box-shadow:0 0 0 1px rgba(255,255,255,.14),inset 0 0 12px rgba(0,0,0,.32),
+    inset 5px -5px 12px rgba(255,255,255,.10)}
+.kass .kern{position:relative;z-index:2;width:36%;aspect-ratio:1;border-radius:50%;
+  background:conic-gradient(var(--kern) 0 12deg,rgba(0,0,0,.22) 12deg 30deg,var(--kern) 30deg 42deg,
+    rgba(0,0,0,.22) 42deg 60deg,var(--kern) 60deg 72deg,rgba(0,0,0,.22) 72deg 90deg,
+    var(--kern) 90deg 102deg,rgba(0,0,0,.22) 102deg 120deg,var(--kern) 120deg 132deg,
+    rgba(0,0,0,.22) 132deg 150deg,var(--kern) 150deg 162deg,rgba(0,0,0,.22) 162deg 180deg,
+    var(--kern) 180deg 192deg,rgba(0,0,0,.22) 192deg 210deg,var(--kern) 210deg 222deg,
+    rgba(0,0,0,.22) 222deg 240deg,var(--kern) 240deg 252deg,rgba(0,0,0,.22) 252deg 270deg,
+    var(--kern) 270deg 282deg,rgba(0,0,0,.22) 282deg 300deg,var(--kern) 300deg 312deg,
+    rgba(0,0,0,.22) 312deg 330deg,var(--kern) 330deg 342deg,rgba(0,0,0,.22) 342deg 360deg);
+  box-shadow:0 0 0 1px rgba(60,50,34,.35),0 1px 3px rgba(0,0,0,.3)}
+.kass .spanne{position:absolute;left:26%;right:26%;top:50%;height:calc(var(--kb) * .007);
+  transform:translateY(-50%);background:linear-gradient(var(--band-2),var(--band));
+  box-shadow:0 1px 0 rgba(255,255,255,.12)}
+
+/* ── Die Unterkante: fünf Öffnungen und der Andruckfilz ── */
+.kass .unterkante{position:relative;z-index:2;flex-shrink:0;
+  height:calc(var(--kb) * .07);margin:0 calc(var(--kb) * -.026);
+  padding:0 calc(var(--kb) * .09);
+  display:flex;align-items:center;justify-content:space-between}
+.kass .loch{width:calc(var(--kb) * .026);height:calc(var(--kb) * .026);border-radius:2px;
+  background:rgba(60,48,32,.40);box-shadow:inset 0 1px 2px rgba(0,0,0,.38)}
+.kass .loch.gross{width:calc(var(--kb) * .04);height:calc(var(--kb) * .032);border-radius:3px}
+.kass .filz{width:calc(var(--kb) * .1);height:calc(var(--kb) * .026);border-radius:2px;
+  background:var(--band-2);box-shadow:inset 0 1px 2px rgba(0,0,0,.42),0 -1px 0 rgba(255,255,255,.3)}
+
+/* ── Das Band als Achse ── */
+.kass .band{width:var(--kb);padding:6px 0 0;cursor:pointer;touch-action:none}
+.kass .lauf{position:relative;height:1px;background:rgba(60,50,34,.22)}
+.kass .fill{position:absolute;left:0;top:-1px;height:3px;background:var(--akzent);border-radius:2px}
+.kass .zeichen{position:absolute;top:-4px;width:1px;height:9px;background:rgba(60,50,34,.30)}
+.kass .zeiger{position:absolute;top:-6px;width:0;height:0;transform:translateX(-50%);
+  border-left:4px solid transparent;border-right:4px solid transparent;border-top:6px solid var(--druck)}
+.kass .times{display:flex;justify-content:space-between;margin-top:9px;
+  font-size:calc(var(--kb) * .0245);letter-spacing:.12em;
+  color:var(--nebendruck);font-variant-numeric:tabular-nums}
+
+/* ── Die Tasten ──
+   Gerundet und gefast statt hart geschnitten: der Radius ist groß genug,
+   dass die Kante Licht fängt, und der Sockel ist nur zwei Punkte hoch. */
+.kass .foot{flex-shrink:0;padding:calc(var(--kb) * .04) 30px 28px;
+  display:flex;align-items:center;justify-content:center;gap:calc(var(--kb) * .035)}
+.kass .tk,.kass .play{border-radius:calc(var(--kb) * .038);display:flex;align-items:center;
+  justify-content:center;cursor:pointer;transition:transform .1s,box-shadow .1s}
+.kass .tk{width:calc(var(--kb) * .17);height:calc(var(--kb) * .1);color:var(--druck);
+  background:linear-gradient(var(--taste),var(--taste-2));
+  box-shadow:0 0 0 1px var(--rand),0 2px 0 rgba(60,50,34,.14),
+    inset 0 1px 0 rgba(255,255,255,.95),inset 0 -2px 3px rgba(60,50,34,.08)}
+.kass .tk:active{transform:translateY(2px);
+  box-shadow:0 0 0 1px var(--rand),inset 0 2px 4px rgba(60,50,34,.26)}
+.kass .play{width:calc(var(--kb) * .22);height:calc(var(--kb) * .1);color:#FDFBF6;
+  background:linear-gradient(150deg,#9C7440,#7A5A2C);
+  box-shadow:0 2px 0 #5E4520,0 6px 12px rgba(122,90,44,.24),inset 0 1px 0 rgba(255,255,255,.35)}
+.kass .play:active{transform:translateY(2px);box-shadow:0 0 0 #5E4520,inset 0 2px 5px rgba(60,40,16,.4)}
+
+/* ── Quer: das Telefon liegt ──
+   Dieselben Bausteine, andere Anordnung — die Kassette links, Achse und
+   Tasten rechts. Im Einbau wäre das eine Medienabfrage, kein zweiter
+   Entwurf. */
+.phone.quer .kass .screen,.kass.quer .screen{display:grid;
+  grid-template-columns:minmax(0,1fr) 34%;grid-template-rows:auto minmax(0,1fr);
+  grid-template-areas:'kopf kopf' 'kass fuss';align-items:center}
+.quer .kass .lid,.kass.quer .lid{grid-area:kopf}
+.quer .kass .tisch,.kass.quer .tisch{grid-area:kass;padding:0 0 0 calc(var(--kb) * .07)}
+.quer .kass .foot,.kass.quer .foot{grid-area:fuss;flex-direction:column;justify-content:center;
+  padding:0 34px 0 calc(var(--kb) * .06);gap:calc(var(--kb) * .04)}
+.quer .kass .tk,.kass.quer .tk{width:calc(var(--kb) * .28);height:calc(var(--kb) * .1)}
+.quer .kass .play,.kass.quer .play{width:calc(var(--kb) * .28);height:calc(var(--kb) * .13)}
+.kass.quer{--kb:min(52cqw,430px)}
+
+/* Runde Tasten als Alternative — dieselbe Kassette, andere Bedienung */
+.kass.rundtasten .tk,.kass.rundtasten .play{border-radius:999px}
+.kass.rundtasten .tk{width:calc(var(--kb) * .11);height:calc(var(--kb) * .11)}
+.kass.rundtasten .play{width:calc(var(--kb) * .14);height:calc(var(--kb) * .14)}
+
+/* ══════════════════════════════════════════════════════════════════════
+   Fünf Sorten
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* A · Ferro — der Normaltyp: warm, matt, rotbraunes Band */
+.kass.k-a{background:radial-gradient(120% 80% at 50% 14%,#FBF7EE,#EFE7D6 66%,#E4D9C2);
+  --akzent:#A2621F;--band:#8A5B36;--band-2:#5E3A1F;--fenster:rgba(96,68,40,.24)}
+.kass.k-a .etikett{background:linear-gradient(#FFFDF7,#F6EEDC)}
+
+/* B · Chrom — kühler, glatter, eine Spur mehr Licht */
+.kass.k-b{background:radial-gradient(120% 80% at 50% 14%,#F7F8F9,#E9ECEF 66%,#DCE1E6);
+  --schale:#EFF1F3;--schale-2:#E0E4E9;--rand:rgba(40,50,60,.20);
+  --etikett:#F4F7FA;--druck:#26303A;--nebendruck:#7C8792;
+  --band:#6B5B4B;--band-2:#413730;--fenster:rgba(50,58,66,.26);
+  --kern:#E8EDF1;--akzent:#2C5F86;--taste:#F6F8FA;--taste-2:#E4E9EE}
+.kass.k-b .schale::after{background:linear-gradient(158deg,rgba(255,255,255,.78),rgba(255,255,255,0) 30%)}
+.kass.k-b .etikett{background:linear-gradient(#FFFFFF,#EDF2F6)}
+.kass.k-b .tt{font-family:var(--sans);font-style:normal;font-weight:600;
+  font-size:calc(var(--kb) * .05);letter-spacing:-.01em}
+.kass.k-b .play{background:linear-gradient(150deg,#3E7CA8,#245577);box-shadow:0 2px 0 #1B4360,
+  0 6px 12px rgba(36,85,119,.28),inset 0 1px 0 rgba(255,255,255,.4)}
+
+/* C · Metall — Perlweiß, Silberdruck, präzise */
+.kass.k-c{background:radial-gradient(120% 80% at 50% 12%,#FDFDFD,#EFEFF1 66%,#E2E2E6);
+  --schale:#FAFAFB;--schale-2:#EAEAEE;--rand:rgba(40,40,46,.18);
+  --etikett:#F6F6F8;--druck:#1F1F24;--nebendruck:#84848C;
+  --band:#5E5A54;--band-2:#3A3733;--fenster:rgba(46,46,52,.22);
+  --kern:#F2F2F4;--akzent:#7E7E88;--taste:#FBFBFC;--taste-2:#E9E9ED}
+.kass.k-c .etikett{background:linear-gradient(150deg,#FFFFFF,#EFEFF2 60%,#F8F8FA)}
+.kass.k-c .seite{background:linear-gradient(150deg,#B4B8BE,#82868E);color:#FFFFFF}
+.kass.k-c .tt{font-family:var(--sans);font-style:normal;font-weight:500;
+  font-size:calc(var(--kb) * .05);letter-spacing:.005em}
+.kass.k-c .play{background:linear-gradient(150deg,#DCDCE0,#A8A8B0);color:#26262C;
+  box-shadow:0 2px 0 #8C8C94,0 6px 12px rgba(60,60,70,.22),inset 0 1px 0 #fff}
+
+/* D · Rauchglas — die Schale ist durchsichtig ────────────────────────
+   Durchscheinen ist eine Frage der Reihenfolge, nicht der Farbe. Deshalb
+   liegen hier vier Lagen übereinander, und man sieht sie einzeln:
+
+     1  die Schale, halbdurchsichtig, mit zwei dunklen Höfen dort, wo die
+        Bandwickel liegen — sie enden nicht am Fenster, sie gehen weiter
+     2  das Band selbst, von Kante zu Kante, ohne Rahmen
+     3  die Kunststoffscheibe: halbdurchsichtiges Weiss mit schrägem Reflex
+        und Lichtkante — und backdrop-filter, das alles darunter leicht
+        unscharf zeichnet. Das ist der eigentliche Trick: was hinter Glas
+        liegt, ist nie ganz scharf
+     4  darüber, scharf und aufgeklebt: das Etikett, die Öffnungen der
+        Unterkante und die Schrauben — die sitzen ja aussen auf der Schale */
+.kass.k-d{background:radial-gradient(120% 80% at 50% 14%,#FAF8F4,#EDE9E1 66%,#E0DBD1);
+  --schale:rgba(238,232,222,.74);--schale-2:rgba(220,212,198,.74);--rand:rgba(70,58,44,.24);
+  --etikett:rgba(255,253,247,.94);--druck:#3A3226;--nebendruck:#8A7F6A;
+  --band:#6F4A2C;--band-2:#472A17;--fenster:rgba(120,96,68,.12);--akzent:#8A6534}
+/* 1 · die Schale, mit den Höfen der Wickel */
+.kass.k-d .schale{
+  background:
+    radial-gradient(circle at 24% 74%,rgba(84,51,30,.20) 0 15%,rgba(84,51,30,.07) 26%,transparent 40%),
+    radial-gradient(circle at 76% 74%,rgba(84,51,30,.20) 0 15%,rgba(84,51,30,.07) 26%,transparent 40%),
+    linear-gradient(163deg,var(--schale),var(--schale-2));
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 0 0 1px var(--rand),
+    0 calc(var(--kb) * .05) calc(var(--kb) * .1) rgba(70,58,44,.18)}
+/* 2 · das Band, von Kante zu Kante */
+.kass.k-d .fenster{z-index:1;
+  margin:calc(var(--kb) * .016) calc(var(--kb) * -.026) 0;
+  height:calc(var(--kb) * .29);border-radius:0;padding:0 calc(var(--kb) * .085);
+  background:var(--fenster);box-shadow:none}
+.kass.k-d .fenster::after{display:none}
+.kass.k-d .wickel{box-shadow:0 0 0 1px rgba(255,255,255,.16),inset 0 0 14px rgba(0,0,0,.26),
+  0 4px 12px rgba(84,51,30,.20)}
+/* 3 · die Kunststoffscheibe über allem, was innen liegt */
+.kass.k-d .schale::after{z-index:2;
+  -webkit-backdrop-filter:blur(1.4px);backdrop-filter:blur(1.4px);
+  background:linear-gradient(152deg,rgba(255,255,255,.60) 0 12%,rgba(255,255,255,.14) 24%,
+    rgba(255,255,255,.02) 42%,rgba(255,255,255,.04) 66%,rgba(255,255,255,.16) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(255,255,255,.55),
+    inset 0 0 0 1px rgba(255,255,255,.28)}
+/* 4 · was aussen auf der Schale sitzt, bleibt scharf */
+.kass.k-d .etikett{z-index:3;backdrop-filter:none}
+.kass.k-d .unterkante{z-index:4;margin-top:calc(var(--kb) * -.075)}
+.kass.k-d .schraube{z-index:5}
+.kass.k-d .oben{position:relative;z-index:3}
+
+/* E · Mixtape — Papieretikett, von Hand beschriftet */
+.kass.k-e{background:radial-gradient(120% 80% at 50% 14%,#FCFAF6,#F0EDE5 66%,#E5E0D5);
+  --schale:#FBFAF7;--schale-2:#EDEBE5;--rand:rgba(60,54,44,.18);
+  --etikett:#FFFEFB;--druck:#2E2A22;--nebendruck:#8C8578;
+  --band:#7A5236;--band-2:#553420;--fenster:rgba(74,60,44,.22);
+  --kern:#F4F1E9;--akzent:#3E5C8A;--taste:#FCFBF8;--taste-2:#EDEAE2}
+.kass.k-e .etikett{background:#FFFEFB;border-color:rgba(60,54,44,.20)}
+.kass.k-e .seite{border-radius:1px}
+.kass.k-e .tt{font-family:'Bradley Hand','Segoe Script','Snell Roundhand',var(--serif);
+  font-style:italic;font-size:calc(var(--kb) * .062);color:#26406A;
+  transform:rotate(-.7deg);transform-origin:left}
+.kass.k-e .by{font-family:'Bradley Hand','Segoe Script','Snell Roundhand',var(--serif);
+  font-size:calc(var(--kb) * .034);letter-spacing:.02em;text-transform:none;color:#4A6285;
+  transform:rotate(-.4deg);transform-origin:left}
+.kass.k-e .linien{background-image:repeating-linear-gradient(0deg,transparent 0 calc(var(--kb) * .0255),
+  rgba(62,92,138,.18) calc(var(--kb) * .0255) calc(var(--kb) * .028))}
+.kass.k-e .play{background:linear-gradient(150deg,#5B7FB0,#2F4E7A);box-shadow:0 2px 0 #24406A,
+  0 6px 12px rgba(47,78,122,.26),inset 0 1px 0 rgba(255,255,255,.4)}
+
+/* ── Kleinigkeiten, die aus dem neuen Etikett folgen ── */
+.kass .tt,.kass .by{display:block}
+
+/* ══════════════════════════════════════════════════════════════════════
+   Zwei weitere Geräte: liegendes Telefon und Tablett
+
+   Beide sind hier nur andere Container. Weil jedes Maß der Kassette aus
+   --kb kommt und --kb an cqw hängt, wächst der Entwurf mit dem Gerät,
+   ohne dass eine einzige Regel doppelt geschrieben wäre.
+   ══════════════════════════════════════════════════════════════════════ */
+.phone.quer{width:844px;height:390px;border-radius:52px;zoom:.72}
+@media (max-width:1000px){.phone.quer{zoom:.5}}
+.quer .notch{top:50%;left:11px;transform:translateY(-50%);width:31px;height:112px}
+.quer .homeind{bottom:50%;left:auto;right:9px;transform:translateY(50%);width:4px;height:126px}
+.quer .sbar{display:none}
+
+.phone.tab{width:834px;height:1112px;border-radius:34px;zoom:.46}
+@media (max-width:1000px){.phone.tab{zoom:.34}}
+.tab .notch{display:none}
+.tab .homeind{width:180px}
+.tab .sbar{padding:0 44px 9px;font-size:15px}
+</style>
+<style>
+/* ── Schluss ── */
+.closing{margin-top:96px;padding-top:46px;border-top:1px solid var(--line-2);
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px}
+@media (max-width:1000px){.closing{grid-template-columns:1fr;gap:36px}}
+.closing h2{font-family:var(--serif);font-size:24px;font-weight:400;margin-bottom:16px}
+.closing p{color:var(--ink-2);font-size:14.5px;margin-bottom:14px}
+.closing p b{color:var(--ink);font-weight:600}
+.closing ul{list-style:none;border-top:1px solid var(--line)}
+.closing li{padding:13px 0;border-bottom:1px solid var(--line);font-size:14px;color:var(--ink-2);
+  display:grid;grid-template-columns:20px 1fr;gap:12px}
+.closing li .m{color:var(--brass)}
+.closing li b{color:var(--ink);font-weight:600}
+footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--line-2);font-family:var(--sans);
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+  display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}}
+</style>
+
+<div class="page">
+  <div class="masthead">
+    <div class="caps">Musiklib — Entwurf W, zweiter Anlauf</div>
+    <h1>Fünf <em>Kassetten</em></h1>
+    <p class="lede">Dritter Anlauf, und diesmal stimmt zuerst das <b>Format</b>: eine Compact Cassette misst
+    100,4 × 63,8 mm — sie ist also deutlich breiter als hoch (1,57 : 1). Meine war fast quadratisch, und
+    deshalb sah sie nach allem Möglichen aus, nur nicht nach einer Kassette. Dazu ein <b>Etikett, das trägt,
+    was ein Etikett trägt</b> (Seitenfeld, Schreiblinie, Typ- und Längenangabe am Rand), <b>gerundete
+    Tasten</b> statt harter Rechtecke — und eine Größe, die dem Gerät folgt: quer wie hoch, am Telefon wie
+    am Tablett.</p>
+    <div class="legende">
+      <div><dt>Gemeinsam</dt><dd>Die Wickel sind die Anzeige: links wird weniger, rechts mehr.</dd></div>
+      <div><dt>Gemeinsam</dt><dd>Der Haarstrich unter der Kassette ist die genaue Achse — dort wird gespult.</dd></div>
+      <div><dt>Unterschied</dt><dd>Schale, Etikett, Bandton und Licht — fünf reale Kassettensorten.</dd></div>
+      <div><dt>Größe</dt><dd><code>--kb = min(90cqw, 600px)</code>: jedes Maß im Entwurf ist ein Bruchteil davon.</dd></div>
+    </div>
+  </div>
+  <div class="rule"></div>
+
+  <div class="chapter">
+    <div class="head">
+      <div class="caps">Fünf Sorten</div>
+      <h2>Dieselbe Mechanik, fünf Materialien</h2>
+      <p>Kassetten gab es in Typen — Ferro, Chrom, Metall —, und die sahen wirklich verschieden aus: anderer
+      Kunststoff, anderes Etikett, anderer Bandton. Dazu zwei, die es genauso gab: die <b>durchscheinende
+      Schale</b>, durch die man den ganzen Wickel sieht, und das <b>von Hand beschriftete Mixtape</b>.</p>
+    </div>
+    <div class="matrix">
+      <div class="probe">
+        <div class="phone kass k-a" data-m="K"></div>
+        <div class="txt"><h4><span class="no">A</span>Ferro</h4>
+          <p>Der Normaltyp: cremefarbene Schale, warmes Papieretikett, <b>rotbraunes Band</b>. Matt, mit einer
+          einzigen Lichtkante über dem oberen Drittel — mehr Glanz hat gespritztes Polystyrol nicht.</p>
+          <div class="stoff">Creme · Eisenoxid · Ocker</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone kass k-b" data-m="K"></div>
+        <div class="txt"><h4><span class="no">B</span>Chrom</h4>
+          <p>Kühler und glatter: graublaue Schale mit stärkerem Licht, Etikett in Serifenlos, dunkleres Band.
+          Chromdioxid war die <b>bessere Kassette</b> — das sah man ihr an, und genau das macht diese Fassung
+          nach.</p>
+          <div class="stoff">Graublau · Kobalt · glatte Schale</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone kass k-c" data-m="K"></div>
+        <div class="txt"><h4><span class="no">C</span>Metall</h4>
+          <p>Perlweiße Schale, <b>Silberdruck</b> auf dem Etikett, präzise Typografie, ein grauer Bandton. Die
+          teuerste Sorte hat als einzige keine Farbe — nur Metall, Weiß und Schwarz.</p>
+          <div class="stoff">Perlweiß · Silberdruck · Anthrazit</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone kass k-d" data-m="K"></div>
+        <div class="txt"><h4><span class="no">D</span>Rauchglas</h4>
+          <p>Die durchsichtige Schale — es gab sie wirklich, und sie braucht kein Fenster mehr: man sieht
+          <b>durch den Kunststoff hindurch</b> auf beide Wickel.</p>
+          <p><b>Durchscheinen ist eine Frage der Reihenfolge</b>, nicht der Farbe. Vier Lagen liegen hier
+          übereinander, und man sieht sie einzeln: die halbdurchsichtige Schale mit zwei dunklen Höfen dort,
+          wo die Wickel liegen — sie enden nicht am Fenster, sie gehen weiter; darüber das Band von Kante zu
+          Kante; darüber die <b>Kunststoffscheibe</b> mit schrägem Reflex und Lichtkante, die alles darunter
+          leicht unscharf zeichnet; und ganz oben, scharf, das aufgeklebte Etikett samt Öffnungen und
+          Schrauben — die sitzen ja außen.</p>
+          <div class="note"><b>Der eigentliche Trick</b> ist die Unschärfe: was hinter Glas liegt, ist nie
+          ganz scharf. Ohne sie sah die Fassung vorher nur nach „hellbeige" aus, weil hinter einer
+          durchsichtigen Fläche nichts lag, was sich verändert.</div>
+          <div class="stoff">Vier Lagen · Scheibe mit Reflex · Messing</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone kass k-e" data-m="K"></div>
+        <div class="txt"><h4><span class="no">E</span>Mixtape</h4>
+          <p>Weißes Papieretikett, <b>von Hand beschriftet</b>, die Zeile leicht schief wie geschrieben, blaue
+          Tinte auf gedruckten Linien. Der einzige Entwurf hier, der nach einer bestimmten Person aussieht und
+          nicht nach einem Produkt.</p>
+          <div class="stoff">Papier · Tinte · Handschrift</div></div>
+      </div>
+      <div class="probe">
+        <div class="txt" style="margin-top:6px">
+          <h4><span class="no">Was sich geändert hat</span>Gegenüber dem zweiten Anlauf</h4>
+          <p><b>Das Format.</b> 1,57 : 1 statt fast quadratisch — die Schale hält es über
+          <code>aspect-ratio</code>, alles darin verteilt sich. Das allein macht mehr aus als jede Farbe.</p>
+          <p><b>Das Etikett.</b> Links das farbige Seitenfeld mit dem A, in der Mitte Titel und Interpret,
+          rechts Typ und Länge, unten die gedruckte Schreiblinie. So ist jedes Leeretikett aufgebaut.</p>
+          <p><b>Die Tasten.</b> Nicht mehr hart geschnitten, sondern <b>gerundet und gefast</b>: der Radius
+          ist groß genug, dass die Kante Licht fängt, der Sockel nur zwei Punkte hoch. Eine Alternative mit
+          runden Tasten steht weiter unten.</p>
+          <div class="note"><b>Mein Favorit:</b> D. Sobald die Schale durchscheint, braucht die Anzeige kein
+          Fenster mehr — der Gegenstand zeigt seinen Zustand ganz von selbst. B ist die zweitbeste, weil sie
+          am wenigsten nach Bastelei aussieht.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="head">
+      <div class="caps">Quer, groß und rund</div>
+      <h2>Dasselbe auf jedem Gerät</h2>
+      <p>Die Kassette hat jetzt eine Breite und keine Punktzahl: <code>--kb = min(90cqw, 600px)</code>. Sie
+      folgt dem Gerät und hört bei 600 Punkten auf; jedes Maß darin — Etikettenrand, Wickel, Schriftgrößen,
+      Tastenhöhe — ist ein Bruchteil davon. <b>Das Telefon quer und das Tablett brauchen deshalb keine zweite
+      Zeichnung</b>, nur eine andere Anordnung.</p>
+    </div>
+    <div class="solo">
+      <div class="phone kass k-a quer" data-m="K"></div>
+      <div class="col"><div class="text">
+        <h3><span class="no">Quer</span>Wenn das Telefon liegt</h3>
+        <p>Die Kassette rückt nach links und wird größer, Achse und Tasten stehen rechts als Spalte. Es ist
+        dieselbe Kassette und derselbe Bandlauf — <b>nur das Raster des Bildschirms ist ein anderes</b>. Im
+        Einbau wäre das eine <code>@media (orientation: landscape)</code>-Regel, kein zweiter Entwurf.</p>
+        <p>Weil eine Kassette breiter als hoch ist, ist das Querformat für sie sogar die natürlichere
+        Haltung: sie füllt die Fläche, statt Luft über und unter sich zu lassen.</p>
+        <div class="stoff">Raster statt Zeichnung · dieselben Bausteine</div>
+      </div></div>
+    </div>
+    <div class="matrix">
+      <div class="probe">
+        <div class="phone kass k-a tab" data-m="K"></div>
+        <div class="txt"><h4><span class="no">Tablett</span>Größer, nicht breiter gezogen</h4>
+          <p>Auf 834 Punkten Breite wächst die Kassette auf ihre Obergrenze von 600 Punkten — und mit ihr die
+          Schrift, die Wickel und die Tasten. <b>Nichts wird verzerrt</b>, alles wird größer. Darüber hinaus
+          bleibt sie stehen; ein Gegenstand, der die halbe Wand einnimmt, sieht nicht mehr nach Kassette
+          aus.</p>
+          <div class="stoff">min(90cqw, 600px) · Container-Einheiten</div></div>
+      </div>
+      <div class="probe">
+        <div class="phone kass k-b rundtasten" data-m="K"></div>
+        <div class="txt"><h4><span class="no">Alternative</span>Runde Tasten</h4>
+          <p>Statt gerundeter Rechtecke drei Kreise — näher an einem Walkman-Bedienfeld als an einem
+          Kassettendeck. Sie brauchen weniger Breite und stehen ruhiger unter der Kassette; dafür verlieren
+          sie den Anklang an die Tastenreihe, die ein Deck hatte.</p>
+          <div class="stoff">Kreis statt Rechteck · dieselbe Fase</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="closing">
+    <div>
+      <h2>Warum das trägt</h2>
+      <p><b>Die Wickel sind die ehrlichste Anzeige auf der ganzen Entwurfsseite.</b> Sie sagen nicht „62
+      Prozent", sondern „das meiste ist noch da" — und zwar für die ganze Warteschlange, nicht für den
+      laufenden Titel. Dafür braucht es keine Zahl und keinen Balken.</p>
+      <p><b>Retro heißt hier Mechanik, nicht Patina.</b> Keine Kratzer, keine vergilbten Etiketten, kein
+      Schmutz. Nachgebaut ist nur, was etwas tut: Wickel, Kern, Bandführung, Filz. Alles andere ist Form.</p>
+      <p>Wenn eine davon ein Thema werden soll, sag mir den Buchstaben — sie ließe sich als Form
+      <code>kassette</code> neben die vier bestehenden stellen. Die Achse wäre der Haarstrich unter der
+      Schale, wie hier.</p>
+    </div>
+    <div>
+      <h2>Was das im Code bedeutet</h2>
+      <ul>
+        <li><span class="m">→</span><span><b>Ein Entwurf, fünf Fassungen.</b> Die Fassung ist eine zweite
+        Klasse am selben Telefon (<code>.kass.k-b</code>) und setzt nur Farben und Oberflächen — Markup und
+        Mechanik sind fünfmal dieselben.</span></li>
+        <li><span class="m">→</span><span><b>Die Wickelgröße folgt der Zeit</b>, nicht umgekehrt: zwei Kreise,
+        deren Durchmesser aus <code>gpos / total</code> kommt — in Prozent der Nabe, damit sie mitwächst.
+        Das ist die ganze Rechnung.</span></li>
+        <li><span class="m">→</span><span><b>Container-Einheiten statt Bildschirm-Einheiten.</b>
+        <code>cqw</code> misst den Player, nicht das Fenster. Deshalb stimmt die Größe auch dann, wenn der
+        Player später einmal nicht die ganze Seite füllt.</span></li>
+        <li><span class="m">→</span><span><b>Der Schatten durch die Schale</b> (Fassung D) ist ein
+        weichgezeichneter Verlauf hinter dem Etikett — kein zweites Bild, keine Maske.</span></li>
+        <li><span class="m">→</span><span><b>Die Handschrift</b> (Fassung E) benutzt Systemschriften; wo keine
+        vorhanden ist, fällt sie auf die Serifenschrift zurück. Das ist der einzige Entwurf hier, dessen
+        Wirkung vom Gerät abhängt.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <span>Musiklib — mobile.html</span>
+    <span>Fünf Kassetten · A bis E</span>
+  </footer>
+</div>
+
+
+<script>
+'use strict';
+
+/* ═════════ Daten ═════════
+   Ein Album, zwölfmal dasselbe — damit die Entwürfe vergleichbar bleiben.
+   Die Farben stehen für das echte Cover aus /api/cover. */
+const ALBUM = {
+  t:'All Melody', ar:'Nils Frahm', y:2018,
+  c:['#F0B266','#E2645F','#6E86B8'],
+  tr:[['Sunson',536],['A Place',322],['My Friend The Forest',272],
+      ['Human Range',415],['Kaleidoscope',372],['Momentum',248]]
+};
+const grad = `linear-gradient(152deg,${ALBUM.c[0]},${ALBUM.c[1]} 54%,${ALBUM.c[2]})`;
+
+const fmt = s => { s = Math.max(0,Math.round(s)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
+const fmtLang = s => { s = Math.round(s); const h = Math.floor(s/3600), m = Math.round(s%3600/60);
+  return h ? `${h} Std ${m} Min` : `${m} Min`; };
+const clamp = (v,a,b) => Math.min(b,Math.max(a,v));
+const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+/* ═════════ Zeichen ═════════ */
+const PREV = '<svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19 20L9 12l10-8v16zM5 4h2v16H5z"/></svg>';
+const NEXT = '<svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M5 4l10 8-10 8V4zm14 0h2v16h-2z"/></svg>';
+const TRI_L = '<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M18 4v16L6 12z"/></svg>';
+const TRI_R = '<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l12 8-12 8z"/></svg>';
+const PLAY = w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
+const PAUSE = w => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4.5h3.4v15H6zM14.6 4.5H18v15h-3.4z"/></svg>`;
+const line = (d,w=1.5) => `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+  stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const CHEV  = line('<path d="M6 9l6 6 6-6"/>');
+const DOTS  = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>';
+const LISTE = line('<path d="M4 7h16M4 12h16M4 17h10"/>');
+const ZURUECK = line('<path d="M15 6l-6 6 6 6"/>');
+const NOTE  = line('<path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.6"/><circle cx="16.5" cy="16" r="2.6"/>');
+const LAUT  = line('<path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9.5a4 4 0 010 5"/>');
+const SCHEIBE = line('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="2.2"/>');
+const SBAR = `<div class="sbar"><span>9:41</span><div class="ic">
+ <svg width="15" height="11" viewBox="0 0 14 10" fill="currentColor"><rect y="6.5" width="2.2" height="3.5" rx="1"/><rect x="3.8" y="4" width="2.2" height="6" rx="1"/><rect x="7.6" y="1.5" width="2.2" height="8.5" rx="1"/><rect x="11.4" width="2.2" height="10" rx="1" opacity=".35"/></svg>
+ <svg width="23" height="11" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="20" height="11" rx="3.5" stroke="currentColor" stroke-opacity=".35"/><rect x="2" y="2" width="14" height="8" rx="2" fill="currentColor"/></svg>
+</div></div>`;
+
+/* Bausteine: Hülle (Quadrat), Scheibe (Kreis), Warteschlangenzeilen */
+const HUELLE = (size,cls='cover art',extra='') =>
+  `<div class="${cls}" style="background:${grad};${extra}"><div class="sheen"></div>
+   <span class="ini" style="font-size:${size}px">A</span></div>`;
+const SCHEIBEN = `<span class="wash"></span><span class="core"></span>`;
+const QROWS = () => ALBUM.tr.map(([t,d],i) => `<div class="qrow" data-jump="${i}" data-row="${i}">
+  <span class="n">${i+1}</span><span class="t">${esc(t)}</span><span class="d">${fmt(d)}</span></div>`).join('');
+const ZEILEN = () => ALBUM.tr.map(([t,d],i) => `<div class="zeile" data-jump="${i}" data-row="${i}">
+  <span class="n">${i+1}</span><span class="t">${esc(t)}</span><span class="d">${fmt(d)}</span></div>`).join('');
+const SHELL = inner => `<div class="notch"></div>${SBAR}<div class="screen">${inner}</div><div class="homeind"></div>`;
+
+/* Der Ring: Fortschritt über die ganze Warteschlange, ein Punkt je Titel.
+   Das SVG ist per CSS um 90° gedreht — Winkel 0 liegt damit oben. */
+const R_RING = 47, U_RING = 2 * Math.PI * R_RING;
+const punkt = (f,r) => [50 + r*Math.cos(2*Math.PI*f), 50 + r*Math.sin(2*Math.PI*f)];
+const RING = () => {
+  let o = [], a = 0;
+  for (const [,d] of ALBUM.tr){ o.push(a); a += d; }
+  const T = a;
+  const pins = o.map((v,i) => { const [x,y] = punkt(v/T, R_RING);
+    return `<circle class="pin" data-pin="${i}" cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="2.3"/>`; }).join('');
+  return `<svg viewBox="0 0 100 100">
+    <circle class="track" cx="50" cy="50" r="${R_RING}"/>
+    <circle class="prog" data-arc cx="50" cy="50" r="${R_RING}"
+      stroke-dasharray="${U_RING.toFixed(2)}" stroke-dashoffset="${U_RING.toFixed(2)}"/>
+    ${pins}<circle class="knob" data-rknob cx="${50+R_RING}" cy="50" r="4"/></svg>`;
+};
+
+/* ═════════ Die zwölf Entwürfe ═════════
+   Jeder liefert sein Markup und, falls er etwas Eigenes anzeigt, ein sync().
+   Alles Gemeinsame — Titel, Zeiten, Balken, Knopf, Zeilen — macht die Klasse. */
+const D = {};
+
+/* ═════════ Die Kassette ═════════
+   Ein Entwurf, fünf Fassungen: die Fassung ist eine zweite Klasse am
+   Telefon (.kass.k-b), sie ändert Schale, Etikett, Band und Licht. */
+const W_LEER = 34, W_VOLL = 98;   // Prozent der Wickelnabe
+D.K = { html: () => {
+  let o = [], a = 0; for (const [,d] of ALBUM.tr){ o.push(a); a += d; }
+  const T = a;
+  return `
+  <div class="lid"><span class="ic">${CHEV}</span><span class="cap">Seite A</span>
+    <span class="ic" data-act="sheet">${LISTE}</span></div>
+  <div class="tisch">
+    <div class="schale">
+      <span class="schraube o1"></span><span class="schraube o2"></span>
+      <span class="schraube u1"></span><span class="schraube u2"></span>
+      <span class="schraube m"></span>
+      <div class="oben"><span class="nase"></span><span class="nase"></span></div>
+      <div class="etikett">
+        <div class="kopf">
+          <span class="seite">A</span>
+          <span class="zeile">
+            <span class="tt" data-title></span>
+            <span class="by"><span data-artist></span> — <span data-album></span></span>
+          </span>
+          <span class="typ">Normal · Type I<br><span data-count></span> · <span data-restq></span></span>
+        </div>
+        <div class="linien"></div>
+      </div>
+      <div class="fenster">
+        <div class="spanne"></div>
+        <div class="hub"><div class="wickel" data-wl></div><div class="kern spin"></div></div>
+        <div class="hub"><div class="wickel" data-wr></div><div class="kern spin"></div></div>
+      </div>
+      <div class="unterkante">
+        <span class="loch gross"></span><span class="loch"></span>
+        <span class="filz"></span>
+        <span class="loch"></span><span class="loch gross"></span>
+      </div>
+    </div>
+    <div class="band" data-seekq>
+      <div class="lauf">
+        ${o.map((v,i) => `<div class="zeichen" data-tick="${i}" style="left:${(v/T*100).toFixed(2)}%"></div>`).join('')}
+        <div class="fill" data-barq></div><div class="zeiger" data-markq></div>
+      </div>
+      <div class="times"><span data-elapsed></span><span data-remain></span></div>
+    </div>
+  </div>
+  <div class="foot">
+    <span class="tk" data-act="prev">${PREV}</span>
+    <span class="play" data-pp data-size="18"></span>
+    <span class="tk" data-act="next">${NEXT}</span>
+  </div>
+  <div class="scrim" data-act="sheet"></div>
+  <div class="sheet"><div class="grip"></div><div class="qh">Bandlauf</div>
+    <div class="qbody">${QROWS()}</div></div>`; },
+  sync(p){
+    // Links wird der Wickel kleiner, rechts groesser — das ist die ganze Anzeige.
+    const f = p.gpos / p.total;
+    const links = W_VOLL - (W_VOLL - W_LEER) * f, rechts = W_LEER + (W_VOLL - W_LEER) * f;
+    const w = p.$('[data-wl]'), r = p.$('[data-wr]');
+    w.style.width = w.style.height = links.toFixed(1) + '%';
+    r.style.width = r.style.height = rechts.toFixed(1) + '%';
+  } };
+
+/* ═════════ Das gemeinsame Modell ═════════ */
+class Player {
+  constructor(m, root){
+    this.m = m; this.root = root; this.d = D[m];
+    this.qi = 2; this.pos = 88; this.playing = true; this.open = false; this.drag = false;
+    root.innerHTML = SHELL(this.d.html());
+    this.wire();
+    this.sync(true);
+  }
+  $(s){ return this.root.querySelector(s); }
+  $$(s){ return [...this.root.querySelectorAll(s)]; }
+  txt(s,v){ this.$$(s).forEach(n => n.textContent = v); }
+  get cur(){ return ALBUM.tr[this.qi]; }
+  get offs(){ let o = [], a = 0; for (const [,d] of ALBUM.tr){ o.push(a); a += d; } return o; }
+  get total(){ return ALBUM.tr.reduce((s,[,d]) => s+d, 0); }
+  get gpos(){ return this.offs[this.qi] + this.pos; }
+  idxAt(v){ const o = this.offs; for (let k = o.length-1; k >= 0; k--) if (v >= o[k]) return k; return 0; }
+
+  /* ── Bedienung ── */
+  wire(){
+    this.$$('[data-act]').forEach(n => n.addEventListener('click', e => {
+      e.stopPropagation(); this.act(n.dataset.act); }));
+    // Jeder Abspielknopf schaltet um — auch die, die nur data-pp tragen.
+    this.$$('[data-pp]').forEach(n => { if (!n.dataset.act)
+      n.addEventListener('click', e => { e.stopPropagation(); this.toggle(); }); });
+    this.$$('[data-jump]').forEach(n => n.addEventListener('click', () => {
+      this.qi = +n.dataset.jump; this.pos = 0; this.playing = true; this.sync(true); }));
+    this.$$('[data-seek]').forEach(n => this.bindSeek(n, false));
+    this.$$('[data-seekq]').forEach(n => this.bindSeek(n, true));
+    const ring = this.$('[data-ring]');
+    if (ring) this.bindRing(ring);
+  }
+  act(a){
+    if (a === 'pp') this.toggle();
+    else if (a === 'next') this.next();
+    else if (a === 'prev') this.prev();
+    else if (a === 'sheet') this.setOpen(!this.open);
+    else if (a === 'tonow'){ const n = this.$(`[data-row="${this.qi}"]`);
+      if (n) n.scrollIntoView({block:'center', behavior:'smooth'}); }
+  }
+  setOpen(v){ this.open = v; this.root.classList.toggle('open', v); }
+  toggle(){ this.playing = !this.playing; this.sync(true); }
+  next(){ if (this.qi < ALBUM.tr.length-1){ this.qi++; this.pos = 0; } else this.pos = this.cur[1]-0.5;
+    this.sync(true); }
+  prev(){ if (this.pos > 3 || this.qi === 0) this.pos = 0; else { this.qi--; this.pos = 0; }
+    this.sync(true); }
+
+  /* Waagerechtes Ziehen: der Balken zeigt den laufenden Titel, nicht die Schlange. */
+  bindSeek(el, global){
+    const at = e => { const r = el.getBoundingClientRect();
+      return clamp((e.clientX - r.left)/r.width, 0, 1); };
+    // Manche Entwuerfe legen die ganze Warteschlange auf eine Achse (Kassette,
+    // Skala) statt nur den laufenden Titel — dann wird global gesetzt.
+    const setz = f => { if (!global){ this.pos = f * this.cur[1]; return; }
+      const v = clamp(f * this.total, 0, this.total - 0.5), i = this.idxAt(v);
+      this.qi = i; this.pos = v - this.offs[i]; };
+    // Der Balken liegt in Entwurf P innerhalb einer Zeile, die selbst anspringt —
+    // ohne dieses Abfangen wuerde jedes Spulen den Titel neu starten.
+    el.addEventListener('click', e => e.stopPropagation());
+    el.addEventListener('pointerdown', e => {
+      e.stopPropagation(); this.drag = true; el.setPointerCapture(e.pointerId);
+      setz(at(e)); this.sync(); });
+    el.addEventListener('pointermove', e => { if (this.drag){ setz(at(e)); this.sync(); } });
+    const end = () => { this.drag = false; this.sync(true); };
+    el.addEventListener('pointerup', end);
+    el.addEventListener('pointercancel', end);
+  }
+  /* Rundes Ziehen: der Ring trägt die ganze Warteschlange, also wird global
+     gesetzt — dieselbe Rechnung wie am Rand, nur mit einem Winkel. */
+  bindRing(el){
+    const at = e => { const r = el.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width/2), dy = e.clientY - (r.top + r.height/2);
+      let a = Math.atan2(dx, -dy); if (a < 0) a += 2*Math.PI;
+      return a / (2*Math.PI) * this.total; };
+    const setG = v => { v = clamp(v, 0, this.total - 0.5); const i = this.idxAt(v);
+      this.qi = i; this.pos = v - this.offs[i]; this.sync(); };
+    let moved = false, sx = 0, sy = 0, down = false;
+    el.addEventListener('pointerdown', e => {
+      // Nur am Ring wird gezogen — in der Mitte sitzt der Knopf.
+      const r = el.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width/2), dy = e.clientY - (r.top + r.height/2);
+      if (Math.hypot(dx,dy) < r.width * 0.30) return;
+      down = true; moved = false; sx = e.clientX; sy = e.clientY;
+      el.setPointerCapture(e.pointerId);
+    });
+    el.addEventListener('pointermove', e => {
+      if (!down) return;
+      if (!moved && Math.hypot(e.clientX-sx, e.clientY-sy) > 6){
+        moved = true; this.drag = true; el.classList.add('grabbing');
+      }
+      if (moved) setG(at(e));
+    });
+    const end = () => { if (!down) return; down = false;
+      if (moved){ this.drag = false; el.classList.remove('grabbing'); }
+      this.sync(true); };
+    el.addEventListener('pointerup', end);
+    el.addEventListener('pointercancel', end);
+  }
+
+  tick(dt){
+    if (!this.playing || this.drag) return;
+    this.pos += dt;
+    if (this.pos >= this.cur[1]){
+      if (this.qi < ALBUM.tr.length-1){ this.qi++; this.pos = 0; }
+      else { this.pos = this.cur[1]-0.5; this.playing = false; }
+      this.sync(true); return;
+    }
+    this.sync();
+  }
+
+  /* ── Anzeige ── */
+  sync(hart){
+    const [t,d] = this.cur, f = clamp(this.pos/d, 0, 1), p = (f*100).toFixed(2) + '%';
+    this.$$('[data-bar]').forEach(n => n.style.width = p);
+    this.$$('[data-knob]').forEach(n => n.style.left = p);
+    this.$$('[data-mark]').forEach(n => n.style.left = p);
+    const q = (this.gpos/this.total*100).toFixed(2) + '%';
+    this.$$('[data-barq]').forEach(n => n.style.width = q);
+    this.$$('[data-markq]').forEach(n => n.style.left = q);
+    this.txt('[data-elapsed]', fmt(this.pos));
+    this.txt('[data-dur]', fmt(d));
+    this.txt('[data-remain]', '−' + fmt(d - this.pos));
+    this.txt('[data-restq]', fmtLang(this.total - this.gpos));
+
+    if (hart || this._lt !== t){
+      this._lt = t;
+      this.txt('[data-title]', t);
+      this.txt('[data-artist]', ALBUM.ar);
+      this.txt('[data-album]', ALBUM.t);
+      this.txt('[data-count]', `${this.qi+1} / ${ALBUM.tr.length}`);
+      this.txt('[data-nexttitle]', this.qi < ALBUM.tr.length-1
+        ? ALBUM.tr[this.qi+1][0] : 'Ende der Warteschlange');
+      this.$$('[data-row]').forEach(n => { const i = +n.dataset.row;
+        n.classList.toggle('now', i === this.qi);
+        n.classList.toggle('past', i < this.qi); });
+    }
+    if (hart || this._lp !== this.playing){
+      this._lp = this.playing;
+      this.root.classList.toggle('playing', this.playing);
+      this.$$('[data-pp]').forEach(n => { const w = +n.dataset.size || 22;
+        n.innerHTML = this.playing ? PAUSE(w) : PLAY(w+2); });
+    }
+    if (this.d.sync) this.d.sync(this);
+  }
+}
+
+/* ═════════ Start ═════════
+   Zwölf Telefone auf einer Seite: gerechnet wird zehnmal je Sekunde, nicht
+   sechzigmal — die Zeiten laufen sichtbar, das Gerät bleibt kühl. */
+
+/* ═════════ Start ═════════ */
+const players = [...document.querySelectorAll('.phone')].map(el => new Player(el.dataset.m, el));
+setInterval(() => players.forEach(p => p.tick(0.12)), 120);
+</script>
+</body>
+</html>
