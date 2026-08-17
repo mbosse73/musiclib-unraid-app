@@ -274,7 +274,7 @@ dialog::backdrop{{background:rgba(0,0,0,.86)}}
 
 <div class="seite">
   <header class="kopfz">
-    <div class="caps">Musiklib · Stand 16. August 2026 · acht Themen portiert</div>
+    <div class="caps">Musiklib · Stand 17. August 2026 · die Auswahl ist eine Anprobe</div>
     <h1>Sechsundsiebzig Spieler, <em>vier</em> Zustände</h1>
     <p class="lede">Alle Konzepte aus vier Quellen — dem gebauten Programm, den Mockup-Blättern,
     dem gelieferten Design-Paket und den eigenen Entwürfen — in <b>einer</b>
@@ -296,9 +296,20 @@ dialog::backdrop{{background:rgba(0,0,0,.86)}}
     Zustände — dort ist nichts abzulesen, dort ist zu entscheiden. Hausregel für Bewegung:
     sparsam, bewegt wird nur, was den Stand zeigt. Dieselben Angaben liegen als
     <code>design/BAUANLEITUNG.md</code> im Repo.</p>
-    <p class="lede">Alles hier steht auf <code>main</code>. Die Testsuite ist von 148 auf
-    <b>164</b> gewachsen — die acht durchlaufen dieselben Zusagen wie die fünf Telefon-Auslagen
-    vor ihnen, samt „bleibt im Bildschirm".</p>
+    <p class="lede"><b>Ausgewählt wird jetzt durch Aufsetzen.</b> Der Einstellungsdialog bot die
+    Auslagen als Textkacheln an — Name, Gerät, ein Satz —, man wählte blind und der Dialog schloss
+    sich sofort. Seit dieser Fassung führt ein Tor in die <b>Anprobe</b>: die Ansicht steht sofort
+    über den ganzen Schirm, mit dem laufenden Titel darin, unten blättert ein nach <b>Familien</b>
+    gegliederter Streifen weiter, am Ende steht Behalten oder Abbrechen. Für dieses Register heisst
+    das zweierlei — eine Portierung lässt sich künftig <i>ansehen</i> statt beschreiben, und jede
+    neue Auslage braucht neben CSS und <code>layout({{…}})</code> eine Zeile in
+    <code>SIGNETE</code>, sonst bleibt ihre Kachel im Streifen leer. Gebaut nach
+    <code>mockups/player/27-anprobe.html</code>; der Gegenentwurf 26 „Schaukasten" steht daneben
+    und ist nicht genommen.</p>
+    <p class="lede">Alles hier steht auf <code>main</code>, und seit dieser Woche prüft das ein
+    Workflow bei jedem Push: die Testsuite ist von 148 auf <b>167</b> gewachsen und darf in der CI
+    keinen einzigen Test überspringen — ohne Browser überspränge sich die halbe Suite still und
+    meldete trotzdem grün.</p>
     <div class="ledger">{ledger_html}</div>
   </header>
 

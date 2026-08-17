@@ -16,8 +16,9 @@ OFFEN = [
   'ein Konzept werden soll, sag welche.'),
  ('Einundzwanzig gezeichnete Blätter warten auf eine Entscheidung',
   'K27–K47 sind fertig durchgezeichnet und keines portiert. Von allem hier ist das der billigste '
-  'Zuwachs: ein CSS-Block und ein <code>layout({…})</code>. K39 Eisblau hochkant ist die einzige '
-  'Telefon-Fassung darunter.'),
+  'Zuwachs: ein CSS-Block, ein <code>layout({…})</code> — und seit der Anprobe eine dritte '
+  'Kleinigkeit: eine Zeile in <code>SIGNETE</code> für die Familie, sonst bleibt die Kachel im '
+  'Auswahlstreifen leer. K39 Eisblau hochkant ist die einzige Telefon-Fassung darunter.'),
  ('Etappe 5 ist nicht angefangen',
   'Vierzehn Paket-Konzepte (K48–K61), kein einziges portiert. Pilot ist K58 Music Sounds Better. K49 und K50 sind die Sonderfälle: die zwei überlebenden Fassungen des gestrichenen Blattes 33 — dort ist zuerst zu entscheiden, ob eine davon 33 ersetzt.'),
  ('Fünfzehn eigene Entwürfe warten auf eine Entscheidung',
