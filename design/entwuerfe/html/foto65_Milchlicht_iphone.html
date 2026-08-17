@@ -1,0 +1,109 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:2340px;overflow:hidden}
+.stage{position:relative;width:1080px;height:2340px;overflow:hidden}
+
+.stage{background:linear-gradient(180deg,#2E3134 0%,#232628 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:rgba(234,244,248,.86);-webkit-font-smoothing:antialiased}
+.kap{letter-spacing:.24em;text-transform:uppercase;color:rgba(234,244,248,.40);
+  font-weight:500}
+.bib{display:inline-flex;align-items:center;color:rgba(234,244,248,.52);
+  letter-spacing:.22em;text-transform:uppercase;font-weight:500}
+
+/* ── Die Blende: mattes Anthrazit, in das die Fenster eingelassen sind ── */
+.blende{position:relative;background:linear-gradient(180deg,#44474A 0%,#3A3D40 50%,#2E3134 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -1px 0 rgba(0,0,0,.5),
+    0 11px 28px rgba(0,0,0,.42)}
+
+/* ── Das Milchglas ──────────────────────────────────────────────────────
+   Ein Band. Die linke Hälfte ist erloschen, die rechte glimmt. Der Übergang
+   ist weich, weil Licht hinter Milchglas keine Kante hat. */
+.glas{position:relative;overflow:hidden;border-radius:2px;
+  box-shadow:inset 0 0 0 3px #1A1C1E,
+    inset 0 6px 15px rgba(0,0,0,.55),
+    0 1px 0 rgba(255,255,255,.14)}
+.grund{position:absolute;inset:0;background:linear-gradient(180deg,#1E2225,#141718)}
+.leuchte{position:absolute;inset:0}
+.tr{position:absolute;top:0;bottom:0;display:flex;align-items:center;
+  padding:0 13px;overflow:hidden}
+.tr + .tr{box-shadow:inset 1px 0 0 rgba(0,0,0,.55)}
+.tn{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:16px;letter-spacing:.14em;
+  text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Die Schrift ist Aussparung: dunkel im Licht, kaum sichtbar im Dunkeln. */
+.tr.hell .tn{color:rgba(16,20,22,.78)}
+.tr.dunkel .tn{color:rgba(234,244,248,.26)}
+.tr.jetzt .tn{font-weight:700;color:rgba(10,14,16,.92)}
+.kante{position:absolute;top:0;bottom:0;width:2px;background:#EAF4F8;
+  box-shadow:0 0 13px 4px rgba(234,244,248,.55)}
+/* Dieselben Zeilen, nur senkrecht gestapelt — fuer das Hochformat. */
+.tz{position:absolute;left:0;right:0;display:flex;align-items:center;
+  padding:0 18px;overflow:hidden}
+.tz + .tz{box-shadow:inset 0 1px 0 rgba(0,0,0,.55)}
+.tz.hell .tn{color:rgba(16,20,22,.78)}
+.tz.dunkel .tn{color:rgba(234,244,248,.26)}
+.tz.jetzt .tn{font-weight:700;color:rgba(10,14,16,.92)}
+.kantew{position:absolute;left:0;right:0;height:2px;background:#EAF4F8;
+  box-shadow:0 0 13px 4px rgba(234,244,248,.55)}
+
+/* ── Die zwei kleinen Fenster ── dasselbe Licht, kleinere Scheibe ── */
+.klein{position:relative;border-radius:2px;overflow:hidden;
+  background:radial-gradient(120% 140% at 50% 120%,rgba(234,244,248,.92),rgba(234,244,248,.60));
+  box-shadow:inset 0 0 0 2px #1A1C1E,0 1px 0 rgba(255,255,255,.14);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:rgba(16,20,22,.86)}
+.klein .wert{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-variant-numeric:tabular-nums;font-weight:700}
+.klein .lab{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(16,20,22,.52)}
+
+/* ── Aluminium und Druckknöpfe ── */
+.alu{position:relative;background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.14) 0 1px,rgba(0,0,0,.05) 1px 3px),
+    linear-gradient(180deg,#DEDCD7 0%,#C9C7C2 44%,#A9A7A2 100%);
+  color:#222426;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 0 -1px 0 rgba(0,0,0,.3)}
+.druck{border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 36% 30%,#4A4C4F,#141618 76%);
+  box-shadow:0 3px 6px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.18)}
+.dlab{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;letter-spacing:.14em;text-transform:uppercase;color:rgba(34,36,38,.42);
+  text-align:center}
+.zeit{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(234,244,248,.5);font-variant-numeric:tabular-nums}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;display:flex;flex-direction:column;
+  justify-content:space-between;padding:94px 52px 0">
+  <div style="display:flex;align-items:baseline;justify-content:space-between">
+  <span class="bib" style="gap:11px;font-size:17px">
+    <svg width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="rgba(234,244,248,.52)"/><rect x="8" y="4" width="3" height="16" rx="1" fill="rgba(234,244,248,.52)"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="rgba(234,244,248,.52)"/></svg>Sammlung · 240 Alben</span>
+  <span class="kap" style="font-size:17px">Kind of Blue · 1959</span>
+</div>
+  <div style="display:flex;flex-direction:column;gap:40px">
+    <div>
+  <div style="font-weight:300;letter-spacing:-.02em;font-size:53px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Blue in Green</div>
+  <div style="color:rgba(234,244,248,.58);font-weight:300;margin-top:9px;
+    font-size:25px">Miles Davis</div>
+</div>
+    <div class="blende" style="margin:0 -52px;padding:33px 47px;
+      display:flex;flex-direction:column;gap:22px">
+      <div class="glas" style="height:620px"><span class="grund"></span><span class="leuchte" style="background:linear-gradient(180deg,rgba(234,244,248,.05) 0%,rgba(234,244,248,.05) 42.7%,rgba(234,244,248,.94) 48.7%,rgba(234,244,248,.86) 100%)"></span><span class="tz dunkel" style="top:0.00%;height:20.48%"><span class="tn">So What</span></span><span class="tz dunkel" style="top:20.48%;height:21.35%"><span class="tn">Freddie Freeloader</span></span><span class="tz jetzt" style="top:41.83%;height:12.20%"><span class="tn">Blue in Green</span></span><span class="tz hell" style="top:54.03%;height:25.27%"><span class="tn">All Blues</span></span><span class="tz hell" style="top:79.30%;height:20.70%"><span class="tn">Flamenco Sketches</span></span><span class="kantew" style="top:46.71%"></span></div>
+      <div style="display:flex;gap:18px">
+        <div class="klein" style="width:184px;height:96px;gap:4px"><span class="wert" style="font-size:28px">3/5</span><span class="lab" style="font-size:12px">Titel</span></div>
+        <div class="klein" style="width:221px;height:96px;gap:4px"><span class="wert" style="font-size:28px">03:23</span><span class="lab" style="font-size:12px">Rest</span></div>
+        <div style="flex:1"></div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between">
+      <span class="zeit" style="font-size:21px">02:14</span>
+      <span class="zeit" style="font-size:21px">-03:23</span></div>
+  </div>
+  <div class="alu" style="margin:0 -52px;padding:36px 36px
+    47px;display:flex;align-items:center;justify-content:center">
+    <div style="display:flex;align-items:center;gap:27px">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><span class="druck" style="width:88px;height:88px"><svg width="23" height="23" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#E6E8EA" stroke-width="2" fill="#E6E8EA" stroke-linejoin="round"/></svg></span><span class="dlab" style="font-size:12px">Zurück</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><span class="druck" style="width:88px;height:88px"><svg width="27" height="27" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#E6E8EA"/><rect x="14" y="5" width="4" height="14" fill="#E6E8EA"/></svg></span><span class="dlab" style="font-size:12px">Halt</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><span class="druck" style="width:88px;height:88px"><svg width="23" height="23" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#E6E8EA" stroke-width="2" fill="#E6E8EA" stroke-linejoin="round"/></svg></span><span class="dlab" style="font-size:12px">Weiter</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><span class="druck" style="width:88px;height:88px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E6E8EA" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 L21 21"/></svg></span><span class="dlab" style="font-size:12px">Suche</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><span class="druck" style="width:88px;height:88px"><svg width="22" height="22" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="#E6E8EA"/><rect x="8" y="4" width="3" height="16" rx="1" fill="#E6E8EA"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="#E6E8EA"/></svg></span><span class="dlab" style="font-size:12px">Sammlung</span></div>
+    </div>
+  </div>
+</div></div></body></html>

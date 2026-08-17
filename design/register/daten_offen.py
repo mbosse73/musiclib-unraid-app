@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 OFFEN = [
- ('Neunundzwanzig Bauanleitungen sind Vorschläge, keine Entscheidungen',
-  'Bei K48–K76 steht auf jeder Karte, was ich zu Spulfläche, Zuständen und Bewegung '
+ ('Achtunddreissig Bauanleitungen sind Vorschläge, keine Entscheidungen',
+  'Bei K48–K85 steht auf jeder Karte, was ich zu Spulfläche, Zuständen und Bewegung '
   '<b>vorschlage</b> — diese Blätter sind Standbilder ohne Skript, dort ist nichts abzulesen. '
   'An acht Stellen habe ich die Frage ausdrücklich offen gelassen statt sie zu entscheiden '
   '(unter anderem: drehen sich die Wickel bei K52 Mix Tape Klar, dreht sich die Spiralplatte '
@@ -21,8 +21,8 @@ OFFEN = [
   'Auswahlstreifen leer. K39 Eisblau hochkant ist die einzige Telefon-Fassung darunter.'),
  ('Etappe 5 ist nicht angefangen',
   'Vierzehn Paket-Konzepte (K48–K61), kein einziges portiert. Pilot ist K58 Music Sounds Better. K49 und K50 sind die Sonderfälle: die zwei überlebenden Fassungen des gestrichenen Blattes 33 — dort ist zuerst zu entscheiden, ob eine davon 33 ersetzt.'),
- ('Fünfzehn eigene Entwürfe warten auf eine Entscheidung',
-  'K62–K76 sind gebaut, aber keiner ist ausgewählt. K63–K65 sind dieselbe Karte in drei Scheiben — Sonnenglas, Klarglas, Rauchglas —, davon gilt genau eine.'),
+ ('Vierundzwanzig eigene Entwürfe warten auf eine Entscheidung',
+  'K62–K85 sind gebaut, aber keiner ist ausgewählt. <b>K77–K85 sind neu</b> — neun aus dem dritten Vorlagensatz, darunter mit <i>Automatik</i> der einzige Entwurf im ganzen Register, der einen Direktzugriff an der Sammlung vorbei anbietet. K63–K65 sind dieselbe Karte in drei Scheiben — Sonnenglas, Klarglas, Rauchglas —, davon gilt genau eine.'),
  ('Die beiden Übergangsseiten',
   '<code>/klassisch</code> (index.html) und <code>/mobil-alt</code> (mobile.html) sollten „eine '
   'Release“ bleiben. Die Release ist durch — sie können weg, sobald du sie nicht mehr brauchst. '

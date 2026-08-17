@@ -1,0 +1,130 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:2340px;overflow:hidden}
+.stage{position:relative;width:1080px;height:2340px;overflow:hidden}
+
+.stage{background:linear-gradient(160deg,#4A4E52 0%,#3A3D40 40%,#2A2D30 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#E8E9EA;-webkit-font-smoothing:antialiased}
+.kap{letter-spacing:.24em;text-transform:uppercase;color:rgba(232,233,234,.34);font-weight:500}
+
+/* ── Der Bildschirm: eine schwarze Scheibe, bündig eingelassen ── */
+.schirm{position:relative;background:#141618;border-radius:4px;overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.6),inset 0 6px 18px rgba(0,0,0,.6),
+    0 1px 0 rgba(255,255,255,.10)}
+.bahn{position:relative;height:6px;border-radius:3px;
+  background:rgba(255,255,255,.12);overflow:hidden}
+.bahn i{position:absolute;left:0;top:0;bottom:0;background:#F97316;border-radius:inherit}
+
+/* ── Pads: Rechtecke mit weicher Kante, gedrückt heisst leuchtet ── */
+.pads{display:grid;gap:10px}
+.pad{position:relative;border-radius:5px;background:linear-gradient(180deg,#4E5256,#42464A);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.13),0 3px 7px rgba(0,0,0,.35);
+  display:flex;align-items:flex-end;padding:9px;overflow:hidden}
+.pad span{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;letter-spacing:.04em;color:rgba(232,233,234,.60);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;width:100%}
+.pad.an{background:linear-gradient(180deg,#FFA657,#F97316);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 0 18px rgba(249,115,22,.45)}
+.pad.an span{color:rgba(28,16,4,.86);font-weight:700}
+.pad.gespielt{background:linear-gradient(180deg,#3A3E42,#2E3236)}
+.pad.gespielt span{color:rgba(232,233,234,.34)}
+
+/* ── Fader: eine Nut, ein Knopf. Der Knopf ist schwarz und rund oben. ── */
+.fader{display:flex;flex-direction:column;align-items:center;gap:9px}
+.nut{position:relative;width:8px;border-radius:4px;
+  background:linear-gradient(90deg,#232629,#171A1C);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.5),inset 0 2px 5px rgba(0,0,0,.7)}
+.griff{position:absolute;left:50%;transform:translate(-50%,-50%);border-radius:5px;
+  background:linear-gradient(180deg,#3D4145 0%,#15171A 60%,#2A2D30 100%);
+  box-shadow:0 3px 7px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.22)}
+.flab{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:13px;letter-spacing:.12em;color:rgba(232,233,234,.34)}
+
+/* ── Die drei Transporttasten: gross, flach, zwei weiss, eine orange ── */
+.tk{display:flex;align-items:center;justify-content:center;border-radius:6px;
+  box-shadow:0 4px 10px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.3)}
+.tk.hell{background:linear-gradient(180deg,#FFFFFF,#DCDCD8)}
+.tk.orange{background:linear-gradient(180deg,#FFA657,#F97316)}
+/* Zwei Drehregler — das einzige Runde auf der ganzen Fläche. */
+.rund{border-radius:50%;position:relative}
+.rund.weiss{background:radial-gradient(circle at 36% 30%,#FFFFFF,#C9C9C4);
+  box-shadow:0 4px 9px rgba(0,0,0,.4)}
+.rund.schwarz{background:radial-gradient(circle at 36% 30%,#3A3E42,#0E1012);
+  box-shadow:0 4px 9px rgba(0,0,0,.5)}
+.titel{font-weight:300;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.zeit{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(232,233,234,.34);font-variant-numeric:tabular-nums}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;display:flex;flex-direction:column;
+  gap:44px;padding:96px 56px 92px">
+  <div class="schirm" style="width:968px;height:900px;padding:26px;
+  display:flex;flex-direction:column;justify-content:space-between;gap:20px">
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <span class="kap" style="font-size:13px">Musiklib</span>
+    <span class="kap" style="font-size:13px">240 Alben</span>
+  </div>
+  <div style="display:flex;justify-content:center">
+    <svg class="cv" viewBox="0 0 468 468" width="468" height="468">
+<defs><linearGradient id="cg4682E48E5" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#2E4A6B"/><stop offset="100%" stop-color="#8E5B8A"/></linearGradient></defs>
+<rect x="0" y="0" width="468" height="468" rx="18" fill="url(#cg4682E48E5)"/>
+<circle cx="248.0" cy="191.9" r="93.6" fill="none"
+  stroke="#ffffff" stroke-width="3.7" opacity="0.49500000000000005"/>
+<path d="M70.2 332.3 L402.5 332.3" stroke="#ffffff"
+  stroke-width="2.8" opacity="0.315"/>
+<path d="M70.2 374.4 L304.2 374.4" stroke="#ffffff"
+  stroke-width="2.8" opacity="0.198"/></svg></div>
+  <div>
+    <div class="titel" style="font-size:28px">Blue in Green</div>
+    <div style="color:rgba(232,233,234,.60);font-size:17px;margin-top:7px">
+      Miles Davis · Kind of Blue</div>
+    <div class="bahn" style="margin-top:18px">
+      <i style="width:40%"></i></div>
+    <div style="display:flex;justify-content:space-between;margin-top:10px">
+      <span class="zeit" style="font-size:15px">02:14</span>
+      <span class="zeit" style="font-size:15px">-03:23</span></div>
+  </div>
+</div>
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:30px">
+    <div style="display:flex;gap:22px;align-items:flex-start"><div class="fader">
+  <span class="nut" style="height:190px">
+    <span class="griff" style="top:58px;width:26px;
+      height:16px"></span></span>
+  <span class="flab">Ton</span></div><div class="fader">
+  <span class="nut" style="height:190px">
+    <span class="griff" style="top:136px;width:26px;
+      height:16px"></span></span>
+  <span class="flab">¼</span></div><div class="fader">
+  <span class="nut" style="height:190px">
+    <span class="griff" style="top:95px;width:26px;
+      height:16px"></span></span>
+  <span class="flab">½</span></div><div class="fader">
+  <span class="nut" style="height:190px">
+    <span class="griff" style="top:54px;width:26px;
+      height:16px"></span></span>
+  <span class="flab">¾</span></div><div class="fader">
+  <span class="nut" style="height:190px">
+    <span class="griff" style="top:12px;width:26px;
+      height:16px"></span></span>
+  <span class="flab">Ende</span></div></div>
+    <div style="display:flex;gap:18px">
+      <span class="rund weiss" style="width:84px;height:84px"></span>
+      <span class="rund schwarz" style="width:84px;height:84px"></span></div>
+  </div>
+  <div style="display:flex;gap:12px">
+  <span class="tk hell" style="width:150px;height:132px">
+    <svg width="44" height="44" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#2A2D30" stroke-width="2" fill="#2A2D30" stroke-linejoin="round"/></svg></span>
+  <span class="tk orange" style="flex:1;height:132px">
+    <svg width="52" height="52" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#FFFFFF"/><rect x="14" y="5" width="4" height="14" fill="#FFFFFF"/></svg></span>
+  <span class="tk hell" style="width:150px;height:132px">
+    <svg width="44" height="44" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#2A2D30" stroke-width="2" fill="#2A2D30" stroke-linejoin="round"/></svg></span>
+</div>
+  <div>
+    <div class="kap" style="font-size:16px;margin-bottom:14px">
+      Warteschlange · antippen springt</div>
+    <div class="pads" style="grid-template-columns:repeat(2,470px)"><span class="pad gespielt" style="height:104px"><span style="font-size:13px">So What</span></span><span class="pad gespielt" style="height:104px"><span style="font-size:13px">Freddie</span></span><span class="pad an" style="height:104px"><span style="font-size:13px">Blue in Green</span></span><span class="pad " style="height:104px"><span style="font-size:13px">All Blues</span></span><span class="pad " style="height:104px"><span style="font-size:13px">Flamenco</span></span><span class="pad " style="height:104px"><span style="font-size:13px">Teo</span></span><span class="pad " style="height:104px"><span style="font-size:13px">Fran-Dance</span></span><span class="pad " style="height:104px"><span style="font-size:13px">Love for Sale</span></span></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:34px;margin-top:auto">
+    <span class="kap" style="font-size:16px">Sammlung</span>
+    <svg width="30" height="30" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="rgba(232,233,234,.60)"/><rect x="8" y="4" width="3" height="16" rx="1" fill="rgba(232,233,234,.60)"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="rgba(232,233,234,.60)"/></svg><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(232,233,234,.60)" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 L21 21"/></svg><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(232,233,234,.60)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z" fill="rgba(232,233,234,.60)"/><path d="M17 9.5a4 4 0 0 1 0 5"/><path d="M19.5 7a7.5 7.5 0 0 1 0 10"/></svg>
+  </div>
+</div></div></body></html>

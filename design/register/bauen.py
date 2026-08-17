@@ -274,11 +274,11 @@ dialog::backdrop{{background:rgba(0,0,0,.86)}}
 
 <div class="seite">
   <header class="kopfz">
-    <div class="caps">Musiklib · Stand 17. August 2026 · die Auswahl ist eine Anprobe</div>
-    <h1>Sechsundsiebzig Spieler, <em>vier</em> Zustände</h1>
+    <div class="caps">Musiklib · Stand 17. August 2026 · dritter Vorlagensatz</div>
+    <h1>Fünfundachtzig Spieler, <em>vier</em> Zustände</h1>
     <p class="lede">Alle Konzepte aus vier Quellen — dem gebauten Programm, den Mockup-Blättern,
     dem gelieferten Design-Paket und den eigenen Entwürfen — in <b>einer</b>
-    Nummernfolge. Die Nummer <code>K01</code>–<code>K76</code> ist
+    Nummernfolge. Die Nummer <code>K01</code>–<code>K85</code> ist
     durchgehend und wird nach jeder Streichung und jedem Fund neu gezogen — die alte Herkunft steht
     auf jeder Karte, damit trotzdem nichts verlorengeht.</p>
     <p class="lede">Jede Karte zeigt <b>beide Formate</b>, quer und hoch, so weit es sie gibt.
@@ -291,11 +291,18 @@ dialog::backdrop{{background:rgba(0,0,0,.86)}}
     Zweig" wieder verschwunden: es gibt ihn nicht mehr.</p>
     <p class="lede"><b>Jede Karte trägt jetzt eine Bauanleitung</b> — Spulfläche, Zustände,
     Bewegung, Bibliothek. Bei den gebauten ist sie aus dem Code gelesen, bei den gezeichneten
-    Blättern aus dem Blatt; bei den <b>29 Standbildern (K48–K76) ist sie ein Vorschlag</b> und
+    Blättern aus dem Blatt; bei den <b>38 Standbildern (K48–K85) ist sie ein Vorschlag</b> und
     trägt deshalb eine farbige Kante. Diese Blätter haben kein Skript, keine Übergänge, keine
     Zustände — dort ist nichts abzulesen, dort ist zu entscheiden. Hausregel für Bewegung:
     sparsam, bewegt wird nur, was den Stand zeigt. Dieselben Angaben liegen als
     <code>design/BAUANLEITUNG.md</code> im Repo.</p>
+    <p class="lede"><b>Neun Entwürfe aus einem dritten Vorlagensatz</b> stehen am Ende:
+    K77–K85, aus zwölf Aufnahmen von Geräten — vier Empfänger aus den Siebzigern, ein
+    Steuerpult, drei heutige Streamer. Zwei Paare zeigen dasselbe Gerät, und zweimal sind
+    zwei Vorlagen zu einem Entwurf zusammengefasst, weil sie dieselbe Frage stellen. Die
+    Vorlagen liegen unter <code>mckups_player_3/</code>. Einer davon, <b>K80 Automatik</b>,
+    bringt etwas, das im ganzen Register sonst fehlt: einen Direktzugriff, der die Sammlung
+    überspringt.</p>
     <p class="lede"><b>Ausgewählt wird jetzt durch Aufsetzen.</b> Der Einstellungsdialog bot die
     Auslagen als Textkacheln an — Name, Gerät, ein Satz —, man wählte blind und der Dialog schloss
     sich sofort. Seit dieser Fassung führt ein Tor in die <b>Anprobe</b>: die Ansicht steht sofort
@@ -316,7 +323,7 @@ dialog::backdrop{{background:rgba(0,0,0,.86)}}
   <div class="werkzeug">
     <input type="search" id="suche" placeholder="Suchen — Name, Herkunft, Format"
       aria-label="Konzepte durchsuchen">
-    <span class="treffer" id="treffer">76 von 76</span>
+    <span class="treffer" id="treffer">85 von 85</span>
     <button class="zuruecksetzen" id="reset" type="button">Alles zeigen</button>
   </div>
 

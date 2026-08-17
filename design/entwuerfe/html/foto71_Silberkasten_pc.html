@@ -1,0 +1,82 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1600px;height:1000px;overflow:hidden}
+.stage{position:relative;width:1600px;height:1000px;overflow:hidden}
+
+.stage{background:
+    repeating-linear-gradient(0deg,rgba(255,255,255,.020) 0 1px,rgba(0,0,0,.06) 1px 4px),
+    linear-gradient(180deg,#151617 0%,#0D0E0F 46%,#08090A 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:rgba(240,240,238,.72);-webkit-font-smoothing:antialiased}
+.kap{letter-spacing:.28em;text-transform:uppercase;color:rgba(240,240,238,.30);font-weight:500}
+
+/* ── Die Platte: gebürstetes Champagnersilber, gewölbt, mit weicher Kante ── */
+.platte{position:relative;border-radius:10px;overflow:hidden;color:#26241E;
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.20) 0 1px,rgba(0,0,0,.045) 1px 3px),
+    linear-gradient(180deg,#F1EDE1 0%,#DCD8CC 40%,#B6B2A5 100%);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.9),
+    inset 0 -2px 0 rgba(0,0,0,.28),
+    0 0 0 2px #3A3B3C,0 14px 34px rgba(0,0,0,.7)}
+.plab{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;letter-spacing:.24em;text-transform:uppercase;color:rgba(38,36,30,.40)}
+.ptitel{font-weight:400;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.pzeit{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(38,36,30,.62);font-variant-numeric:tabular-nums}
+
+/* Die Warteschlange auf der Platte: Striche, einer davon voll. */
+.qz{display:flex;align-items:flex-end;gap:4px}
+.qz i{display:block;border-radius:1px;background:rgba(38,36,30,.26)}
+.qz i.vor{background:rgba(38,36,30,.52)}
+.qz i.jetzt{background:#26241E}
+
+/* ── Der eine Knopf: ein Ring, sonst nichts. ── */
+.knopf{position:relative;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;background:transparent;
+  box-shadow:inset 0 0 0 2px rgba(240,240,238,.72),
+    0 0 26px rgba(240,240,238,.10)}
+.klab{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;letter-spacing:.26em;text-transform:uppercase;
+  color:rgba(240,240,238,.30);text-align:center}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:96px;padding:60px">
+  <div style="position:absolute;top:52px;left:0;right:0;display:flex;
+    justify-content:space-between;padding:0 74px">
+    <span class="kap" style="font-size:17px">Musiklib</span>
+    <span class="kap" style="font-size:17px">Silberkasten</span>
+  </div>
+  <div class="platte" style="width:1180px;height:300px;
+  padding:30px 40px;display:flex;flex-direction:column;
+  justify-content:space-between">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:30px">
+    <div style="min-width:0">
+      <div class="plab" style="font-size:13px">Es läuft</div>
+      <div class="ptitel" style="font-size:34px;margin-top:8px">
+        Blue in Green</div>
+      <div class="pzeit" style="font-size:16px;margin-top:6px">
+        Miles Davis · Kind of Blue</div>
+    </div>
+    <div style="position:relative;width:306px;height:120px">
+  <svg viewBox="0 0 306 120" width="306" height="120">
+    <line x1="89.3" y1="89.1" x2="76.6" y2="80.5" stroke="#26241E" stroke-width="1.9" opacity="0.9"/><line x1="88.2" y1="80.8" x2="80.7" y2="74.9" stroke="#26241E" stroke-width="1.0" opacity="0.55"/><line x1="92.2" y1="76.1" x2="85.2" y2="69.6" stroke="#26241E" stroke-width="1.0" opacity="0.55"/><line x1="96.6" y1="71.7" x2="90.1" y2="64.7" stroke="#26241E" stroke-width="1.0" opacity="0.55"/><line x1="101.3" y1="67.6" x2="95.3" y2="60.1" stroke="#26241E" stroke-width="1.0" opacity="0.55"/><line x1="109.5" y1="68.7" x2="100.9" y2="56.0" stroke="#26241E" stroke-width="1.9" opacity="0.9"/><line x1="111.5" y1="60.6" x2="106.7" y2="52.3" stroke="#26241E" stroke-width="1.0" opacity="0.55"/><line x1="117.0" y1="57.7" x2="112.8" y2="49.1" stroke="#26241E" stroke-width="1.0" opacity="0.55"/><line x1="122.7" y1="55.2" x2="119.2" y2="46.3" stroke="#26241E" stroke-width="1.0" opacity="0.55"/><line x1="128.5" y1="53.1" x2="125.7" y2="44.0" stroke="#26241E" stroke-width="1.0" opacity="0.55"/><line x1="135.8" y1="57.1" x2="132.4" y2="42.2" stroke="#26241E" stroke-width="1.9" opacity="0.9"/><line x1="140.6" y1="50.4" x2="139.2" y2="40.9" stroke="#26241E" stroke-width="1.0" opacity="0.55"/><line x1="146.8" y1="49.7" x2="146.1" y2="40.1" stroke="#26241E" stroke-width="1.0" opacity="0.55"/><line x1="153.0" y1="49.4" x2="153.0" y2="39.8" stroke="#26241E" stroke-width="1.0" opacity="0.55"/><line x1="159.2" y1="49.7" x2="159.9" y2="40.1" stroke="#26241E" stroke-width="1.0" opacity="0.55"/><line x1="164.5" y1="56.1" x2="166.8" y2="40.9" stroke="#26241E" stroke-width="1.9" opacity="0.9"/><line x1="171.5" y1="51.5" x2="173.6" y2="42.2" stroke="#26241E" stroke-width="1.0" opacity="0.55"/><line x1="177.5" y1="53.1" x2="180.3" y2="44.0" stroke="#26241E" stroke-width="1.0" opacity="0.55"/><line x1="183.3" y1="55.2" x2="186.8" y2="46.3" stroke="#26241E" stroke-width="1.0" opacity="0.55"/><line x1="189.0" y1="57.7" x2="193.2" y2="49.1" stroke="#26241E" stroke-width="1.0" opacity="0.55"/><line x1="191.6" y1="65.6" x2="199.3" y2="52.3" stroke="#26241E" stroke-width="1.9" opacity="0.9"/><line x1="199.7" y1="63.9" x2="205.1" y2="56.0" stroke="#26241E" stroke-width="1.0" opacity="0.55"/><line x1="204.7" y1="67.6" x2="210.7" y2="60.1" stroke="#26241E" stroke-width="1.0" opacity="0.55"/><line x1="209.4" y1="71.7" x2="215.9" y2="64.7" stroke="#C0392B" stroke-width="1.0" opacity="0.55"/><line x1="213.8" y1="76.1" x2="220.8" y2="69.6" stroke="#C0392B" stroke-width="1.0" opacity="0.55"/><line x1="213.3" y1="84.4" x2="225.3" y2="74.9" stroke="#C0392B" stroke-width="1.9" opacity="0.9"/><line x1="221.4" y1="85.8" x2="229.4" y2="80.5" stroke="#C0392B" stroke-width="1.0" opacity="0.55"/>
+    <line x1="153.0" y1="132.0" x2="134.0"
+      y2="35.9" stroke="#26241E" stroke-width="1.5"/>
+  </svg>
+  <span class="plab" style="position:absolute;left:0;right:0;bottom:0;text-align:center;
+    font-size:22px">Stand</span>
+</div>
+  </div>
+  <div>
+    <div class="qz" style="width:100%"><i class="vor" style="width:20.5%;height:16px"></i><i class="vor" style="width:21.4%;height:16px"></i><i class="jetzt" style="width:12.2%;height:30px"></i><i class="" style="width:25.3%;height:16px"></i><i class="" style="width:20.7%;height:16px"></i></div>
+    <div style="display:flex;align-items:baseline;justify-content:space-between;
+      margin-top:10px">
+      <span class="pzeit" style="font-size:15px">02:14</span>
+      <span class="plab" style="font-size:12px">
+        Titel 3 von 5 · Sammlung 240</span>
+      <span class="pzeit" style="font-size:15px">-03:23</span>
+    </div>
+  </div>
+</div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:20px">
+    <span class="knopf" style="width:96px;height:96px"><svg width="30" height="30" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="rgba(240,240,238,.72)"/><rect x="14" y="5" width="4" height="14" fill="rgba(240,240,238,.72)"/></svg></span>
+    <span class="klab" style="font-size:15px">Spielen · Anhalten</span>
+  </div>
+</div></div></body></html>

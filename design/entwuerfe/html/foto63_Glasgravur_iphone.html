@@ -1,0 +1,96 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:2340px;overflow:hidden}
+.stage{position:relative;width:1080px;height:2340px;overflow:hidden}
+
+.stage{background:linear-gradient(180deg,#17171A 0%,#0E0E10 34%,#141416 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#F4F2EC;-webkit-font-smoothing:antialiased}
+.kap{letter-spacing:.26em;text-transform:uppercase;color:rgba(244,242,236,.34);font-weight:500}
+.bib{display:inline-flex;align-items:center;color:rgba(244,242,236,.34);letter-spacing:.24em;
+  text-transform:uppercase;font-weight:500}
+
+/* ── Die Scheibe ────────────────────────────────────────────────────────
+   Schwarzes Glas: oben ein schmaler Lichtreflex, sonst tief. Was darauf
+   liegt, liegt in Wahrheit dahinter — deshalb die helle Oberkante an jedem
+   Strich und der Schatten darunter. */
+.glas{position:relative;overflow:hidden;background:
+    linear-gradient(180deg,rgba(255,255,255,.10) 0%,rgba(255,255,255,.015) 9%,
+      rgba(0,0,0,0) 26%),#0A0B0D;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.09),
+    inset 0 13px 28px rgba(0,0,0,.75),
+    0 11px 31px rgba(0,0,0,.55)}
+.gr{position:absolute;background:rgba(244,242,236,.46);transform:translateX(-50%);
+  box-shadow:0 -1px 0 rgba(255,255,255,.30),0 1px 2px rgba(0,0,0,.9)}
+.gr.gross{background:#F4F2EC}
+.zahl{position:absolute;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:#F4F2EC;transform:translateX(-50%);
+  font-variant-numeric:tabular-nums;
+  text-shadow:0 -1px 0 rgba(255,255,255,.35),0 1px 3px rgba(0,0,0,.95)}
+.marke{position:absolute;transform:translateX(-50%);border-radius:2px;
+  background:linear-gradient(180deg,#8FDCFF 0%,#4FC3F7 55%,#1E88C7 100%);
+  box-shadow:0 0 20px 6px rgba(79,195,247,.55),
+    0 0 55px 17px rgba(79,195,247,.22)}
+.schrift{position:absolute;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;letter-spacing:.10em;
+  text-transform:uppercase;color:rgba(244,242,236,.62)}
+
+/* ── Die Blende ── gebürstetes Aluminium, waagerechte Faser. */
+.blende{position:relative;background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.10) 0 1px,
+      rgba(0,0,0,.05) 1px 3px),
+    linear-gradient(180deg,#D3D1CA 0%,#B9B7B0 46%,#9C9A93 100%);
+  color:#26262A;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),inset 0 -1px 0 rgba(0,0,0,.35),
+    0 6px 17px rgba(0,0,0,.45)}
+.blende .kap{color:rgba(38,38,42,.55)}
+
+/* Der Kippschalter: ein schwarzer Hebel in einer gefrästen Nut. Gedrückt
+   heisst hier oben — die Haupttaste steht anders als die anderen. */
+.kipp{position:relative;display:flex;align-items:flex-end;justify-content:center;
+  border-radius:3px;background:linear-gradient(180deg,#8E8C85,#C6C4BD);
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.55)}
+.kipp i{display:block;border-radius:2px;
+  background:linear-gradient(180deg,#3A3A3E 0%,#111113 60%,#26262A 100%);
+  box-shadow:0 2px 5px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.16)}
+.kipp.an i{background:linear-gradient(180deg,#26262A 0%,#111113 40%,#3A3A3E 100%)}
+.kipplab{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(38,38,42,.62);text-align:center}
+
+/* Der gerändelte Knopf — die Rändelung ist gezeichnet, nicht behauptet. */
+.knopf{border-radius:50%;position:relative;background:
+    repeating-conic-gradient(from 0deg,#EDEBE4 0deg 2deg,#A8A69F 2deg 4deg),
+    radial-gradient(circle at 34% 28%,#FFFFFF,#9B9992);
+  box-shadow:inset 0 0 0 3px #CFCDC6,0 4px 9px rgba(0,0,0,.45)}
+.knopf::after{content:'';position:absolute;left:50%;top:8px;width:2px;
+  height:34%;transform:translateX(-50%);background:#26262A;border-radius:1px}
+.zeit{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(244,242,236,.34);font-variant-numeric:tabular-nums}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;display:flex;flex-direction:column;
+  justify-content:space-between;padding:92px 56px 0">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:27px">
+  <span class="bib" style="gap:11px;font-size:17px">
+    <svg width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="rgba(244,242,236,.34)"/><rect x="8" y="4" width="3" height="16" rx="1" fill="rgba(244,242,236,.34)"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="rgba(244,242,236,.34)"/></svg>Sammlung · 240 Alben</span>
+  <span class="kap" style="font-size:17px">MX · Warteschlange</span>
+</div>
+  <div style="flex:1;min-height:0;display:flex;align-items:center">
+    <div style="width:100%;display:flex;flex-direction:column;gap:53px">
+      <div>
+  <div style="font-weight:300;letter-spacing:-.02em;font-size:57px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Blue in Green</div>
+  <div style="color:rgba(244,242,236,.62);font-weight:300;margin-top:10px;
+    font-size:26px">Miles Davis</div>
+</div>
+      <div class="glas" style="height:300px"><span class="gr gross" style="left:4.500%;top:90px;width:2px;height:60px"></span><span class="gr" style="left:5.667%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:6.833%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:8.000%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:9.167%;top:90px;width:1px;height:36px"></span><span class="gr gross" style="left:10.333%;top:90px;width:2px;height:60px"></span><span class="gr" style="left:11.500%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:12.667%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:13.833%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:15.000%;top:90px;width:1px;height:36px"></span><span class="gr gross" style="left:16.167%;top:90px;width:2px;height:60px"></span><span class="gr" style="left:17.333%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:18.500%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:19.667%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:20.833%;top:90px;width:1px;height:36px"></span><span class="gr gross" style="left:22.000%;top:90px;width:2px;height:60px"></span><span class="gr" style="left:23.167%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:24.333%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:25.500%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:26.667%;top:90px;width:1px;height:36px"></span><span class="gr gross" style="left:27.833%;top:90px;width:2px;height:60px"></span><span class="gr" style="left:29.000%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:30.167%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:31.333%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:32.500%;top:90px;width:1px;height:36px"></span><span class="gr gross" style="left:33.667%;top:90px;width:2px;height:60px"></span><span class="gr" style="left:34.833%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:36.000%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:37.167%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:38.333%;top:90px;width:1px;height:36px"></span><span class="gr gross" style="left:39.500%;top:90px;width:2px;height:60px"></span><span class="gr" style="left:40.667%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:41.833%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:43.000%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:44.167%;top:90px;width:1px;height:36px"></span><span class="gr gross" style="left:45.333%;top:90px;width:2px;height:60px"></span><span class="gr" style="left:46.500%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:47.667%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:48.833%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:50.000%;top:90px;width:1px;height:36px"></span><span class="gr gross" style="left:51.167%;top:90px;width:2px;height:60px"></span><span class="gr" style="left:52.333%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:53.500%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:54.667%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:55.833%;top:90px;width:1px;height:36px"></span><span class="gr gross" style="left:57.000%;top:90px;width:2px;height:60px"></span><span class="gr" style="left:58.167%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:59.333%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:60.500%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:61.667%;top:90px;width:1px;height:36px"></span><span class="gr gross" style="left:62.833%;top:90px;width:2px;height:60px"></span><span class="gr" style="left:64.000%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:65.167%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:66.333%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:67.500%;top:90px;width:1px;height:36px"></span><span class="gr gross" style="left:68.667%;top:90px;width:2px;height:60px"></span><span class="gr" style="left:69.833%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:71.000%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:72.167%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:73.333%;top:90px;width:1px;height:36px"></span><span class="gr gross" style="left:74.500%;top:90px;width:2px;height:60px"></span><span class="gr" style="left:75.667%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:76.833%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:78.000%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:79.167%;top:90px;width:1px;height:36px"></span><span class="gr gross" style="left:80.333%;top:90px;width:2px;height:60px"></span><span class="gr" style="left:81.500%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:82.667%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:83.833%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:85.000%;top:90px;width:1px;height:36px"></span><span class="gr gross" style="left:86.167%;top:90px;width:2px;height:60px"></span><span class="gr" style="left:87.333%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:88.500%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:89.667%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:90.833%;top:90px;width:1px;height:36px"></span><span class="gr gross" style="left:92.000%;top:90px;width:2px;height:60px"></span><span class="gr" style="left:93.167%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:94.333%;top:90px;width:1px;height:36px"></span><span class="gr" style="left:95.500%;top:90px;width:1px;height:36px"></span><span class="gr gross" style="left:4.50%;top:66px;width:2px;height:102px"></span><span class="zahl" style="left:4.50%;top:21px;font-size:28px">0</span><span class="gr gross" style="left:15.00%;top:66px;width:2px;height:102px"></span><span class="zahl" style="left:15.00%;top:21px;font-size:28px">9</span><span class="gr gross" style="left:26.67%;top:66px;width:2px;height:102px"></span><span class="zahl" style="left:26.67%;top:21px;font-size:28px">19</span><span class="gr gross" style="left:32.50%;top:66px;width:2px;height:102px"></span><span class="zahl" style="left:32.50%;top:21px;font-size:28px">24</span><span class="gr gross" style="left:46.50%;top:66px;width:2px;height:102px"></span><span class="zahl" style="left:46.50%;top:21px;font-size:28px">36</span><span class="gr gross" style="left:55.83%;top:66px;width:2px;height:102px"></span><span class="zahl" style="left:55.83%;top:21px;font-size:28px">44</span><span class="gr gross" style="left:65.17%;top:66px;width:2px;height:102px"></span><span class="zahl" style="left:65.17%;top:21px;font-size:28px">52</span><span class="gr gross" style="left:75.67%;top:66px;width:2px;height:102px"></span><span class="zahl" style="left:75.67%;top:21px;font-size:28px">61</span><span class="gr gross" style="left:86.17%;top:66px;width:2px;height:102px"></span><span class="zahl" style="left:86.17%;top:21px;font-size:28px">70</span><span class="marke" style="left:29.58%;top:192px;width:6px;height:66px"></span><span class="schrift" style="left:4.5%;bottom:15px;font-size:17px">Warteschlange · Minuten</span><span class="schrift" style="right:4.5%;bottom:15px;font-size:17px">Kind of Blue · 1959</span></div>
+      <div style="display:flex;justify-content:space-between">
+        <span class="zeit" style="font-size:22px">02:14</span>
+        <span class="zeit" style="font-size:22px">-03:23</span></div>
+    </div>
+  </div>
+  <div style="margin:0 -56px"><div class="blende" style="padding:36px 40px;
+  display:flex;flex-direction:column;gap:31px;align-items:center">
+  <div style="display:flex;gap:23px"><div style="display:flex;flex-direction:column;align-items:center;gap:9px"><span class="kipp" style="width:114px;height:109px;padding:5px"><i style="width:99px;height:61px;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#E8E6DF" stroke-width="2" fill="#E8E6DF" stroke-linejoin="round"/></svg></i></span><span class="kipplab" style="font-size:14px">Zurück</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:9px"><span class="kipp an" style="width:114px;height:109px;padding:5px"><i style="width:99px;height:61px;display:flex;align-items:center;justify-content:center"><svg width="25" height="25" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#E8E6DF"/><rect x="14" y="5" width="4" height="14" fill="#E8E6DF"/></svg></i></span><span class="kipplab" style="font-size:14px">Halt</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:9px"><span class="kipp" style="width:114px;height:109px;padding:5px"><i style="width:99px;height:61px;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#E8E6DF" stroke-width="2" fill="#E8E6DF" stroke-linejoin="round"/></svg></i></span><span class="kipplab" style="font-size:14px">Weiter</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:9px"><span class="kipp" style="width:114px;height:109px;padding:5px"><i style="width:99px;height:61px;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8E6DF" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 L21 21"/></svg></i></span><span class="kipplab" style="font-size:14px">Suche</span></div></div>
+  <div style="display:flex;align-items:center;gap:23px;width:100%">
+    <span class="knopf" style="width:96px;height:96px;flex:none"></span>
+    <span class="kipplab" style="font-size:17px;text-align:left">Lautstärke</span>
+    <span style="margin-left:auto"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="rgba(38,38,42,.62)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z" fill="rgba(38,38,42,.62)"/><path d="M17 9.5a4 4 0 0 1 0 5"/><path d="M19.5 7a7.5 7.5 0 0 1 0 10"/></svg></span>
+  </div>
+</div></div>
+</div></div></body></html>

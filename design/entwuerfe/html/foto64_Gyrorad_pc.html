@@ -1,0 +1,109 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1600px;height:1000px;overflow:hidden}
+.stage{position:relative;width:1600px;height:1000px;overflow:hidden}
+
+.stage{background:linear-gradient(180deg,#EFEADA 0%,#DED8C6 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#33291C;-webkit-font-smoothing:antialiased}
+.kap{letter-spacing:.24em;text-transform:uppercase;color:rgba(51,41,28,.40);font-weight:500}
+.bib{display:inline-flex;align-items:center;color:rgba(51,41,28,.62);letter-spacing:.22em;
+  text-transform:uppercase;font-weight:500}
+
+/* ── Die Front: gebürstetes Champagnerblech mit Holzwangen ── */
+.front{position:relative;background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.16) 0 1px,rgba(0,0,0,.05) 1px 3px),
+    linear-gradient(180deg,#EDE7D6 0%,#D8D2C0 40%,#B9B29C 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85),inset 0 -1px 0 rgba(0,0,0,.22),
+    0 14px 34px rgba(60,45,25,.28)}
+.wange{position:absolute;top:0;bottom:0;width:26px;
+  background:repeating-linear-gradient(180deg,rgba(0,0,0,.16) 0 2px,rgba(255,255,255,.05) 2px 7px),
+    linear-gradient(90deg,#6B462A,#5A3A22);
+  box-shadow:inset 0 0 8px rgba(0,0,0,.5)}
+
+/* ── Das Fenster: dunkles Glas in einer Fassung ── */
+.fenster{position:relative;overflow:hidden;border-radius:3px;
+  background:linear-gradient(180deg,#2A2721 0%,#1C1A16 40%,#141310 100%);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.6),inset 0 8px 18px rgba(0,0,0,.6),
+    0 1px 0 rgba(255,255,255,.6)}
+.tick{position:absolute;background:rgba(239,233,214,.45);transform:translateX(-50%)}
+.tick.gross{background:#EFE9D6}
+.zahl{position:absolute;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:#EFE9D6;transform:translateX(-50%);
+  font-variant-numeric:tabular-nums}
+.marke{position:absolute;transform:translateX(-50%);background:#B4341E;border-radius:1px;
+  box-shadow:0 0 10px rgba(180,52,30,.8)}
+.flab{position:absolute;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(239,233,214,.52)}
+
+/* ── Das Zeigerwerk: cremefarbenes Blatt, ein Zeiger, kein roter Bogen ──
+   Es zeigt die Position im Titel — das ist die Anzeige, die das Rad nicht
+   geben kann. */
+.werk{position:relative;border-radius:3px;overflow:hidden;
+  background:linear-gradient(180deg,#F6F1DE 0%,#EFE9D6 62%,#DED7C0 100%);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.35),inset 0 5px 12px rgba(90,70,40,.22)}
+
+/* ── Das Rad: gerippt, rund, mit Tiefe. Die Rippen sind gezeichnet. ── */
+.rad{position:relative;border-radius:50%;background:
+    repeating-conic-gradient(from 0deg,#3A342A 0deg 3deg,#15120E 3deg 6deg),
+    radial-gradient(circle at 36% 30%,#4A4238,#0E0C0A 72%);
+  box-shadow:inset 0 0 0 5px #241F18,
+    inset 0 6px 16px rgba(0,0,0,.8),
+    0 8px 20px rgba(60,45,25,.45)}
+.rad::after{content:'';position:absolute;inset:22%;border-radius:50%;
+  background:radial-gradient(circle at 38% 32%,#6B6255,#221E18);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+.radlab{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;letter-spacing:.18em;text-transform:uppercase;color:rgba(51,41,28,.40);
+  text-align:center}
+
+/* ── Drehknöpfe der unteren Reihe ── */
+.dreh{position:relative;border-radius:50%;background:
+    radial-gradient(circle at 34% 28%,#FFFDF4,#B7B09A 78%);
+  box-shadow:inset 0 0 0 2px #E4DECB,0 3px 8px rgba(60,45,25,.4)}
+.dreh::after{content:'';position:absolute;left:50%;top:6px;width:2px;
+  height:38%;transform:translateX(-50%);background:#33291C;border-radius:1px}
+.dlab{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;letter-spacing:.14em;text-transform:uppercase;color:rgba(51,41,28,.40);
+  text-align:center}
+.zeit{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(51,41,28,.62);font-variant-numeric:tabular-nums}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;padding:52px 64px 0;display:flex;
+  flex-direction:column;gap:36px">
+  <div style="display:flex;align-items:baseline;justify-content:space-between">
+  <span class="bib" style="gap:12px;font-size:19px">
+    <svg width="20" height="20" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="rgba(51,41,28,.62)"/><rect x="8" y="4" width="3" height="16" rx="1" fill="rgba(51,41,28,.62)"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="rgba(51,41,28,.62)"/></svg>Sammlung · 240 Alben</span>
+  <span class="kap" style="font-size:18px">Stereophonic Receiver</span>
+</div>
+  <div>
+  <div style="font-weight:300;letter-spacing:-.02em;font-size:60px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Blue in Green</div>
+  <div style="color:rgba(51,41,28,.62);font-weight:300;margin-top:10px;
+    font-size:27px">Miles Davis · 1959</div>
+</div>
+  <div class="front" style="position:relative;flex:1;min-height:0;margin:0 -64px;
+    padding:44px 90px 40px;display:flex;flex-direction:column;
+    justify-content:space-between">
+    <span class="wange" style="left:0"></span><span class="wange" style="right:0"></span>
+    <div style="display:flex;align-items:flex-end;gap:44px">
+      <div class="werk" style="width:250px;height:168px">
+  <svg viewBox="0 0 250 168" width="250" height="168">
+    <line x1="34.7" y1="115.0" x2="12.2" y2="100.9" stroke="#33291C" stroke-width="2.2" opacity="0.85"/><line x1="39.4" y1="89.8" x2="28.6" y2="79.6" stroke="#33291C" stroke-width="1.1" opacity="0.5"/><line x1="57.5" y1="74.2" x2="49.1" y2="62.1" stroke="#33291C" stroke-width="1.1" opacity="0.5"/><line x1="78.4" y1="62.7" x2="72.6" y2="49.1" stroke="#33291C" stroke-width="1.1" opacity="0.5"/><line x1="101.2" y1="55.5" x2="98.2" y2="41.0" stroke="#33291C" stroke-width="1.1" opacity="0.5"/><line x1="125.0" y1="64.9" x2="125.0" y2="38.3" stroke="#33291C" stroke-width="2.2" opacity="0.85"/><line x1="148.8" y1="55.5" x2="151.8" y2="41.0" stroke="#33291C" stroke-width="1.1" opacity="0.5"/><line x1="171.6" y1="62.7" x2="177.4" y2="49.1" stroke="#33291C" stroke-width="1.1" opacity="0.5"/><line x1="192.5" y1="74.2" x2="200.9" y2="62.1" stroke="#33291C" stroke-width="1.1" opacity="0.5"/><line x1="210.6" y1="89.8" x2="221.4" y2="79.6" stroke="#33291C" stroke-width="1.1" opacity="0.5"/><line x1="215.3" y1="115.0" x2="237.8" y2="100.9" stroke="#33291C" stroke-width="2.2" opacity="0.85"/>
+    <line x1="125.0" y1="171.36" x2="97.4" y2="36.7" stroke="#33291C"
+      stroke-width="1.8"/>
+    <circle cx="125.0" cy="171.36" r="5.0" fill="#33291C"/>
+    <text x="125.0" y="97" text-anchor="middle" font-family="ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace"
+      font-size="13" fill="rgba(51,41,28,.62)" letter-spacing="2">IM TITEL</text>
+  </svg>
+</div>
+      <div style="flex:1;min-width:0"><div class="fenster" style="height:168px"><span class="tick gross" style="left:5.000%;top:74px;width:2px;height:37px"></span><span class="tick" style="left:6.731%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:8.462%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:10.192%;top:74px;width:1px;height:22px"></span><span class="tick gross" style="left:11.923%;top:74px;width:2px;height:37px"></span><span class="tick" style="left:13.654%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:15.385%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:17.115%;top:74px;width:1px;height:22px"></span><span class="tick gross" style="left:18.846%;top:74px;width:2px;height:37px"></span><span class="tick" style="left:20.577%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:22.308%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:24.038%;top:74px;width:1px;height:22px"></span><span class="tick gross" style="left:25.769%;top:74px;width:2px;height:37px"></span><span class="tick" style="left:27.500%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:29.231%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:30.962%;top:74px;width:1px;height:22px"></span><span class="tick gross" style="left:32.692%;top:74px;width:2px;height:37px"></span><span class="tick" style="left:34.423%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:36.154%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:37.885%;top:74px;width:1px;height:22px"></span><span class="tick gross" style="left:39.615%;top:74px;width:2px;height:37px"></span><span class="tick" style="left:41.346%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:43.077%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:44.808%;top:74px;width:1px;height:22px"></span><span class="tick gross" style="left:46.538%;top:74px;width:2px;height:37px"></span><span class="tick" style="left:48.269%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:50.000%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:51.731%;top:74px;width:1px;height:22px"></span><span class="tick gross" style="left:53.462%;top:74px;width:2px;height:37px"></span><span class="tick" style="left:55.192%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:56.923%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:58.654%;top:74px;width:1px;height:22px"></span><span class="tick gross" style="left:60.385%;top:74px;width:2px;height:37px"></span><span class="tick" style="left:62.115%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:63.846%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:65.577%;top:74px;width:1px;height:22px"></span><span class="tick gross" style="left:67.308%;top:74px;width:2px;height:37px"></span><span class="tick" style="left:69.038%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:70.769%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:72.500%;top:74px;width:1px;height:22px"></span><span class="tick gross" style="left:74.231%;top:74px;width:2px;height:37px"></span><span class="tick" style="left:75.962%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:77.692%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:79.423%;top:74px;width:1px;height:22px"></span><span class="tick gross" style="left:81.154%;top:74px;width:2px;height:37px"></span><span class="tick" style="left:82.885%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:84.615%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:86.346%;top:74px;width:1px;height:22px"></span><span class="tick gross" style="left:88.077%;top:74px;width:2px;height:37px"></span><span class="tick" style="left:89.808%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:91.538%;top:74px;width:1px;height:22px"></span><span class="tick" style="left:93.269%;top:74px;width:1px;height:22px"></span><span class="tick gross" style="left:95.000%;top:74px;width:2px;height:37px"></span><span class="zahl" style="left:5.00%;top:24px;font-size:26px">0</span><span class="zahl" style="left:15.38%;top:24px;font-size:26px">9</span><span class="zahl" style="left:26.92%;top:24px;font-size:26px">19</span><span class="zahl" style="left:32.69%;top:24px;font-size:26px">24</span><span class="zahl" style="left:46.54%;top:24px;font-size:26px">36</span><span class="zahl" style="left:55.77%;top:24px;font-size:26px">44</span><span class="zahl" style="left:65.00%;top:24px;font-size:26px">52</span><span class="zahl" style="left:75.38%;top:24px;font-size:26px">61</span><span class="zahl" style="left:85.77%;top:24px;font-size:26px">70</span><span class="marke" style="left:29.81%;top:17px;width:3px;height:104px"></span><span class="flab" style="left:5.0%;bottom:10px;font-size:17px">Album · Minuten</span><span class="flab" style="right:5.0%;bottom:10px;font-size:17px">Kind of Blue</span></div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:52px">
+      <div style="display:flex;align-items:center;gap:38px"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#33291C" stroke-width="2" fill="#33291C" stroke-linejoin="round"/></svg><svg width="32" height="32" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#33291C"/><rect x="14" y="5" width="4" height="14" fill="#33291C"/></svg><svg width="26" height="26" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#33291C" stroke-width="2" fill="#33291C" stroke-linejoin="round"/></svg><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(51,41,28,.62)" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 L21 21"/></svg><svg width="24" height="24" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="rgba(51,41,28,.62)"/><rect x="8" y="4" width="3" height="16" rx="1" fill="rgba(51,41,28,.62)"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="rgba(51,41,28,.62)"/></svg></div>
+      <div style="display:flex;gap:38px;margin-left:auto">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:9px"><span class="dreh" style="width:74px;height:74px"></span><span class="dlab" style="font-size:14px">Bass</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:9px"><span class="dreh" style="width:74px;height:74px"></span><span class="dlab" style="font-size:14px">Höhen</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:9px"><span class="dreh" style="width:74px;height:74px"></span><span class="dlab" style="font-size:14px">Lautstärke</span></div></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:11px">
+        <span class="rad" style="width:176px;height:176px"></span>
+        <span class="radlab" style="font-size:16px">Spulen</span></div>
+    </div>
+    <div style="display:flex;justify-content:space-between">
+      <span class="zeit" style="font-size:21px">02:14</span>
+      <span class="zeit" style="font-size:21px">-03:23</span></div>
+  </div>
+</div></div></body></html>

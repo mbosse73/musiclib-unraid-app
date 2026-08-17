@@ -320,6 +320,61 @@ VORSCHLAG = {
    'durchsichtig, wo er steht. Das ist Anzeige, nicht Zierrat — neben der Gegenwart liest man '
    'genau ab, am Rand nur ungefähr.',
    'Die Quellenzeile oben links.'),
+
+ # ── Dritter Vorlagensatz. Wieder Standbilder ohne Skript: Vorschläge. ────
+ 'foto63_Glasgravur': ('Das Glas selbst — die Warteschlange in Minuten, über Titelgrenzen hinweg.',
+   'Die Gravur ist überall gleich hell; nur der blaue Balken bewegt sich. Gelaufenes sieht aus '
+   'wie Kommendes — bewusst: die Skala ist ein Massstab, kein Verlauf.',
+   'Nur der blaue Balken wandert. <b>Zu entscheiden:</b> ob er beim Ziehen mitleuchtet oder '
+   'erst am Ende springt.',
+   'Vorschlag: der Kippschalter „Suche" auf der Blende — die Blende trägt sonst keine Taste dafür.'),
+ 'foto64_Gyrorad': ('Das Rad — endlos drehbar. Die Albumskala darüber wird nicht angefasst.',
+   'Der Zeiger links steht auf der Position im Titel, die rote Marke auf der Albumskala.',
+   '<b>Das Rad läuft nach</b> und kommt zur Ruhe; der Zeiger folgt. Ohne Trägheit ist es ein '
+   'Knopf, und dann braucht es kein Rad. <b>Zu entscheiden:</b> wie stark die Reibung ist.',
+   'Vorschlag: das Buchzeichen in der Tastenreihe links.'),
+ 'foto65_Milchlicht': ('Das Milchglasband — die Grenze zwischen dunkel und hell ist die Position.',
+   'Gelaufenes ist dunkel, Kommendes leuchtet; der laufende Titel steht fett und liegt auf der '
+   'Grenze. Zwei kleine Fenster zählen Titel und Restzeit.',
+   '<b>Die Leuchtkante wandert</b>, sonst nichts. Das ist die ganze Bewegung und zugleich die '
+   'ganze Anzeige.',
+   'Der Druckknopf „Sammlung" in der Reihe auf dem Aluminium.'),
+ 'foto66_Automatik': ('Die grosse türkise Skala; wer einen Merkplatz nimmt, springt statt zu spulen.',
+   'Fünf Schieber, jeder ein gemerktes Album; der aktive Platz ist türkis umrandet, seine Marke '
+   'steht auf dem Stand im Album.',
+   'Die orange Nadel wandert auf der Skala. <b>Zu entscheiden:</b> ob ein Schieber beim Springen '
+   'nachfährt — das wäre die zweite Bewegung.',
+   'Die Merkplätze sind der schnelle Weg; daneben Buchzeichen und Lupe in der Tastenreihe unten.'),
+ 'foto67_Rasterschrift': ('Die Punktreihe unter der Anzeige — so fein wie das Raster, nicht feiner.',
+   'Cyan heisst an, dunkel heisst aus. Der laufende Titel ist der einzige rote Punkt.',
+   'Punkte gehen an und aus, sonst nichts — ein Raster blendet nicht über.',
+   'Vorschlag: das vierte geätzte Zeichen unten links.'),
+ 'foto68_Fadertisch': ('Die Bahn unter dem Bild; die vier unteren Fader springen auf Viertel, '
+   'Hälfte, Dreiviertel und Ende.',
+   'Ein Pad je Titel: Gespieltes dunkler, Laufendes orange. Genau eine Taste ist orange, und sie '
+   'ist die grösste.',
+   'Keine. <b>Zu entscheiden:</b> ob ein Pad beim Antippen kurz aufleuchtet — das wäre '
+   'Rückmeldung und kein Zierrat.',
+   'Die Zeichen unten rechts neben „Sammlung". Das Pad-Feld blättert in der letzten Reihe weiter.'),
+ 'foto69_Halbmond': ('Der Fortschrittsstrich im Schlitz — wenige Pixel hoch, aber die einzige '
+   'Stelle mit einer Position.',
+   'Die Kante zwischen heller und dunkler Kappenhälfte ist die Stellung des Knopfes. Im Schlitz '
+   'steht, was die fünf Punkte gerade tun.',
+   'Der Halbmond dreht sich beim Verstellen. <b>Zu entscheiden:</b> ob der Schlitz beim '
+   'Titelwechsel überblendet oder hart umschaltet.',
+   'Der fünfte Punkt unter dem Schlitz.'),
+ 'foto70_Dezibel': ('Das rechte Zeigerfenster — man zieht den Zeiger.',
+   'Links Pegel, rechts Stand im Album; Orange am Skalenende heisst in beiden „es wird knapp".',
+   '<b>Beide Zeiger bewegen sich, und beide zeigen etwas</b> — der linke den Pegel, der rechte '
+   'die Position. Keiner läuft leer.',
+   'Die freistehenden Zeichen rechts, ohne Rahmen und ohne Wort.'),
+ 'foto71_Silberkasten': ('Die Warteschlangenleiste auf der Platte; der laufende Titel ist der '
+   'volle Strich.',
+   'Alles steht auf der einen Platte. Der Ring unten ist gedrückt oder nicht — mehr Zustand hat '
+   'er nicht.',
+   'Nur der Zeiger. Die Platte selbst bleibt still: sie ist Blech, kein Bildschirm.',
+   '<b>Offen.</b> Der Entwurf hat bewusst einen einzigen Knopf. Vorschlag: langes Drücken auf '
+   'die Platte öffnet die Sammlung — sonst braucht es eine zweite Marke auf der Platte.'),
 }
 del VORSCHLAG['foto52_platzhalter']
 

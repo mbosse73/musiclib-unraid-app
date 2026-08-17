@@ -715,3 +715,84 @@ in `daten_bau.py` und baut beides neu.
 - **Zustände** — Der rote Keil ist die Gegenwart; Rot kommt sonst nirgends vor. Titelgrenzen stehen als hohe Striche zwischen den feinen.
 - **Bewegung** — **Der Keil wandert, und die Schärfe wandert mit ihm**: der Schleier ist dort durchsichtig, wo er steht. Das ist Anzeige, nicht Zierrat — neben der Gegenwart liest man genau ab, am Rand nur ungefähr.
 - **Bibliothek** — Die Quellenzeile oben links.
+
+### K77 · Glasgravur
+
+*McIntosh MX110 — Telefon · PC. **Vorschlag — bitte prüfen**.*
+
+- **Spulen** — Das Glas selbst — die Warteschlange in Minuten, über Titelgrenzen hinweg.
+- **Zustände** — Die Gravur ist überall gleich hell; nur der blaue Balken bewegt sich. Gelaufenes sieht aus wie Kommendes — bewusst: die Skala ist ein Massstab, kein Verlauf.
+- **Bewegung** — Nur der blaue Balken wandert. **Zu entscheiden:** ob er beim Ziehen mitleuchtet oder erst am Ende springt.
+- **Bibliothek** — Vorschlag: der Kippschalter „Suche" auf der Blende — die Blende trägt sonst keine Taste dafür.
+
+### K78 · Gyrorad
+
+*Marantz 2216 B &amp; Pioneer SX-650 — Telefon · PC. **Vorschlag — bitte prüfen**.*
+
+- **Spulen** — Das Rad — endlos drehbar. Die Albumskala darüber wird nicht angefasst.
+- **Zustände** — Der Zeiger links steht auf der Position im Titel, die rote Marke auf der Albumskala.
+- **Bewegung** — **Das Rad läuft nach** und kommt zur Ruhe; der Zeiger folgt. Ohne Trägheit ist es ein Knopf, und dann braucht es kein Rad. **Zu entscheiden:** wie stark die Reibung ist.
+- **Bibliothek** — Vorschlag: das Buchzeichen in der Tastenreihe links.
+
+### K79 · Milchlicht
+
+*Technics SA-5551 &amp; Yamaha CR-700 — Telefon · PC. **Vorschlag — bitte prüfen**.*
+
+- **Spulen** — Das Milchglasband — die Grenze zwischen dunkel und hell ist die Position.
+- **Zustände** — Gelaufenes ist dunkel, Kommendes leuchtet; der laufende Titel steht fett und liegt auf der Grenze. Zwei kleine Fenster zählen Titel und Restzeit.
+- **Bewegung** — **Die Leuchtkante wandert**, sonst nichts. Das ist die ganze Bewegung und zugleich die ganze Anzeige.
+- **Bibliothek** — Der Druckknopf „Sammlung" in der Reihe auf dem Aluminium.
+
+### K80 · Automatik
+
+*Receiver mit FM Automatic Tuning — Telefon · PC. **Vorschlag — bitte prüfen**.*
+
+- **Spulen** — Die grosse türkise Skala; wer einen Merkplatz nimmt, springt statt zu spulen.
+- **Zustände** — Fünf Schieber, jeder ein gemerktes Album; der aktive Platz ist türkis umrandet, seine Marke steht auf dem Stand im Album.
+- **Bewegung** — Die orange Nadel wandert auf der Skala. **Zu entscheiden:** ob ein Schieber beim Springen nachfährt — das wäre die zweite Bewegung.
+- **Bibliothek** — Die Merkplätze sind der schnelle Weg; daneben Buchzeichen und Lupe in der Tastenreihe unten.
+
+### K81 · Rasterschrift
+
+*Gryphon Ethos — Telefon · PC. **Vorschlag — bitte prüfen**.*
+
+- **Spulen** — Die Punktreihe unter der Anzeige — so fein wie das Raster, nicht feiner.
+- **Zustände** — Cyan heisst an, dunkel heisst aus. Der laufende Titel ist der einzige rote Punkt.
+- **Bewegung** — Punkte gehen an und aus, sonst nichts — ein Raster blendet nicht über.
+- **Bibliothek** — Vorschlag: das vierte geätzte Zeichen unten links.
+
+### K82 · Fadertisch
+
+*Morror Art — Telefon · PC. **Vorschlag — bitte prüfen**.*
+
+- **Spulen** — Die Bahn unter dem Bild; die vier unteren Fader springen auf Viertel, Hälfte, Dreiviertel und Ende.
+- **Zustände** — Ein Pad je Titel: Gespieltes dunkler, Laufendes orange. Genau eine Taste ist orange, und sie ist die grösste.
+- **Bewegung** — Keine. **Zu entscheiden:** ob ein Pad beim Antippen kurz aufleuchtet — das wäre Rückmeldung und kein Zierrat.
+- **Bibliothek** — Die Zeichen unten rechts neben „Sammlung". Das Pad-Feld blättert in der letzten Reihe weiter.
+
+### K83 · Halbmond
+
+*AVM — Telefon · PC. **Vorschlag — bitte prüfen**.*
+
+- **Spulen** — Der Fortschrittsstrich im Schlitz — wenige Pixel hoch, aber die einzige Stelle mit einer Position.
+- **Zustände** — Die Kante zwischen heller und dunkler Kappenhälfte ist die Stellung des Knopfes. Im Schlitz steht, was die fünf Punkte gerade tun.
+- **Bewegung** — Der Halbmond dreht sich beim Verstellen. **Zu entscheiden:** ob der Schlitz beim Titelwechsel überblendet oder hart umschaltet.
+- **Bibliothek** — Der fünfte Punkt unter dem Schlitz.
+
+### K84 · Dezibel
+
+*Eversolo T10 — Telefon · PC. **Vorschlag — bitte prüfen**.*
+
+- **Spulen** — Das rechte Zeigerfenster — man zieht den Zeiger.
+- **Zustände** — Links Pegel, rechts Stand im Album; Orange am Skalenende heisst in beiden „es wird knapp".
+- **Bewegung** — **Beide Zeiger bewegen sich, und beide zeigen etwas** — der linke den Pegel, der rechte die Position. Keiner läuft leer.
+- **Bibliothek** — Die freistehenden Zeichen rechts, ohne Rahmen und ohne Wort.
+
+### K85 · Silberkasten
+
+*Eversolo, Silberplatte — Telefon · PC. **Vorschlag — bitte prüfen**.*
+
+- **Spulen** — Die Warteschlangenleiste auf der Platte; der laufende Titel ist der volle Strich.
+- **Zustände** — Alles steht auf der einen Platte. Der Ring unten ist gedrückt oder nicht — mehr Zustand hat er nicht.
+- **Bewegung** — Nur der Zeiger. Die Platte selbst bleibt still: sie ist Blech, kein Bildschirm.
+- **Bibliothek** — **Offen.** Der Entwurf hat bewusst einen einzigen Knopf. Vorschlag: langes Drücken auf die Platte öffnet die Sammlung — sonst braucht es eine zweite Marke auf der Platte.
