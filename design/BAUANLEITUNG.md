@@ -13,7 +13,8 @@ Wozu: das Konzeptregister zeigt, *wie* ein Konzept aussieht. Diese Datei sagt,
 **Drei Verlässlichkeitsgrade.** Bei den gebauten Konzepten ist das eine
 Beschreibung, abgelesen aus dem Code. Bei den gezeichneten Blättern ist es aus
 dem Blatt übernommen — die sind bedienbar und beantworten die Frage selbst.
-Bei den Paket-Blättern und den eigenen Entwürfen ist es ein **Vorschlag**:
+Bei den Paket-Blättern, den eigenen Entwürfen und den drei Synthesen ist es
+ein **Vorschlag**:
 diese Blätter sind pixelgenaue Standbilder ohne Skript, ohne Übergänge, ohne
 Zustände. Dort ist nichts abzulesen, dort ist zu entscheiden.
 
@@ -115,7 +116,7 @@ in `daten_bau.py` und baut beides neu.
 
 ### K11 · Turm
 
-*Blatt 13 · Nussbaum &amp; Champagner — Tablet · PC. gelesen aus `player.html`.*
+*Blatt 13 · Nussbaum & Champagner — Tablet · PC. gelesen aus `player.html`.*
 
 - **Spulen** — Die Laufleiste an der Frontplatte.
 - **Zustände** — Zeiger stehen auf dem Pegel; der laufende Titel ist in der Vierer-Wahl hell.
@@ -124,7 +125,7 @@ in `daten_bau.py` und baut beides neu.
 
 ### K12 · Vollverstärker
 
-*Blatt 13 · Nussbaum &amp; Champagner — Tablet · PC. gelesen aus `player.html`.*
+*Blatt 13 · Nussbaum & Champagner — Tablet · PC. gelesen aus `player.html`.*
 
 - **Spulen** — Die Laufleiste.
 - **Zustände** — Wie Turm, auf einer Frontplatte statt zweier.
@@ -160,7 +161,7 @@ in `daten_bau.py` und baut beides neu.
 
 ### K16 · Karte
 
-*Blatt 03 · Antiqua &amp; Ausschlag — Telefon. gelesen aus `player.html`.*
+*Blatt 03 · Antiqua & Ausschlag — Telefon. gelesen aus `player.html`.*
 
 - **Spulen** — Der Ausschlag unter der Zeitüberschrift.
 - **Zustände** — Kopflinie auf der Position; darunter die Warteschlange mit markiertem Titel.
@@ -727,7 +728,7 @@ in `daten_bau.py` und baut beides neu.
 
 ### K78 · Gyrorad
 
-*Marantz 2216 B &amp; Pioneer SX-650 — Telefon · PC. **Vorschlag — bitte prüfen**.*
+*Marantz 2216 B & Pioneer SX-650 — Telefon · PC. **Vorschlag — bitte prüfen**.*
 
 - **Spulen** — Das Rad — endlos drehbar. Die Albumskala darüber wird nicht angefasst.
 - **Zustände** — Der Zeiger links steht auf der Position im Titel, die rote Marke auf der Albumskala.
@@ -736,7 +737,7 @@ in `daten_bau.py` und baut beides neu.
 
 ### K79 · Milchlicht
 
-*Technics SA-5551 &amp; Yamaha CR-700 — Telefon · PC. **Vorschlag — bitte prüfen**.*
+*Technics SA-5551 & Yamaha CR-700 — Telefon · PC. **Vorschlag — bitte prüfen**.*
 
 - **Spulen** — Das Milchglasband — die Grenze zwischen dunkel und hell ist die Position.
 - **Zustände** — Gelaufenes ist dunkel, Kommendes leuchtet; der laufende Titel steht fett und liegt auf der Grenze. Zwei kleine Fenster zählen Titel und Restzeit.
@@ -823,3 +824,33 @@ in `daten_bau.py` und baut beides neu.
 - **Zustände** — Der Durchmesser der beiden Wickel ist der Stand im Album; das Zählwerk zeigt die Position im Titel. Von den Wipptasten steht immer genau eine.
 - **Bewegung** — **Die Wickel wachsen und schrumpfen** — das ist die einzige Fortschrittsanzeige des Entwurfs und deshalb Pflicht. Die beiden Zeiger folgen Pegel und Stand. Ob sich die Spulen zusätzlich *drehen*, ist **zu entscheiden**: es wäre der einzige Dauerläufer.
 - **Bibliothek** — Das Buchzeichen rechts auf der Frontplatte, neben Lupe und Lautstärke.
+
+
+## Synthese — aus allen 88 gezogen
+
+### K89 · Bogen
+
+*Synthese aus K06 Aufgeschlagen, K13 Papier, K14 Desert Rose, K87 Anschlag — Telefon · PC. **Vorschlag — bitte prüfen**.*
+
+- **Spulen** — Die Haarlinie unten über die volle Satzbreite — sie trägt das ganze Album, nicht den Titel, also spult man über Titelgrenzen hinweg an derselben Linie. Das ist `bindAchse()` und nicht `bindDrag()`: Ziel in `deck._gziel` parken, erst beim Loslassen anwenden.
+- **Zustände** — Der laufende Titel ist der einzige mit Tinte statt Grau, seine Ziffer steht in Messing. Auf der Linie: die gelaufene Strecke messingfarben, die Raute auf der Gegenwart. Messing steht nirgends sonst — das ist die ganze Zustandslehre des Blattes.
+- **Bewegung** — Nur die Raute wandert und die messingfarbene Strecke wächst. Kein Blättern, kein Aufblenden. **Zu entscheiden:** ob die Raute beim Titelwechsel merklich über den hohen Strich springt oder einfach weiterläuft — ersteres macht die Grenze hörbar sichtbar, letzteres ist ruhiger.
+- **Bibliothek** — Die drei leisen Zeichen oben rechts; die Sammlung als Blende über das Blatt. Die Titelliste ist Text und trotzdem antippbar — sie ist die Warteschlange, nicht die Sammlung.
+
+### K90 · Nachtglas
+
+*Synthese aus K49 Glass ohne Kreise, K21 Milchglaszeilen, K79 Milchlicht, K84 Dezibel — Telefon · PC. **Vorschlag — bitte prüfen**.*
+
+- **Spulen** — Die hinterleuchtete Bahn unter dem Titel. Sie zeigt **nur den laufenden Titel**; für das Album sind die Glaszeilen darunter zuständig, und jede davon kann ihre eigene Kante tragen (dann wäre es K23 Die Spur in Glas — das ist offen, siehe Bewegung).
+- **Zustände** — Gelaufenes leuchtet, Kommendes ist dunkles Glas, die weisse Kante steht auf der Gegenwart. In der Schlange: gelaufene Zeilen matt, die laufende heller mit eisblauem Balken an der linken Kante. Gedrückt wird an einer kurz aufhellenden Scheibe erkennbar.
+- **Bewegung** — Die Lichtkante wandert, sonst nichts. **Zu entscheiden:** ob jede Glaszeile ihren eigenen Stand als Kante trägt — das wäre schön und wäre zugleich fünf bewegte Kanten statt einer, also gegen die Hausregel, dass nur die Gegenwart sich bewegt.
+- **Bibliothek** — Die drei leisen Zeichen oben rechts in der Karte; die Sammlung als Blende, die als weitere Glasscheibe über die Karte fährt.
+
+### K91 · Rundlauf
+
+*Synthese aus K78 Gyrorad, K11/K12 Turm & Vollverstärker, K77 Glasgravur, K85 Silberkasten, K83 Halbmond — Telefon · PC. **Vorschlag — bitte prüfen**.*
+
+- **Spulen** — Das geriffelte Rad rechts (am Telefon unten in der Mitte) — gedreht, nicht gezogen; und die gravierte Skala im Anzeigefenster ist die zweite, feinere Spulfläche. Nur eine der beiden darf `data-spulen` tragen: das Rad, weil es die grössere Fläche ist und ohne Blick getroffen wird.
+- **Zustände** — Der Bernsteinbalken steht auf der Gegenwart, die hohen Striche sind die Titelgrenzen, die Ziffer des laufenden Titels ist die einzige helle. In der Silberplatte steht der laufende Titel in Bernstein. Die Tasten haben eine Kante und einen Lichtsaum, damit ein Druck als Einsinken darstellbar ist.
+- **Bewegung** — Der Bernsteinbalken wandert. Das Rad dreht sich **nur unter dem Finger**, mit Nachlauf wie bei K78 Gyrorad — ohne Trägheit ist es ein Knopf. Sonst steht alles: eine Frontplatte ist still, bis man sie anfasst.
+- **Bibliothek** — Die drei leisen Zeichen oben rechts, graviert in die Frontplatte; die Sammlung als Blende über das Gerät. Die Silberplatte zeigt die Warteschlange, nicht die Sammlung.

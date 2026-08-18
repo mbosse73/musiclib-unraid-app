@@ -9,6 +9,7 @@ etwas ändert, ändert es dort und baut beides neu:
     python3 design/register/bauen.py
     python3 design/register/anleitung.py
 """
+import html
 import pathlib
 import re
 
@@ -32,7 +33,9 @@ AUSZEICHNUNG = [(r'</?b>', '**'), (r'</?i>', '*'), (r'</?code>', '`')]
 def md(t):
     for muster, zeichen in AUSZEICHNUNG:
         t = re.sub(muster, zeichen, t)
-    return t
+    # Entitäten sind HTML und in Markdown nur ein Tippfehler: „Nussbaum &amp;
+    # Champagner“ stand hier bis eben genau so da.
+    return html.unescape(t)
 
 
 KOPF = '''# Bauanleitung je Konzept
@@ -50,7 +53,8 @@ Wozu: das Konzeptregister zeigt, *wie* ein Konzept aussieht. Diese Datei sagt,
 **Drei Verlässlichkeitsgrade.** Bei den gebauten Konzepten ist das eine
 Beschreibung, abgelesen aus dem Code. Bei den gezeichneten Blättern ist es aus
 dem Blatt übernommen — die sind bedienbar und beantworten die Frage selbst.
-Bei den Paket-Blättern und den eigenen Entwürfen ist es ein **Vorschlag**:
+Bei den Paket-Blättern, den eigenen Entwürfen und den drei Synthesen ist es
+ein **Vorschlag**:
 diese Blätter sind pixelgenaue Standbilder ohne Skript, ohne Übergänge, ohne
 Zustände. Dort ist nichts abzulesen, dort ist zu entscheiden.
 
@@ -69,7 +73,7 @@ for status, titel, lede, hinweis, eintraege in GRUPPEN:
             continue
         teile.append(
             f'### K{nr:02d} · {name}\n\n'
-            f'*{herkunft} — {formate}. {GRAD[b["art"]]}*\n\n'
+            f'*{md(herkunft)} — {formate}. {GRAD[b["art"]]}*\n\n'
             f'- **Spulen** — {md(b["spulen"])}\n'
             f'- **Zustände** — {md(b["zustaende"])}\n'
             f'- **Bewegung** — {md(b["bewegung"])}\n'

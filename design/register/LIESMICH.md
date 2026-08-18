@@ -1,9 +1,10 @@
 # Das Konzeptregister
 
-Alle 76 Konzepte auf einem Blatt: je eine Karte mit Aufnahmen, Herkunft,
+Alle 91 Konzepte auf einem Blatt: je eine Karte mit Aufnahmen, Herkunft,
 Formaten, Stand und Bauanleitung, dazu Filter, Suche und eine Lupe. Es ist die
 Übersicht über alles, was für diese App je entworfen wurde — gebaut,
-gezeichnet, geliefert oder selbst gemacht.
+gezeichnet, geliefert, selbst gemacht — und zuletzt aus allem davor
+zusammengezogen.
 
 Das Register ist **kein Teil der App**. Der Container liefert es nicht aus, die
 Tests fassen es nicht an; es ist Werkzeug für Entscheidungen.
@@ -28,16 +29,16 @@ setzt ihn von Hand, dieselbe Variable wie in `test_frontend.py`.
 
 | Datei | Was |
 |---|---|
-| `daten_gruppen.py` | `GRUPPEN` — die vier Gruppen und ihre Einträge, in Registerreihenfolge. **Die Nummern K01–K76 stehen nirgends: sie werden beim Bauen gezählt.** Wer einen Eintrag einfügt, verschiebt alle folgenden. |
+| `daten_gruppen.py` | `GRUPPEN` — die fünf Gruppen und ihre Einträge, in Registerreihenfolge. **Die Nummern K01–K91 stehen nirgends: sie werden beim Bauen gezählt.** Wer einen Eintrag einfügt, verschiebt alle folgenden. |
 | `daten_bau.py` | `BAU` — je Konzept Spulfläche, Zustände, Bewegung, Bibliothek. Geschlüsselt über die **erste Bildkennung**, nicht über den Namen: „Emaille" ist ein Blatt *und* eine Auslage. |
 | `daten_offen.py` | `OFFEN` — was noch zu entscheiden ist, als Liste unter den Karten. |
 | `bauen.py` | baut `konzeptregister.html`, Bilder inline als data-URI. |
 | `anleitung.py` | baut `../BAUANLEITUNG.md` aus **denselben** Daten. |
-| `aufnahmen.py` | nimmt alle 130 Bilder nach `kb/` auf. |
+| `aufnahmen.py` | nimmt alle 160 Bilder nach `kb/` auf. |
 | `sammlung.py` | die Testsammlung dafür — 12 Alben, 107 Titel. |
-| `kb/` | die Aufnahmen, 7 MB. Erzeugt, aber eingecheckt: sonst kostet jede Registeransicht sechs Minuten Aufnahme. |
+| `kb/` | die Aufnahmen, gut 8 MB. Erzeugt, aber eingecheckt: sonst kostet jede Registeransicht sechs Minuten Aufnahme. |
 
-`konzeptregister.html` ist **nicht** eingecheckt (siehe `.gitignore`): 8,7 MB,
+`konzeptregister.html` ist **nicht** eingecheckt (siehe `.gitignore`): 10,8 MB,
 in denen dieselben Bilder ein zweites Mal stecken, und bei jedem Bau ein neuer
 Blob. Was das Register ausmacht — Texte, Reihenfolge, Aufnahmen — liegt hier
 vollständig; die Seite ist daraus in Sekunden wieder da.
@@ -65,3 +66,17 @@ nie angefasst.
    der kein `kb/<name>.jpg` gehört, lässt `bauen.py` abbrechen.
 4. Beides neu bauen. Die Nummern hinter der Einfügestelle verschieben sich —
    das ist beabsichtigt und der Grund, warum in `daten_bau.py` keine steht.
+5. Eine **neue Gruppe** braucht zusätzlich drei Zeilen in `bauen.py`: einen
+   Eintrag in `MARKE`, eine Farbe `--s-<schluessel>` in **allen drei** Paletten
+   (hell, `prefers-color-scheme:dark`, `[data-theme="dark"]`) und je eine Regel
+   für `.punkt[data-status=…]` und `.karte[data-status=…]`. Fehlt die Farbe in
+   nur einer Palette, ist der Punkt dort unsichtbar und die Karte trägt die
+   Kante der Gruppe davor.
+
+## Die Synthese-Gruppe ist anders zu lesen
+
+K89–K91 (Bogen, Nachtglas, Rundlauf) haben kein Vorbild; sie sind die 88 davor
+noch einmal gelesen. Was sie teilen — Maßband, Schriftleiter, Satzspiegel,
+Bedienreihe — steht in `../entwuerfe/src/kanon.py`, was sie unterscheidet ist
+allein die Standanzeige. Wer eine davon streicht, streicht ein Material, keinen
+Entwurf; wer zwei nimmt, hat zwei Fassungen derselben Sache.

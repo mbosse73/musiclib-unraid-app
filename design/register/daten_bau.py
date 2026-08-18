@@ -397,6 +397,48 @@ VORSCHLAG = {
    'Entwurfs und deshalb Pflicht. Die beiden Zeiger folgen Pegel und Stand. Ob sich die Spulen '
    'zusätzlich <i>drehen</i>, ist <b>zu entscheiden</b>: es wäre der einzige Dauerläufer.',
    'Das Buchzeichen rechts auf der Frontplatte, neben Lupe und Lautstärke.'),
+
+ # ── K89–K91 · die drei Synthesen. Ein Aufbau in drei Materialien; was sie
+ # teilen, steht in design/entwuerfe/src/kanon.py. ────────────────────────
+ 'foto75_Bogen': ('Die Haarlinie unten über die volle Satzbreite — sie trägt das ganze '
+   'Album, nicht den Titel, also spult man über Titelgrenzen hinweg an derselben Linie. '
+   'Das ist <code>bindAchse()</code> und nicht <code>bindDrag()</code>: Ziel in '
+   '<code>deck._gziel</code> parken, erst beim Loslassen anwenden.',
+   'Der laufende Titel ist der einzige mit Tinte statt Grau, seine Ziffer steht in Messing. '
+   'Auf der Linie: die gelaufene Strecke messingfarben, die Raute auf der Gegenwart. '
+   'Messing steht nirgends sonst — das ist die ganze Zustandslehre des Blattes.',
+   'Nur die Raute wandert und die messingfarbene Strecke wächst. Kein Blättern, kein '
+   'Aufblenden. <b>Zu entscheiden:</b> ob die Raute beim Titelwechsel merklich über den '
+   'hohen Strich springt oder einfach weiterläuft — ersteres macht die Grenze hörbar '
+   'sichtbar, letzteres ist ruhiger.',
+   'Die drei leisen Zeichen oben rechts; die Sammlung als Blende über das Blatt. Die '
+   'Titelliste ist Text und trotzdem antippbar — sie ist die Warteschlange, nicht die '
+   'Sammlung.'),
+ 'foto76_Nachtglas': ('Die hinterleuchtete Bahn unter dem Titel. Sie zeigt <b>nur den '
+   'laufenden Titel</b>; für das Album sind die Glaszeilen darunter zuständig, und jede '
+   'davon kann ihre eigene Kante tragen (dann wäre es K23 Die Spur in Glas — das ist '
+   'offen, siehe Bewegung).',
+   'Gelaufenes leuchtet, Kommendes ist dunkles Glas, die weisse Kante steht auf der '
+   'Gegenwart. In der Schlange: gelaufene Zeilen matt, die laufende heller mit eisblauem '
+   'Balken an der linken Kante. Gedrückt wird an einer kurz aufhellenden Scheibe erkennbar.',
+   'Die Lichtkante wandert, sonst nichts. <b>Zu entscheiden:</b> ob jede Glaszeile ihren '
+   'eigenen Stand als Kante trägt — das wäre schön und wäre zugleich fünf bewegte Kanten '
+   'statt einer, also gegen die Hausregel, dass nur die Gegenwart sich bewegt.',
+   'Die drei leisen Zeichen oben rechts in der Karte; die Sammlung als Blende, die als '
+   'weitere Glasscheibe über die Karte fährt.'),
+ 'foto77_Rundlauf': ('Das geriffelte Rad rechts (am Telefon unten in der Mitte) — gedreht, '
+   'nicht gezogen; und die gravierte Skala im Anzeigefenster ist die zweite, feinere '
+   'Spulfläche. Nur eine der beiden darf <code>data-spulen</code> tragen: das Rad, weil '
+   'es die grössere Fläche ist und ohne Blick getroffen wird.',
+   'Der Bernsteinbalken steht auf der Gegenwart, die hohen Striche sind die Titelgrenzen, '
+   'die Ziffer des laufenden Titels ist die einzige helle. In der Silberplatte steht der '
+   'laufende Titel in Bernstein. Die Tasten haben eine Kante und einen Lichtsaum, damit '
+   'ein Druck als Einsinken darstellbar ist.',
+   'Der Bernsteinbalken wandert. Das Rad dreht sich <b>nur unter dem Finger</b>, mit '
+   'Nachlauf wie bei K78 Gyrorad — ohne Trägheit ist es ein Knopf. Sonst steht alles: '
+   'eine Frontplatte ist still, bis man sie anfasst.',
+   'Die drei leisen Zeichen oben rechts, graviert in die Frontplatte; die Sammlung als '
+   'Blende über das Gerät. Die Silberplatte zeigt die Warteschlange, nicht die Sammlung.'),
 }
 del VORSCHLAG['foto52_platzhalter']
 
