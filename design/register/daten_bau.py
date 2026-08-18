@@ -375,6 +375,28 @@ VORSCHLAG = {
    'Nur der Zeiger. Die Platte selbst bleibt still: sie ist Blech, kein Bildschirm.',
    '<b>Offen.</b> Der Entwurf hat bewusst einen einzigen Knopf. Vorschlag: langes Drücken auf '
    'die Platte öffnet die Sammlung — sonst braucht es eine zweite Marke auf der Platte.'),
+
+ 'foto72_Tastenreihe': ('Das Fenster: der Bandlauf zwischen den beiden Wickeln, über Titelgrenzen hinweg.',
+   'Genau eine Taste steht unten, und ihr Wort steht fett — mehr Zustand braucht eine '
+   'mechanische Reihe nicht. Der Wickel links wächst, der rechte wird dünner.',
+   'Die Wickel ändern ihren Durchmesser. Die Taste federt beim Drücken. Sonst nichts — '
+   'ein Klaviertastenwerk ist still, bis man es anfasst.',
+   'Das Buchzeichen unter der Tastenreihe, neben Lupe und Lautstärke.'),
+ 'foto73_Anschlag': ('Der Rand der orangen Scheibe — der Sektor folgt dem Finger, im Uhrzeigersinn '
+   'ab zwölf Uhr.',
+   'Der laufende Titel ist der einzige fett gesetzte im Blocksatz; der abgespielte Teil des '
+   'Albums steht als dunklerer Sektor in der Scheibe.',
+   'Der Sektor wächst. <b>Zu entscheiden:</b> ob die schwarze Platte oben rechts sich dreht, '
+   'solange Ton läuft — sie zeigt dann nichts, was der Sektor nicht schon sagt, wäre aber das '
+   'einzige Lebenszeichen in einem sonst starren Plakat.',
+   'Das Buchzeichen in der Zeichenreihe unten; die Titelliste selbst ist Text und kein Menü.'),
+ 'foto74_Bandteller': ('Die Spulen selbst: man dreht eine, das Band wandert.',
+   'Der Durchmesser der beiden Wickel ist der Stand im Album; das Zählwerk zeigt die Position '
+   'im Titel. Von den Wipptasten steht immer genau eine.',
+   '<b>Die Wickel wachsen und schrumpfen</b> — das ist die einzige Fortschrittsanzeige des '
+   'Entwurfs und deshalb Pflicht. Die beiden Zeiger folgen Pegel und Stand. Ob sich die Spulen '
+   'zusätzlich <i>drehen</i>, ist <b>zu entscheiden</b>: es wäre der einzige Dauerläufer.',
+   'Das Buchzeichen rechts auf der Frontplatte, neben Lupe und Lautstärke.'),
 }
 del VORSCHLAG['foto52_platzhalter']
 

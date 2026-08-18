@@ -27,4 +27,18 @@ Champagner-Receiver mit Schwungrad und Zeigern das eine, eine hinterleuchtete
 Glasskala in dunkler Blende das andere. Zwei Entwürfe daraus zu machen hätte
 zwei Fassungen derselben Sache ergeben, und davon hat das Register genug.
 
+## Nachtrag: drei weitere Aufnahmen
+
+Nachgereicht, deshalb ohne Uhrzeit im Dateinamen:
+
+| Aufnahme | Vorlage | Entwurf |
+|---|---|---|
+| `Nachtrag 1 — SKR 700.jpeg` | Kassettenrekorder SKR 700 | 72 Tastenreihe |
+| `Nachtrag 2 — Plattenspieler-Plakat.jpeg` | Plakat, kein Gerät | 73 Anschlag |
+| `Nachtrag 3 — Revox.jpeg` | Revox-Bandmaschine | 74 Bandteller |
+
+Die zweite ist die einzige Vorlage im ganzen Repo, die **kein Gerät zeigt**,
+sondern ein gedrucktes Blatt — und der Entwurf daraus ist entsprechend der
+einzige, der keine Maschine nachbaut.
+
 Nichts hiervon wird ausgeliefert. Der Container kennt diesen Ordner nicht.

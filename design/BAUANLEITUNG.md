@@ -796,3 +796,30 @@ in `daten_bau.py` und baut beides neu.
 - **Zustände** — Alles steht auf der einen Platte. Der Ring unten ist gedrückt oder nicht — mehr Zustand hat er nicht.
 - **Bewegung** — Nur der Zeiger. Die Platte selbst bleibt still: sie ist Blech, kein Bildschirm.
 - **Bibliothek** — **Offen.** Der Entwurf hat bewusst einen einzigen Knopf. Vorschlag: langes Drücken auf die Platte öffnet die Sammlung — sonst braucht es eine zweite Marke auf der Platte.
+
+### K86 · Tastenreihe
+
+*Kassettenrekorder SKR 700 — Telefon · PC. **Vorschlag — bitte prüfen**.*
+
+- **Spulen** — Das Fenster: der Bandlauf zwischen den beiden Wickeln, über Titelgrenzen hinweg.
+- **Zustände** — Genau eine Taste steht unten, und ihr Wort steht fett — mehr Zustand braucht eine mechanische Reihe nicht. Der Wickel links wächst, der rechte wird dünner.
+- **Bewegung** — Die Wickel ändern ihren Durchmesser. Die Taste federt beim Drücken. Sonst nichts — ein Klaviertastenwerk ist still, bis man es anfasst.
+- **Bibliothek** — Das Buchzeichen unter der Tastenreihe, neben Lupe und Lautstärke.
+
+### K87 · Anschlag
+
+*Plattenspieler-Plakat — Telefon · PC. **Vorschlag — bitte prüfen**.*
+
+- **Spulen** — Der Rand der orangen Scheibe — der Sektor folgt dem Finger, im Uhrzeigersinn ab zwölf Uhr.
+- **Zustände** — Der laufende Titel ist der einzige fett gesetzte im Blocksatz; der abgespielte Teil des Albums steht als dunklerer Sektor in der Scheibe.
+- **Bewegung** — Der Sektor wächst. **Zu entscheiden:** ob die schwarze Platte oben rechts sich dreht, solange Ton läuft — sie zeigt dann nichts, was der Sektor nicht schon sagt, wäre aber das einzige Lebenszeichen in einem sonst starren Plakat.
+- **Bibliothek** — Das Buchzeichen in der Zeichenreihe unten; die Titelliste selbst ist Text und kein Menü.
+
+### K88 · Bandteller
+
+*Revox-Bandmaschine — Telefon · PC. **Vorschlag — bitte prüfen**.*
+
+- **Spulen** — Die Spulen selbst: man dreht eine, das Band wandert.
+- **Zustände** — Der Durchmesser der beiden Wickel ist der Stand im Album; das Zählwerk zeigt die Position im Titel. Von den Wipptasten steht immer genau eine.
+- **Bewegung** — **Die Wickel wachsen und schrumpfen** — das ist die einzige Fortschrittsanzeige des Entwurfs und deshalb Pflicht. Die beiden Zeiger folgen Pegel und Stand. Ob sich die Spulen zusätzlich *drehen*, ist **zu entscheiden**: es wäre der einzige Dauerläufer.
+- **Bibliothek** — Das Buchzeichen rechts auf der Frontplatte, neben Lupe und Lautstärke.

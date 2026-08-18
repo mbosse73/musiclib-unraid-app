@@ -1,0 +1,84 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:2340px;overflow:hidden}
+.stage{position:relative;width:1080px;height:2340px;overflow:hidden}
+
+.stage{background:linear-gradient(180deg,#D6D6D2 0%,#BFBFBB 46%,#AAAAA6 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#26262A;-webkit-font-smoothing:antialiased}
+.kap{letter-spacing:.24em;text-transform:uppercase;color:rgba(38,38,42,.42);font-weight:500}
+.gebuerstet{background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.17) 0 1px,rgba(0,0,0,.05) 1px 3px),
+    linear-gradient(180deg,#D8D8D4 0%,#C6C6C2 44%,#A8A8A4 100%)}
+
+/* ── Der Lautsprecherkorb: ein Punktraster hinter einem Ring ── */
+.korb{position:relative;border-radius:50%;
+  background:radial-gradient(circle at 38% 32%,#3E3E3C,#161616 76%);
+  box-shadow:inset 0 0 0 5px #B4B4B0,inset 0 0 0 7px #8E8E8A,
+    0 6px 16px rgba(0,0,0,.35)}
+.korb::after{content:'';position:absolute;inset:7px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.10) 0 1px,rgba(0,0,0,.55) 1px 3px);
+  background-size:6px 6px}
+
+/* ── Das Fenster: beleuchtetes Elfenbein hinter Glas ── */
+.fenster{position:relative;overflow:hidden;border-radius:3px;
+  background:linear-gradient(180deg,#F4EFD6 0%,#E8E2C4 52%,#D8D2B4 100%);
+  box-shadow:inset 0 0 0 4px #9A9A96,inset 0 4px 12px rgba(90,80,50,.28),
+    0 5px 14px rgba(0,0,0,.35)}
+.flab{position:absolute;font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(58,46,34,.55)}
+
+/* ── Die Klaviertaste: gerippt, silbern, mit Druckpunkt ── */
+.taste{position:relative;border-radius:3px;
+  background:repeating-linear-gradient(90deg,#EDEDE9 0 2px,#B2B2AE 2px 4px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -2px 0 rgba(0,0,0,.28),
+    0 4px 8px rgba(0,0,0,.34)}
+.taste.unten{background:repeating-linear-gradient(90deg,#B2B2AE 0 2px,#8E8E8A 2px 4px);
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.3)}
+.tlab{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;letter-spacing:.14em;text-transform:uppercase;color:#26262A;
+  text-align:center}
+.taste.unten + .tlab{font-weight:700}
+/* Die Klammer ist gedruckt: zwei Winkel und ein Wort dazwischen. */
+.klammer{position:absolute;border-top:2px solid rgba(38,38,42,.62);
+  border-left:2px solid rgba(38,38,42,.62);border-right:2px solid rgba(38,38,42,.62)}
+.klab{position:absolute;left:50%;transform:translateX(-50%);font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;
+  letter-spacing:.18em;text-transform:uppercase;color:rgba(38,38,42,.62);background:#C6C6C2;
+  padding:0 8px}
+.zeit{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(38,38,42,.62);font-variant-numeric:tabular-nums}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;display:flex;flex-direction:column;
+  padding:92px 48px 0;gap:30px">
+  <div style="display:flex;align-items:baseline;justify-content:space-between">
+  <span class="kap" style="font-size:19px">Musiklib · SKR</span>
+  <span class="kap" style="font-size:19px">Sammlung 240 · Kind of Blue</span>
+</div>
+  <div class="gebuerstet" style="flex:1;margin:0 -48px;padding:44px 48px 60px;
+    display:flex;flex-direction:column;align-items:center;gap:40px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.8)">
+    <span class="korb" style="width:340px;height:340px;flex:none"></span>
+    <div class="fenster" style="width:940px;height:250px;
+  display:flex;align-items:center;justify-content:center;gap:94px">
+  <svg viewBox="0 0 150 150" width="150" height="150"><circle cx="75" cy="75" r="75" fill="none" stroke="rgba(58,46,34,.35)" stroke-width="1.4"/><circle cx="75" cy="75" r="43.5" fill="#3A2E22" opacity=".82"/><circle cx="75" cy="75" r="22.5" fill="#DAD6C4" stroke="rgba(58,46,34,.5)" stroke-width="1.2"/><line x1="84.0" y1="75.0" x2="96.0" y2="75.0" stroke="rgba(58,46,34,.6)" stroke-width="2.0"/><line x1="70.5" y1="82.8" x2="64.5" y2="93.2" stroke="rgba(58,46,34,.6)" stroke-width="2.0"/><line x1="70.5" y1="67.2" x2="64.5" y2="56.8" stroke="rgba(58,46,34,.6)" stroke-width="2.0"/></svg><svg viewBox="0 0 150 150" width="150" height="150"><circle cx="75" cy="75" r="75" fill="none" stroke="rgba(58,46,34,.35)" stroke-width="1.4"/><circle cx="75" cy="75" r="52.5" fill="#3A2E22" opacity=".82"/><circle cx="75" cy="75" r="22.5" fill="#DAD6C4" stroke="rgba(58,46,34,.5)" stroke-width="1.2"/><line x1="84.0" y1="75.0" x2="96.0" y2="75.0" stroke="rgba(58,46,34,.6)" stroke-width="2.0"/><line x1="70.5" y1="82.8" x2="64.5" y2="93.2" stroke="rgba(58,46,34,.6)" stroke-width="2.0"/><line x1="70.5" y1="67.2" x2="64.5" y2="56.8" stroke="rgba(58,46,34,.6)" stroke-width="2.0"/></svg>
+  <span class="flab" style="left:56px;top:25px;
+    font-size:19px">Warteschlange</span>
+  <span class="flab" style="right:56px;top:25px;
+    font-size:19px">Titel 3 von 5</span>
+  <span class="flab" style="left:0;right:0;bottom:22px;text-align:center;
+    font-size:21px;letter-spacing:.06em">Blue in Green · Miles Davis</span>
+</div>
+    <div style="display:flex;flex-direction:column;gap:28px;align-items:center">
+      <div style="position:relative;padding-top:46px">
+  <span class="klammer" style="left:384px;top:22px;
+    width:588px;height:18px"></span>
+  <span class="klab" style="top:13px;left:678px;
+    font-size:28px">Suchlauf</span>
+  <div style="display:flex;gap:51px"><div style="width:150px;display:flex;flex-direction:column;align-items:center;gap:10px"><span class="taste" style="width:150px;height:92px"></span><span class="tlab" style="font-size:32px">Halt</span></div><div style="width:150px;display:flex;flex-direction:column;align-items:center;gap:10px"><span class="taste" style="width:150px;height:92px"></span><span class="tlab" style="font-size:32px">Merken</span></div><div style="width:150px;display:flex;flex-direction:column;align-items:center;gap:10px"><span class="taste" style="width:150px;height:92px"></span><span class="tlab" style="font-size:32px">Zurück</span></div><div style="width:150px;display:flex;flex-direction:column;align-items:center;gap:10px"><span class="taste unten" style="width:150px;height:92px"></span><span class="tlab" style="font-size:32px">Spielen</span></div><div style="width:150px;display:flex;flex-direction:column;align-items:center;gap:10px"><span class="taste" style="width:150px;height:92px"></span><span class="tlab" style="font-size:32px">Vor</span></div><div style="width:150px;display:flex;flex-direction:column;align-items:center;gap:10px"><span class="taste" style="width:150px;height:92px"></span><span class="tlab" style="font-size:32px">Pause</span></div></div>
+</div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
+      <span class="zeit" style="font-size:23px">02:14</span>
+      <div style="display:flex;gap:34px">
+        <svg width="30" height="30" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="rgba(38,38,42,.62)"/><rect x="8" y="4" width="3" height="16" rx="1" fill="rgba(38,38,42,.62)"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="rgba(38,38,42,.62)"/></svg><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(38,38,42,.62)" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 L21 21"/></svg><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(38,38,42,.62)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z" fill="rgba(38,38,42,.62)"/><path d="M17 9.5a4 4 0 0 1 0 5"/><path d="M19.5 7a7.5 7.5 0 0 1 0 10"/></svg></div>
+      <span class="zeit" style="font-size:23px">-03:23</span>
+    </div>
+  </div>
+</div></div></body></html>

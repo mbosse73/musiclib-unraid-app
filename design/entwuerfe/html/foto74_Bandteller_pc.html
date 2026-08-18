@@ -1,0 +1,84 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1600px;height:1000px;overflow:hidden}
+.stage{position:relative;width:1600px;height:1000px;overflow:hidden}
+
+.stage{background:linear-gradient(180deg,#232527 0%,#17181A 55%,#0E0F11 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#E9EBEC;-webkit-font-smoothing:antialiased}
+.kap{letter-spacing:.24em;text-transform:uppercase;color:rgba(233,235,236,.34);font-weight:500}
+
+/* ── Die Frontplatte: gebürstetes Aluminium über dunklem Feld ── */
+.front{position:relative;background:linear-gradient(180deg,#4A4D51 0%,#3E4145 60%,#303336 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 -1px 0 rgba(0,0,0,.6),
+    0 10px 26px rgba(0,0,0,.55)}
+.leiste{background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.16) 0 1px,rgba(0,0,0,.05) 1px 3px),
+    linear-gradient(180deg,#D6D8DA 0%,#C4C6C8 46%,#A2A4A6 100%);
+  color:#1A1C1E;box-shadow:inset 0 1px 0 rgba(255,255,255,.85)}
+
+/* ── Die Wipptaste: schwarzer Hebel in einer Nut, gekippt heisst „steht" ── */
+.wippe{position:relative;border-radius:2px;
+  background:linear-gradient(180deg,#2A2C2F 0%,#0E1012 62%,#212326 100%);
+  box-shadow:0 3px 7px rgba(0,0,0,.6),
+    inset 0 1px 0 rgba(255,255,255,.16)}
+.wippe.an{background:linear-gradient(180deg,#0E1012 0%,#2A2C2F 62%,#3A3D40 100%);
+  box-shadow:inset 0 3px 6px rgba(0,0,0,.7)}
+.wippe.rot{background:linear-gradient(180deg,#E0483C 0%,#C42B22 60%,#8E1E17 100%)}
+.wlab{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;letter-spacing:.14em;text-transform:uppercase;color:rgba(233,235,236,.34);
+  text-align:center}
+.wippe.an + .wlab{color:#E9EBEC;font-weight:700}
+
+/* ── Das Instrument: cremefarbenes Blatt in rotem Rahmen ── */
+.werk{position:relative;overflow:hidden;
+  background:linear-gradient(180deg,#F2EEE2 0%,#DAD5C6 100%);
+  box-shadow:inset 0 0 0 3px #C42B22,0 1px 0 rgba(255,255,255,.2)}
+
+/* ── Das Zählwerk: vier Walzen hinter einem Fenster ── */
+.zaehler{display:flex;gap:2px;background:#1A1C1E;padding:4px;
+  border-radius:2px;box-shadow:inset 0 2px 6px rgba(0,0,0,.8)}
+.zaehler span{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-weight:700;color:#EDE9DC;
+  background:linear-gradient(180deg,#3C3E41,#191B1D 52%,#2E3033);
+  padding:3px 7px;border-radius:1px;font-variant-numeric:tabular-nums}
+
+.regler{border-radius:50%;position:relative;
+  background:radial-gradient(circle at 34% 28%,#F2F4F5,#9EA0A2 78%);
+  box-shadow:inset 0 0 0 2px #D8DADC,0 3px 8px rgba(0,0,0,.5)}
+.regler::after{content:'';position:absolute;left:50%;top:5px;width:2px;
+  height:36%;transform:translateX(-50%);background:#1A1C1E;border-radius:1px}
+.zeit{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(233,235,236,.34);font-variant-numeric:tabular-nums}
+.titel{font-weight:300;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;display:flex;flex-direction:column;
+  padding:44px 64px 0;gap:22px">
+  <div style="display:flex;align-items:baseline;justify-content:space-between">
+  <span class="kap" style="font-size:18px">Musiklib · Bandmaschine</span>
+  <span class="kap" style="font-size:18px">Sammlung 240</span>
+</div>
+  <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;
+    gap:70px">
+    <svg viewBox="0 0 330 330" width="330" height="330"><defs><radialGradient id="bw1" cx="50%" cy="50%" r="148.5" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#4A3524"/><stop offset="62.2%" stop-color="#6B4C31"/><stop offset="62.2%" stop-color="#121315"/><stop offset="100%" stop-color="#0C0D0F"/></radialGradient></defs><circle cx="165.0" cy="165.0" r="160.0" fill="#141517"/><circle cx="165.0" cy="165.0" r="92.4" fill="#6B4C31"/><circle cx="165.0" cy="165.0" r="148.5" fill="#2B57C8"/><circle cx="165.0" cy="165.0" r="148.5" fill="none" stroke="#1E3E96" stroke-width="7.3"/><path d="M 138.2 104.7 A 66.0 66.0 0 0 1 191.8 104.7 L 200.9 31.1 A 138.6 138.6 0 0 0 129.1 31.1 Z" fill="url(#bw1)"/><path d="M 230.6 171.9 A 66.0 66.0 0 0 1 203.8 218.4 L 263.0 263.0 A 138.6 138.6 0 0 0 298.9 200.9 Z" fill="url(#bw1)"/><path d="M 126.2 218.4 A 66.0 66.0 0 0 1 99.4 171.9 L 31.1 200.9 A 138.6 138.6 0 0 0 67.0 263.0 Z" fill="url(#bw1)"/><circle cx="165.0" cy="165.0" r="66.0" fill="#2B57C8"/><circle cx="165.0" cy="165.0" r="28.1" fill="#2A2C2E" stroke="#4A4C4E" stroke-width="2.6"/><circle cx="165.0" cy="165.0" r="8.2" fill="#8A8C8E"/></svg>
+    <div style="text-align:center">
+      <div class="titel" style="font-size:44px">Blue in Green</div>
+      <div style="color:rgba(233,235,236,.60);font-size:22px;margin-top:10px">
+        Miles Davis · Kind of Blue</div>
+      <div style="display:flex;justify-content:center;margin-top:26px">
+        <div class="zaehler"><span style="font-size:30px">3</span><span style="font-size:30px">1</span><span style="font-size:30px">4</span><span style="font-size:30px">2</span></div></div>
+      <div class="kap" style="font-size:13px;margin-top:12px">Zählwerk · im Titel</div>
+    </div>
+    <svg viewBox="0 0 330 330" width="330" height="330"><defs><radialGradient id="bw2" cx="50%" cy="50%" r="148.5" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#4A3524"/><stop offset="75.6%" stop-color="#6B4C31"/><stop offset="75.6%" stop-color="#121315"/><stop offset="100%" stop-color="#0C0D0F"/></radialGradient></defs><circle cx="165.0" cy="165.0" r="160.0" fill="#141517"/><circle cx="165.0" cy="165.0" r="112.2" fill="#6B4C31"/><circle cx="165.0" cy="165.0" r="148.5" fill="#2B57C8"/><circle cx="165.0" cy="165.0" r="148.5" fill="none" stroke="#1E3E96" stroke-width="7.3"/><path d="M 138.2 104.7 A 66.0 66.0 0 0 1 191.8 104.7 L 200.9 31.1 A 138.6 138.6 0 0 0 129.1 31.1 Z" fill="url(#bw2)"/><path d="M 230.6 171.9 A 66.0 66.0 0 0 1 203.8 218.4 L 263.0 263.0 A 138.6 138.6 0 0 0 298.9 200.9 Z" fill="url(#bw2)"/><path d="M 126.2 218.4 A 66.0 66.0 0 0 1 99.4 171.9 L 31.1 200.9 A 138.6 138.6 0 0 0 67.0 263.0 Z" fill="url(#bw2)"/><circle cx="165.0" cy="165.0" r="66.0" fill="#2B57C8"/><circle cx="165.0" cy="165.0" r="28.1" fill="#2A2C2E" stroke="#4A4C4E" stroke-width="2.6"/><circle cx="165.0" cy="165.0" r="8.2" fill="#8A8C8E"/></svg>
+  </div>
+  <div class="front" style="margin:0 -64px;padding:30px 64px 40px;display:flex;
+    align-items:center;gap:56px">
+    <div style="display:flex;gap:26px"><div style="display:flex;flex-direction:column;align-items:center;gap:9px"><span class="wippe" style="width:62px;height:78px"></span><span class="wlab" style="font-size:19px">Zurück</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:9px"><span class="wippe" style="width:62px;height:78px"></span><span class="wlab" style="font-size:19px">Vor</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:9px"><span class="wippe an" style="width:62px;height:78px"></span><span class="wlab" style="font-size:19px">Spielen</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:9px"><span class="wippe" style="width:62px;height:78px"></span><span class="wlab" style="font-size:19px">Halt</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:9px"><span class="wippe rot" style="width:62px;height:78px"></span><span class="wlab" style="font-size:19px">Merken</span></div></div>
+    <div style="display:flex;gap:22px;margin-left:auto">
+      <div class="werk" style="width:150px;height:84px"><svg viewBox="0 0 150 84" width="150" height="84"><line x1="30.5" y1="57.9" x2="22.6" y2="52.9" stroke="#1A1C1E" stroke-width="2.0"/><line x1="37.0" y1="49.5" x2="30.2" y2="43.0" stroke="#1A1C1E" stroke-width="1.1"/><line x1="45.1" y1="42.6" x2="39.7" y2="34.9" stroke="#1A1C1E" stroke-width="1.1"/><line x1="54.4" y1="37.5" x2="50.6" y2="28.9" stroke="#1A1C1E" stroke-width="1.1"/><line x1="64.5" y1="34.3" x2="62.6" y2="25.1" stroke="#1A1C1E" stroke-width="1.1"/><line x1="75.0" y1="33.3" x2="75.0" y2="23.9" stroke="#1A1C1E" stroke-width="2.0"/><line x1="85.5" y1="34.3" x2="87.4" y2="25.1" stroke="#1A1C1E" stroke-width="1.1"/><line x1="95.6" y1="37.5" x2="99.4" y2="28.9" stroke="#1A1C1E" stroke-width="1.1"/><line x1="104.9" y1="42.6" x2="110.3" y2="34.9" stroke="#C42B22" stroke-width="1.1"/><line x1="113.0" y1="49.5" x2="119.8" y2="43.0" stroke="#C42B22" stroke-width="1.1"/><line x1="119.5" y1="57.9" x2="127.4" y2="52.9" stroke="#C42B22" stroke-width="2.0"/><line x1="75.0" y1="85.68" x2="85.3" y2="22.7" stroke="#1A1C1E" stroke-width="1.6"/></svg></div><div class="werk" style="width:150px;height:84px"><svg viewBox="0 0 150 84" width="150" height="84"><line x1="30.5" y1="57.9" x2="22.6" y2="52.9" stroke="#1A1C1E" stroke-width="2.0"/><line x1="37.0" y1="49.5" x2="30.2" y2="43.0" stroke="#1A1C1E" stroke-width="1.1"/><line x1="45.1" y1="42.6" x2="39.7" y2="34.9" stroke="#1A1C1E" stroke-width="1.1"/><line x1="54.4" y1="37.5" x2="50.6" y2="28.9" stroke="#1A1C1E" stroke-width="1.1"/><line x1="64.5" y1="34.3" x2="62.6" y2="25.1" stroke="#1A1C1E" stroke-width="1.1"/><line x1="75.0" y1="33.3" x2="75.0" y2="23.9" stroke="#1A1C1E" stroke-width="2.0"/><line x1="85.5" y1="34.3" x2="87.4" y2="25.1" stroke="#1A1C1E" stroke-width="1.1"/><line x1="95.6" y1="37.5" x2="99.4" y2="28.9" stroke="#1A1C1E" stroke-width="1.1"/><line x1="104.9" y1="42.6" x2="110.3" y2="34.9" stroke="#C42B22" stroke-width="1.1"/><line x1="113.0" y1="49.5" x2="119.8" y2="43.0" stroke="#C42B22" stroke-width="1.1"/><line x1="119.5" y1="57.9" x2="127.4" y2="52.9" stroke="#C42B22" stroke-width="2.0"/><line x1="75.0" y1="85.68" x2="62.2" y2="23.1" stroke="#1A1C1E" stroke-width="1.6"/></svg></div>
+    </div>
+    <div style="display:flex;gap:26px;align-items:center">
+      <span class="regler" style="width:70px;height:70px"></span>
+      <span class="regler" style="width:70px;height:70px"></span>
+      <div style="display:flex;gap:18px;margin-left:10px">
+        <svg width="24" height="24" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="rgba(233,235,236,.60)"/><rect x="8" y="4" width="3" height="16" rx="1" fill="rgba(233,235,236,.60)"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="rgba(233,235,236,.60)"/></svg><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(233,235,236,.60)" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 L21 21"/></svg><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(233,235,236,.60)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z" fill="rgba(233,235,236,.60)"/><path d="M17 9.5a4 4 0 0 1 0 5"/><path d="M19.5 7a7.5 7.5 0 0 1 0 10"/></svg></div>
+    </div>
+  </div>
+</div></div></body></html>

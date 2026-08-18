@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1600px;height:1000px;overflow:hidden}
+.stage{position:relative;width:1600px;height:1000px;overflow:hidden}
+
+.stage{background:linear-gradient(180deg,#EFE7D6 0%,#E5DBC6 100%);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#141210;-webkit-font-smoothing:antialiased}
+.kap{letter-spacing:.26em;text-transform:uppercase;color:rgba(20,18,16,.40);font-weight:600}
+/* Die Überschrift: so fett und so eng, wie es ohne eigene Schriftdatei geht. */
+.schlag{font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;font-weight:900;line-height:.86;letter-spacing:-.03em;
+  text-transform:uppercase;text-wrap:balance}
+/* Der Blocksatz: die Titelliste als Fliesstext, zweispaltig. */
+.satz{column-gap:28px;text-align:justify;hyphens:auto}
+.zeile{display:flex;gap:9px;break-inside:avoid;color:rgba(20,18,16,.62);
+  border-bottom:1px solid rgba(20,18,16,.14);padding:5px 0}
+.zeile .nr{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(20,18,16,.40);flex:none}
+.zeile .na{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.zeile .da{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(20,18,16,.40);flex:none;font-variant-numeric:tabular-nums}
+.zeile.jetzt{color:#141210;font-weight:700;border-bottom-color:#141210}
+.zeile.jetzt .nr,.zeile.jetzt .da{color:#C24A28}
+.platte{position:relative;border-radius:50%;background:
+    repeating-radial-gradient(circle,#111 0 2px,#1D1B19 2px 4px),
+    radial-gradient(circle at 34% 28%,#3A3734,#0B0A09 70%)}
+.platte::after{content:'';position:absolute;inset:39%;border-radius:50%;background:#EFE7D6;
+  box-shadow:inset 0 0 0 1px rgba(20,18,16,.4)}
+.platte::before{content:'';position:absolute;left:50%;top:50%;width:4px;
+  height:4px;margin:-2px 0 0 -2px;border-radius:50%;
+  background:#141210;z-index:2}
+.taste{display:flex;align-items:center;justify-content:center;color:#141210}
+.zeit{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;color:rgba(20,18,16,.62);font-variant-numeric:tabular-nums}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;padding:56px 72px">
+  <div style="position:absolute;left:640px;top:60px">
+    <svg viewBox="0 0 560 560" width="560" height="560"><circle cx="280.0" cy="280.0" r="280.0" fill="#E8613A"/><path d="M 280.0 280.0 L 280.0 0 A 280.0 280.0 0 0 1 444.6 506.5 Z" fill="#C24A28" opacity=".55"/><line x1="280.0" y1="0" x2="280.0" y2="50" stroke="#EFE7D6" stroke-width="3.0"/><line x1="280.0" y1="280.0" x2="444.6" y2="506.5" stroke="#141210" stroke-width="2.2"/></svg></div>
+  <div class="platte" style="position:absolute;right:78px;top:44px;
+    width:240px;height:240px"></div>
+  <div style="position:relative;display:flex;flex-direction:column;height:100%;
+    justify-content:space-between">
+    <div style="display:flex;align-items:baseline;justify-content:space-between">
+      <span class="kap" style="font-size:17px">Musiklib · 240 Alben</span>
+      <span class="kap" style="font-size:17px">1959</span>
+    </div>
+    <div style="max-width:560px">
+      <div class="schlag" style="font-size:126px">Kind of Blue</div>
+      <div style="margin-top:22px;font-size:26px;color:rgba(20,18,16,.62)">Miles Davis</div>
+    </div>
+    <div style="display:flex;align-items:flex-end;gap:56px">
+      <div style="width:600px"><div class="satz" style="column-count:2;font-size:15px"><div class="zeile"><span class="nr">01</span><span class="na">So What</span><span class="da">9:22</span></div><div class="zeile"><span class="nr">02</span><span class="na">Freddie Freeloader</span><span class="da">9:46</span></div><div class="zeile jetzt"><span class="nr">03</span><span class="na">Blue in Green</span><span class="da">5:37</span></div><div class="zeile"><span class="nr">04</span><span class="na">All Blues</span><span class="da">11:33</span></div><div class="zeile"><span class="nr">05</span><span class="na">Flamenco Sketches</span><span class="da">9:26</span></div></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:20px;align-items:flex-start">
+        <div style="display:flex;align-items:center;gap:37px"><span class="taste"><svg width="34" height="34" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#141210" stroke-width="2" fill="#141210" stroke-linejoin="round"/></svg></span><span class="taste"><svg width="42" height="42" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#141210"/><rect x="14" y="5" width="4" height="14" fill="#141210"/></svg></span><span class="taste"><svg width="34" height="34" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#141210" stroke-width="2" fill="#141210" stroke-linejoin="round"/></svg></span><span class="taste"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="rgba(20,18,16,.62)" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 L21 21"/></svg></span><span class="taste"><svg width="27" height="27" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="rgba(20,18,16,.62)"/><rect x="8" y="4" width="3" height="16" rx="1" fill="rgba(20,18,16,.62)"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="rgba(20,18,16,.62)"/></svg></span><span class="taste"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="rgba(20,18,16,.62)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z" fill="rgba(20,18,16,.62)"/><path d="M17 9.5a4 4 0 0 1 0 5"/><path d="M19.5 7a7.5 7.5 0 0 1 0 10"/></svg></span></div>
+        <div style="display:flex;gap:26px">
+          <span class="zeit" style="font-size:20px">02:14</span>
+          <span class="zeit" style="font-size:20px">-03:23</span></div>
+      </div>
+    </div>
+  </div>
+</div></div></body></html>
