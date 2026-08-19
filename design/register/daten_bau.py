@@ -439,6 +439,41 @@ VORSCHLAG = {
    'eine Frontplatte ist still, bis man sie anfasst.',
    'Die drei leisen Zeichen oben rechts, graviert in die Frontplatte; die Sammlung als '
    'Blende über das Gerät. Die Silberplatte zeigt die Warteschlange, nicht die Sammlung.'),
+
+ # ── K92–K94 · die drei Abweichungen. Kein gemeinsamer Kanon, kein Geraet,
+ # keine Fortschrittsleiste — nur die Hausregel. ─────────────────────────
+ 'foto78_Schattenwurf': ('Der Schatten selbst. Man schiebt ihn wie einen Zeiger über die '
+   'Felder — über Titelgrenzen hinweg, ohne abzusetzen. <b>Es gibt keine zweite '
+   'Spulfläche</b>, also trägt er <code>data-spulen</code>.',
+   'Das Feld, in dem der Schatten steht, ist der laufende Titel; sein Name steht dort als '
+   'einziger fett. Weiter gibt es keinen Zustand — eine Sonnenuhr kennt keinen.',
+   'Nur der Schatten wandert. <b>Sein Rand muss weich bleiben</b>: eine harte Kante macht '
+   'daraus einen Zeiger, und dann ist der Entwurf weg. Der Halbschatten ist zugleich die '
+   'ehrliche Genauigkeit — auf die Sekunde muss eine Musikanzeige nicht sein.',
+   'Drei Messingstifte unten rechts (quer) bzw. rechts unter der Platte (hoch), neben '
+   'Lupe und Lautstärke. Die Sammlung fährt als Blende über die Platte.'),
+ 'foto79_Lesezeichen': ('<b>Der Satzblock selbst.</b> Man zieht den zinnoberroten Keil '
+   'durch den Text; die Grenze zwischen Schwarz und Blass folgt dem Finger. Titelgrenzen '
+   'sind Trennzeichen, keine Rasterpunkte — man geht darüber hinweg wie beim Lesen.',
+   'Alles Gelaufene steht in voller Schwärze, alles Kommende blass, und der Keil steht '
+   'exakt dazwischen — auch mitten im Wort. Ein laufender Titel ist daran zu erkennen, '
+   'dass die Grenze in ihm liegt; er braucht keine eigene Auszeichnung.',
+   'Die Grenze wandert, Zeichen für Zeichen. Sonst nichts. <b>Zu entscheiden:</b> ob der '
+   'Umschlag zeichenweise springt oder ob der Keil zwischen zwei Zeichen weich gleitet — '
+   'zeichenweise ist ehrlicher (so ist der Text gesetzt), weich ist ruhiger.',
+   'Die sechs Zeichen in der Fusszeile, gesetzt wie ein Kolophon. Die Sammlung öffnet als '
+   'Blende über die Seite; der Satzblock selbst ist Text und kein Menü.'),
+ 'foto80_Klepsydra': ('Der Meniskus. Senkrecht gezogen, und der Stand folgt. Abgelesen '
+   'wird an der <b>Unterkante der Wölbung</b> wie an einem Laborglas — dort steht auch die '
+   'Zeitangabe.',
+   'Was gelaufen ist, steht als Flüssigkeit im Glas; was kommt, ist leeres Glas. Der '
+   'laufende Titel ist der, dessen Marke die Flüssigkeit gerade erreicht hat, und steht '
+   'rechts in Tintenblau statt in Grau.',
+   'Der Spiegel steigt, der Meniskus mit ihm. <b>Kein Schwappen, kein Blubbern</b> — die '
+   'Flüssigkeit ist eine Anzeige und kein Aquarium. Der Glanzstreifen auf dem Glas steht '
+   'still, denn er zeigt nichts.',
+   'Die drei kleinen Messingtasten oben rechts (quer) bzw. unten rechts (hoch). Die '
+   'Sammlung fährt als Blende über das Blatt; die Skala rechts ist die Warteschlange.'),
 }
 del VORSCHLAG['foto52_platzhalter']
 

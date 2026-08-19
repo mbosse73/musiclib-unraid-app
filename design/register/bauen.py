@@ -18,7 +18,8 @@ ZIEL = HIER / 'konzeptregister.html'
 
 MARKE = {'gebaut': 'Im Programm', 'blatt': 'Blatt gezeichnet',
          'thema': 'Auf einem Zweig', 'paket': 'Zum Bau ausgewählt',
-         'entwurf': 'Auswahl offen', 'synthese': 'Aus allen gezogen'}
+         'entwurf': 'Auswahl offen', 'synthese': 'Aus allen gezogen',
+         'abweichung': 'Kein Gerät'}
 
 
 def bild(name):
@@ -100,7 +101,7 @@ SEITE = f'''<title>Musiklib Konzeptregister</title>
   --line:rgba(36,30,24,.11); --line-2:rgba(36,30,24,.24);
   --brass:#8A6534;
   --s-gebaut:#3E6B4C; --s-blatt:#42607A; --s-thema:#5B5A7E; --s-paket:#8A6534;
-  --s-entwurf:#7A4F63; --s-synthese:#9A7638;
+  --s-entwurf:#7A4F63; --s-synthese:#9A7638; --s-abweichung:#2F6F6B;
   --serif:ui-serif,'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
   --sans:ui-sans-serif,-apple-system,'Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
   --mono:ui-monospace,'SF Mono','IBM Plex Mono',Menlo,Consolas,monospace;
@@ -112,7 +113,7 @@ SEITE = f'''<title>Musiklib Konzeptregister</title>
     --line:rgba(239,232,220,.12); --line-2:rgba(239,232,220,.24);
     --brass:#CA9C5E;
     --s-gebaut:#7FB58E; --s-blatt:#8AAFCE; --s-thema:#A3A1D0; --s-paket:#CA9C5E;
-    --s-entwurf:#C892A6; --s-synthese:#D6B26A;
+    --s-entwurf:#C892A6; --s-synthese:#D6B26A; --s-abweichung:#79C4BE;
   }}
 }}
 :root[data-theme="dark"]{{
@@ -121,7 +122,7 @@ SEITE = f'''<title>Musiklib Konzeptregister</title>
   --line:rgba(239,232,220,.12); --line-2:rgba(239,232,220,.24);
   --brass:#CA9C5E;
   --s-gebaut:#7FB58E; --s-blatt:#8AAFCE; --s-thema:#A3A1D0; --s-paket:#CA9C5E;
-  --s-entwurf:#C892A6; --s-synthese:#D6B26A;
+  --s-entwurf:#C892A6; --s-synthese:#D6B26A; --s-abweichung:#79C4BE;
 }}
 *,*::before,*::after{{box-sizing:border-box}}
 body{{margin:0;background:var(--stage);color:var(--ink);font-family:var(--sans);
@@ -141,7 +142,7 @@ code{{font-family:var(--mono);font-size:.88em;color:var(--ink-2)}}
 .lede{{margin:18px 0 0;color:var(--ink-2);font-size:16.5px;max-width:64ch}}
 .lede b{{color:var(--ink);font-weight:600}}
 
-/* ── Übersicht: fünf Zeilen, die zugleich der Filter sind ── */
+/* ── Übersicht: sechs Zeilen, die zugleich der Filter sind ── */
 .ledger{{margin-top:36px;border-top:1px solid var(--line);display:flex;flex-direction:column}}
 .lz{{display:grid;grid-template-columns:14px minmax(150px,1fr) 42px 92px minmax(0,2.1fr);
   gap:16px;align-items:baseline;width:100%;text-align:left;font:inherit;color:inherit;
@@ -155,6 +156,7 @@ code{{font-family:var(--mono);font-size:.88em;color:var(--ink-2)}}
 .punkt[data-status="paket"]{{background:var(--s-paket)}}
 .punkt[data-status="entwurf"]{{background:var(--s-entwurf)}}
 .punkt[data-status="synthese"]{{background:var(--s-synthese)}}
+.punkt[data-status="abweichung"]{{background:var(--s-abweichung)}}
 .lname{{font-family:var(--serif);font-size:19px}}
 .lzahl{{font-family:var(--mono);font-size:15px;font-variant-numeric:tabular-nums;text-align:right}}
 .lspanne{{font-family:var(--mono);font-size:12px;color:var(--ink-3)}}
@@ -207,6 +209,7 @@ code{{font-family:var(--mono);font-size:.88em;color:var(--ink-2)}}
 .karte[data-status="paket"]{{border-left-color:var(--s-paket)}}
 .karte[data-status="entwurf"]{{border-left-color:var(--s-entwurf)}}
 .karte[data-status="synthese"]{{border-left-color:var(--s-synthese)}}
+.karte[data-status="abweichung"]{{border-left-color:var(--s-abweichung)}}
 .karte[hidden]{{display:none}}
 .meta{{min-width:0}}
 .kopf{{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;margin-bottom:5px}}
@@ -276,12 +279,12 @@ dialog::backdrop{{background:rgba(0,0,0,.86)}}
 
 <div class="seite">
   <header class="kopfz">
-    <div class="caps">Musiklib · Stand 18. August 2026 · drei Synthesen</div>
-    <h1>Einundneunzig Spieler, <em>fünf</em> Zustände</h1>
+    <div class="caps">Musiklib · Stand 19. August 2026 · drei Abweichungen</div>
+    <h1>Vierundneunzig Spieler, <em>sechs</em> Zustände</h1>
     <p class="lede">Alle Konzepte aus fünf Quellen — dem gebauten Programm, den Mockup-Blättern,
     dem gelieferten Design-Paket, den eigenen Entwürfen und zuletzt der Synthese aus allen
     vorstehenden — in <b>einer</b>
-    Nummernfolge. Die Nummer <code>K01</code>–<code>K91</code> ist
+    Nummernfolge. Die Nummer <code>K01</code>–<code>K94</code> ist
     durchgehend und wird nach jeder Streichung und jedem Fund neu gezogen — die alte Herkunft steht
     auf jeder Karte, damit trotzdem nichts verlorengeht.</p>
     <p class="lede">Jede Karte zeigt <b>beide Formate</b>, quer und hoch, so weit es sie gibt.
@@ -294,7 +297,7 @@ dialog::backdrop{{background:rgba(0,0,0,.86)}}
     Zweig" wieder verschwunden: es gibt ihn nicht mehr.</p>
     <p class="lede"><b>Jede Karte trägt jetzt eine Bauanleitung</b> — Spulfläche, Zustände,
     Bewegung, Bibliothek. Bei den gebauten ist sie aus dem Code gelesen, bei den gezeichneten
-    Blättern aus dem Blatt; bei den <b>44 Standbildern (K48–K91) ist sie ein Vorschlag</b> und
+    Blättern aus dem Blatt; bei den <b>47 Standbildern (K48–K94) ist sie ein Vorschlag</b> und
     trägt deshalb eine farbige Kante. Diese Blätter haben kein Skript, keine Übergänge, keine
     Zustände — dort ist nichts abzulesen, dort ist zu entscheiden. Hausregel für Bewegung:
     sparsam, bewegt wird nur, was den Stand zeigt. Dieselben Angaben liegen als
@@ -328,13 +331,20 @@ dialog::backdrop{{background:rgba(0,0,0,.86)}}
     und unterscheiden sich nur darin, <b>was den Stand zeigt</b>: eine Haarlinie, eine
     Lichtkante, ein Zeiger. Zu entscheiden ist deshalb nicht dreimal einzeln, sondern
     <b>welches Material</b>.</p>
+    <p class="lede"><b>Und danach drei, die sich an nichts halten.</b> K92 Schattenwurf,
+    K93 Lesezeichen und K94 Klepsydra sind gebaut, nachdem die Synthesen zu brav
+    ausgefallen waren: kein gemeinsamer Kanon, kein Gerät, keine Fortschrittsleiste.
+    Eine Sonnenuhr, deren Schatten über die Titel wandert; eine Buchseite, auf der die
+    <b>Schrift selbst</b> die Zeitachse ist und die Grenze zwischen Schwarz und Blass
+    mitten im Wort steht; ein Messzylinder, in dem das Album <b>steigt</b>. Sie halten
+    genau eine Hausregel ein — bewegt wird, was den Stand zeigt — und sonst keine.</p>
     <div class="ledger">{ledger_html}</div>
   </header>
 
   <div class="werkzeug">
     <input type="search" id="suche" placeholder="Suchen — Name, Herkunft, Format"
       aria-label="Konzepte durchsuchen">
-    <span class="treffer" id="treffer">91 von 91</span>
+    <span class="treffer" id="treffer">94 von 94</span>
     <button class="zuruecksetzen" id="reset" type="button">Alles zeigen</button>
   </div>
 

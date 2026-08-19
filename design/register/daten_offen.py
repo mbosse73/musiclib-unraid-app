@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 OFFEN = [
- ('Vierundvierzig Bauanleitungen sind Vorschläge, keine Entscheidungen',
-  'Bei K48–K91 steht auf jeder Karte, was ich zu Spulfläche, Zuständen und Bewegung '
+ ('Siebenundvierzig Bauanleitungen sind Vorschläge, keine Entscheidungen',
+  'Bei K48–K94 steht auf jeder Karte, was ich zu Spulfläche, Zuständen und Bewegung '
   '<b>vorschlage</b> — diese Blätter sind Standbilder ohne Skript, dort ist nichts abzulesen. '
-  'An elf Stellen habe ich die Frage ausdrücklich offen gelassen statt sie zu entscheiden '
+  'An dreizehn Stellen habe ich die Frage ausdrücklich offen gelassen statt sie zu entscheiden '
   '(unter anderem: drehen sich die Wickel bei K52 Mix Tape Klar, dreht sich die Spiralplatte '
   'bei K59/K60, dimmt K74 Klimaxfront im Ruhezustand auf schwarzes Glas, trägt bei K90 '
   'Nachtglas jede Glaszeile ihren eigenen Stand). '
@@ -45,4 +45,12 @@ OFFEN = [
   '<b>einmal, welches Material</b>: was der Kanon regelt, ist bei allen dreien schon '
   'entschieden. Wer zwei davon nimmt, hat zwei Fassungen derselben Sache — davon hat das '
   'Register genug.'),
+ ('Drei Abweichungen — und die sind absichtlich unbequem',
+  'K92 Schattenwurf, K93 Lesezeichen und K94 Klepsydra sind gebaut, nachdem die Synthesen '
+  'zu brav ausgefallen waren. Sie teilen <b>nichts</b> miteinander und halten <b>eine</b> '
+  'Regel ein: bewegt wird, was den Stand zeigt. Keines hat eine Fortschrittsleiste. '
+  'Zu entscheiden ist bei jedem einzeln — und zwei Punkte darin sind ausdrücklich offen '
+  'gelassen: ob der Umschlag bei K93 zeichenweise springt oder weich gleitet, und ob die '
+  'Feinteilung bei K94 links oder rechts im Glas steht. <b>K93 ist der einzige Entwurf im '
+  'ganzen Register ohne Bild und ohne eigene Anzeigefläche</b>.'),
 ]

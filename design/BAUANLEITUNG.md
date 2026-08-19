@@ -854,3 +854,33 @@ in `daten_bau.py` und baut beides neu.
 - **Zustände** — Der Bernsteinbalken steht auf der Gegenwart, die hohen Striche sind die Titelgrenzen, die Ziffer des laufenden Titels ist die einzige helle. In der Silberplatte steht der laufende Titel in Bernstein. Die Tasten haben eine Kante und einen Lichtsaum, damit ein Druck als Einsinken darstellbar ist.
 - **Bewegung** — Der Bernsteinbalken wandert. Das Rad dreht sich **nur unter dem Finger**, mit Nachlauf wie bei K78 Gyrorad — ohne Trägheit ist es ein Knopf. Sonst steht alles: eine Frontplatte ist still, bis man sie anfasst.
 - **Bibliothek** — Die drei leisen Zeichen oben rechts, graviert in die Frontplatte; die Sammlung als Blende über das Gerät. Die Silberplatte zeigt die Warteschlange, nicht die Sammlung.
+
+
+## Abweichung — keines davon ist ein Gerät
+
+### K92 · Schattenwurf
+
+*Ohne Vorbild · Sonnenuhr — Telefon · PC. **Vorschlag — bitte prüfen**.*
+
+- **Spulen** — Der Schatten selbst. Man schiebt ihn wie einen Zeiger über die Felder — über Titelgrenzen hinweg, ohne abzusetzen. **Es gibt keine zweite Spulfläche**, also trägt er `data-spulen`.
+- **Zustände** — Das Feld, in dem der Schatten steht, ist der laufende Titel; sein Name steht dort als einziger fett. Weiter gibt es keinen Zustand — eine Sonnenuhr kennt keinen.
+- **Bewegung** — Nur der Schatten wandert. **Sein Rand muss weich bleiben**: eine harte Kante macht daraus einen Zeiger, und dann ist der Entwurf weg. Der Halbschatten ist zugleich die ehrliche Genauigkeit — auf die Sekunde muss eine Musikanzeige nicht sein.
+- **Bibliothek** — Drei Messingstifte unten rechts (quer) bzw. rechts unter der Platte (hoch), neben Lupe und Lautstärke. Die Sammlung fährt als Blende über die Platte.
+
+### K93 · Lesezeichen
+
+*Ohne Vorbild · Satzblock — Telefon · PC. **Vorschlag — bitte prüfen**.*
+
+- **Spulen** — **Der Satzblock selbst.** Man zieht den zinnoberroten Keil durch den Text; die Grenze zwischen Schwarz und Blass folgt dem Finger. Titelgrenzen sind Trennzeichen, keine Rasterpunkte — man geht darüber hinweg wie beim Lesen.
+- **Zustände** — Alles Gelaufene steht in voller Schwärze, alles Kommende blass, und der Keil steht exakt dazwischen — auch mitten im Wort. Ein laufender Titel ist daran zu erkennen, dass die Grenze in ihm liegt; er braucht keine eigene Auszeichnung.
+- **Bewegung** — Die Grenze wandert, Zeichen für Zeichen. Sonst nichts. **Zu entscheiden:** ob der Umschlag zeichenweise springt oder ob der Keil zwischen zwei Zeichen weich gleitet — zeichenweise ist ehrlicher (so ist der Text gesetzt), weich ist ruhiger.
+- **Bibliothek** — Die sechs Zeichen in der Fusszeile, gesetzt wie ein Kolophon. Die Sammlung öffnet als Blende über die Seite; der Satzblock selbst ist Text und kein Menü.
+
+### K94 · Klepsydra
+
+*Ohne Vorbild · Laborglas — Telefon · PC. **Vorschlag — bitte prüfen**.*
+
+- **Spulen** — Der Meniskus. Senkrecht gezogen, und der Stand folgt. Abgelesen wird an der **Unterkante der Wölbung** wie an einem Laborglas — dort steht auch die Zeitangabe.
+- **Zustände** — Was gelaufen ist, steht als Flüssigkeit im Glas; was kommt, ist leeres Glas. Der laufende Titel ist der, dessen Marke die Flüssigkeit gerade erreicht hat, und steht rechts in Tintenblau statt in Grau.
+- **Bewegung** — Der Spiegel steigt, der Meniskus mit ihm. **Kein Schwappen, kein Blubbern** — die Flüssigkeit ist eine Anzeige und kein Aquarium. Der Glanzstreifen auf dem Glas steht still, denn er zeigt nichts.
+- **Bibliothek** — Die drei kleinen Messingtasten oben rechts (quer) bzw. unten rechts (hoch). Die Sammlung fährt als Blende über das Blatt; die Skala rechts ist die Warteschlange.

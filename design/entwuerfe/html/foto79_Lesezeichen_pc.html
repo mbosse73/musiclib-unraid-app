@@ -1,0 +1,61 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1600px;height:1000px;overflow:hidden}
+.stage{position:relative;width:1600px;height:1000px;overflow:hidden}
+
+.stage{background:linear-gradient(178deg,#F7F3E9 0%,#EFE9DA 100%);
+  font-family:Georgia,'Times New Roman',ui-serif,serif;color:#1A1714;-webkit-font-smoothing:antialiased}
+.kap{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:.30em;
+  text-transform:uppercase;color:rgba(26,23,20,.55)}
+.titel{font-size:74px;line-height:.98;letter-spacing:-.022em;
+  font-weight:400;text-wrap:balance}
+.wer{font-style:italic;font-size:26px;color:rgba(26,23,20,.55);margin-top:12px}
+/* Der Satzblock. Alles, was diesen Entwurf ausmacht, steckt hier — Blocksatz,
+   Trennung, zwei Schwaerzen. Und er ist **gross**: fuenf Titel fuellen keine
+   Seite in Lesegroesse, also wird die Titelliste selbst zur Ueberschrift.
+   Das dreht die uebliche Rangfolge um, und zwar mit Absicht: gehoert wird ein
+   Titel, nicht ein Album. */
+.satz{text-align:justify;hyphens:auto;-webkit-hyphens:auto;
+  line-height:1.02;letter-spacing:-.018em;text-indent:0;margin:0;
+  /* Der Absatz ist ein Flex-Kind: ohne min-width:0 waechst er auf seine
+     max-content-Breite und laeuft aus dem Blatt heraus. */
+  width:100%;min-width:0}
+.gelesen{color:#1A1714}
+.kommt{color:rgba(26,23,20,.26)}
+.trenn{color:rgba(26,23,20,.26);padding:0 7px;font-size:.26em;vertical-align:.42em}
+.gelesen .trenn{color:rgba(26,23,20,.42)}
+.dauer{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:.20em;vertical-align:.90em;letter-spacing:.02em;
+  padding-left:6px;font-weight:400}
+/* Der Keil sitzt im Textfluss, nicht darueber: so steht er immer genau auf
+   der Stelle, egal wie der Satz umbricht. */
+.marke{display:inline-block;width:0;height:0;vertical-align:.06em;
+  border-left:.20em solid #C1361F;
+  border-top:.17em solid transparent;border-bottom:.17em solid transparent;
+  margin:0 .04em}
+.fuss{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;color:rgba(26,23,20,.55);
+  display:flex;align-items:center;gap:26px}
+.uhr{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:16px;color:#1A1714;
+  font-variant-numeric:tabular-nums}
+.zeichen{display:flex;align-items:center;gap:24px}
+.folio{font-family:ui-monospace,'SFMono-Regular',Menlo,'Courier New',monospace;font-size:13px;color:rgba(26,23,20,.26)}
+
+</style></head><body><div class="stage"><div style="position:absolute;inset:0;padding:74px 88px 66px;
+  display:flex;flex-direction:column">
+  <div style="display:flex;align-items:baseline;justify-content:space-between">
+    <span class="kap">Kind of Blue · Miles Davis · 1959</span>
+    <span class="kap">Musiklib · 5 Titel · 45:44</span>
+  </div>
+  <div style="flex:1;display:flex;align-items:center;font-size:114px">
+    <p class="satz" lang="en"><span class="gelesen">So What<span class="dauer">9:22</span> <span class="trenn">▪</span> Freddie Freeloader<span class="dauer">9:46</span> <span class="trenn">▪</span> Blue i</span><span class="marke"></span><span class="kommt">n Green<span class="dauer">5:37</span> <span class="trenn">▪</span> All Blues<span class="dauer">11:33</span> <span class="trenn">▪</span> Flamenco Sketches<span class="dauer">9:26</span></span></p>
+  </div>
+  <div style="padding-top:26px;border-top:1px solid rgba(26,23,20,.16);
+    display:flex;align-items:center;justify-content:space-between">
+    <div class="fuss">
+      <span class="uhr" style="font-size:22px">02:14</span>
+      <span>von 5:37</span>
+      <span class="kap">Blue in Green</span>
+    </div>
+    <div class="fuss"><span class="zeichen"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M7 5v14M20 5v14l-11-7z" stroke="#1A1714" stroke-width="2" fill="#1A1714" stroke-linejoin="round"/></svg><svg width="31" height="31" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#1A1714"/><rect x="14" y="5" width="4" height="14" fill="#1A1714"/></svg><svg width="26" height="26" viewBox="0 0 24 24"><path d="M17 5v14M4 5v14l11-7z" stroke="#1A1714" stroke-width="2" fill="#1A1714" stroke-linejoin="round"/></svg></span><span style="width:1px;height:24px;background:rgba(26,23,20,.26)"></span><span class="zeichen"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="rgba(26,23,20,.55)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 L21 21"/></svg><svg width="21" height="21" viewBox="0 0 24 24"><rect x="3" y="4" width="3" height="16" rx="1" fill="rgba(26,23,20,.55)"/><rect x="8" y="4" width="3" height="16" rx="1" fill="rgba(26,23,20,.55)"/><path d="M14.5 5.4 L18.2 4.5 L21.5 19 L17.8 19.9 Z" fill="rgba(26,23,20,.55)"/></svg><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="rgba(26,23,20,.55)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z" fill="rgba(26,23,20,.55)"/><path d="M17 9.5a4 4 0 0 1 0 5"/><path d="M19.5 7a7.5 7.5 0 0 1 0 10"/></svg></span></div>
+    <span class="folio">1959</span>
+  </div>
+</div></div></body></html>
